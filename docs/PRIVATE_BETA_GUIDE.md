@@ -77,3 +77,7 @@ An expense records money you spent. A food entry records something you ate or dr
 ## Food amounts
 
 Check whether the nutrition label uses grams or millilitres, then enter the amount you actually consumed. Missing nutrition is not treated as zero. Custom products are available when a source cannot provide the information.
+
+## Search and barcodes
+
+External food searches need internet access and can hit provider limits. You can type a barcode if scanning is unavailable. Saved foods and custom products give you a fallback when a search fails.
