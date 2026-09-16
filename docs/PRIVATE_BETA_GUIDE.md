@@ -25,3 +25,7 @@ Your records and profile stay in the app on your device. There is no online acco
 ## Make a backup
 
 Open Innstillinger and choose Sikkerhetskopi. On Android this opens the share sheet. Choose where to save the JSON file; canceling does not create an external backup.
+
+## Move records from the website
+
+Export a JSON backup from the website and transfer it to your phone. Import it in the app settings. You can skip profile setup first if you want to restore your old data.
