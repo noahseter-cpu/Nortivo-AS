@@ -21,3 +21,7 @@ The visible name is Nortivo. The private beta keeps its older Android package ID
 ## Local storage
 
 Your records and profile stay in the app on your device. There is no online account or automatic sync between the website, phone and PC.
+
+## Make a backup
+
+Open Innstillinger and choose Sikkerhetskopi. On Android this opens the share sheet. Choose where to save the JSON file; canceling does not create an external backup.
