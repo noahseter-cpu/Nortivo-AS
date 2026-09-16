@@ -37,3 +37,7 @@ Merge adds missing records and keeps current settings and profile. Replace resto
 ## JSON and CSV
 
 Use JSON when you want to restore the full tracker. CSV is useful for viewing transaction data elsewhere. Exported files are not encrypted, and JSON backups include your profile details.
+
+## Your profile
+
+Enter your name, height in cm, weight in kg and age. The optional calorie estimate also uses your chosen formula basis and usual activity level. You can edit these details in Innstillinger.
