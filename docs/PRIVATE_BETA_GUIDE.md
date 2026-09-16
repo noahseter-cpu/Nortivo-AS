@@ -17,3 +17,7 @@ Install the new APK over the old one. Do not uninstall first or clear app data. 
 ## App name and package name
 
 The visible name is Nortivo. The private beta keeps its older Android package ID so updates can keep your existing records. Your own profile name stays separate from the company name.
+
+## Local storage
+
+Your records and profile stay in the app on your device. There is no online account or automatic sync between the website, phone and PC.
