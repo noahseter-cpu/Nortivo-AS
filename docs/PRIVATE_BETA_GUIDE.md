@@ -13,3 +13,7 @@ Copy the APK to your Android phone and open it. If Android asks, allow installat
 ## Update the app
 
 Install the new APK over the old one. Do not uninstall first or clear app data. Make a JSON backup before updating.
+
+## App name and package name
+
+The visible name is Nortivo. The private beta keeps its older Android package ID so updates can keep your existing records. Your own profile name stays separate from the company name.
