@@ -61,3 +61,7 @@ Use the top-bar theme button for a quick change. Innstillinger → Utseende also
 ## Popups and the keyboard
 
 Popups use the visible screen height and scroll inside the dialog. Tap a field when you want to open the keyboard. If something is still clipped on your phone, include a screenshot when reporting it.
+
+## Monthly budgets
+
+Set category limits and an optional overall limit in Økonomi. Category limits do not add to the overall limit. Budgets belong to their selected month, so check the month before editing.
