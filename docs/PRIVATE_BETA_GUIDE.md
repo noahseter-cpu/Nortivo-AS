@@ -73,3 +73,7 @@ Record expenses, income and refunds with the right date and category. Refunds af
 ## Buying and eating are separate
 
 An expense records money you spent. A food entry records something you ate or drank. One does not automatically create the other.
+
+## Food amounts
+
+Check whether the nutrition label uses grams or millilitres, then enter the amount you actually consumed. Missing nutrition is not treated as zero. Custom products are available when a source cannot provide the information.
