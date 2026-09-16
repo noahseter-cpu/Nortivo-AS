@@ -59,3 +59,11 @@ Tests use Playwright with Microsoft Edge on this Windows host. Override `TEST_UR
 React + TypeScript on the supplied Vinext/Vite Sites starter. Existing Radix/Shadcn primitives manage dialogs, focus and tabs; Lucide supplies icons. Pure calculations/validation: `lib/tracker-core.ts`. IndexedDB repository/cache: `lib/tracker-store.ts`. Provider adapters and read-only route: `lib/food-adapters.ts`, `app/api/foods/route.ts`. Feature views: `components/tracker-*.tsx`. CSS tokens and motion: `app/globals.css`. Manrope is self-hosted under its included SIL Open Font License.
 
 The initial requirement for image approval was explicitly superseded by Noah's request to stop showing previews and build directly. No rejected mockup is an approved visual reference.
+
+## Android private beta (0.2.0)
+
+See ANDROID_TESTING.md for APK installation, exact rebuild steps and native-device checks. Run `npm run android:build` on this Windows host. The Android bundle is self-contained and does not require the hosted website to load.
+
+Optional local profile: name, height, weight, age, selected formula, activity and suitability. A maintenance-calorie estimate is reviewed before optional adoption. No online registration or syncing is included. Android automatic cloud backup/device transfer is disabled; use the explicit JSON backup/share action. Existing website data can be exported and imported into the app.
+
+Stored schema is now version 2, migrated from version 1 without resetting records. The backup envelope remains version 1; its data contains the schema version. Merge keeps the current profile/settings; Replace restores the imported ones. See lib/profile.ts and ANDROID_TESTING.md for calculation sources and limitations.

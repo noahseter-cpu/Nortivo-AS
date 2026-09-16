@@ -172,7 +172,7 @@ test("backup validation duplicates references nonfinite values", () => {
   s.transactions.push(tx(5000));
   const backup = validateState(JSON.parse(JSON.stringify(s)));
   expect(mergeStates(s, backup).transactions.length).toBe(1);
-  expect(() => validateState({ ...s, version: 2 })).toThrow();
+  expect(() => validateState({ ...s, version: 99 })).toThrow();
   expect(() =>
     validateState({
       ...s,

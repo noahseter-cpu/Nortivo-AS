@@ -100,10 +100,12 @@ export function SettingsPage({
   state,
   save,
   goals,
+  profile,
 }: {
   state: State;
   save: Save;
   goals: () => void;
+  profile: () => void;
 }) {
   const [incoming, setIncoming] = useState<State | null>(null);
   const [error, setError] = useState("");
@@ -136,6 +138,7 @@ export function SettingsPage({
   }
   return (
     <div className="settings-grid">
+      <section className="panel"><h2>Din profil</h2><p className="help">{state.profile ? `${state.settings.name} · ${state.profile.heightCm} cm · ${state.profile.weightKg} kg · ${state.profile.age} år` : 'Navn, kroppsmål og et valgfritt kaloriforslag – lagret på denne enheten.'}</p><Btn secondary onClick={profile}>{state.profile?'Endre profil og kaloriforslag':'Opprett profil'}</Btn></section>
       <section className="panel">
         <h2>Din hverdag</h2>
         <Form
@@ -256,9 +259,9 @@ export function SettingsPage({
             <ShieldCheck size={22} />
           </div>
           <p className="settings-copy">
-            Registreringene lagres i denne nettleseren. Telefon og PC
-            synkroniseres ikke. Hvis nettleserdata slettes, kan registreringene
-            gå tapt.
+            Registreringene og profilen lagres på denne enheten. Telefon og PC
+            synkroniseres ikke. Avinstallering eller sletting av app- og nettleserdata
+            kan fjerne registreringene. Lag en sikkerhetskopi først.
           </p>
           <div className="backup-actions">
             <Btn
