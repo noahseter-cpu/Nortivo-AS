@@ -45,3 +45,7 @@ Enter your name, height in cm, weight in kg and age. The optional calorie estima
 ## Calorie suggestions
 
 The suggestion is an estimate for maintaining your weight. It is not a weight-loss plan or a medical assessment. Read the calculation details in the app before deciding whether to use it.
+
+## Choose your own goal
+
+Review the estimate and tick the option only if you want it as your goal. Saving your profile without ticking it keeps your existing calorie goal. Earlier goal history is preserved.
