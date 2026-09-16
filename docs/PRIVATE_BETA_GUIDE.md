@@ -85,3 +85,7 @@ External food searches need internet access and can hit provider limits. You can
 ## Daily steps
 
 Enter the total steps for the selected day. Updating that day replaces its total instead of adding the number again. A recorded zero is different from leaving the day blank.
+
+## Things to try during the month
+
+Try saving and reopening records, restarting offline, changing themes, opening forms with the keyboard, and exporting and restoring a backup. Camera permission, native file sharing and phone-specific keyboard behavior need real-device checks. The beta has no built-in one-month expiry.
