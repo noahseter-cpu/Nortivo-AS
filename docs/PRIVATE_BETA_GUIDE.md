@@ -29,3 +29,7 @@ Open Innstillinger and choose Sikkerhetskopi. On Android this opens the share sh
 ## Move records from the website
 
 Export a JSON backup from the website and transfer it to your phone. Import it in the app settings. You can skip profile setup first if you want to restore your old data.
+
+## Restore options
+
+Merge adds missing records and keeps current settings and profile. Replace restores the imported state instead. Read the restore preview before choosing, and keep a backup of anything you might need.
