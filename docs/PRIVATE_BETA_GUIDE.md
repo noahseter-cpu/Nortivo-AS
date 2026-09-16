@@ -9,3 +9,7 @@ Nortivo brings money, food and daily activity into one place. This guide is for 
 ## Install the beta
 
 Copy the APK to your Android phone and open it. If Android asks, allow installation from the file app you are using. Keep Play Protect on.
+
+## Update the app
+
+Install the new APK over the old one. Do not uninstall first or clear app data. Make a JSON backup before updating.
