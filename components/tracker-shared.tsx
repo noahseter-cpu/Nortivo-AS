@@ -1,0 +1,248 @@
+"use client";
+import { useRef, useState, type ReactNode, type FormEvent } from "react";
+import { X, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  dateLabel,
+  monthLabel,
+  shiftDate,
+  shiftMonth,
+  type State,
+} from "@/lib/tracker-core";
+export type Save = (
+  change: (s: State) => void,
+  message?: string,
+) => Promise<boolean>;
+export function Btn({
+  children,
+  secondary = false,
+  className = "",
+  ...props
+}: React.ComponentProps<typeof Button> & { secondary?: boolean }) {
+  return (
+    <Button
+      {...props}
+      className={`button ${secondary ? "secondary" : "primary"} ${className}`}
+    >
+      {children}
+    </Button>
+  );
+}
+export function Field({
+  label,
+  children,
+  hint,
+}: {
+  label: string;
+  children: ReactNode;
+  hint?: string;
+}) {
+  return (
+    <label className="field">
+      <span>{label}</span>
+      {children}
+      {hint && <small>{hint}</small>}
+    </label>
+  );
+}
+export function Form({
+  children,
+  onSubmit,
+  label = "Lagre",
+  cancel,
+}: {
+  children: ReactNode;
+  onSubmit: (data: FormData) => Promise<boolean | void>;
+  label?: string;
+  cancel?: () => void;
+}) {
+  const lock = useRef(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  async function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (lock.current) return;
+    lock.current = true;
+    setBusy(true);
+    setError("");
+    try {
+      await onSubmit(new FormData(e.currentTarget));
+    } catch (e) {
+      setError(
+        e instanceof Error && e.name !== "ZodError"
+          ? e.message
+          : "Sjekk at alle feltene har gyldige verdier.",
+      );
+    } finally {
+      lock.current = false;
+      setBusy(false);
+    }
+  }
+  return (
+    <form onSubmit={submit} className="form-stack">
+      {children}
+      {error && (
+        <div className="error-box" role="alert">
+          {error}
+        </div>
+      )}
+      <div className="form-actions">
+        {cancel && (
+          <Btn type="button" secondary onClick={cancel}>
+            Avbryt
+          </Btn>
+        )}
+        <Btn type="submit" disabled={busy}>
+          {busy ? "Lagrer …" : label}
+        </Btn>
+      </div>
+    </form>
+  );
+}
+export function Modal({
+  title,
+  description,
+  children,
+  onClose,
+  trigger,
+}: {
+  title: string;
+  description?: string;
+  children: ReactNode;
+  onClose: () => void;
+  trigger?: HTMLElement | null;
+}) {
+  return (
+    <Dialog
+      open
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}
+    >
+      <DialogContent
+        className="tracker-dialog"
+        showCloseButton={false}
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          trigger?.focus();
+        }}
+      >
+        <DialogTitle className="dialog-title">{title}</DialogTitle>
+        <DialogDescription
+          className={description ? "dialog-description" : "sr-only"}
+        >
+          {description ?? title}
+        </DialogDescription>
+        <DialogClose asChild>
+          <button aria-label="Lukk" className="dialog-close icon-button">
+            <X size={19} />
+          </button>
+        </DialogClose>
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
+}
+export function DatePicker({
+  value,
+  onChange,
+  month = false,
+}: {
+  value: string;
+  onChange: (x: string) => void;
+  month?: boolean;
+}) {
+  return (
+    <div className="date-picker">
+      <button
+        aria-label={month ? "Forrige måned" : "Forrige dag"}
+        className="icon-button"
+        onClick={() =>
+          onChange(month ? shiftMonth(value, -1) : shiftDate(value, -1))
+        }
+      >
+        <ChevronLeft size={16} />
+      </button>
+      <label>
+        <span>
+          {month
+            ? monthLabel(value)
+            : dateLabel(value, { day: "numeric", month: "long" })}
+        </span>
+        <input
+          aria-label={month ? "Velg måned" : "Velg dato"}
+          type={month ? "month" : "date"}
+          value={value}
+          min={month ? "1900-01" : "1900-01-01"}
+          max={month ? "2200-12" : "2200-12-31"}
+          onChange={(e) => {
+            if (e.target.value) onChange(e.target.value);
+          }}
+        />
+      </label>
+      <button
+        aria-label={month ? "Neste måned" : "Neste dag"}
+        className="icon-button"
+        onClick={() =>
+          onChange(month ? shiftMonth(value, 1) : shiftDate(value, 1))
+        }
+      >
+        <ChevronRight size={16} />
+      </button>
+    </div>
+  );
+}
+export function Empty({
+  title,
+  children,
+  icon,
+}: {
+  title: string;
+  children: ReactNode;
+  icon?: ReactNode;
+}) {
+  return (
+    <div className="empty-state">
+      <span className="empty-icon">{icon ?? <Inbox size={25} />}</span>
+      <h3>{title}</h3>
+      <p>{children}</p>
+    </div>
+  );
+}
+export function Progress({ value, label }: { value: number; label: string }) {
+  return (
+    <div
+      className="progress-track"
+      role="progressbar"
+      aria-valuenow={Math.round(Math.min(100, Math.max(0, value)))}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label={label}
+    >
+      <span
+        className={value >= 100 ? "over" : ""}
+        style={{
+          transform: `scaleX(${Math.min(1, Math.max(0, value / 100))})`,
+        }}
+      />
+    </div>
+  );
+}
+export const val = (d: FormData, k: string) => String(d.get(k) ?? "").trim();
+export const optional = (d: FormData, k: string, fn: (s: string) => number) =>
+  val(d, k) === "" ? null : fn(val(d, k));
+export function download(name: string, content: string, type: string) {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}

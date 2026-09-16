@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-16T18:45:27.891Z",
+  "title": "Noah Tracker",
+  "extensions": {
+    "colorMeta": {
+      "background": {
+        "displayName": "background",
+        "tonalRamp": [
+          "oklch(15.00% 0.0041 91.45)",
+          "oklch(26.43% 0.0041 91.45)",
+          "oklch(37.86% 0.0041 91.45)",
+          "oklch(49.29% 0.0041 91.45)",
+          "oklch(60.71% 0.0041 91.45)",
+          "oklch(72.14% 0.0041 91.45)",
+          "oklch(83.57% 0.0041 91.45)",
+          "oklch(95.00% 0.0041 91.45)"
+        ]
+      },
+      "paper": {
+        "displayName": "paper",
+        "tonalRamp": [
+          "oklch(15.00% 0.0000 89.88)",
+          "oklch(26.43% 0.0000 89.88)",
+          "oklch(37.86% 0.0000 89.88)",
+          "oklch(49.29% 0.0000 89.88)",
+          "oklch(60.71% 0.0000 89.88)",
+          "oklch(72.14% 0.0000 89.88)",
+          "oklch(83.57% 0.0000 89.88)",
+          "oklch(95.00% 0.0000 89.88)"
+        ]
+      },
+      "ink": {
+        "displayName": "ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.0144 166.67)",
+          "oklch(26.43% 0.0144 166.67)",
+          "oklch(37.86% 0.0144 166.67)",
+          "oklch(49.29% 0.0144 166.67)",
+          "oklch(60.71% 0.0144 166.67)",
+          "oklch(72.14% 0.0144 166.67)",
+          "oklch(83.57% 0.0144 166.67)",
+          "oklch(95.00% 0.0144 166.67)"
+        ]
+      },
+      "muted": {
+        "displayName": "muted",
+        "tonalRamp": [
+          "oklch(15.00% 0.0125 167.46)",
+          "oklch(26.43% 0.0125 167.46)",
+          "oklch(37.86% 0.0125 167.46)",
+          "oklch(49.29% 0.0125 167.46)",
+          "oklch(60.71% 0.0125 167.46)",
+          "oklch(72.14% 0.0125 167.46)",
+          "oklch(83.57% 0.0125 167.46)",
+          "oklch(95.00% 0.0125 167.46)"
+        ]
+      },
+      "line": {
+        "displayName": "line",
+        "tonalRamp": [
+          "oklch(15.00% 0.0086 128.56)",
+          "oklch(26.43% 0.0086 128.56)",
+          "oklch(37.86% 0.0086 128.56)",
+          "oklch(49.29% 0.0086 128.56)",
+          "oklch(60.71% 0.0086 128.56)",
+          "oklch(72.14% 0.0086 128.56)",
+          "oklch(83.57% 0.0086 128.56)",
+          "oklch(95.00% 0.0086 128.56)"
+        ]
+      },
+      "accent": {
+        "displayName": "accent",
+        "tonalRamp": [
+          "oklch(15.00% 0.1461 34.82)",
+          "oklch(26.43% 0.1461 34.82)",
+          "oklch(37.86% 0.1461 34.82)",
+          "oklch(49.29% 0.1461 34.82)",
+          "oklch(60.71% 0.1461 34.82)",
+          "oklch(72.14% 0.1461 34.82)",
+          "oklch(83.57% 0.1461 34.82)",
+          "oklch(95.00% 0.1461 34.82)"
+        ]
+      },
+      "accent-hover": {
+        "displayName": "accent-hover",
+        "tonalRamp": [
+          "oklch(15.00% 0.1318 34.44)",
+          "oklch(26.43% 0.1318 34.44)",
+          "oklch(37.86% 0.1318 34.44)",
+          "oklch(49.29% 0.1318 34.44)",
+          "oklch(60.71% 0.1318 34.44)",
+          "oklch(72.14% 0.1318 34.44)",
+          "oklch(83.57% 0.1318 34.44)",
+          "oklch(95.00% 0.1318 34.44)"
+        ]
+      },
+      "navigation": {
+        "displayName": "navigation",
+        "tonalRamp": [
+          "oklch(15.00% 0.0136 173.13)",
+          "oklch(26.43% 0.0136 173.13)",
+          "oklch(37.86% 0.0136 173.13)",
+          "oklch(49.29% 0.0136 173.13)",
+          "oklch(60.71% 0.0136 173.13)",
+          "oklch(72.14% 0.0136 173.13)",
+          "oklch(83.57% 0.0136 173.13)",
+          "oklch(95.00% 0.0136 173.13)"
+        ]
+      },
+      "positive": {
+        "displayName": "positive",
+        "tonalRamp": [
+          "oklch(15.00% 0.0750 150.72)",
+          "oklch(26.43% 0.0750 150.72)",
+          "oklch(37.86% 0.0750 150.72)",
+          "oklch(49.29% 0.0750 150.72)",
+          "oklch(60.71% 0.0750 150.72)",
+          "oklch(72.14% 0.0750 150.72)",
+          "oklch(83.57% 0.0750 150.72)",
+          "oklch(95.00% 0.0750 150.72)"
+        ]
+      },
+      "negative": {
+        "displayName": "negative",
+        "tonalRamp": [
+          "oklch(15.00% 0.1439 33.09)",
+          "oklch(26.43% 0.1439 33.09)",
+          "oklch(37.86% 0.1439 33.09)",
+          "oklch(49.29% 0.1439 33.09)",
+          "oklch(60.71% 0.1439 33.09)",
+          "oklch(72.14% 0.1439 33.09)",
+          "oklch(83.57% 0.1439 33.09)",
+          "oklch(95.00% 0.1439 33.09)"
+        ]
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog",
+        "value": "0 20px 90px #17241f30",
+        "purpose": "Dialog elevation"
+      }
+    ],
+    "motion": [
+      {
+        "name": "feedback",
+        "value": "200ms cubic-bezier(.23,1,.32,1)",
+        "purpose": "Progress and dialog entry"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "width-520",
+        "value": "520px"
+      },
+      {
+        "name": "width-780",
+        "value": "780px"
+      },
+      {
+        "name": "width-900",
+        "value": "900px"
+      },
+      {
+        "name": "width-1100",
+        "value": "1100px"
+      },
+      {
+        "name": "width-1200",
+        "value": "1200px"
+      },
+      {
+        "name": "width-1500",
+        "value": "1500px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button primary",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Repeated logging action",
+      "html": "<button class=\"ds-primary\">Lagre</button>",
+      "css": ".ds-primary{font:600 13px Manrope,Segoe UI,sans-serif;background:var(--accent,#b74b31);color:#fff;padding:11px 17px;border:1px solid transparent;border-radius:8px;transition:transform 120ms cubic-bezier(.23,1,.32,1),background 160ms ease}.ds-primary:hover{background:#9e3f29}.ds-primary:active{transform:scale(.98)}.ds-primary:focus-visible{outline:3px solid #b9593b;outline-offset:3px}"
+    },
+    {
+      "name": "Button secondary",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Repeated logging action",
+      "html": "<button class=\"ds-secondary\">Lagre</button>",
+      "css": ".ds-secondary{font:600 13px Manrope,Segoe UI,sans-serif;background:#fff;color:#252e2a;padding:11px 17px;border:1px solid #e5e8e2;border-radius:8px;transition:transform 120ms cubic-bezier(.23,1,.32,1),background 160ms ease}.ds-secondary:hover{background:#f5eee7}.ds-secondary:active{transform:scale(.98)}.ds-secondary:focus-visible{outline:3px solid #b9593b;outline-offset:3px}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "description": "Text field",
+      "html": "<input class=\"ds-input\" placeholder=\"Produktnavn\" aria-label=\"Produktnavn\">",
+      "css": ".ds-input{font-family:Manrope,Segoe UI,sans-serif;padding:10px 12px;border:1px solid #e5e8e2;border-radius:7px;background:#fff;color:#252e2a;font-size:14px}.ds-input:focus-visible{outline:3px solid #b9593b;outline-offset:3px}"
+    },
+    {
+      "name": "Active navigation",
+      "kind": "nav",
+      "description": "Active navigation",
+      "html": "<div class=\"ds-nav\" >Oversikt</div>",
+      "css": ".ds-nav{font-family:Manrope,Segoe UI,sans-serif;padding:12px 16px;border-radius:9px;background:#3a4540;color:#fff;font-size:13px}.ds-nav:focus-visible{outline:3px solid #b9593b;outline-offset:3px}"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "description": "Panel",
+      "html": "<div class=\"ds-panel\" >Dagen din</div>",
+      "css": ".ds-panel{font-family:Manrope,Segoe UI,sans-serif;padding:26px;border-radius:14px;border:1px solid #e5e8e2;background:#fff;color:#252e2a}.ds-panel:focus-visible{outline:3px solid #b9593b;outline-offset:3px}"
+    },
+    {
+      "name": "Progress",
+      "kind": "custom",
+      "description": "Progress",
+      "html": "<div class=\"ds-progress\" ><span style=\"display:block;width:60%;height:100%;background:#b74b31\"></span></div>",
+      "css": ".ds-progress{font-family:Manrope,Segoe UI,sans-serif;height:5px;background:#eee8df;border-radius:4px;overflow:hidden}.ds-progress:focus-visible{outline:3px solid #b9593b;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "",
+    "overview": "Quiet personal workspace. Cream canvas, compact dark navigation and warm terracotta actions establish the implemented direction.",
+    "keyCharacteristics": [],
+    "rules": [],
+    "dos": [
+      "Do keep selected dates and money contexts explicit.",
+      "Do distinguish recorded zero from missing data.",
+      "Do keep repeated logging actions easy to reach on phones."
+    ],
+    "donts": [
+      "Don't invent user history or arbitrary targets.",
+      "Don't add decorative entrance sequences or count-up effects.",
+      "Don't use a rejected mockup as an approved reference."
+    ]
+  }
+}
