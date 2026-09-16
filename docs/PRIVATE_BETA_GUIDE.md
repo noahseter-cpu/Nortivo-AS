@@ -89,3 +89,7 @@ Enter the total steps for the selected day. Updating that day replaces its total
 ## Things to try during the month
 
 Try saving and reopening records, restarting offline, changing themes, opening forms with the keyboard, and exporting and restoring a backup. Camera permission, native file sharing and phone-specific keyboard behavior need real-device checks. The beta has no built-in one-month expiry.
+
+## Report a problem
+
+Include the app version, phone model, what you tapped and what you expected to happen. Add a screenshot if it helps, but hide personal records or body measurements you do not want to share. Browser test results do not mean every phone feature has been verified.

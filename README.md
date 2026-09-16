@@ -73,3 +73,7 @@ Stored schema is now version 2, migrated from version 1 without resetting record
 Company/app branding is now Nortivo. Android versionCode2 retains the original package and signing certificate, so install over0.2.0 without uninstalling. Schema3 migrates schema1/2 records and adds persisted appearance preference (System by default). Theme controls are in the header and Innstillinger → Utseende. Personal names, historical records and older backup identifiers are preserved.
 
 All tracker dialogs now use a single flex viewport container without stock transform-centering utilities. The container tracks the visible viewport while the keyboard opens; Android uses adjustResize. Dialogs focus their container on opening, allowing the user to open the keyboard deliberately by tapping an input.
+
+## Quick beta guide
+
+See [the private beta guide](docs/PRIVATE_BETA_GUIDE.md) for short notes on setup, backups, goals, themes and reporting issues.
