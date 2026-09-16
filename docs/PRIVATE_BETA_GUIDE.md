@@ -49,3 +49,7 @@ The suggestion is an estimate for maintaining your weight. It is not a weight-lo
 ## Choose your own goal
 
 Review the estimate and tick the option only if you want it as your goal. Saving your profile without ticking it keeps your existing calorie goal. Earlier goal history is preserved.
+
+## When no estimate is shown
+
+The app skips automatic suggestions for people under 18 or over 78, pregnancy or breastfeeding, special medical or eating-disorder needs, and an unspecified formula basis. You can still save your profile and use the tracker.
