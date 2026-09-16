@@ -69,3 +69,7 @@ Set category limits and an optional overall limit in Økonomi. Category limits d
 ## Money records
 
 Record expenses, income and refunds with the right date and category. Refunds affect their recorded date. The displayed balance is your recorded balance, not a live connection to your bank.
+
+## Buying and eating are separate
+
+An expense records money you spent. A food entry records something you ate or drank. One does not automatically create the other.
