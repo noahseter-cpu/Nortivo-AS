@@ -53,3 +53,7 @@ Review the estimate and tick the option only if you want it as your goal. Saving
 ## When no estimate is shown
 
 The app skips automatic suggestions for people under 18 or over 78, pregnancy or breastfeeding, special medical or eating-disorder needs, and an unspecified formula basis. You can still save your profile and use the tracker.
+
+## Light and dark mode
+
+Use the top-bar theme button for a quick change. Innstillinger → Utseende also offers Lyst, Mørkt and System. System follows the device preference, and your choice is saved.
