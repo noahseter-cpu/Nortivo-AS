@@ -1,5 +1,5 @@
 ---
-name: Noah Tracker
+name: Nortivo
 description: Quiet personal workspace for money, food and activity.
 colors:
   background: "#faf9f6"
@@ -92,3 +92,9 @@ Existing Button, Sidebar, Dialog and Tabs primitives are composed in the impleme
 ## Profile setup and Android
 
 The profile uses the incumbent palette and typography, a two-step form with editable inputs and an explicit optional target checkbox. Fields are 48px high. Phone layout stacks at 780px; native safe-area padding preserves Android system bars. Steps switch instantly and focus the heading; existing button feedback remains. No new decorative animation system was introduced.
+
+## Nortivo themes and dialogs (0.3.0)
+
+Nortivo is the product brand. Personal profile names are retained. Light mode keeps the original cream/terracotta system; dark mode uses canvas #171c19, paper #222925, text #edf0e9, muted #b1bdb5, separators #414d45 and warm accent #eeaa89 with dark action text #30231c. Semantics cover inputs, dialogs, empty states, feedback, activity, navigation and Android system-bar contrast. System appearance is the migrated default; explicit Light/Dark persists.
+
+Dialog positioning belongs only to the visible-viewport flex container. Do not reintroduce translated centering utilities on its content. Small screens use a bottom sheet, desktop a centered panel; both scroll internally and remain within keyboard-reduced height. The popup entry uses opacity only.

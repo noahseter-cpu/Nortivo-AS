@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-09-16T18:45:27.891Z",
-  "title": "Noah Tracker",
+  "title": "Nortivo",
   "extensions": {
     "colorMeta": {
       "background": {
@@ -174,7 +174,18 @@
         "name": "width-1500",
         "value": "1500px"
       }
-    ]
+    ],
+    "themes": {
+      "dark": {
+        "background": "#171c19",
+        "paper": "#222925",
+        "ink": "#edf0e9",
+        "muted": "#b1bdb5",
+        "line": "#414d45",
+        "accent": "#eeaa89",
+        "actionInk": "#30231c"
+      }
+    }
   },
   "components": [
     {

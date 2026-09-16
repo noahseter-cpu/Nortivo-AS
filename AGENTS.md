@@ -9,3 +9,7 @@ For visual work read C:/Users/noahn/.agents/skills/impeccable/SKILL.md (pbakaus/
 Use Norwegian Bokmål, NOK exact integer øre, Europe/Oslo local date strings and Monday-first weeks. Never guess user targets, financial history, density, food calories, serving weights or connections. Buying and consuming food remain separate. Success follows committed storage, never animation completion. Keep source citations/licences and provider versions documented.
 
 Use the existing React/TypeScript/Vinext starter and its accessible primitives. Keep provider and persistence modules replaceable. Test financial/nutrition invariants, persistence and accessible mobile/desktop flows when changing them. Report untested hardware or integrations honestly.
+
+## Nortivo identity and Android update
+
+The company and product display name is Nortivo, per Noah's correction. Noah remains the user's personal name, not the brand. Keep the legacy Android package no.noah.tracker.privatebeta, localhost origin, IndexedDB database keys and backup identifiers unchanged for private-beta update/data compatibility. App display names and export filenames use Nortivo.

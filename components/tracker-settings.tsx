@@ -138,7 +138,45 @@ export function SettingsPage({
   }
   return (
     <div className="settings-grid">
-      <section className="panel"><h2>Din profil</h2><p className="help">{state.profile ? `${state.settings.name} · ${state.profile.heightCm} cm · ${state.profile.weightKg} kg · ${state.profile.age} år` : 'Navn, kroppsmål og et valgfritt kaloriforslag – lagret på denne enheten.'}</p><Btn secondary onClick={profile}>{state.profile?'Endre profil og kaloriforslag':'Opprett profil'}</Btn></section>
+      <section className="panel appearance-panel">
+        <h2>Utseende</h2>
+        <p className="help">
+          Velg lyst eller mørkt tema, eller følg telefonens innstilling.
+        </p>
+        <div className="theme-options" role="group" aria-label="Fargetema">
+          {(
+            [
+              ["light", "Lyst"],
+              ["dark", "Mørkt"],
+              ["system", "System"],
+            ] as const
+          ).map(([value, label]) => (
+            <Btn
+              key={value}
+              secondary={state.settings.theme !== value}
+              aria-pressed={state.settings.theme === value}
+              onClick={() =>
+                save((s) => {
+                  s.settings.theme = value;
+                }, "Temaet er lagret")
+              }
+            >
+              {label}
+            </Btn>
+          ))}
+        </div>
+      </section>
+      <section className="panel">
+        <h2>Din profil</h2>
+        <p className="help">
+          {state.profile
+            ? `${state.settings.name} · ${state.profile.heightCm} cm · ${state.profile.weightKg} kg · ${state.profile.age} år`
+            : "Navn, kroppsmål og et valgfritt kaloriforslag – lagret på denne enheten."}
+        </p>
+        <Btn secondary onClick={profile}>
+          {state.profile ? "Endre profil og kaloriforslag" : "Opprett profil"}
+        </Btn>
+      </section>
       <section className="panel">
         <h2>Din hverdag</h2>
         <Form
@@ -260,15 +298,16 @@ export function SettingsPage({
           </div>
           <p className="settings-copy">
             Registreringene og profilen lagres på denne enheten. Telefon og PC
-            synkroniseres ikke. Avinstallering eller sletting av app- og nettleserdata
-            kan fjerne registreringene. Lag en sikkerhetskopi først.
+            synkroniseres ikke. Avinstallering eller sletting av app- og
+            nettleserdata kan fjerne registreringene. Lag en sikkerhetskopi
+            først.
           </p>
           <div className="backup-actions">
             <Btn
               secondary
               onClick={() =>
                 download(
-                  `noah-tracker-${today()}.json`,
+                  `nortivo-${today()}.json`,
                   JSON.stringify(
                     {
                       format: "noah-tracker-backup",
@@ -305,7 +344,7 @@ export function SettingsPage({
             className="text-button"
             onClick={() =>
               download(
-                `noah-transaksjoner-${today()}.csv`,
+                `nortivo-transaksjoner-${today()}.csv`,
                 csvTransactions(state),
                 "text/csv;charset=utf-8",
               )

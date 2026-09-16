@@ -54,7 +54,7 @@ test("v1 migration preserves all history and v2 profile backup round trips", () 
   delete old.profile;
   delete old.profilePromptSeen;
   const migrated = validateState(old);
-  expect(migrated.version).toBe(2);
+  expect(migrated.version).toBe(3);
   expect(migrated.activity).toEqual(s.activity);
   expect(migrated.goals).toEqual(s.goals);
   expect(migrated.profile).toBeNull();

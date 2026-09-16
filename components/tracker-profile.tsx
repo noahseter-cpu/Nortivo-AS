@@ -58,7 +58,7 @@ export function ProfileSetup({
     <main className="profile-page">
       <header className="profile-header">
         <span className="profile-wordmark">
-          noah<span>·</span>
+          nortivo<span>·</span>
         </span>
         <span>
           <ShieldCheck size={15} /> Bare på denne enheten
