@@ -65,3 +65,7 @@ Popups use the visible screen height and scroll inside the dialog. Tap a field w
 ## Monthly budgets
 
 Set category limits and an optional overall limit in Økonomi. Category limits do not add to the overall limit. Budgets belong to their selected month, so check the month before editing.
+
+## Money records
+
+Record expenses, income and refunds with the right date and category. Refunds affect their recorded date. The displayed balance is your recorded balance, not a live connection to your bank.
