@@ -1,4 +1,4 @@
-# Noah Tracker
+# Nortivo
 
 Norwegian Bokmål personal tracker for money, category and overall monthly budgets, daily steps and food intake. No sample personal records are seeded.
 
@@ -67,3 +67,9 @@ See ANDROID_TESTING.md for APK installation, exact rebuild steps and native-devi
 Optional local profile: name, height, weight, age, selected formula, activity and suitability. A maintenance-calorie estimate is reviewed before optional adoption. No online registration or syncing is included. Android automatic cloud backup/device transfer is disabled; use the explicit JSON backup/share action. Existing website data can be exported and imported into the app.
 
 Stored schema is now version 2, migrated from version 1 without resetting records. The backup envelope remains version 1; its data contains the schema version. Merge keeps the current profile/settings; Replace restores the imported ones. See lib/profile.ts and ANDROID_TESTING.md for calculation sources and limitations.
+
+## Nortivo 0.3.0-private update
+
+Company/app branding is now Nortivo. Android versionCode2 retains the original package and signing certificate, so install over0.2.0 without uninstalling. Schema3 migrates schema1/2 records and adds persisted appearance preference (System by default). Theme controls are in the header and Innstillinger → Utseende. Personal names, historical records and older backup identifiers are preserved.
+
+All tracker dialogs now use a single flex viewport container without stock transform-centering utilities. The container tracks the visible viewport while the keyboard opens; Android uses adjustResize. Dialogs focus their container on opening, allowing the user to open the keyboard deliberately by tapping an input.

@@ -1,5 +1,11 @@
 "use client";
-import { useRef, useState, type ReactNode, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type FormEvent,
+} from "react";
 import { X, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import {
   Dialog,
@@ -119,6 +125,34 @@ export function Modal({
   onClose: () => void;
   trigger?: HTMLElement | null;
 }) {
+  const dialog = useRef<HTMLDivElement>(null);
+  const returnFocus = useRef<HTMLElement | null>(
+    typeof document === "undefined"
+      ? null
+      : (document.activeElement as HTMLElement),
+  );
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    const resize = () => {
+      document.documentElement.style.setProperty(
+        "--dialog-height",
+        `${viewport?.height ?? window.innerHeight}px`,
+      );
+      document.documentElement.style.setProperty(
+        "--dialog-top",
+        `${viewport?.offsetTop ?? 0}px`,
+      );
+    };
+    resize();
+    viewport?.addEventListener("resize", resize);
+    viewport?.addEventListener("scroll", resize);
+    window.addEventListener("resize", resize);
+    return () => {
+      viewport?.removeEventListener("resize", resize);
+      viewport?.removeEventListener("scroll", resize);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
   return (
     <Dialog
       open
@@ -127,11 +161,17 @@ export function Modal({
       }}
     >
       <DialogContent
+        contained
+        ref={dialog}
         className="tracker-dialog"
         showCloseButton={false}
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+          dialog.current?.focus();
+        }}
         onCloseAutoFocus={(e) => {
           e.preventDefault();
-          trigger?.focus();
+          (trigger ?? returnFocus.current)?.focus();
         }}
       >
         <DialogTitle className="dialog-title">{title}</DialogTitle>
@@ -239,18 +279,31 @@ export const val = (d: FormData, k: string) => String(d.get(k) ?? "").trim();
 export const optional = (d: FormData, k: string, fn: (s: string) => number) =>
   val(d, k) === "" ? null : fn(val(d, k));
 export function download(name: string, content: string, type: string) {
-  void exportFile(name,content,type);
+  void exportFile(name, content, type);
 }
 async function exportFile(name: string, content: string, type: string) {
-  const {Capacitor}=await import('@capacitor/core');
-  if(Capacitor.isNativePlatform()) {
+  const { Capacitor } = await import("@capacitor/core");
+  if (Capacitor.isNativePlatform()) {
     try {
-      const {Filesystem,Directory,Encoding}=await import('@capacitor/filesystem');
-      const {Share}=await import('@capacitor/share');
-      const file=await Filesystem.writeFile({path:name,data:content,directory:Directory.Cache,encoding:Encoding.UTF8});
-      await Share.share({title:'Noah Tracker – sikkerhetskopi',files:[file.uri],dialogTitle:'Lagre en kopi'});
+      const { Filesystem, Directory, Encoding } =
+        await import("@capacitor/filesystem");
+      const { Share } = await import("@capacitor/share");
+      const file = await Filesystem.writeFile({
+        path: name,
+        data: content,
+        directory: Directory.Cache,
+        encoding: Encoding.UTF8,
+      });
+      await Share.share({
+        title: "Nortivo – sikkerhetskopi",
+        files: [file.uri],
+        dialogTitle: "Lagre en kopi",
+      });
     } catch {
-      const {toast}=await import('sonner');toast.error('Eksporten ble ikke fullført. Prøv igjen og velg hvor kopien skal lagres.');
+      const { toast } = await import("sonner");
+      toast.error(
+        "Eksporten ble ikke fullført. Prøv igjen og velg hvor kopien skal lagres.",
+      );
     }
     return;
   }

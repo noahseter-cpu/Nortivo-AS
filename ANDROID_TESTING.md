@@ -1,14 +1,14 @@
-# Noah Tracker Android private test
+# Nortivo Android private test
 
-Version 0.2.0-private, versionCode 1. Package: `no.noah.tracker.privatebeta`.
+Version 0.3.0-private, versionCode 2. Package: `no.noah.tracker.privatebeta`.
 
 This is a locally bundled, debug-signed APK for Noah's private month of testing. No expiration timer is built in. It is not a Play Store release. No online account is created. The existing hosted website is not the APK's runtime or login service.
 
 ## Install on your phone
 
-1. Copy `Noah-Tracker-0.2.0-private.apk` from this PC's Downloads folder to the phone using USB or Quick Share.
+1. Copy `Nortivo-0.3.0-private.apk` from this PC's Downloads folder to the phone using USB or Quick Share.
 2. Open the APK on the phone. If Android asks, allow installation from the file app used for this file, then install. You can turn that permission off afterward. Keep Play Protect enabled.
-3. Open Noah Tracker. Enter name, height in cm, weight in kg, age, formula basis and activity. Review the maintenance estimate. Applying it as a daily goal is optional.
+3. Open Nortivo. Enter name, height in cm, weight in kg, age, formula basis and activity. Review the maintenance estimate. Applying it as a daily goal is optional.
 4. Edit these details later under **Innstillinger → Endre profil og kaloriforslag**.
 
 Requires Android 7.0/API 24 or newer and an up-to-date Android System WebView. Target/compile API 36. App assets and barcode decoder are bundled locally. Food searches need an internet connection. Camera permission is requested only when scanning.
@@ -42,12 +42,16 @@ npm ci
 powershell -ExecutionPolicy Bypass -File scripts/build-android.ps1
 ```
 
-APK output: `outputs/android/Noah-Tracker-0.2.0-private.apk` with a SHA-256 file. `npm run dev` still starts the web edition. `npm run mobile:preview` serves a browser preview of the compiled standalone UI, not a native emulator.
+APK output: `outputs/android/Nortivo-0.3.0-private.apk` with a SHA-256 file. `npm run dev` still starts the web edition. `npm run mobile:preview` serves a browser preview of the compiled standalone UI, not a native emulator.
 
 ## Validation and remaining device checks
 
-Android Gradle build and APK v2 signature verification passed. TypeScript, 19 calculation/schema/storage cases, 2 profile browser journeys and 7 existing browser journeys passed. Desktop and phone-width profile screenshots inspected. V1 records migrate to schema V2 without resetting history. Profile changes without opting into a new goal preserve the current target.
+Android Gradle build and APK v2 signature verification passed. TypeScript, 19 calculation/schema/storage cases, 2 profile browser journeys and 7 existing browser journeys passed. Desktop and phone-width profile screenshots inspected. V1/V2 records migrate to schema V3 without resetting history. Profile changes without opting into a new goal preserve the current target.
 
 No Android phone was connected (`adb devices` empty), so physical installation, camera scanning, system Back, native provider HTTP, file-picker import and Android share-sheet export remain device checks. Browser simulations are not claimed as native hardware tests. During the month, test offline restart, save/reopen, camera allow/deny, backup/restore and installing an update over the existing app.
 
 Before Play submission: use a signed release AAB and final identity, finish real-device testing and accessibility checks, and prepare the store's required privacy/data disclosures. No Play submission was made.
+
+## Update from 0.2.0
+
+Install the new APK over the old app without uninstalling. Package and signing certificate are unchanged. The display brand is Nortivo. Theme preference is under Innstillinger → Utseende and in the top bar. Popups use a keyboard-aware viewport container;31 automated checks pass. User/device records and personal profile names are preserved.

@@ -24,3 +24,9 @@ Physical camera scanning on a phone has not been tested. Camera denial/fallback 
 ## Profile and private Android beta — 2026-09-16
 
 Added 3 formula/migration tests and2 profile browser journeys; all pass. Existing14 core,2 storage and7 browser checks also passed:28 distinct checks. TypeScript passed. Standalone mobile Vite build, Capacitor Android sync, Gradle debug APK build and apksigner v2 verification passed. Manifest inspected: package no.noah.tracker.privatebeta, minSDK24, target36, Internet and Camera permissions, OS backups disabled. APK is debug-signed for private testing. No phone was connected; native camera, Back, native HTTP, share sheet and file picker await device testing. See ANDROID_TESTING.md. Browser screenshots are evidence for the UI only, not native hardware behavior.
+
+## Nortivo popup/theme patch — 0.3.0-private
+
+Reproduced the class-level positioning conflict implicated by the user's screenshots; replaced mixed fixed/translated dialog placement with a shared visible-viewport container. Geometry assertions pass at412×892,412×360,892×360 and320×400; Save remains reachable by scrolling. Light/dark dialog screenshots inspected. No physical Samsung device or keyboard was connected; viewport resizing is a browser simulation, not a hardware test.
+
+Appearance checks pass for all six views and popup/input surfaces. Explicit dark preference survives reload, System follows emulated OS preference, and schema2 migration retains data. All31 distinct automated cases passed (24 core/storage/profile/appearance cases plus7 prior browser regression cases). Two initial browser cases encountered a server-start connection refusal; both passed after the development server became ready. Final TypeScript, Gradle APK build and APK signature checks passed. VersionCode2 and Nortivo launcher label verified with aapt; certificate fingerprint matches0.2.0.

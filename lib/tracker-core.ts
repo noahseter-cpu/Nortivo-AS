@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { profileSchema } from './profile';
+import { profileSchema } from "./profile";
 export const id = () => crypto.randomUUID();
 export const today = () =>
   new Intl.DateTimeFormat("sv-SE", {
@@ -97,7 +97,7 @@ const mealSchema = z.object({
     .max(100),
 });
 export const stateSchema = z.object({
-  version: z.literal(2),
+  version: z.literal(3),
   profile: profileSchema.nullable(),
   profilePromptSeen: z.boolean(),
   revision: z.number().int().nonnegative(),
@@ -111,6 +111,7 @@ export const stateSchema = z.object({
   meals: z.array(mealSchema).max(5000),
   modes: z.array(modeSchema).max(100000),
   settings: z.object({
+    theme: z.enum(["system", "light", "dark"]),
     name: z.string().min(1).max(60),
     opening: z
       .object({
@@ -130,7 +131,7 @@ export type Transaction = z.infer<typeof transactionSchema>;
 export type Meal = z.infer<typeof mealSchema>;
 export function emptyState(): State {
   return {
-    version: 2,
+    version: 3,
     profile: null,
     profilePromptSeen: false,
     revision: 0,
@@ -151,6 +152,7 @@ export function emptyState(): State {
     meals: [],
     modes: [],
     settings: {
+      theme: "system",
       name: "Noah",
       opening: null,
       warning: 80,
@@ -312,8 +314,24 @@ export function put<T>(
 }
 export function validateState(raw: unknown): State {
   // v1 data is migrated in memory and committed with the next successful write.
-  if (raw && typeof raw === 'object' && (raw as {version?:unknown}).version === 1)
-    raw = {...raw, version:2, profile:null, profilePromptSeen:true};
+  if (
+    raw &&
+    typeof raw === "object" &&
+    (raw as { version?: unknown }).version === 1
+  )
+    raw = { ...raw, version: 2, profile: null, profilePromptSeen: true };
+  if (
+    raw &&
+    typeof raw === "object" &&
+    (raw as { version?: unknown }).version === 2
+  ) {
+    const old = raw as { settings?: Record<string, unknown> };
+    raw = {
+      ...old,
+      version: 3,
+      settings: { ...old.settings, theme: "system" },
+    };
+  }
   const s = stateSchema.parse(raw);
   for (const [rows, keyName] of [
     [s.categories, "id"],

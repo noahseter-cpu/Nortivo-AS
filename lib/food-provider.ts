@@ -17,7 +17,7 @@ async function upstream(url: string, off = false) {
     const headers: Record<string, string> = {
       Accept: "application/json",
       "User-Agent":
-        "NoahTracker/1.0 (+https://noah-hverdag-tracker.noahrare.chatgpt.site; personal tracker)",
+        "Nortivo/0.3.0 (+https://noah-hverdag-tracker.noahrare.chatgpt.site; personal tracker)",
     };
     if (off && staging) headers.Authorization = "Basic b2ZmOm9mZg==";
     const r = Capacitor.isNativePlatform()

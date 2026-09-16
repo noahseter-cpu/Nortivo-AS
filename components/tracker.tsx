@@ -18,6 +18,8 @@ import {
   Check,
   SlidersHorizontal,
   CalendarDays,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import {
@@ -81,7 +83,8 @@ import {
 } from "./tracker-food";
 import { ActivityPage, ActivityForm } from "./tracker-activity";
 import { SettingsPage, GoalsForm } from "./tracker-settings";
-import { ProfileSetup } from './tracker-profile';
+import { ProfileSetup } from "./tracker-profile";
+import { applyAppearance } from "@/lib/appearance";
 const navigation = [
   { name: "Oversikt", icon: House },
   { name: "Økonomi", icon: Wallet },
@@ -107,6 +110,7 @@ export default function Tracker() {
   const [state, setState] = useState<State>(emptyState());
   const [ready, setReady] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
+  const [darkAppearance, setDarkAppearance] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState<View>("Oversikt");
   const [date, setDate] = useState(today);
@@ -151,7 +155,11 @@ export default function Tracker() {
     window.addEventListener("online", online);
     window.addEventListener("offline", online);
     window.addEventListener("focus", refresh);
-    if (process.env.NEXT_PUBLIC_ANDROID !== 'true' && process.env.NODE_ENV === "production" && "serviceWorker" in navigator)
+    if (
+      process.env.NEXT_PUBLIC_ANDROID !== "true" &&
+      process.env.NODE_ENV === "production" &&
+      "serviceWorker" in navigator
+    )
       navigator.serviceWorker
         .register("/sw.js")
         .then(() => navigator.serviceWorker.ready)
@@ -173,16 +181,44 @@ export default function Tracker() {
     };
   }, []);
   const latestState = useRef(state);
-  useEffect(()=>{
-    const back=()=>{
-      if(document.querySelector('[role="dialog"]')) {document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true}));return;}
-      if(editProfile) {setEditProfile(false);return;}
-      if(view!=='Oversikt'){setView('Oversikt');return;}
-      void import('@capacitor/app').then(({App})=>App.minimizeApp());
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const apply = () => {
+      const dark =
+        state.settings.theme === "dark" ||
+        (state.settings.theme === "system" && media.matches);
+      applyAppearance(dark);
+      setDarkAppearance(dark);
     };
-    window.addEventListener('noah-back',back);
-    return ()=>window.removeEventListener('noah-back',back);
-  },[editProfile,view]);
+    apply();
+    media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
+  }, [state.settings.theme]);
+  useEffect(() => {
+    const back = () => {
+      if (document.querySelector('[role="dialog"]')) {
+        document.dispatchEvent(
+          new KeyboardEvent("keydown", {
+            key: "Escape",
+            code: "Escape",
+            bubbles: true,
+          }),
+        );
+        return;
+      }
+      if (editProfile) {
+        setEditProfile(false);
+        return;
+      }
+      if (view !== "Oversikt") {
+        setView("Oversikt");
+        return;
+      }
+      void import("@capacitor/app").then(({ App }) => App.minimizeApp());
+    };
+    window.addEventListener("noah-back", back);
+    return () => window.removeEventListener("noah-back", back);
+  }, [editProfile, view]);
   latestState.current = state;
   useEffect(
     () => (ready ? registerTrackerTools(() => latestState.current) : undefined),
@@ -275,8 +311,22 @@ export default function Tracker() {
       "Dine mål, dine innstillinger og dine data.",
     ],
   };
-  if (ready && (editProfile || (process.env.NEXT_PUBLIC_ANDROID === 'true' && !state.profilePromptSeen)))
-    return <><Toaster position="top-center" richColors/><ProfileSetup state={state} save={save} close={()=>setEditProfile(false)} first={!state.profilePromptSeen}/></>;
+  if (
+    ready &&
+    (editProfile ||
+      (process.env.NEXT_PUBLIC_ANDROID === "true" && !state.profilePromptSeen))
+  )
+    return (
+      <>
+        <Toaster position="top-center" richColors />
+        <ProfileSetup
+          state={state}
+          save={save}
+          close={() => setEditProfile(false)}
+          first={!state.profilePromptSeen}
+        />
+      </>
+    );
   return (
     <>
       <Toaster
@@ -287,12 +337,12 @@ export default function Tracker() {
       />
       <SidebarProvider className="app-shell">
         <Sidebar collapsible="none" className="sidebar">
-          <a className="brand" href="/" aria-label="Noah Tracker, oversikt">
+          <a className="brand" href="/" aria-label="Nortivo, oversikt">
             <span className="brand-mark">
               n<span>·</span>
             </span>
             <span>
-              noah<span className="brand-sub">Din hverdag, samlet.</span>
+              nortivo<span className="brand-sub">Din hverdag, samlet.</span>
             </span>
           </a>
           <nav aria-label="Hovedmeny">
@@ -321,11 +371,24 @@ export default function Tracker() {
           <header className="topbar">
             <span>
               <span className="brand-mobile">
-                noah<span>·</span>
+                nortivo<span>·</span>
               </span>
               <span className="desktop-label">Din personlige oversikt</span>
             </span>
             <div className="topbar-end">
+              <button
+                className="icon-button theme-toggle"
+                aria-label="Bytt lyst eller mørkt tema"
+                aria-pressed={darkAppearance}
+                disabled={!ready}
+                onClick={() =>
+                  save((s) => {
+                    s.settings.theme = darkAppearance ? "light" : "dark";
+                  }, "Temaet er lagret")
+                }
+              >
+                {darkAppearance ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
               {offline ? (
                 <span className="offline-label">
                   <WifiOff size={14} />
@@ -829,7 +892,12 @@ export default function Tracker() {
                   </>
                 )}
                 {view === "Innstillinger" && (
-                  <SettingsPage state={state} save={save} goals={goalForm} profile={()=>setEditProfile(true)} />
+                  <SettingsPage
+                    state={state}
+                    save={save}
+                    goals={goalForm}
+                    profile={() => setEditProfile(true)}
+                  />
                 )}
               </>
             )}
@@ -892,17 +960,21 @@ export default function Tracker() {
           {overlay.kind === "goals" && (
             <GoalsForm state={state} date={date} save={save} close={close} />
           )}{" "}
-          {overlay.kind === "food" && overlay.entry?.food.source === "Lagret måltid" && <MealEntryForm entry={overlay.entry} save={save} close={close}/>}
-          {overlay.kind === "food" && overlay.entry?.food.source !== "Lagret måltid" && (
-            <FoodForm
-              food={overlay.food}
-              entry={overlay.entry}
-              date={date}
-              save={save}
-              close={close}
-              saveOnly={overlay.saveOnly}
-            />
-          )}{" "}
+          {overlay.kind === "food" &&
+            overlay.entry?.food.source === "Lagret måltid" && (
+              <MealEntryForm entry={overlay.entry} save={save} close={close} />
+            )}
+          {overlay.kind === "food" &&
+            overlay.entry?.food.source !== "Lagret måltid" && (
+              <FoodForm
+                food={overlay.food}
+                entry={overlay.entry}
+                date={date}
+                save={save}
+                close={close}
+                saveOnly={overlay.saveOnly}
+              />
+            )}{" "}
           {overlay.kind === "manual" && (
             <ManualCalories
               state={state}
