@@ -81,3 +81,7 @@ Check whether the nutrition label uses grams or millilitres, then enter the amou
 ## Search and barcodes
 
 External food searches need internet access and can hit provider limits. You can type a barcode if scanning is unavailable. Saved foods and custom products give you a fallback when a search fails.
+
+## Daily steps
+
+Enter the total steps for the selected day. Updating that day replaces its total instead of adding the number again. A recorded zero is different from leaving the day blank.
