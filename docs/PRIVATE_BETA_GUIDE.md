@@ -33,3 +33,7 @@ Export a JSON backup from the website and transfer it to your phone. Import it i
 ## Restore options
 
 Merge adds missing records and keeps current settings and profile. Replace restores the imported state instead. Read the restore preview before choosing, and keep a backup of anything you might need.
+
+## JSON and CSV
+
+Use JSON when you want to restore the full tracker. CSV is useful for viewing transaction data elsewhere. Exported files are not encrypted, and JSON backups include your profile details.
