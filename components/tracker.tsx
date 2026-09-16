@@ -81,6 +81,7 @@ import {
 } from "./tracker-food";
 import { ActivityPage, ActivityForm } from "./tracker-activity";
 import { SettingsPage, GoalsForm } from "./tracker-settings";
+import { ProfileSetup } from './tracker-profile';
 const navigation = [
   { name: "Oversikt", icon: House },
   { name: "Økonomi", icon: Wallet },
@@ -105,6 +106,7 @@ type Overlay =
 export default function Tracker() {
   const [state, setState] = useState<State>(emptyState());
   const [ready, setReady] = useState(false);
+  const [editProfile, setEditProfile] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState<View>("Oversikt");
   const [date, setDate] = useState(today);
@@ -149,7 +151,7 @@ export default function Tracker() {
     window.addEventListener("online", online);
     window.addEventListener("offline", online);
     window.addEventListener("focus", refresh);
-    if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator)
+    if (process.env.NEXT_PUBLIC_ANDROID !== 'true' && process.env.NODE_ENV === "production" && "serviceWorker" in navigator)
       navigator.serviceWorker
         .register("/sw.js")
         .then(() => navigator.serviceWorker.ready)
@@ -171,6 +173,16 @@ export default function Tracker() {
     };
   }, []);
   const latestState = useRef(state);
+  useEffect(()=>{
+    const back=()=>{
+      if(document.querySelector('[role="dialog"]')) {document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true}));return;}
+      if(editProfile) {setEditProfile(false);return;}
+      if(view!=='Oversikt'){setView('Oversikt');return;}
+      void import('@capacitor/app').then(({App})=>App.minimizeApp());
+    };
+    window.addEventListener('noah-back',back);
+    return ()=>window.removeEventListener('noah-back',back);
+  },[editProfile,view]);
   latestState.current = state;
   useEffect(
     () => (ready ? registerTrackerTools(() => latestState.current) : undefined),
@@ -263,6 +275,8 @@ export default function Tracker() {
       "Dine mål, dine innstillinger og dine data.",
     ],
   };
+  if (ready && (editProfile || (process.env.NEXT_PUBLIC_ANDROID === 'true' && !state.profilePromptSeen)))
+    return <><Toaster position="top-center" richColors/><ProfileSetup state={state} save={save} close={()=>setEditProfile(false)} first={!state.profilePromptSeen}/></>;
   return (
     <>
       <Toaster
@@ -815,7 +829,7 @@ export default function Tracker() {
                   </>
                 )}
                 {view === "Innstillinger" && (
-                  <SettingsPage state={state} save={save} goals={goalForm} />
+                  <SettingsPage state={state} save={save} goals={goalForm} profile={()=>setEditProfile(true)} />
                 )}
               </>
             )}

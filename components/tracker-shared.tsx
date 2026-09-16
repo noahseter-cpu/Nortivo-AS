@@ -239,6 +239,21 @@ export const val = (d: FormData, k: string) => String(d.get(k) ?? "").trim();
 export const optional = (d: FormData, k: string, fn: (s: string) => number) =>
   val(d, k) === "" ? null : fn(val(d, k));
 export function download(name: string, content: string, type: string) {
+  void exportFile(name,content,type);
+}
+async function exportFile(name: string, content: string, type: string) {
+  const {Capacitor}=await import('@capacitor/core');
+  if(Capacitor.isNativePlatform()) {
+    try {
+      const {Filesystem,Directory,Encoding}=await import('@capacitor/filesystem');
+      const {Share}=await import('@capacitor/share');
+      const file=await Filesystem.writeFile({path:name,data:content,directory:Directory.Cache,encoding:Encoding.UTF8});
+      await Share.share({title:'Noah Tracker – sikkerhetskopi',files:[file.uri],dialogTitle:'Lagre en kopi'});
+    } catch {
+      const {toast}=await import('sonner');toast.error('Eksporten ble ikke fullført. Prøv igjen og velg hvor kopien skal lagres.');
+    }
+    return;
+  }
   const url = URL.createObjectURL(new Blob([content], { type }));
   const a = document.createElement("a");
   a.href = url;

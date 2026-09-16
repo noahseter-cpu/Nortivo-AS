@@ -88,3 +88,7 @@ Existing Button, Sidebar, Dialog and Tabs primitives are composed in the impleme
 - Don't invent user history or arbitrary targets.
 - Don't add decorative entrance sequences or count-up effects.
 - Don't use a rejected mockup as an approved reference.
+
+## Profile setup and Android
+
+The profile uses the incumbent palette and typography, a two-step form with editable inputs and an explicit optional target checkbox. Fields are 48px high. Phone layout stacks at 780px; native safe-area padding preserves Android system bars. Steps switch instantly and focus the heading; existing button feedback remains. No new decorative animation system was introduced.

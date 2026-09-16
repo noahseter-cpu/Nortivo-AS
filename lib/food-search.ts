@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Capacitor } from "@capacitor/core";
 import { foodSchema, type Food } from "./tracker-core";
 import { cacheRead, cacheWrite } from "./tracker-store";
 export async function searchFood(
@@ -22,9 +23,14 @@ export async function searchFood(
   const timeout = AbortSignal.timeout(20000);
   let r: Response;
   try {
-    r = await fetch(`/api/foods?${params}`, {
-      signal: AbortSignal.any([signal, timeout]),
-    });
+    r = Capacitor.isNativePlatform()
+      ? await (
+          await import("./food-provider")
+        ).GET(new Request(`https://localhost/api/foods?${params}`))
+      : await fetch(`/api/foods?${params}`, {
+          signal: AbortSignal.any([signal, timeout]),
+        });
+    if (signal.aborted) throw new DOMException("Aborted", "AbortError");
   } catch (e) {
     if (signal.aborted) throw e;
     throw Error(

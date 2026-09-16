@@ -674,3 +674,6 @@ Then generate the three actual design options A, B and C using Impeccable, with 
 STOP after presenting those options and wait for my selection.
 
 Do not begin coding yet.
+## Android private beta scope (2026-09-16)
+
+Noah requested an installable APK for about one month of private Android testing, followed later by Play Store publishing. He chose an on-device profile rather than online accounts. Collect name, cm height, kg weight, age, formula basis and activity; show a reviewed optional maintenance-calorie estimate. Preserve history, provide migration from schema 1 to2, and never silently overwrite earlier goals. Bundle app assets locally, retain manual barcode entry and provide native backup sharing. Do not impose a one-month expiry or claim this beta is a Play-ready release.
