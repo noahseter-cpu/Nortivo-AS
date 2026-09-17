@@ -92,7 +92,7 @@ export function Form({
     }
   }
   return (
-    <form onSubmit={submit} className="form-stack">
+    <form onSubmit={submit} className="form-stack" aria-busy={busy}>
       {children}
       {error && (
         <div className="error-box" role="alert">
