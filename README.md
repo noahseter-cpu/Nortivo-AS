@@ -1,4 +1,4 @@
-# Nortivo
+# Arc by Norvido
 
 Norwegian Bokmål personal tracker for money, category and overall monthly budgets, daily steps and food intake. No sample personal records are seeded.
 
@@ -77,3 +77,9 @@ All tracker dialogs now use a single flex viewport container without stock trans
 ## Quick beta guide
 
 See [the private beta guide](docs/PRIVATE_BETA_GUIDE.md) for short notes on setup, backups, goals, themes and reporting issues.
+
+## Arc by Norvido 0.4.0-private
+
+Display name updated at the user’s request; package, origin, private database and backup identifiers remain unchanged. Android versionCode 3. Matvaretabellen searches on Android use a bundled public dataset fetched 2026-09-17, avoiding the large native HTTP transfer and working offline. Web continues to use the live adapter. Switching providers cancels stale requests and clears previous errors. Public query cache keys are versioned; personal storage is untouched.
+
+Dataset source and caching/attribution terms: https://www.matvaretabellen.no/api/ . The API is unversioned. Snapshot provenance is in lib/data/matvaretabellen.json; attribution stays on each food. Refresh using node scripts/refresh-matvaretabellen.mjs and rebuild the APK.

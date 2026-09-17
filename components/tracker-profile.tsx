@@ -58,7 +58,7 @@ export function ProfileSetup({
     <main className="profile-page">
       <header className="profile-header">
         <span className="profile-wordmark">
-          nortivo<span>·</span>
+          Arc by Norvido<span>·</span>
         </span>
         <span>
           <ShieldCheck size={15} /> Bare på denne enheten

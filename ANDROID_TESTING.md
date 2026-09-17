@@ -55,3 +55,7 @@ Before Play submission: use a signed release AAB and final identity, finish real
 ## Update from 0.2.0
 
 Install the new APK over the old app without uninstalling. Package and signing certificate are unchanged. The display brand is Nortivo. Theme preference is under Innstillinger → Utseende and in the top bar. Popups use a keyboard-aware viewport container;31 automated checks pass. User/device records and personal profile names are preserved.
+
+## Arc by Norvido 0.4.0-private
+
+Install Arc-by-Norvido-0.4.0-private.apk over the existing app. Version code 3 preserves the package and signing identity. Open Food Facts is the default; Matvaretabellen is bundled for offline search. The dataset is refreshed when a new APK is built with a refreshed snapshot. Keep JSON backups; no uninstall is needed.

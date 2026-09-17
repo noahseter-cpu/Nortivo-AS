@@ -65,7 +65,7 @@ test.describe("Android layout and appearance", () => {
     await page.setViewportSize({ width: 412, height: 892 });
     await expect(dialog).toHaveCSS("opacity", "1");
     await page.screenshot({
-      path: ".impeccable/review/nortivo-popup-light.png",
+      path: ".sites-runtime/arc-popup-light.png",
     });
     await page.getByRole("button", { name: "Lagre", exact: true }).click();
     await expect(dialog).not.toBeVisible();
@@ -75,7 +75,7 @@ test.describe("Android layout and appearance", () => {
   test("dark switch persists, system follows device, every page and popup is themed", async ({
     page,
   }) => {
-    await expect(page.locator(".brand-mobile")).toContainText("nortivo");
+    await expect(page.locator(".brand-mobile")).toContainText("Arc");
     await page
       .getByRole("button", { name: "Bytt lyst eller mørkt tema" })
       .click();
@@ -107,7 +107,7 @@ test.describe("Android layout and appearance", () => {
       ).toBe("rgb(34, 41, 37)");
     }
     await page.screenshot({
-      path: ".impeccable/review/nortivo-dark-mobile.png",
+      path: ".sites-runtime/arc-dark-mobile.png",
       fullPage: true,
     });
     await page
@@ -129,12 +129,12 @@ test.describe("Android layout and appearance", () => {
       .scrollIntoViewIfNeeded();
     await expect(page.getByRole("dialog")).toHaveCSS("opacity", "1");
     await page.screenshot({
-      path: ".impeccable/review/nortivo-popup-dark-keyboard.png",
+      path: ".sites-runtime/arc-popup-dark-keyboard.png",
     });
     await page.keyboard.press("Escape");
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.screenshot({
-      path: ".impeccable/review/nortivo-dark-desktop.png",
+      path: ".sites-runtime/arc-dark-desktop.png",
     });
     await page
       .getByRole("navigation", { name: "Hovedmeny" })

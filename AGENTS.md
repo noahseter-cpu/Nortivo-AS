@@ -13,3 +13,5 @@ Use the existing React/TypeScript/Vinext starter and its accessible primitives. 
 ## Nortivo identity and Android update
 
 The company and product display name is Nortivo, per Noah's correction. Noah remains the user's personal name, not the brand. Keep the legacy Android package no.noah.tracker.privatebeta, localhost origin, IndexedDB database keys and backup identifiers unchanged for private-beta update/data compatibility. App display names and export filenames use Nortivo.
+
+Latest naming correction (2026-09-17): app display name is Arc by Norvido, exactly as requested. Retain all legacy compatibility identifiers.
