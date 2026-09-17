@@ -34,13 +34,15 @@ test("onboarding opt-in goal, persistence, reload, and profile edit", async ({
   ).toBeVisible();
   await fill(page);
   await page.screenshot({
-    path: ".impeccable/review/profile-mobile.png",
+    path: ".sites-runtime/audit/profile-mobile.png",
     fullPage: true,
   });
   await page.getByRole("button", { name: "Se forslag", exact: true }).click();
   await expect(page.locator(".profile-estimate")).toContainText("2 850");
-  await expect(page.getByRole("checkbox")).not.toBeChecked();
-  await page.getByRole("checkbox").check();
+  await expect(
+    page.getByRole("radio", { name: /Behold nåværende/ }),
+  ).toBeChecked();
+  await page.getByRole("radio", { name: /Bruk forslaget/ }).check();
   await page.getByRole("button", { name: "Lagre profil", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Hei, Test Noah" }),
@@ -63,7 +65,7 @@ test("onboarding opt-in goal, persistence, reload, and profile edit", async ({
   await page.getByRole("button", { name: "Se forslag", exact: true }).click();
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.screenshot({
-    path: ".impeccable/review/profile-desktop.png",
+    path: ".sites-runtime/audit/profile-desktop.png",
     fullPage: true,
   });
   await page.getByRole("button", { name: "Lagre profil", exact: true }).click();
@@ -112,4 +114,44 @@ test("skip is remembered and under-18 profile has no auto-target", async ({
   await expect(page.getByRole("textbox", { name: "Alder (år)" })).toHaveValue(
     "17",
   );
+});
+test("user can choose an individual calorie goal without adopting the estimate", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await fill(page);
+  await page.getByRole("button", { name: "Se forslag", exact: true }).click();
+  await page
+    .getByRole("radio", { name: "Velg kalorimål selv", exact: true })
+    .check();
+  await page
+    .getByRole("textbox", {
+      name: "Mitt kalorimål (kcal per dag)",
+      exact: true,
+    })
+    .fill("2300");
+  await page.screenshot({
+    path: ".sites-runtime/audit/custom-goal.png",
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Lagre profil", exact: true }).click();
+  await page.reload();
+  await page
+    .getByRole("navigation", { name: "Hovedmeny" })
+    .getByRole("button", { name: "Innstillinger", exact: true })
+    .click();
+  await expect(
+    page.getByText("Kalorimål: 2300 kcal per dag. Du bestemmer målet selv."),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Endre profil og kaloriforslag" })
+    .click();
+  await page.getByRole("button", { name: "Se forslag", exact: true }).click();
+  await expect(
+    page.getByRole("radio", { name: /Behold nåværende/ }),
+  ).toBeChecked();
+  await page.getByRole("button", { name: "Lagre profil", exact: true }).click();
+  await expect(
+    page.getByText("Kalorimål: 2300 kcal per dag. Du bestemmer målet selv."),
+  ).toBeVisible();
 });

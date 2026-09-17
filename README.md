@@ -87,3 +87,7 @@ Dataset source and caching/attribution terms: https://www.matvaretabellen.no/api
 ## Arc 0.4.2
 
 Manual products have a primary action above external search and can be saved and logged in one form. User corrections are reused for the same provider ID. Source data still needs comparison with the exact product label; generic foods distinguish raw/cooked/dry variants. Changing g/ml clears incompatible quantities. Past diary snapshots are unchanged. Install Arc-by-Norvido-0.4.2-private.apk over the previous build.
+
+## Arc 0.4.3
+
+Profile review now offers Keep / Suggested / Custom daily calories. Custom positive values are stored through the existing effective-dated goals; step goals, past dates, records and backups stay intact. Settings exposes a direct manual-goal action without requiring profile measurements. See docs/CALORIE_VERIFICATION.md for the full2,121-record source comparison and10 manufacturer reference checks. OFF live503 remains a verification limitation.

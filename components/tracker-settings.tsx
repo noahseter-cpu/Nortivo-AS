@@ -169,6 +169,12 @@ export function SettingsPage({
       <section className="panel">
         <h2>Din profil</h2>
         <p className="help">
+          Kalorimål:{" "}
+          {goal?.calories ? goal.calories + " kcal per dag" : "Ikke satt"}. Du
+          bestemmer målet selv.
+        </p>
+        <Btn onClick={goals}>Velg mitt kalorimål</Btn>
+        <p className="help">
           {state.profile
             ? `${state.settings.name} · ${state.profile.heightCm} cm · ${state.profile.weightKg} kg · ${state.profile.age} år`
             : "Navn, kroppsmål og et valgfritt kaloriforslag – lagret på denne enheten."}

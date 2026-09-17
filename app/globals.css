@@ -2498,3 +2498,8 @@ button:active:not(:disabled) { transition-duration: 100ms; }
 .custom-food-callout p { margin: 0; font-size: 13px; max-width: 48ch; }
 .custom-food-callout .button { flex-shrink: 0; }
 @media (max-width: 780px) { .custom-food-callout { align-items: stretch; flex-direction: column; gap: 16px; } .custom-food-callout .button { width: 100%; min-height: 48px; } }
+
+.calorie-choice { border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.calorie-choice legend { padding: 0 6px; font-weight: 650; }
+.calorie-choice .check-label { min-height: 44px; margin: 0; }
+.calorie-choice input[type="radio"] { accent-color: var(--accent); flex-shrink: 0; }
