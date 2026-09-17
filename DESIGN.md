@@ -106,3 +106,7 @@ Mobile date controls, list actions and text actions now have 44px minimum touch 
 ## Manual food entry (0.4.2)
 
 An editorial strip above external search puts personal entry first: concise heading, one explanatory sentence, primary button. Mobile stacks it with a48px full-width action. The form keeps name, calories and basis visible and hides optional portion fields. Existing quiet dialog motion is preserved; toggling save-and-log reveals fields instantly.
+
+## Individual goal choice (0.4.3)
+
+Profile review groups Keep / Suggested / Custom in a labelled fieldset, with44px radio targets and a conditional explicit kcal/day field. Default is Keep; custom is available even without an eligible automatic estimate. No additional animation; all decisions remain readable immediately.

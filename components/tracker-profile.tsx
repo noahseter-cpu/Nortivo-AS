@@ -39,7 +39,12 @@ export function ProfileSetup({
   const [selectedActivity, setSelectedActivity] = useState(
     state.profile?.activity ?? "",
   );
-  const [apply, setApply] = useState(false);
+  const [goalChoice, setGoalChoice] = useState<"keep" | "suggested" | "custom">(
+    "keep",
+  );
+  const [customCalories, setCustomCalories] = useState(
+    String(goalAt(state, today())?.calories ?? ""),
+  );
   const title = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     title.current?.focus();
@@ -105,7 +110,7 @@ export function ProfileSetup({
                 });
                 setDraft({ name, profile });
                 setPrevious({ name, profile });
-                setApply(false);
+                setGoalChoice("keep");
               }}
             >
               <h2>Hvem er du?</h2>
@@ -219,19 +224,25 @@ export function ProfileSetup({
             <Form
               label="Lagre profil"
               onSubmit={async () => {
+                const chosenCalories =
+                  goalChoice === "custom"
+                    ? decimal(customCalories, false)
+                    : goalChoice === "suggested" && result?.eligible
+                      ? result.calories
+                      : null;
                 if (
                   await save((s) => {
                     s.settings.name = draft.name;
                     s.profile = draft.profile;
                     s.profilePromptSeen = true;
-                    if (apply && result?.eligible) {
+                    if (chosenCalories !== null) {
                       const current = goalAt(s, today());
                       const existing = s.goals.find((g) => g.date === today());
                       put(s.goals, {
                         id: existing?.id ?? id(),
                         date: today(),
                         steps: current?.steps ?? null,
-                        calories: result.calories,
+                        calories: chosenCalories,
                       });
                     }
                   }, "Profilen er lagret")
@@ -257,20 +268,6 @@ export function ProfileSetup({
                       ligge utenfor.
                     </p>
                   </div>
-                  <label className="profile-apply">
-                    <input
-                      type="checkbox"
-                      checked={apply}
-                      onChange={(e) => setApply(e.target.checked)}
-                    />
-                    <span>
-                      Bruk {num(result.calories)} kcal som mål fra i dag
-                      <small>
-                        Tidligere mål beholdes. Målet kan endres i
-                        Innstillinger.
-                      </small>
-                    </span>
-                  </label>
                 </>
               ) : (
                 <div className="profile-unavailable">
@@ -278,6 +275,53 @@ export function ProfileSetup({
                   <p>{result?.reason}</p>
                 </div>
               )}
+              <fieldset className="calorie-choice">
+                <legend>Ditt daglige kalorimål</legend>
+                <label className="check-label">
+                  <input
+                    type="radio"
+                    name="goalChoice"
+                    checked={goalChoice === "keep"}
+                    onChange={() => setGoalChoice("keep")}
+                  />
+                  Behold nåværende mål / ikke sett et mål
+                </label>
+                {result?.eligible && (
+                  <label className="check-label">
+                    <input
+                      type="radio"
+                      name="goalChoice"
+                      checked={goalChoice === "suggested"}
+                      onChange={() => setGoalChoice("suggested")}
+                    />
+                    Bruk forslaget: {num(result.calories)} kcal per dag
+                  </label>
+                )}
+                <label className="check-label">
+                  <input
+                    type="radio"
+                    name="goalChoice"
+                    checked={goalChoice === "custom"}
+                    onChange={() => setGoalChoice("custom")}
+                  />
+                  Velg kalorimål selv
+                </label>
+                {goalChoice === "custom" && (
+                  <Field label="Mitt kalorimål (kcal per dag)">
+                    <input
+                      inputMode="decimal"
+                      required
+                      value={customCalories}
+                      onChange={(e) => setCustomCalories(e.target.value)}
+                    />
+                  </Field>
+                )}
+                <p className="help">
+                  Et eget mål er tallet du velger, ikke et beregnet behov.
+                  Endringen gjelder fra i dag. Tidligere dagers mål og
+                  registreringer beholdes.
+                </p>
+              </fieldset>
               <details className="profile-method">
                 <summary>Slik beregnes forslaget</summary>
                 <p>

@@ -50,3 +50,7 @@ OFF parsing accepts numeric kcal strings, rejects explicit non-kcal units and su
 Sources checked: https://openfoodfacts.github.io/openfoodfacts-server/dev/explain-nutrition-data/ and https://openfoodfacts.github.io/openfoodfacts-server/api/tutorials/how-to-create-data-quality-controls-in-your-app/ ; https://www.matvaretabellen.no/api/ . The reported Mountain Dew 20 versus29 kcal/100ml discrepancy was not directly verified: the live OFF search returned503. User-provided label values apply to their specific variant, not all products with the same name.
 
 Validation:30 tests passed including private correction precedence, energy units, no serving fallback, and mobile create/save/log/reload at29kcal/100ml ×500ml =145kcal. TypeScript passed. Mobile screenshots inspected; external data accuracy and physical Android hardware remain unverified. APK0.4.2 is signed with existing debug identity, versionCode5; no schema changes.
+
+## Arc0.4.3 verification
+
+31 tests passed, including custom daily calories, default keep behavior, save/reload, eligible suggestion and ineligible profile. TypeScript passed. APK versionCode6 assembled and signature verified. No schema changes; existing effective-dated goals are reused. Manufacturer and full dataset comparison findings are recorded in docs/CALORIE_VERIFICATION.md; do not describe matching source data as independently verified nutrition. Physical Android remains untested.
