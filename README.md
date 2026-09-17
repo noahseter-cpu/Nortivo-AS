@@ -83,3 +83,7 @@ See [the private beta guide](docs/PRIVATE_BETA_GUIDE.md) for short notes on setu
 Display name updated at the user’s request; package, origin, private database and backup identifiers remain unchanged. Android versionCode 3. Matvaretabellen searches on Android use a bundled public dataset fetched 2026-09-17, avoiding the large native HTTP transfer and working offline. Web continues to use the live adapter. Switching providers cancels stale requests and clears previous errors. Public query cache keys are versioned; personal storage is untouched.
 
 Dataset source and caching/attribution terms: https://www.matvaretabellen.no/api/ . The API is unversioned. Snapshot provenance is in lib/data/matvaretabellen.json; attribution stays on each food. Refresh using node scripts/refresh-matvaretabellen.mjs and rebuild the APK.
+
+## Arc 0.4.2
+
+Manual products have a primary action above external search and can be saved and logged in one form. User corrections are reused for the same provider ID. Source data still needs comparison with the exact product label; generic foods distinguish raw/cooked/dry variants. Changing g/ml clears incompatible quantities. Past diary snapshots are unchanged. Install Arc-by-Norvido-0.4.2-private.apk over the previous build.

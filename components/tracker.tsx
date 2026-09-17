@@ -1,4 +1,5 @@
 "use client";
+import { preferredFood } from "@/lib/food-adapters";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -287,7 +288,7 @@ export default function Tracker() {
   const pick = (food: Food) =>
     open({
       kind: "food",
-      food: state.foods.find((x) => x.id === food.id) ?? food,
+      food: preferredFood(food, state.foods),
     });
   const editFood = (entry: FoodLog) =>
     open({ kind: "food", food: entry.food, entry });

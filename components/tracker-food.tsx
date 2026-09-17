@@ -27,6 +27,7 @@ import {
   dailyCalories,
 } from "@/lib/tracker-core";
 import { Capacitor } from "@capacitor/core";
+import { preferredFood } from "@/lib/food-adapters";
 import { searchFood } from "@/lib/food-search";
 import {
   Btn,
@@ -54,6 +55,8 @@ export function FoodForm({
   close: () => void;
   saveOnly?: boolean;
 }) {
+  const [logNow, setLogNow] = useState(false);
+  const onlySave = saveOnly && !logNow;
   const [energy, setEnergy] = useState(
     food.kcal100 === null ? "" : String(food.kcal100),
   );
@@ -78,7 +81,7 @@ export function FoodForm({
   return (
     <Form
       cancel={close}
-      label={saveOnly ? "Lagre produkt" : "Logg maten"}
+      label={onlySave ? "Lagre produkt" : "Logg maten"}
       onSubmit={async (d) => {
         if (!unit)
           throw Error("Velg gram eller milliliter fra næringsdeklarasjonen.");
@@ -100,12 +103,12 @@ export function FoodForm({
           favorite: d.get("favorite") === "on",
         });
         const chosenDate = val(d, "date") || date;
-        const consumed = saveOnly ? 0 : decimal(amount, false);
+        const consumed = onlySave ? 0 : decimal(amount, false);
         if (
           await save(
             (s) => {
               put(s.foods, f);
-              if (!saveOnly) {
+              if (!onlySave) {
                 if (
                   s.modes.find((x) => x.date === chosenDate)?.mode === "manual"
                 )
@@ -123,7 +126,7 @@ export function FoodForm({
                 });
               }
             },
-            saveOnly ? "Produktet er lagret" : "Maten er logget",
+            onlySave ? "Produktet er lagret" : "Maten er logget",
           )
         )
           close();
@@ -136,39 +139,58 @@ export function FoodForm({
             required
             defaultValue={food.name === "Nytt produkt" ? "" : food.name}
             maxLength={250}
+            placeholder="For eksempel yoghurten min"
           />
         </Field>
       )}
-      <div className="food-identity">
-        <span className="soft-icon peach">
-          <Utensils size={22} />
-        </span>
-        <div>
-          <h3>{food.name}</h3>
-          <p>
-            {food.brand}
-            {food.packageSize ? ` · ${food.packageSize}` : ""}
-          </p>
-          <small>Kilde: {food.source}</small>
+      {!isCustom && (
+        <div className="food-identity">
+          <span className="soft-icon peach">
+            <Utensils size={22} />
+          </span>
+          <div>
+            <h3>{food.name}</h3>
+            <p>
+              {food.brand}
+              {food.packageSize ? ` · ${food.packageSize}` : ""}
+            </p>
+            <small>Kilde: {food.source}</small>
+          </div>
         </div>
-      </div>
-      {food.source === "Open Food Facts" && (
-        <p className="notice">
-          Kontroller etiketten: gjelder verdien per 100 g eller per 100 ml? Vi
-          gjetter ikke måleenheten. Bekreft opplysningene nedenfor.
+      )}
+      {isCustom && (
+        <p className="help">
+          Skriv av kcal (ikke kJ) fra emballasjen, og velg om tallet gjelder 100 g eller
+          100 ml. Produktet lagres bare hos deg.
         </p>
       )}
-      {food.kcal100 === null && (
+      {food.source === "Matvaretabellen" && (
         <p className="notice">
-          Produktet mangler kaloriverdi. Fyll inn kcal fra etiketten for å
-          fortsette.
+          Verdien gjelder 100 g spiselig del. Velg riktig variant: rå, kokt og
+          tørr mat kan ha svært ulikt kaloriinnhold.
+        </p>
+      )}
+      {food.source === "Open Food Facts" && (
+        <p className="notice">
+          Kontroller kcal mot etiketten og riktig variant (som solgt eller
+          tilberedt). Gjelder verdien per 100 g eller per 100 ml? Vi gjetter
+          ikke måleenheten. Bekreft opplysningene nedenfor.
+        </p>
+      )}
+      {!isCustom && food.kcal100 === null && (
+        <p className="notice">
+          Kaloriverdien mangler eller er usikker. Fyll inn kcal fra etiketten
+          for å fortsette.
         </p>
       )}
       <div className="form-row">
-        <Field label="kcal per 100">
+        <Field
+          label="kcal per 100"
+        >
           <input
             inputMode="decimal"
             required
+            aria-label="kcal per 100"
             value={energy}
             onChange={(e) => setEnergy(e.target.value)}
           />
@@ -177,7 +199,11 @@ export function FoodForm({
           <select
             required
             value={unit}
-            onChange={(e) => setUnit(e.target.value as "g" | "ml")}
+            onChange={(e) => {
+              setUnit(e.target.value as "g" | "ml");
+              setPortion("");
+              setAmount("");
+            }}
           >
             <option value="">Velg fra etiketten</option>
             <option value="g">Per 100 gram</option>
@@ -185,7 +211,17 @@ export function FoodForm({
           </select>
         </Field>
       </div>
-      {!saveOnly && (
+      {saveOnly && (
+        <label className="check-label">
+          <input
+            type="checkbox"
+            checked={logNow}
+            onChange={(e) => setLogNow(e.target.checked)}
+          />
+          Logg også det jeg spiste
+        </label>
+      )}
+      {!onlySave && (
         <>
           <Field
             label={`Mengde spist eller drukket${unit ? ` (${unit})` : ""}`}
@@ -199,7 +235,7 @@ export function FoodForm({
               onChange={(e) => setAmount(e.target.value)}
             />
           </Field>
-          {food.portion && (
+          {food.portion && unit === food.unit && (
             <button
               type="button"
               className="text-button"
@@ -256,7 +292,11 @@ export function FoodForm({
         </div>
       </details>
       <label className="check-label">
-        <input type="checkbox" name="favorite" defaultChecked={food.favorite} />
+        <input
+          type="checkbox"
+          name="favorite"
+          defaultChecked={food.favorite || (isCustom && saveOnly)}
+        />
         Lagre som favoritt
       </label>
       {food.url.startsWith("https://") && (
@@ -276,12 +316,62 @@ export function FoodForm({
     </Form>
   );
 }
-export function MealEntryForm({entry,save,close}:{entry:FoodLog;save:Save;close:()=>void}) {
-  return <Form cancel={close} label="Oppdater måltid" onSubmit={async d=>{
-    const amount=decimal(val(d,"amount"),false);
-    const updated={...entry,date:val(d,"date"),amount,kcal:kcal(entry.food,amount),group:val(d,"group") as FoodLog["group"]};
-    if(await save(s=>{if(s.modes.find(x=>x.date===updated.date)?.mode==="manual")throw Error("Bytt til matregistreringer for denne datoen først.");put(s.logs,updated)},"Måltidet er oppdatert"))close();
-  }}><p className="notice">Bruker næringsverdiene fra det opprinnelige måltidet. Senere endringer i oppskriften påvirker ikke denne registreringen.</p><Field label="Porsjoner spist"><input name="amount" inputMode="decimal" required defaultValue={entry.amount}/></Field><Field label="Dato"><input type="date" name="date" required defaultValue={entry.date}/></Field><Field label="Måltid"><select name="group" defaultValue={entry.group}>{["Frokost","Lunsj","Middag","Mellommåltid","Annet"].map(x=><option key={x}>{x}</option>)}</select></Field></Form>
+export function MealEntryForm({
+  entry,
+  save,
+  close,
+}: {
+  entry: FoodLog;
+  save: Save;
+  close: () => void;
+}) {
+  return (
+    <Form
+      cancel={close}
+      label="Oppdater måltid"
+      onSubmit={async (d) => {
+        const amount = decimal(val(d, "amount"), false);
+        const updated = {
+          ...entry,
+          date: val(d, "date"),
+          amount,
+          kcal: kcal(entry.food, amount),
+          group: val(d, "group") as FoodLog["group"],
+        };
+        if (
+          await save((s) => {
+            if (s.modes.find((x) => x.date === updated.date)?.mode === "manual")
+              throw Error("Bytt til matregistreringer for denne datoen først.");
+            put(s.logs, updated);
+          }, "Måltidet er oppdatert")
+        )
+          close();
+      }}
+    >
+      <p className="notice">
+        Bruker næringsverdiene fra det opprinnelige måltidet. Senere endringer i
+        oppskriften påvirker ikke denne registreringen.
+      </p>
+      <Field label="Porsjoner spist">
+        <input
+          name="amount"
+          inputMode="decimal"
+          required
+          defaultValue={entry.amount}
+        />
+      </Field>
+      <Field label="Dato">
+        <input type="date" name="date" required defaultValue={entry.date} />
+      </Field>
+      <Field label="Måltid">
+        <select name="group" defaultValue={entry.group}>
+          {["Frokost", "Lunsj", "Middag", "Mellommåltid", "Annet"].map((x) => (
+            <option key={x}>{x}</option>
+          ))}
+        </select>
+      </Field>
+    </Form>
+  );
 }
 export function ManualCalories({
   state,
@@ -687,7 +777,7 @@ export function FoodLogs({
             <strong>
               {num(log.kcal)} <small>kcal</small>
             </strong>
-            {(
+            {
               <button
                 className="icon-button quiet"
                 aria-label={`Rediger ${log.food.name}`}
@@ -695,7 +785,7 @@ export function FoodLogs({
               >
                 <Pencil size={14} />
               </button>
-            )}
+            }
             <button
               className="icon-button quiet"
               aria-label={`Slett ${log.food.name}`}
@@ -761,7 +851,7 @@ export function FoodPage({
         isBarcode,
       );
       if (!c.signal.aborted) {
-        setResults(found);
+        setResults(found.map((f) => preferredFood(f, state.foods)));
         if (isBarcode && found.length === 1) {
           setScan(false);
           pick(found[0]);
@@ -845,12 +935,20 @@ export function FoodPage({
             <ScanLine size={17} />
             Skann
           </Btn>
-          <Btn onClick={custom}>
-            <Plus size={17} />
-            Eget produkt
-          </Btn>
         </div>
       </div>
+      <section className="custom-food-callout" aria-label="Eget produkt">
+        <div>
+          <h2>Din mat. Tall fra etiketten.</h2>
+          <p>
+            Legg inn navn og kalorier selv. Lagre én gang, bruk igjen uten nett.
+          </p>
+        </div>
+        <Btn onClick={custom}>
+          <Plus size={18} />
+          Legg inn eget produkt
+        </Btn>
+      </section>
       <div className="food-layout">
         <section className="panel">
           <h2>Finn maten din</h2>
@@ -875,7 +973,11 @@ export function FoodPage({
             </label>
             <Btn disabled={busy}>{busy ? "Søker …" : "Søk"}</Btn>
           </form>
-          <div className="source-selector" role="group" aria-label="Velg matkilde">
+          <div
+            className="source-selector"
+            role="group"
+            aria-label="Velg matkilde"
+          >
             <label>
               <input
                 type="radio"
@@ -945,7 +1047,11 @@ export function FoodPage({
               </form>
             </section>
           )}
-          {busy && <p className="search-status" role="status">Henter matvarer … Du kan bytte matkilde mens du venter.</p>}
+          {busy && (
+            <p className="search-status" role="status">
+              Henter matvarer … Du kan bytte matkilde mens du venter.
+            </p>
+          )}
           {error && (
             <div className="error-box" role="alert">
               {error}
@@ -955,7 +1061,9 @@ export function FoodPage({
             <div className="external-results">
               <div className="section-head">
                 <h3>Søkeresultater</h3>
-                <span className="subtle" role="status">{results.length} treff</span>
+                <span className="subtle" role="status">
+                  {results.length} treff
+                </span>
               </div>
               {results.length ? (
                 rows(results)

@@ -8,7 +8,7 @@ async function nav(page: any, name: string) {
 }
 async function custom(page: any) {
   await nav(page, "Mat og kalorier");
-  await page.getByRole("button", { name: "Eget produkt", exact: true }).click();
+  await page.getByRole("button", { name: "Legg inn eget produkt", exact: true }).click();
   await page
     .getByRole("textbox", { name: "Produktnavn", exact: true })
     .fill("Fiktiv testdrikk");

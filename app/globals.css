@@ -2492,3 +2492,9 @@ button:active:not(:disabled) { transition-duration: 100ms; }
 @media (prefers-reduced-motion: reduce) {
   button:active:not(:disabled) { transition: none; transform: none; }
 }
+
+.custom-food-callout { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; margin-bottom: 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.custom-food-callout h2 { font-size: 20px; margin: 0 0 6px; }
+.custom-food-callout p { margin: 0; font-size: 13px; max-width: 48ch; }
+.custom-food-callout .button { flex-shrink: 0; }
+@media (max-width: 780px) { .custom-food-callout { align-items: stretch; flex-direction: column; gap: 16px; } .custom-food-callout .button { width: 100%; min-height: 48px; } }
