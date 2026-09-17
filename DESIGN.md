@@ -25,6 +25,8 @@ Mint marks primary actions, focus and the product voice. It is not used as decor
 ## Composition
 
 - Public home: dominant editorial statement beside a narrow capability rail, followed by one contrasting Arc product strip.
+- Founder attribution belongs in footer metadata, separate from primary hero actions.
+- Products: editorial product index with asymmetrical name and explanation columns; Arc leads, while Nortivo Support remains visually secondary.
 - Support: explanation and sequence on the left, focused form workspace on the right.
 - Admin: compact login surface; operational dashboard keeps its list/detail split and dense information hierarchy.
 - Cards are reserved for bounded workspaces and the Arc product feature, not used as the default container for every section.
@@ -47,3 +49,4 @@ Mint marks primary actions, focus and the product voice. It is not used as decor
 ## Responsive behavior
 
 At 760px and below, the hero becomes a single reading sequence: statement, action, capability rail, Arc. Support becomes one column below 880px. At 560px, forms become single-column and admin actions stack without horizontal page overflow.
+The products index becomes one column below 760px, and product details turn from a three-column fact row into a vertically divided list.
