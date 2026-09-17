@@ -26,6 +26,7 @@ import {
   num,
   dailyCalories,
 } from "@/lib/tracker-core";
+import { Capacitor } from "@capacitor/core";
 import { searchFood } from "@/lib/food-search";
 import {
   Btn,
@@ -736,7 +737,7 @@ export function FoodPage({
   initialScan?: boolean;
 }) {
   const [query, setQuery] = useState("");
-  const [provider, setProvider] = useState<"mvt" | "off">("mvt");
+  const [provider, setProvider] = useState<"mvt" | "off">("off");
   const [results, setResults] = useState<Food[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -879,21 +880,11 @@ export function FoodPage({
               <input
                 type="radio"
                 name="source"
-                checked={provider === "mvt"}
-                onChange={() => {
-                  setProvider("mvt");
-                  setResults([]);
-                  setSearched(false);
-                }}
-              />
-              Matvaretabellen
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="source"
                 checked={provider === "off"}
                 onChange={() => {
+                  controller.current?.abort();
+                  setBusy(false);
+                  setError("");
                   setProvider("off");
                   setResults([]);
                   setSearched(false);
@@ -901,12 +892,30 @@ export function FoodPage({
               />
               Open Food Facts
             </label>
+            <label>
+              <input
+                type="radio"
+                name="source"
+                checked={provider === "mvt"}
+                onChange={() => {
+                  controller.current?.abort();
+                  setBusy(false);
+                  setError("");
+                  setProvider("mvt");
+                  setResults([]);
+                  setSearched(false);
+                }}
+              />
+              Matvaretabellen
+            </label>
           </div>
           <p className="help">
             {provider === "mvt"
               ? "Norske råvarer og tilberedte matvarer."
               : "Pakkevarer, drikke og merkevarer fra flere land."}{" "}
-            Søket sendes til valgt matkilde når du trykker Søk.
+            {provider === "mvt" && Capacitor.isNativePlatform()
+              ? "Søk uten nett i Matvaretabellen, oppdatert 17.09.2026."
+              : "Søket sendes til valgt matkilde når du trykker Søk."}
           </p>
           {scan && (
             <section className="scan-area">

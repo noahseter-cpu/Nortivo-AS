@@ -1,4 +1,5 @@
 import { z } from "zod";
+import matvareSnapshot from "./data/matvaretabellen.json" with { type: "json" };
 import { Capacitor, CapacitorHttp } from "@capacitor/core";
 import { fromMatvare, fromOFF } from "@/lib/food-adapters";
 import type { Food } from "@/lib/tracker-core";
@@ -17,7 +18,7 @@ async function upstream(url: string, off = false) {
     const headers: Record<string, string> = {
       Accept: "application/json",
       "User-Agent":
-        "Nortivo/0.3.0 (+https://noah-hverdag-tracker.noahrare.chatgpt.site; personal tracker)",
+        "ArcByNorvido/0.4.0 (+https://noah-hverdag-tracker.noahrare.chatgpt.site; personal tracker)",
     };
     if (off && staging) headers.Authorization = "Basic b2ZmOm9mZg==";
     const r = Capacitor.isNativePlatform()
@@ -58,9 +59,9 @@ async function getLibrary() {
   if (library && Date.now() - libraryTime < 86400000) return library;
   if (!libraryRequest)
     libraryRequest = (async () => {
-      const data = await upstream(
-        "https://www.matvaretabellen.no/api/nb/foods.json",
-      );
+      const data = Capacitor.isNativePlatform()
+        ? matvareSnapshot
+        : await upstream("https://www.matvaretabellen.no/api/nb/foods.json");
       if (!data || !Array.isArray(data.foods))
         throw Error("Uventet svar fra Matvaretabellen.");
       const foods = data.foods.map(fromMatvare).filter(Boolean) as Food[];

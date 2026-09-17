@@ -307,7 +307,7 @@ export function SettingsPage({
               secondary
               onClick={() =>
                 download(
-                  `nortivo-${today()}.json`,
+                  `arc-by-norvido-${today()}.json`,
                   JSON.stringify(
                     {
                       format: "noah-tracker-backup",
@@ -344,7 +344,7 @@ export function SettingsPage({
             className="text-button"
             onClick={() =>
               download(
-                `nortivo-transaksjoner-${today()}.csv`,
+                `arc-by-norvido-transaksjoner-${today()}.csv`,
                 csvTransactions(state),
                 "text/csv;charset=utf-8",
               )

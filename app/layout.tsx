@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: "Nortivo — Din hverdag, samlet",
+  title: "Arc by Norvido — Din hverdag, samlet",
   description:
     "Personlig oversikt over penger, mat og aktivitet. Lagret i nettleseren.",
   icons: { icon: "/favicon.svg" },

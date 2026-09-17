@@ -12,11 +12,12 @@ export async function searchFood(
     provider,
     [barcode ? "barcode" : "q"]: query,
   });
-  const key = params.toString();
+  const bundled = provider === "mvt" && Capacitor.isNativePlatform();
+  const key = `v2:${params.toString()}`;
   const cached = (await cacheRead(key)) as { at: number; foods: Food[] } | null;
-  if (cached && (!navigator.onLine || Date.now() - cached.at < 86400000))
+  if (!bundled && cached && (!navigator.onLine || Date.now() - cached.at < 86400000))
     return cached.foods.map((x) => foodSchema.parse(x));
-  if (!navigator.onLine)
+  if (!navigator.onLine && !bundled)
     throw Error(
       "Du er frakoblet. Bruk lagrede matvarer, favoritter eller egne produkter.",
     );

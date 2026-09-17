@@ -337,12 +337,12 @@ export default function Tracker() {
       />
       <SidebarProvider className="app-shell">
         <Sidebar collapsible="none" className="sidebar">
-          <a className="brand" href="/" aria-label="Nortivo, oversikt">
+          <a className="brand" href="/" aria-label="Arc by Norvido, oversikt">
             <span className="brand-mark">
               n<span>·</span>
             </span>
             <span>
-              nortivo<span className="brand-sub">Din hverdag, samlet.</span>
+              Arc<span className="brand-sub">by Norvido</span>
             </span>
           </a>
           <nav aria-label="Hovedmeny">
@@ -370,8 +370,8 @@ export default function Tracker() {
         <div className="workspace">
           <header className="topbar">
             <span>
-              <span className="brand-mobile">
-                nortivo<span>·</span>
+              <span className="brand-mobile" aria-label="Arc by Norvido">
+                Arc<span>·</span>
               </span>
               <span className="desktop-label">Din personlige oversikt</span>
             </span>

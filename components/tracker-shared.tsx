@@ -295,7 +295,7 @@ async function exportFile(name: string, content: string, type: string) {
         encoding: Encoding.UTF8,
       });
       await Share.share({
-        title: "Nortivo – sikkerhetskopi",
+        title: "Arc by Norvido – sikkerhetskopi",
         files: [file.uri],
         dialogTitle: "Lagre en kopi",
       });
