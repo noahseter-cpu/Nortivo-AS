@@ -64,3 +64,7 @@ Validation: 9 profile/theme/dialog tests passed and TypeScript passed. APK versi
 ## Arc 0.4.5 logo (2026-09-17)
 
 Rendered the shared Arc SVG in the web brand and favicon, cached it in the service worker shell, and replaced the Android adaptive foreground with the matching vector arch-A mark. Web smoke check found one mobile brand image and one sidebar brand image; Android build and v2 signature verification passed. The package ID and signing identity remain unchanged. Physical launcher rendering on a device remains untested.
+
+## Arc 0.4.6 logo refinement (2026-09-17)
+
+Replaced the first arch treatment with a geometric open-A mark that holds its silhouette at small sizes and uses the same peach, dark green and terracotta palette across web, favicon and Android. The sidebar and mobile header use a transparent mark on the dark brand field; the favicon and adaptive icon retain the dark rounded field. Android versionCode 9 / 0.4.6-private. Physical launcher rendering on a device remains untested.

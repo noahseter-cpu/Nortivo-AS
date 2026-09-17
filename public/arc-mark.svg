@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Arc mark</title>
+  <desc id="desc">A geometric open A with an arc-like crown and terracotta terminal</desc>
+  <path d="M18 102 48 27c4-11 20-11 24 0l30 75" fill="none" stroke="#edb599" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M35 75h50" fill="none" stroke="#edb599" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="103" cy="102" r="6" fill="#b74b31"/>
+</svg>
