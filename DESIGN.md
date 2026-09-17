@@ -110,3 +110,7 @@ An editorial strip above external search puts personal entry first: concise head
 ## Individual goal choice (0.4.3)
 
 Profile review groups Keep / Suggested / Custom in a labelled fieldset, with44px radio targets and a conditional explicit kcal/day field. Default is Keep; custom is available even without an eligible automatic estimate. No additional animation; all decisions remain readable immediately.
+
+## Arc identity (0.4.5)
+
+Arc uses a compact arch-A monogram: dark navigation green field, warm peach arch and one terracotta terminal dot. The mark is shared by the sidebar/mobile brand, favicon and Android adaptive icon. It remains legible at small sizes and does not rely on text inside the icon.

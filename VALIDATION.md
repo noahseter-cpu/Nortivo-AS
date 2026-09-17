@@ -60,3 +60,7 @@ Validation:30 tests passed including private correction precedence, energy units
 The bounded Impeccable pass tightened Settings: personal calorie choice and body profile are separated visually, selected calorie options have clear bordered rows and full touch targets, and forms expose aria-busy while saving. No data model or migration changes. Existing motion stays restrained: no added navigation animation, and reduced-motion behavior remains intact.
 
 Validation: 9 profile/theme/dialog tests passed and TypeScript passed. APK versionCode 7 assembled and signature verified. Physical Android remains untested.
+
+## Arc 0.4.5 logo (2026-09-17)
+
+Rendered the shared Arc SVG in the web brand and favicon, cached it in the service worker shell, and replaced the Android adaptive foreground with the matching vector arch-A mark. Web smoke check found one mobile brand image and one sidebar brand image; Android build and v2 signature verification passed. The package ID and signing identity remain unchanged. Physical launcher rendering on a device remains untested.
