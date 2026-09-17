@@ -168,12 +168,15 @@ export function SettingsPage({
       </section>
       <section className="panel">
         <h2>Din profil</h2>
+        <div className="personal-goal-section">
         <p className="help">
           Kalorimål:{" "}
           {goal?.calories ? goal.calories + " kcal per dag" : "Ikke satt"}. Du
           bestemmer målet selv.
         </p>
         <Btn onClick={goals}>Velg mitt kalorimål</Btn>
+        </div>
+        <div className="personal-profile-section">
         <p className="help">
           {state.profile
             ? `${state.settings.name} · ${state.profile.heightCm} cm · ${state.profile.weightKg} kg · ${state.profile.age} år`
@@ -182,6 +185,7 @@ export function SettingsPage({
         <Btn secondary onClick={profile}>
           {state.profile ? "Endre profil og kaloriforslag" : "Opprett profil"}
         </Btn>
+        </div>
       </section>
       <section className="panel">
         <h2>Din hverdag</h2>

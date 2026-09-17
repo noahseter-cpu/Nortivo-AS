@@ -54,3 +54,9 @@ Validation:30 tests passed including private correction precedence, energy units
 ## Arc0.4.3 verification
 
 31 tests passed, including custom daily calories, default keep behavior, save/reload, eligible suggestion and ineligible profile. TypeScript passed. APK versionCode6 assembled and signature verified. No schema changes; existing effective-dated goals are reused. Manufacturer and full dataset comparison findings are recorded in docs/CALORIE_VERIFICATION.md; do not describe matching source data as independently verified nutrition. Physical Android remains untested.
+
+## Arc 0.4.4 quick polish (2026-09-17)
+
+The bounded Impeccable pass tightened Settings: personal calorie choice and body profile are separated visually, selected calorie options have clear bordered rows and full touch targets, and forms expose aria-busy while saving. No data model or migration changes. Existing motion stays restrained: no added navigation animation, and reduced-motion behavior remains intact.
+
+Validation: 9 profile/theme/dialog tests passed and TypeScript passed. APK versionCode 7 assembled and signature verified. Physical Android remains untested.
