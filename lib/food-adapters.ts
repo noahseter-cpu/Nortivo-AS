@@ -2,8 +2,28 @@ import { z } from "zod";
 import { foodSchema, type Food } from "./tracker-core";
 const safeText = (v: unknown, max = 250) =>
   typeof v === "string" ? v.slice(0, max) : "";
-const safeKcal = (v: unknown) =>
-  typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1000 ? v : null;
+const safeKcal = (v: unknown) => {
+  const n =
+    typeof v === "string" && /^\d+(\.\d+)?$/.test(v.trim()) ? Number(v) : v;
+  return typeof n === "number" && Number.isFinite(n) && n >= 0 && n <= 1000
+    ? n
+    : null;
+};
+export function offCalories(n: Record<string, unknown>): number | null {
+  // Read only the explicit kcal/100 field, never serving energy or generic kJ.
+  if (n["energy-kcal_unit"] && n["energy-kcal_unit"] !== "kcal") return null;
+  const kcal = safeKcal(n["energy-kcal_100g"]);
+  const kj = n["energy-kj_100g"];
+  // Conflicting energy declarations need a label check, not a guessed correction.
+  if (
+    kcal !== null &&
+    typeof kj === "number" &&
+    Number.isFinite(kj) &&
+    Math.abs(kcal - kj / 4.184) > Math.max(20, kcal * 0.2)
+  )
+    return null;
+  return kcal;
+}
 const base = {
   brand: "",
   url: "",
@@ -78,7 +98,19 @@ export function fromOFF(raw: unknown): Food | null {
     url: `https://world.openfoodfacts.org/product/${encodeURIComponent(x.code)}`,
     image: image.startsWith("https://images.openfoodfacts.org/") ? image : "",
     packageSize: safeText(x.quantity),
-    kcal100: n.success ? safeKcal(n.data["energy-kcal_100g"]) : null,
+    kcal100: n.success ? offCalories(n.data) : null,
     unit: null,
   });
+}
+
+export function preferredFood(food: Food, saved: Food[]): Food {
+  return (
+    [...saved]
+      .reverse()
+      .find(
+        (f) => f.source === "Egen registrering" && f.sourceId === food.id,
+      ) ??
+    saved.find((f) => f.id === food.id) ??
+    food
+  );
 }

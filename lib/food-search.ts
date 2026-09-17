@@ -13,7 +13,7 @@ export async function searchFood(
     [barcode ? "barcode" : "q"]: query,
   });
   const bundled = provider === "mvt" && Capacitor.isNativePlatform();
-  const key = `v2:${params.toString()}`;
+  const key = `v3:${params.toString()}`;
   const cached = (await cacheRead(key)) as { at: number; foods: Food[] } | null;
   if (!bundled && cached && (!navigator.onLine || Date.now() - cached.at < 86400000))
     return cached.foods.map((x) => foodSchema.parse(x));

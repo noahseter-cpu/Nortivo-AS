@@ -102,3 +102,7 @@ Dialog positioning belongs only to the visible-viewport flex container. Do not r
 ## Arc 0.4.1 usability pass
 
 Mobile date controls, list actions and text actions now have 44px minimum touch height; icon actions also have 44px minimum width. Food-source selection uses bordered labels with visible selection and focus. Food result names use 14px and metadata 12px on phones. Existing palette and layout remain intact. The Impeccable detector reported existing documentation/token advisories, no non-advisory findings. PRODUCT.md remains on its older schema; an explicit `init` can refresh that record separately.
+
+## Manual food entry (0.4.2)
+
+An editorial strip above external search puts personal entry first: concise heading, one explanatory sentence, primary button. Mobile stacks it with a48px full-width action. The form keeps name, calories and basis visible and hides optional portion fields. Existing quiet dialog motion is preserved; toggling save-and-log reveals fields instantly.
