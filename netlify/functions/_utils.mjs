@@ -35,11 +35,13 @@ function requiredEnv(name) {
 export async function supabase(path, options = {}) {
   const base = requiredEnv('SUPABASE_URL').replace(/\/$/, '');
   const key = requiredEnv('SUPABASE_SERVICE_ROLE_KEY');
+  const authHeaders = key.startsWith('sb_secret_')
+    ? { apikey: key }
+    : { apikey: key, Authorization: `Bearer ${key}` };
   const response = await fetch(`${base}/rest/v1/${path}`, {
     ...options,
     headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
+      ...authHeaders,
       'Content-Type': 'application/json',
       ...options.headers,
     },
