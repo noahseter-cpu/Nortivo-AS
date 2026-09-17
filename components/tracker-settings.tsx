@@ -360,8 +360,8 @@ export function SettingsPage({
           )}
           <p className="help">
             Sikkerhetskopier er ikke kryptert. Oppbevar filen et trygt sted.
-            Matvarer du har lagret, kan brukes uten nett. Nye eksterne søk
-            krever internett.
+            Lagrede matvarer kan brukes uten nett. I Android-appen fungerer også
+            Matvaretabellen uten nett. Open Food Facts krever internett.
           </p>
         </section>
         <section className="panel">

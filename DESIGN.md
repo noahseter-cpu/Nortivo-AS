@@ -98,3 +98,7 @@ The profile uses the incumbent palette and typography, a two-step form with edit
 Nortivo is the product brand. Personal profile names are retained. Light mode keeps the original cream/terracotta system; dark mode uses canvas #171c19, paper #222925, text #edf0e9, muted #b1bdb5, separators #414d45 and warm accent #eeaa89 with dark action text #30231c. Semantics cover inputs, dialogs, empty states, feedback, activity, navigation and Android system-bar contrast. System appearance is the migrated default; explicit Light/Dark persists.
 
 Dialog positioning belongs only to the visible-viewport flex container. Do not reintroduce translated centering utilities on its content. Small screens use a bottom sheet, desktop a centered panel; both scroll internally and remain within keyboard-reduced height. The popup entry uses opacity only.
+
+## Arc 0.4.1 usability pass
+
+Mobile date controls, list actions and text actions now have 44px minimum touch height; icon actions also have 44px minimum width. Food-source selection uses bordered labels with visible selection and focus. Food result names use 14px and metadata 12px on phones. Existing palette and layout remain intact. The Impeccable detector reported existing documentation/token advisories, no non-advisory findings. PRODUCT.md remains on its older schema; an explicit `init` can refresh that record separately.

@@ -2450,3 +2450,45 @@ html[data-input="keyboard"] .tracker-dialog-viewport > .tracker-dialog {
     display: none;
   }
 }
+
+/* Arc usability pass: quiet controls with generous touch targets. */
+::selection { background: var(--accent); color: var(--paper); }
+input, textarea { caret-color: var(--accent); }
+.source-selector { gap: 8px; }
+.source-selector label {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--muted);
+}
+.source-selector label:has(input:checked) {
+  border-color: var(--accent);
+  color: var(--ink);
+  background: var(--surface-muted);
+}
+.source-selector input { accent-color: var(--accent); }
+.source-selector label:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.search-status { margin: 16px 0; color: var(--muted); font-size: 13px; }
+/* Navigation and keyboard input stay instant. Presses give feedback only. */
+.nav-item:active:not(:disabled),
+[role="tab"]:active:not(:disabled),
+html[data-input="keyboard"] button:active:not(:disabled) { transform: none; }
+html[data-input="keyboard"] button { transition: none; }
+button:active:not(:disabled) { transition-duration: 100ms; }
+@media (max-width: 780px) {
+  .icon-button, .date-picker .icon-button, .daily-panel .date-picker .icon-button,
+  .record .icon-button, .food-result .icon-button { min-width: 44px; min-height: 44px; }
+  .text-button { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; }
+  .food-tabs [data-slot="tabs-trigger"] { min-height: 44px; font-size: 12px; padding-inline: 8px; }
+  .source-selector { font-size: 12px; }
+  .food-pick strong { font-size: 14px; }
+  .food-pick small, .food-pick > span { font-size: 12px; }
+  .source-selector label { flex: 1 1 130px; }
+  .search-field { min-width: 0; }
+  .search-field input { min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  button:active:not(:disabled) { transition: none; transform: none; }
+}

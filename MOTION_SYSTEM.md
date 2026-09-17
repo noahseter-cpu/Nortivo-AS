@@ -11,3 +11,12 @@ Reduced motion removes transforms and transition/animation timing while preservi
 Live validation belongs in VALIDATION.md. Static screenshots alone do not establish correct motion.
 
 Nortivo0.3.0 replaces translated popup entry/centering with a single flex viewport and opacity-only200ms feedback. Dialog geometry never animates during keyboard resize. Reduced motion and keyboard-origin transitions still skip animation. Geometry and focus verified in browser tests; physical Android keyboard behavior remains a device check.
+
+## Arc 0.4.1 motion review
+
+| Before | After | Why |
+| --- | --- | --- |
+| All buttons scale on press, including navigation and keyboard input | Navigation, tabs and keyboard input remain still | Frequent actions need immediate stable feedback |
+| Same 120ms transform timing on press and release | 100ms press, existing 120ms release using --ease-out | Subtle feedback remains interruptible |
+
+Approve for this bounded pass: reduced motion suppresses movement; keyboard input skips button transitions; dialog geometry remains unchanged. CSS transitions only, no added libraries. Physical-device feel remains untested.

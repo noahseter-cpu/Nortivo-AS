@@ -875,7 +875,7 @@ export function FoodPage({
             </label>
             <Btn disabled={busy}>{busy ? "Søker …" : "Søk"}</Btn>
           </form>
-          <div className="source-selector">
+          <div className="source-selector" role="group" aria-label="Velg matkilde">
             <label>
               <input
                 type="radio"
@@ -945,6 +945,7 @@ export function FoodPage({
               </form>
             </section>
           )}
+          {busy && <p className="search-status" role="status">Henter matvarer … Du kan bytte matkilde mens du venter.</p>}
           {error && (
             <div className="error-box" role="alert">
               {error}
@@ -954,7 +955,7 @@ export function FoodPage({
             <div className="external-results">
               <div className="section-head">
                 <h3>Søkeresultater</h3>
-                <span className="subtle">{results.length} treff</span>
+                <span className="subtle" role="status">{results.length} treff</span>
               </div>
               {results.length ? (
                 rows(results)
