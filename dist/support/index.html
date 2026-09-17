@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071018" />
+    <meta name="description" content="Contact Nortivo Support or check an existing support ticket." />
+    <title>Support — Nortivo</title>
+    <link rel="stylesheet" href="/assets/portal.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/"><span class="brand-mark">N</span>Nortivo</a>
+      <a class="back-link" href="/">← Back home</a>
+    </header>
+
+    <main class="page support-layout">
+      <div>
+        <p class="kicker">Nortivo Support</p>
+        <h1>How can we help?</h1>
+        <p class="lead">Send us a ticket and keep the ticket number. We will answer by email, and you can check the status here at any time.</p>
+        <ol class="steps">
+          <li><span class="step-number">1</span><span>Tell us what you need help with.</span></li>
+          <li><span class="step-number">2</span><span>Save the ticket number shown after sending.</span></li>
+          <li><span class="step-number">3</span><span>We review the ticket and answer by email.</span></li>
+        </ol>
+      </div>
+
+      <section class="card" aria-label="Nortivo support portal">
+        <div class="card-body">
+          <div class="tabs" role="tablist" aria-label="Support options">
+            <button class="tab active" id="new-tab" type="button" role="tab" aria-selected="true">New ticket</button>
+            <button class="tab" id="lookup-tab" type="button" role="tab" aria-selected="false">Find ticket</button>
+          </div>
+
+          <div class="panel" id="new-panel" role="tabpanel">
+            <h2>Create a support ticket</h2>
+            <p class="panel-intro">We normally answer as soon as possible.</p>
+            <form id="ticket-form">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="name">Name</label>
+                  <input id="name" name="name" autocomplete="name" maxlength="80" required />
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" autocomplete="email" maxlength="160" required />
+                </div>
+                <div class="field full">
+                  <label for="subject">Subject</label>
+                  <input id="subject" name="subject" maxlength="140" required />
+                </div>
+                <div class="field full">
+                  <label for="message">What happened?</label>
+                  <textarea id="message" name="message" maxlength="4000" required></textarea>
+                </div>
+                <div class="honeypot" aria-hidden="true">
+                  <label for="company">Company website</label>
+                  <input id="company" name="company" tabindex="-1" autocomplete="off" />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="button" type="submit">Send ticket</button>
+              </div>
+              <p class="message" id="form-message" aria-live="polite"></p>
+            </form>
+            <div class="ticket-result" id="created-ticket" hidden>
+              <div class="result-top"><span class="ticket-number" id="created-number"></span><span class="status open">Open</span></div>
+              <h3 class="result-subject">Ticket received</h3>
+              <p class="result-body">Save this ticket number. We also sent it to your email when email delivery is configured.</p>
+            </div>
+          </div>
+
+          <div class="panel" id="lookup-panel" role="tabpanel" hidden>
+            <h2>Find your ticket</h2>
+            <p class="panel-intro">Enter the same email address you used when creating it.</p>
+            <form id="lookup-form">
+              <div class="form-grid">
+                <div class="field full">
+                  <label for="ticket-number">Ticket number</label>
+                  <input id="ticket-number" name="ticket" placeholder="NT-2026-ABC123" autocomplete="off" required />
+                </div>
+                <div class="field full">
+                  <label for="lookup-email">Email</label>
+                  <input id="lookup-email" name="email" type="email" autocomplete="email" required />
+                </div>
+              </div>
+              <div class="form-actions"><button class="button" type="submit">Check ticket</button></div>
+              <p class="message" id="lookup-message" aria-live="polite"></p>
+            </form>
+            <div class="ticket-result" id="ticket-result" hidden>
+              <div class="result-top"><span class="ticket-number" id="result-number"></span><span class="status" id="result-status"></span></div>
+              <h3 class="result-subject" id="result-subject"></h3>
+              <p class="result-meta" id="result-date"></p>
+              <p class="result-body" id="result-body"></p>
+              <div class="reply-list" id="result-replies"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const newTab = document.querySelector('#new-tab');
+      const lookupTab = document.querySelector('#lookup-tab');
+      const newPanel = document.querySelector('#new-panel');
+      const lookupPanel = document.querySelector('#lookup-panel');
+
+      function showPanel(name) {
+        const isNew = name === 'new';
+        newPanel.hidden = !isNew;
+        lookupPanel.hidden = isNew;
+        newTab.classList.toggle('active', isNew);
+        lookupTab.classList.toggle('active', !isNew);
+        newTab.setAttribute('aria-selected', String(isNew));
+        lookupTab.setAttribute('aria-selected', String(!isNew));
+      }
+      newTab.addEventListener('click', () => showPanel('new'));
+      lookupTab.addEventListener('click', () => showPanel('lookup'));
+
+      async function readResponse(response) {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
+        return data;
+      }
+
+      document.querySelector('#ticket-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const button = form.querySelector('button[type="submit"]');
+        const message = document.querySelector('#form-message');
+        const result = document.querySelector('#created-ticket');
+        button.disabled = true;
+        message.className = 'message';
+        message.textContent = 'Sending ticket…';
+        result.hidden = true;
+        try {
+          const payload = Object.fromEntries(new FormData(form));
+          const data = await readResponse(await fetch('/.netlify/functions/tickets', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+          }));
+          document.querySelector('#created-number').textContent = data.ticket.ticket_number;
+          result.hidden = false;
+          message.className = 'message success';
+          message.textContent = 'Your ticket has been created.';
+          form.reset();
+        } catch (error) {
+          message.className = 'message error';
+          message.textContent = error.message;
+        } finally { button.disabled = false; }
+      });
+
+      document.querySelector('#lookup-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const button = form.querySelector('button[type="submit"]');
+        const message = document.querySelector('#lookup-message');
+        const result = document.querySelector('#ticket-result');
+        button.disabled = true;
+        message.className = 'message';
+        message.textContent = 'Finding ticket…';
+        result.hidden = true;
+        try {
+          const fields = new FormData(form);
+          const params = new URLSearchParams({ ticket: fields.get('ticket').trim(), email: fields.get('email').trim() });
+          const data = await readResponse(await fetch('/.netlify/functions/tickets?' + params));
+          const ticket = data.ticket;
+          document.querySelector('#result-number').textContent = ticket.ticket_number;
+          const status = document.querySelector('#result-status');
+          status.textContent = ticket.status;
+          status.className = 'status ' + ticket.status;
+          document.querySelector('#result-subject').textContent = ticket.subject;
+          document.querySelector('#result-date').textContent = 'Created ' + new Date(ticket.created_at).toLocaleString();
+          document.querySelector('#result-body').textContent = ticket.message;
+          const replies = document.querySelector('#result-replies');
+          replies.replaceChildren();
+          for (const item of data.replies || []) {
+            const reply = document.createElement('div');
+            reply.className = 'reply';
+            reply.textContent = 'Nortivo Support · ' + new Date(item.created_at).toLocaleString() + '\n' + item.body;
+            replies.append(reply);
+          }
+          result.hidden = false;
+          message.textContent = '';
+        } catch (error) {
+          message.className = 'message error';
+          message.textContent = error.message;
+        } finally { button.disabled = false; }
+      });
+    </script>
+  </body>
+</html>

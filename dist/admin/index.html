@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071018" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Support Admin — Nortivo</title>
+    <link rel="stylesheet" href="/assets/portal.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/"><span class="brand-mark">N</span>Nortivo</a>
+      <a class="back-link" href="/support/">Customer support page</a>
+    </header>
+
+    <main class="page admin-page">
+      <section class="card login-card" id="login-card">
+        <div class="card-body">
+          <p class="kicker">Private area</p>
+          <h1>Support admin</h1>
+          <p class="lead">Sign in to view and answer Nortivo support tickets.</p>
+          <form id="login-form" style="margin-top: 26px">
+            <div class="field">
+              <label for="password">Admin password</label>
+              <input id="password" name="password" type="password" autocomplete="current-password" required />
+            </div>
+            <div class="form-actions"><button class="button" type="submit">Sign in</button></div>
+            <p class="message" id="login-message" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="dashboard" id="dashboard" hidden>
+        <div class="dashboard-head">
+          <div><p class="kicker">Nortivo Support</p><h1>Tickets</h1></div>
+          <div class="dashboard-actions">
+            <button class="button secondary" id="refresh-button" type="button">Refresh</button>
+            <button class="button danger" id="logout-button" type="button">Sign out</button>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span class="stat-label">Open</span><strong class="stat-value" id="open-count">0</strong></div>
+          <div class="stat"><span class="stat-label">Answered</span><strong class="stat-value" id="answered-count">0</strong></div>
+          <div class="stat"><span class="stat-label">Total</span><strong class="stat-value" id="total-count">0</strong></div>
+        </div>
+
+        <section class="card workspace">
+          <div class="ticket-list">
+            <div class="list-tools">
+              <input id="search" type="search" placeholder="Search tickets" aria-label="Search tickets" />
+              <select id="status-filter" aria-label="Filter status">
+                <option value="all">All statuses</option>
+                <option value="open">Open</option>
+                <option value="answered">Answered</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+            <div class="tickets" id="tickets"></div>
+          </div>
+          <div class="ticket-detail" id="ticket-detail">
+            <div class="empty"><p>Select a ticket to read and answer it.</p></div>
+          </div>
+        </section>
+        <p class="message" id="dashboard-message" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script>
+      const loginCard = document.querySelector('#login-card');
+      const dashboard = document.querySelector('#dashboard');
+      const ticketsElement = document.querySelector('#tickets');
+      const detailElement = document.querySelector('#ticket-detail');
+      const dashboardMessage = document.querySelector('#dashboard-message');
+      let tickets = [];
+      let activeId = null;
+
+      async function api(url, options = {}) {
+        const response = await fetch(url, { credentials: 'same-origin', ...options });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          loginCard.hidden = false;
+          dashboard.hidden = true;
+          throw new Error('Please sign in again.');
+        }
+        if (!response.ok) throw new Error(data.error || 'Something went wrong.');
+        return data;
+      }
+
+      function formatDate(value) {
+        return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+      }
+
+      function updateStats() {
+        document.querySelector('#open-count').textContent = tickets.filter(t => t.status === 'open').length;
+        document.querySelector('#answered-count').textContent = tickets.filter(t => t.status === 'answered').length;
+        document.querySelector('#total-count').textContent = tickets.length;
+      }
+
+      function renderList() {
+        const query = document.querySelector('#search').value.trim().toLowerCase();
+        const status = document.querySelector('#status-filter').value;
+        const filtered = tickets.filter(ticket => {
+          const matchesStatus = status === 'all' || ticket.status === status;
+          const text = [ticket.ticket_number, ticket.name, ticket.email, ticket.subject].join(' ').toLowerCase();
+          return matchesStatus && text.includes(query);
+        });
+        ticketsElement.replaceChildren();
+        if (!filtered.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = 'No tickets found.';
+          ticketsElement.append(empty);
+          return;
+        }
+        for (const ticket of filtered) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'ticket-item' + (ticket.id === activeId ? ' active' : '');
+          const top = document.createElement('div');
+          top.className = 'ticket-item-top';
+          const number = document.createElement('strong');
+          number.textContent = ticket.ticket_number;
+          const badge = document.createElement('span');
+          badge.className = 'status ' + ticket.status;
+          badge.textContent = ticket.status;
+          const subject = document.createElement('p');
+          subject.textContent = ticket.subject;
+          const meta = document.createElement('small');
+          meta.textContent = ticket.name + ' · ' + formatDate(ticket.created_at);
+          top.append(number, badge);
+          button.append(top, subject, meta);
+          button.addEventListener('click', () => openTicket(ticket.id));
+          ticketsElement.append(button);
+        }
+      }
+
+      async function loadTickets() {
+        dashboardMessage.textContent = 'Loading tickets…';
+        try {
+          const data = await api('/.netlify/functions/admin-tickets');
+          tickets = data.tickets || [];
+          updateStats();
+          renderList();
+          dashboardMessage.textContent = '';
+          return true;
+        } catch (error) {
+          dashboardMessage.className = 'message error';
+          dashboardMessage.textContent = error.message;
+          return false;
+        }
+      }
+
+      async function openTicket(id) {
+        activeId = id;
+        renderList();
+        detailElement.innerHTML = '<div class="empty"><p>Loading ticket…</p></div>';
+        try {
+          const data = await api('/.netlify/functions/admin-tickets?id=' + encodeURIComponent(id));
+          renderDetail(data.ticket, data.replies || []);
+        } catch (error) {
+          detailElement.replaceChildren();
+          const message = document.createElement('p');
+          message.className = 'message error';
+          message.textContent = error.message;
+          detailElement.append(message);
+        }
+      }
+
+      function renderDetail(ticket, replies) {
+        detailElement.replaceChildren();
+        const head = document.createElement('div');
+        head.className = 'detail-head';
+        const heading = document.createElement('div');
+        const number = document.createElement('span');
+        number.className = 'ticket-number';
+        number.textContent = ticket.ticket_number;
+        const title = document.createElement('h2');
+        title.textContent = ticket.subject;
+        heading.append(number, title);
+        const status = document.createElement('span');
+        status.className = 'status ' + ticket.status;
+        status.textContent = ticket.status;
+        head.append(heading, status);
+
+        const meta = document.createElement('p');
+        meta.className = 'detail-meta';
+        meta.textContent = ticket.name + ' · ' + ticket.email + ' · ' + formatDate(ticket.created_at);
+        const original = document.createElement('div');
+        original.className = 'original-message';
+        original.textContent = ticket.message;
+        const replyList = document.createElement('div');
+        replyList.className = 'admin-replies reply-list';
+        for (const item of replies) {
+          const reply = document.createElement('div');
+          reply.className = 'reply';
+          reply.textContent = 'Sent ' + formatDate(item.created_at) + '\n' + item.body;
+          replyList.append(reply);
+        }
+
+        const box = document.createElement('form');
+        box.className = 'reply-box';
+        const label = document.createElement('label');
+        label.setAttribute('for', 'reply-text');
+        label.textContent = 'Email reply';
+        const textarea = document.createElement('textarea');
+        textarea.id = 'reply-text';
+        textarea.required = true;
+        textarea.maxLength = 4000;
+        textarea.placeholder = 'Write your reply to the customer…';
+        const actions = document.createElement('div');
+        actions.className = 'form-actions';
+        const send = document.createElement('button');
+        send.className = 'button';
+        send.type = 'submit';
+        send.textContent = 'Send email reply';
+        const close = document.createElement('button');
+        close.className = 'button secondary';
+        close.type = 'button';
+        close.textContent = ticket.status === 'closed' ? 'Reopen ticket' : 'Close ticket';
+        actions.append(send, close);
+        const message = document.createElement('p');
+        message.className = 'message';
+        box.append(label, textarea, actions, message);
+        box.addEventListener('submit', async event => {
+          event.preventDefault();
+          send.disabled = true;
+          message.textContent = 'Sending reply…';
+          try {
+            await api('/.netlify/functions/reply-ticket', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: ticket.id, message: textarea.value })
+            });
+            message.className = 'message success';
+            message.textContent = 'Reply sent by email.';
+            await loadTickets();
+            await openTicket(ticket.id);
+          } catch (error) {
+            message.className = 'message error';
+            message.textContent = error.message;
+          } finally { send.disabled = false; }
+        });
+        close.addEventListener('click', async () => {
+          close.disabled = true;
+          try {
+            const nextStatus = ticket.status === 'closed' ? 'open' : 'closed';
+            await api('/.netlify/functions/admin-tickets', {
+              method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: ticket.id, status: nextStatus })
+            });
+            await loadTickets();
+            await openTicket(ticket.id);
+          } catch (error) {
+            message.className = 'message error';
+            message.textContent = error.message;
+          } finally { close.disabled = false; }
+        });
+        detailElement.append(head, meta, original, replyList, box);
+      }
+
+      document.querySelector('#login-form').addEventListener('submit', async event => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const button = form.querySelector('button');
+        const message = document.querySelector('#login-message');
+        button.disabled = true;
+        message.textContent = 'Signing in…';
+        try {
+          await api('/.netlify/functions/admin-login', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: form.password.value })
+          });
+          form.reset();
+          loginCard.hidden = true;
+          dashboard.hidden = false;
+          await loadTickets();
+        } catch (error) {
+          message.className = 'message error';
+          message.textContent = error.message;
+        } finally { button.disabled = false; }
+      });
+
+      document.querySelector('#refresh-button').addEventListener('click', loadTickets);
+      document.querySelector('#search').addEventListener('input', renderList);
+      document.querySelector('#status-filter').addEventListener('change', renderList);
+      document.querySelector('#logout-button').addEventListener('click', async () => {
+        await fetch('/.netlify/functions/admin-logout', { method: 'POST', credentials: 'same-origin' });
+        dashboard.hidden = true;
+        loginCard.hidden = false;
+      });
+
+      (async function checkSession() {
+        const response = await fetch('/.netlify/functions/admin-tickets', { credentials: 'same-origin' });
+        if (response.ok) {
+          loginCard.hidden = true;
+          dashboard.hidden = false;
+          const data = await response.json();
+          tickets = data.tickets || [];
+          updateStats();
+          renderList();
+        }
+      })();
+    </script>
+  </body>
+</html>
