@@ -340,7 +340,7 @@ export default function Tracker() {
         <Sidebar collapsible="none" className="sidebar">
           <a className="brand" href="/" aria-label="Arc by Norvido, oversikt">
             <span className="brand-mark">
-              n<span>·</span>
+              <img src="/arc-logo.svg" alt="" aria-hidden="true" />
             </span>
             <span>
               Arc<span className="brand-sub">by Norvido</span>
@@ -372,7 +372,7 @@ export default function Tracker() {
           <header className="topbar">
             <span>
               <span className="brand-mobile" aria-label="Arc by Norvido">
-                Arc<span>·</span>
+                <img src="/arc-logo.svg" alt="" aria-hidden="true" /><span>Arc</span>
               </span>
               <span className="desktop-label">Din personlige oversikt</span>
             </span>
