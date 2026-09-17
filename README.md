@@ -91,3 +91,7 @@ Manual products have a primary action above external search and can be saved and
 ## Arc 0.4.3
 
 Profile review now offers Keep / Suggested / Custom daily calories. Custom positive values are stored through the existing effective-dated goals; step goals, past dates, records and backups stay intact. Settings exposes a direct manual-goal action without requiring profile measurements. See docs/CALORIE_VERIFICATION.md for the full2,121-record source comparison and10 manufacturer reference checks. OFF live503 remains a verification limitation.
+
+## Arc 0.4.6-private
+
+The Arc identity now uses a geometric open-A mark shared across the web header, sidebar, favicon and Android adaptive icon. The private Android build is versionCode 9 and keeps the legacy package, local storage and backup identifiers for update compatibility.

@@ -111,6 +111,6 @@ An editorial strip above external search puts personal entry first: concise head
 
 Profile review groups Keep / Suggested / Custom in a labelled fieldset, with44px radio targets and a conditional explicit kcal/day field. Default is Keep; custom is available even without an eligible automatic estimate. No additional animation; all decisions remain readable immediately.
 
-## Arc identity (0.4.5)
+## Arc identity (0.4.6)
 
-Arc uses a compact arch-A monogram: dark navigation green field, warm peach arch and one terracotta terminal dot. The mark is shared by the sidebar/mobile brand, favicon and Android adaptive icon. It remains legible at small sizes and does not rely on text inside the icon.
+Arc uses a compact geometric open-A monogram: a dark navigation green field, warm peach structural strokes and one terracotta terminal dot. The open crown gives the mark an arc-like gesture while the horizontal bar keeps the A readable at 22–42px. The same mark is used in the sidebar/mobile brand, favicon and Android adaptive icon, without relying on text inside the icon. This refinement is versioned as 0.4.6-private for the Android test build.

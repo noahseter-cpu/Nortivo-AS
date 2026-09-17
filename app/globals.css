@@ -176,11 +176,11 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e7baa4;
-  color: #27312c;
+  background: #242d2a;
+  color: #edb599;
   width: 39px;
   height: 42px;
-  border-radius: 12px;
+  border-radius: 11px;
   font-size: 33px;
   font-weight: 750;
   letter-spacing: -0.04em;
@@ -289,8 +289,17 @@ a {
 }
 .brand-mobile {
   display: none;
+  align-items: center;
+  gap: 8px;
 }
-.brand-mobile img { width: 22px; height: 22px; border-radius: 7px; display: block; }
+.brand-mobile img {
+  width: 25px;
+  height: 25px;
+  padding: 4px;
+  border-radius: 8px;
+  display: block;
+  background: #242d2a;
+}
 main {
   max-width: 1340px;
   margin: 0 auto;
@@ -1614,7 +1623,7 @@ details summary {
     display: none;
   }
   .brand-mobile {
-    display: block;
+    display: flex;
     font-size: 26px;
     font-weight: 700;
     color: var(--ink);
