@@ -1,4 +1,4 @@
-const SHELL = "noah-shell-v4";
+const SHELL = "noah-shell-v5";
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
@@ -9,6 +9,7 @@ self.addEventListener("install", (event) => {
           "/favicon.svg",
           "/arc-logo.svg",
           "/arc-mark.svg",
+          "/arc-wordmark.svg",
           "/fonts/manrope-regular.ttf",
           "/fonts/manrope-semibold.ttf",
           "/fonts/manrope-bold.ttf",

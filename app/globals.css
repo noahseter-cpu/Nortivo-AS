@@ -167,8 +167,9 @@ a {
   background: transparent;
   text-align: left;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 7px;
   text-decoration: none;
   color: #fff;
   font-size: 28px;
@@ -176,23 +177,19 @@ a {
   letter-spacing: -0.04em;
   margin: 0 8px 48px;
 }
-.brand-mark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #242d2a;
-  color: #edb599;
-  width: 39px;
-  height: 42px;
-  border-radius: 11px;
-  font-size: 33px;
-  font-weight: 750;
-  letter-spacing: -0.04em;
-  overflow: hidden;
+.arc-wordmark {
+  display: block;
+  flex-shrink: 0;
+  width: 90px;
+  height: 41px;
+  background: currentColor;
+  -webkit-mask: url("/arc-wordmark.svg") center / contain no-repeat;
+  mask: url("/arc-wordmark.svg") center / contain no-repeat;
 }
-.brand-mark img { width: 100%; height: 100%; display: block; }
-.brand-mark > span {
-  color: #a64e34;
+.brand-mobile .arc-wordmark {
+  width: 62px;
+  height: 29px;
+  color: var(--ink);
 }
 .brand-sub {
   display: block;
@@ -313,14 +310,6 @@ a {
 @media (max-width: 360px) { .food-nutrient-inputs { grid-template-columns: minmax(0, 1fr); } }
 .skip-link { position: fixed; inset-block-start: 8px; inset-inline-start: 8px; z-index: 100; padding: 12px 20px; background: var(--paper); color: var(--ink); transform: translateY(-200%); }
 .skip-link:focus { transform: none; }
-.brand-mobile img {
-  width: 25px;
-  height: 25px;
-  padding: 4px;
-  border-radius: 8px;
-  display: block;
-  background: #242d2a;
-}
 main {
   max-width: 1340px;
   margin: 0 auto;
@@ -1534,9 +1523,9 @@ details summary {
   .sidebar-bottom {
     display: none;
   }
-  .brand-mark {
-    width: 34px;
-    height: 38px;
+  .brand .arc-wordmark {
+    width: 42px;
+    height: 20px;
   }
   .nav-item {
     justify-content: center;
@@ -1644,9 +1633,6 @@ details summary {
     font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.04em;
-  }
-  .brand-mobile > span {
-    color: var(--accent);
   }
   .storage-label {
     font-size: 9px;
@@ -2123,9 +2109,9 @@ html[data-input="keyboard"] [data-slot="dialog-overlay"] {
   font-weight: 700;
   letter-spacing: -0.04em;
 }
-.profile-wordmark > span {
-  color: var(--accent);
-}
+.profile-wordmark { display: flex; align-items: center; gap: 10px; }
+.profile-wordmark .arc-wordmark { width: 66px; height: 30px; }
+.profile-wordmark .brand-sub { color: var(--muted); font-size: 12px; }
 .profile-layout {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;

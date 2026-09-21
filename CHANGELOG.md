@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0-rc.2 — 2026-09-21
+
+- Replace the rejected A-symbol with the user's selected clean Arc wordmark in the app, onboarding, favicon, launcher and splash.
+- Generate all icon variants from one outlined master, including a transparent Android themed-icon mask and safe adaptive placement.
+- Remove unused Capacitor starter icon/splash resources and refresh the web icon cache.
+- Increment Android versionCode to11, retaining the prior package and signing identity for private updates. No storage or calculation changes.
+
 ## 1.0.0-rc.1 — 2026-09-21
 
 - Rename display identity to Arc by Nortivo while preserving private-beta update identifiers.

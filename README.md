@@ -1,6 +1,8 @@
 # Arc by Nortivo
 
-Personal tracker for money, category and overall monthly budgets, daily steps and food intake, in Norwegian Bokmål and English. No sample personal records are seeded. Current candidate: **1.0.0-rc.1**, Android versionCode **10**. This is a private test candidate, not a published Play release.
+Personal tracker for money, category and overall monthly budgets, daily steps and food intake, in Norwegian Bokmål and English. No sample personal records are seeded. Current candidate: **1.0.0-rc.2**, Android versionCode **11**. This is a private test candidate, not a published Play release.
+
+The rc.2 identity update uses the user's selected clean **Arc wordmark** across the app and launcher. `public/arc-wordmark.svg` is the outlined master; `node scripts/generate-arc-icons.mjs` regenerates matching web/native assets. Android builds run this generator automatically.
 
 Start with [the 1.0 release checklist](docs/RELEASE_1_0.md), [language and migration details](docs/LANGUAGE_1_0.md), [food sources](docs/FOOD_SEARCH_1_0.md), and [Android release signing](docs/ANDROID_RELEASE_1_0.md). Historical beta notes below describe previous versions only.
 

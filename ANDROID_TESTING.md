@@ -2,7 +2,7 @@
 
 ## Current candidate — 2026-09-21
 
-Use `outputs/android/Arc-by-Nortivo-1.0.0-rc.1.apk`, Android versionCode10. Install over the existing private beta without uninstalling; the package, localhost origin, database/backup identifiers and signing certificate are unchanged. Export a JSON backup first. This candidate adds both interface languages, a persistent language selector and unified food search. [Current release instructions](docs/ANDROID_RELEASE_1_0.md) and [verification/checklist](docs/RELEASE_1_0.md) supersede the older version names below. The unsigned AAB is preparation only, not an installable/private-test APK or a signed Play upload.
+Use `outputs/android/Arc-by-Nortivo-1.0.0-rc.2.apk`, Android versionCode 11. Install over the existing private beta without uninstalling; the package, localhost origin, database/backup identifiers and signing certificate are unchanged. Export a JSON backup first. This candidate replaces the logo with the selected clean Arc wordmark and corrects Android icon masking. It retains the bilingual interface and unified food search from rc.1. [Release instructions](docs/ANDROID_RELEASE_1_0.md) and [verification/checklist](docs/RELEASE_1_0.md) document the preceding rc.1 baseline; the logo update is recorded in [VALIDATION.md](VALIDATION.md). The unsigned rc.1 AAB is preparation only, not an installable/private-test APK or a signed Play upload.
 
 ## Historical beta instructions
 

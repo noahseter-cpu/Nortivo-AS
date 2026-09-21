@@ -385,12 +385,8 @@ export default function Tracker() {
             onClick={() => setView("Oversikt")}
             aria-label={tr("Arc by Nortivo, oversikt")}
           >
-            <span className="brand-mark">
-              <img src="/arc-mark.svg" alt="" aria-hidden="true" />
-            </span>
-            <span>
-              Arc<span className="brand-sub">by Nortivo</span>
-            </span>
+            <span className="arc-wordmark" aria-hidden="true" />
+            <span className="brand-sub">by Nortivo</span>
           </button>
           <nav aria-label={tr("Hovedmeny")}>
             {navigation.map(({ name, icon: Icon }) => (
@@ -427,9 +423,12 @@ export default function Tracker() {
         <div className="workspace">
           <header className="topbar">
             <span>
-              <span className="brand-mobile" aria-label="Arc by Nortivo">
-                <img src="/arc-mark.svg" alt="" aria-hidden="true" />
-                <span>Arc</span>
+              <span
+                className="brand-mobile"
+                role="img"
+                aria-label="Arc by Nortivo"
+              >
+                <span className="arc-wordmark" aria-hidden="true" />
               </span>
               <span className="desktop-label">
                 {tr("Din personlige oversikt")}

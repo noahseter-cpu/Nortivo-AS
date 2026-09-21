@@ -111,6 +111,12 @@ An editorial strip above external search puts personal entry first: concise head
 
 Profile review groups Keep / Suggested / Custom in a labelled fieldset, with44px radio targets and a conditional explicit kcal/day field. Default is Keep; custom is available even without an eligible automatic estimate. No additional animation; all decisions remain readable immediately.
 
-## Arc identity (0.4.6)
+## Arc identity (0.4.6, superseded)
 
 Arc uses a compact geometric open-A monogram: a dark navigation green field, warm peach structural strokes and one terracotta terminal dot. The open crown gives the mark an arc-like gesture while the horizontal bar keeps the A readable at 22–42px. The same mark is used in the sidebar/mobile brand, favicon and Android adaptive icon, without relying on text inside the icon. This refinement is versioned as 0.4.6-private for the Android test build.
+
+## Arc wordmark (1.0.0-rc.2)
+
+Noah rejected the A-symbol and explicitly selected “Rent «Arc»-ordmerke” on2026-09-21. The new outlined wordmark uses a clear capital A and open r/c, with restrained curved corners, ivory on dark green for the launcher and inherited text color in the interface. The mark itself reads Arc; the secondary “by Nortivo” attribution sits below on desktop and beside it in onboarding. Mobile displays the wordmark once.
+
+`public/arc-wordmark.svg` is the single geometry master, reconstructed as crisp paths from the generated direction saved in `assets/brand/arc-wordmark-reference.png`. All small/full web icons and native vectors derive from it via `scripts/generate-arc-icons.mjs`. Android separates background, transparent foreground and monochrome alpha; the whole adaptive wordmark bounding rectangle fits inside the central66dp circle. Splash uses the same lettering in dark ink on cream. The obsolete packaged Capacitor/robot starter assets are removed. Existing page layout, interaction, motion and all stored data remain intact.

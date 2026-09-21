@@ -86,3 +86,11 @@ Rendered the shared Arc SVG in the web brand and favicon, cached it in the servi
 ## Arc 0.4.6 logo refinement (2026-09-17)
 
 Replaced the first arch treatment with a geometric open-A mark that holds its silhouette at small sizes and uses the same peach, dark green and terracotta palette across web, favicon and Android. The sidebar and mobile header use a transparent mark on the dark brand field; the favicon and adaptive icon retain the dark rounded field. Android versionCode 9 / 0.4.6-private. Physical launcher rendering on a device remains untested.
+
+## Arc 1.0.0-rc.2 wordmark (2026-09-21)
+
+Implemented the user's selected clean Arc wordmark across web, onboarding, favicon, Android launcher and splash. One outlined SVG generates all icon variants. Adaptive foreground and monochrome layers are transparent and fit within Android's safe circle; unused starter resources were removed. No persistence, calculation or motion changes.
+
+Validation: TypeScript, production web build, Android APK build and native release lint passed. ESLint reports zero errors and two existing image advisories. Three existing browser tests passed against the production Worker, covering desktop/mobile navigation, finance interaction and bilingual settings/profile. Additional rendered checks at 390, 760 and 1440px in light/dark modes confirmed wordmark visibility and no horizontal overflow. Inspected the icon at 512px and 32px. Impeccable reported 211 advisory sidecar mismatches and zero non-advisory findings; that documentation drift was outside this logo change.
+
+APK package `no.noah.tracker.privatebeta`, label `Arc by Nortivo`, versionCode 11 and versionName `1.0.0-rc.2` verified with aapt. Signature verification passed and the SHA-256 signing certificate matches the previous private beta (`cf55bc471b9b02bef4e6efc5af7b5a6f12185d57476b2af606236e30977533fa`). Physical Android launcher/splash rendering remains untested. The initial development server failed internally; browser verification used the successfully built production Worker instead.

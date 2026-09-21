@@ -10,6 +10,8 @@ if (-not $env:JAVA_HOME) {
 if (-not $env:ANDROID_HOME) { $env:ANDROID_HOME = "$trackerRoot/.sites-runtime/android-tools/sdk" }
 if (-not (Test-Path -LiteralPath "$env:ANDROID_HOME/platforms/android-36/android.jar")) { throw 'Install Android SDK platform 36 and set ANDROID_HOME.' }
 Set-Content -LiteralPath "$trackerRoot/android/local.properties" -Value ('sdk.dir=' + $env:ANDROID_HOME.Replace('\','/'))
+& $trackerNode scripts/generate-arc-icons.mjs
+if ($LASTEXITCODE -ne 0) { throw 'Arc icon generation failed.' }
 & $trackerNode node_modules/vite/bin/vite.js build --config vite.mobile.config.ts
 if ($LASTEXITCODE -ne 0) { throw 'Mobile web build failed.' }
 & $trackerNode node_modules/@capacitor/cli/bin/capacitor sync android
@@ -20,7 +22,7 @@ $trackerApk = "$trackerRoot/android/app/build/outputs/apk/debug/app-debug.apk"
 & "$env:ANDROID_HOME/build-tools/36.0.0/apksigner.bat" verify --verbose $trackerApk
 if ($LASTEXITCODE -ne 0) { throw 'APK signature verification failed.' }
 New-Item -ItemType Directory -Force "$trackerRoot/outputs/android" | Out-Null
-$trackerOutput = "$trackerRoot/outputs/android/Arc-by-Nortivo-1.0.0-rc.1.apk"
+$trackerOutput = "$trackerRoot/outputs/android/Arc-by-Nortivo-1.0.0-rc.2.apk"
 Copy-Item -LiteralPath $trackerApk -Destination $trackerOutput -Force
 $trackerHash = & $trackerNode -e "const fs=require('fs');const crypto=require('crypto');const p=process.argv[1];process.stdout.write(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'))" -- "$trackerOutput"
 if ($LASTEXITCODE -ne 0) { throw 'APK checksum generation failed.' }

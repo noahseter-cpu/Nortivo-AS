@@ -76,8 +76,13 @@ export function ProfileSetup({
   return (
     <main className="profile-page">
       <header className="profile-header">
-        <span className="profile-wordmark">
-          Arc by Nortivo<span>·</span>
+        <span
+          className="profile-wordmark"
+          role="img"
+          aria-label="Arc by Nortivo"
+        >
+          <span className="arc-wordmark" aria-hidden="true" />
+          <span className="brand-sub">by Nortivo</span>
         </span>
         <span className="profile-local">
           <ShieldCheck size={15} /> {t("Bare på denne enheten")}
