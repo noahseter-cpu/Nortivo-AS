@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { profileSchema } from "./profile";
+import { getLanguage, getLocale, t } from "./i18n";
 export const id = () => crypto.randomUUID();
 export const today = () =>
   new Intl.DateTimeFormat("sv-SE", {
@@ -55,6 +56,30 @@ export const foodSchema = z.object({
   packageSize: text.default(""),
   favorite: z.boolean().default(false),
   confirmed: z.boolean().default(false),
+  names: z.object({ nb: text.optional(), en: text.optional() }).optional(),
+  portionNames: z
+    .object({ nb: text.optional(), en: text.optional() })
+    .optional(),
+  nutrients100: z
+    .object({
+      protein: nonnegative.nullable(),
+      carbohydrate: nonnegative.nullable(),
+      fat: nonnegative.nullable(),
+      fiber: nonnegative.nullable(),
+      sugar: nonnegative.nullable(),
+      salt: nonnegative.nullable(),
+    })
+    .optional(),
+  markets: z.array(z.string().max(100)).max(500).optional(),
+  sourceVersion: text.optional(),
+  originalEnergy: z
+    .object({
+      value: nonnegative,
+      unit: z.enum(["kcal", "kJ"]),
+      basis: z.enum(["100g", "100ml", "100-unknown"]),
+    })
+    .optional(),
+  searchKeywords: z.array(z.string().max(250)).max(500).optional(),
 });
 export const logSchema = z.object({
   id: key,
@@ -97,7 +122,7 @@ const mealSchema = z.object({
     .max(100),
 });
 export const stateSchema = z.object({
-  version: z.literal(3),
+  version: z.literal(4),
   profile: profileSchema.nullable(),
   profilePromptSeen: z.boolean(),
   revision: z.number().int().nonnegative(),
@@ -111,8 +136,13 @@ export const stateSchema = z.object({
   meals: z.array(mealSchema).max(5000),
   modes: z.array(modeSchema).max(100000),
   settings: z.object({
+    language: z.enum(["nb", "en"]).nullable(),
+    languageSource: z
+      .enum(["manual", "legacy", "country", "fallback"])
+      .nullable(),
+    foodMarket: z.enum(["no", "world"]).default("no"),
     theme: z.enum(["system", "light", "dark"]),
-    name: z.string().min(1).max(60),
+    name: z.string().max(60),
     opening: z
       .object({
         amount: z.number().int().min(-1e12).max(1e12),
@@ -131,7 +161,7 @@ export type Transaction = z.infer<typeof transactionSchema>;
 export type Meal = z.infer<typeof mealSchema>;
 export function emptyState(): State {
   return {
-    version: 3,
+    version: 4,
     profile: null,
     profilePromptSeen: false,
     revision: 0,
@@ -152,8 +182,11 @@ export function emptyState(): State {
     meals: [],
     modes: [],
     settings: {
+      language: null,
+      languageSource: null,
+      foodMarket: "no",
       theme: "system",
-      name: "Noah",
+      name: "",
       opening: null,
       warning: 80,
       danger: 100,
@@ -162,37 +195,64 @@ export function emptyState(): State {
   };
 }
 export function amountOre(raw: string, signed = false) {
-  const s = raw.trim().replace(/[\s\u00a0\u202f]/g, "");
+  const normal = raw.trim().replace(/[\u00a0\u202f]/g, " ");
+  // A space is allowed only as a complete group of three, never "12 34" => 1234.
+  if (
+    normal.includes(" ") &&
+    !/^-?\d{1,3}(?: \d{3})+(?:[,.]\d{1,2})?$/.test(normal)
+  )
+    throw Error(t("Skriv et gyldig beløp, for eksempel 125,50."));
+  const s = normal.replace(/ /g, "");
   if (!(signed ? /^-?\d+(?:[,.]\d{1,2})?$/ : /^\d+(?:[,.]\d{1,2})?$/).test(s))
-    throw Error("Skriv et gyldig beløp, for eksempel 125,50.");
+    throw Error(t("Skriv et gyldig beløp, for eksempel 125,50."));
   const negative = s.startsWith("-");
   const [a, b = ""] = s.replace("-", "").split(/[,.]/);
   const n = (Number(a) * 100 + Number(b.padEnd(2, "0"))) * (negative ? -1 : 1);
   if (!Number.isSafeInteger(n) || Math.abs(n) > 1e12)
-    throw Error("Beløpet er for stort.");
+    throw Error(t("Beløpet er for stort."));
   return n;
 }
 export function decimal(raw: string, allowZero = true) {
   if (!/^\d+(?:[,.]\d+)?$/.test(raw.trim()))
-    throw Error("Skriv et gyldig tall.");
+    throw Error(t("Skriv et gyldig tall."));
+  const foreignSeparator = getLanguage() === "nb" ? "." : ",";
+  const parts = raw.trim().split(foreignSeparator);
+  if (
+    parts.length === 2 &&
+    /^[1-9]\d{0,2}$/.test(parts[0]) &&
+    parts[1].length === 3
+  )
+    throw Error(
+      t(
+        "Tallet er tvetydig. Bruk desimaltegnet for valgt språk, og ingen tusenskilletegn.",
+      ),
+    );
   const n = Number(raw.replace(",", "."));
   if (!Number.isFinite(n) || n > 1e10 || n < 0 || (!allowZero && n === 0))
-    throw Error("Skriv et gyldig positivt tall.");
+    throw Error(t("Skriv et gyldig positivt tall."));
   return n;
 }
 export const money = (v: number) =>
-  new Intl.NumberFormat("nb-NO", {
+  new Intl.NumberFormat(getLocale(), {
     style: "currency",
     currency: "NOK",
     maximumFractionDigits: v % 100 === 0 ? 0 : 2,
   }).format(v / 100);
 export const num = (v: number) =>
-  new Intl.NumberFormat("nb-NO", { maximumFractionDigits: 1 }).format(v);
+  new Intl.NumberFormat(getLocale(), { maximumFractionDigits: 1 }).format(v);
+/** Editable numeric values retain precision and never include grouping separators. */
+export const inputNumber = (v: number | null | undefined) =>
+  v == null
+    ? ""
+    : new Intl.NumberFormat(getLocale(), {
+        useGrouping: false,
+        maximumSignificantDigits: 21,
+      }).format(v);
 export const dateLabel = (
   d: string,
   options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long" },
 ) =>
-  new Intl.DateTimeFormat("nb-NO", { ...options, timeZone: "UTC" }).format(
+  new Intl.DateTimeFormat(getLocale(), { ...options, timeZone: "UTC" }).format(
     new Date(d + "T12:00:00Z"),
   );
 export const monthLabel = (m: string) =>
@@ -270,14 +330,18 @@ export function allowance(
 export function kcal(food: Food, amount: number) {
   if (
     food.kcal100 === null ||
-    food.unit === null ||
+    !["g", "ml", "portion"].includes(food.unit ?? "") ||
     !Number.isFinite(food.kcal100) ||
     food.kcal100 < 0 ||
     !Number.isFinite(amount) ||
-    amount <= 0
+    amount <= 0 ||
+    amount > 1e10
   )
-    throw Error("Bekreft kalorier og måleenhet før du logger maten.");
-  return Math.round(food.kcal100 * amount) / 100;
+    throw Error(t("Bekreft kalorier og måleenhet før du logger maten."));
+  const result = Math.round(food.kcal100 * amount) / 100;
+  if (!Number.isFinite(result) || result > 1e10)
+    throw Error(t("Kalorimengden er for stor. Kontroller mengden."));
+  return result;
 }
 export function dailyCalories(s: State, d: string) {
   const mode = s.modes.find((x) => x.date === d);
@@ -332,6 +396,24 @@ export function validateState(raw: unknown): State {
       settings: { ...old.settings, theme: "system" },
     };
   }
+  if (
+    raw &&
+    typeof raw === "object" &&
+    (raw as { version?: unknown }).version === 3
+  ) {
+    const old = raw as { settings?: Record<string, unknown> };
+    // All released schemas were Norwegian; preserve that experience on upgrade.
+    raw = {
+      ...old,
+      version: 4,
+      settings: {
+        ...old.settings,
+        language: "nb",
+        languageSource: "legacy",
+        foodMarket: "no",
+      },
+    };
+  }
   const s = stateSchema.parse(raw);
   for (const [rows, keyName] of [
     [s.categories, "id"],
@@ -346,23 +428,41 @@ export function validateState(raw: unknown): State {
   ] as [unknown[], string][]) {
     const keys = rows.map((r) => (r as Record<string, unknown>)[keyName]);
     if (new Set(keys).size !== keys.length)
-      throw Error("Filen inneholder dupliserte ID-er eller datoer.");
+      throw Error(t("Filen inneholder dupliserte ID-er eller datoer."));
   }
   if (new Set(s.goals.map((x) => x.date)).size !== s.goals.length)
-    throw Error("Flere mål for samme dato.");
+    throw Error(t("Flere mål for samme dato."));
   const cats = new Set(s.categories.map((x) => x.id));
   if (
     s.transactions.some((x) => !cats.has(x.categoryId)) ||
     s.budgets.some((x) => Object.keys(x.categories).some((k) => !cats.has(k)))
   )
-    throw Error("En kategori mangler i sikkerhetskopien.");
+    throw Error(t("En kategori mangler i sikkerhetskopien."));
+  // Each value is integer øre, but many individually valid amounts can exceed
+  // IEEE-754's exact integer range. Bound every subset, balance and budget result.
+  let largestBase = Math.abs(s.settings.opening?.amount ?? 0);
+  for (const budget of s.budgets) {
+    largestBase = Math.max(largestBase, budget.total ?? 0);
+    for (const limit of Object.values(budget.categories))
+      largestBase = Math.max(largestBase, limit);
+  }
+  const absoluteMoney = s.transactions.reduce(
+    (sum, transaction) => sum + BigInt(transaction.amount),
+    BigInt(largestBase),
+  );
+  if (absoluteMoney > BigInt(Number.MAX_SAFE_INTEGER))
+    throw Error(
+      t(
+        "De samlede beløpene er for store til å beregnes nøyaktig. Kontroller beløpene i registreringene eller sikkerhetskopien.",
+      ),
+    );
   for (const log of s.logs) {
     if (Math.abs(kcal(log.food, log.amount) - log.kcal) > 0.011)
-      throw Error("Kaloritotalen stemmer ikke med matregistreringen.");
+      throw Error(t("Kaloritotalen stemmer ikke med matregistreringen."));
   }
   for (const mode of s.modes) {
     if (mode.mode === "manual" && mode.total === null)
-      throw Error("En manuell kaloritotal mangler.");
+      throw Error(t("En manuell kaloritotal mangler."));
   }
   for (const meal of s.meals)
     for (const item of meal.ingredients) kcal(item.food, item.amount);
@@ -401,13 +501,23 @@ export function csvTransactions(s: State) {
   return (
     "\ufeff" +
     [
-      ["ID", "Dato", "Type", "Beløp NOK", "Kategori", "Tittel", "Notat"],
+      [
+        "ID",
+        t("Dato"),
+        t("Type"),
+        t("Beløp NOK"),
+        t("Kategori"),
+        t("Tittel"),
+        t("Notat"),
+      ],
       ...s.transactions.map((x) => [
         x.id,
         x.date,
-        { expense: "Utgift", income: "Inntekt", refund: "Refusjon" }[x.type],
-        (x.amount / 100).toFixed(2).replace(".", ","),
-        s.categories.find((c) => c.id === x.categoryId)?.name ?? "",
+        t({ expense: "Utgift", income: "Inntekt", refund: "Refusjon" }[x.type]),
+        (x.amount / 100)
+          .toFixed(2)
+          .replace(".", getLanguage() === "nb" ? "," : "."),
+        categoryLabel(s.categories.find((c) => c.id === x.categoryId)),
         x.title,
         x.note,
       ]),
@@ -417,4 +527,21 @@ export function csvTransactions(s: State) {
       )
       .join("\r\n")
   );
+}
+
+const originalCategories = [
+  "Mat",
+  "Transport",
+  "Shopping",
+  "Abonnementer",
+  "Underholdning",
+  "Annet",
+];
+/** Translate only untouched built-in categories; custom and renamed names are data. */
+export function categoryLabel(category?: { id: string; name: string }) {
+  if (!category) return "";
+  const original = originalCategories[Number(category.id.replace(/^cat-/, ""))];
+  return /^cat-[0-5]$/.test(category.id) && category.name === original
+    ? t(original)
+    : category.name;
 }

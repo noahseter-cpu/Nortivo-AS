@@ -8,7 +8,6 @@ import {
   Utensils,
   Pencil,
   Trash2,
-  ArrowRight,
   Camera,
   ExternalLink,
 } from "lucide-react";
@@ -24,22 +23,75 @@ import {
   kcal,
   put,
   num,
+  inputNumber,
   dailyCalories,
 } from "@/lib/tracker-core";
-import { Capacitor } from "@capacitor/core";
-import { preferredFood } from "@/lib/food-adapters";
-import { searchFood } from "@/lib/food-search";
+import {
+  preferredFood,
+  localizedFoodName,
+  foodMatches,
+  nutrientAmount,
+  type NutrientKey,
+} from "@/lib/food-adapters";
+import {
+  searchFoods,
+  type SearchIssue,
+  type FoodSearchResult,
+} from "@/lib/food-search";
+import { t, useI18n, getLanguage } from "@/lib/i18n";
 import {
   Btn,
   Empty,
   Field,
   Form,
   DatePicker,
-  Modal,
   val,
-  optional,
   type Save,
 } from "./tracker-shared";
+const foodName = (food: Food) => localizedFoodName(food, getLanguage());
+const nutrientLabels: [NutrientKey, string][] = [
+  ["protein", "Protein"],
+  ["carbohydrate", "Karbohydrat"],
+  ["fat", "Fett"],
+  ["fiber", "Fiber"],
+  ["sugar", "Sukkerarter"],
+  ["salt", "Salt"],
+];
+function ownNutrients(data: FormData) {
+  return Object.fromEntries(
+    nutrientLabels.map(([key]) => {
+      const raw = val(data, `nutrient-${key}`);
+      const value = raw ? decimal(raw) : null;
+      if (value !== null && value > 100)
+        throw Error("Et næringsstoff kan ikke overstige 100 g per 100.");
+      return [key, value];
+    }),
+  );
+}
+function Nutrition({
+  food,
+  amount = 100,
+  unit = food.unit,
+}: {
+  food: Food;
+  amount?: number;
+  unit?: Food["unit"];
+}) {
+  useI18n();
+  return (
+    <dl className="food-nutrients">
+      {nutrientLabels.map(([key, label]) => {
+        const value = nutrientAmount(food, key, amount, unit);
+        return (
+          <div key={key}>
+            <dt>{t(label)}</dt>
+            <dd>{value === null ? t("Ukjent") : `${num(value)} g`}</dd>
+          </div>
+        );
+      })}
+    </dl>
+  );
+}
 export function FoodForm({
   food,
   entry,
@@ -55,21 +107,22 @@ export function FoodForm({
   close: () => void;
   saveOnly?: boolean;
 }) {
+  useI18n();
   const [logNow, setLogNow] = useState(false);
   const onlySave = saveOnly && !logNow;
-  const [energy, setEnergy] = useState(
-    food.kcal100 === null ? "" : String(food.kcal100),
-  );
+  const [energy, setEnergy] = useState(inputNumber(food.kcal100));
   const [unit, setUnit] = useState<"g" | "ml" | "">(
     food.unit === "g" || food.unit === "ml" ? food.unit : "",
   );
-  const [amount, setAmount] = useState(entry ? String(entry.amount) : "");
-  const [portion, setPortion] = useState(
-    food.portion === null ? "" : String(food.portion),
-  );
+  const [amount, setAmount] = useState(inputNumber(entry?.amount));
+  const [portion, setPortion] = useState(inputNumber(food.portion));
   const isCustom = food.source === "Egen registrering";
   let preview: number | null = null;
+  let sourceNutrientsMatch = false;
   try {
+    sourceNutrientsMatch =
+      food.kcal100 === decimal(energy) &&
+      (food.unit === null || food.unit === unit);
     if (unit && energy !== "" && amount !== "")
       preview = kcal(
         { ...food, kcal100: decimal(energy), unit },
@@ -81,7 +134,7 @@ export function FoodForm({
   return (
     <Form
       cancel={close}
-      label={onlySave ? "Lagre produkt" : "Logg maten"}
+      label={t(onlySave ? "Lagre produkt" : "Logg maten")}
       onSubmit={async (d) => {
         if (!unit)
           throw Error("Velg gram eller milliliter fra næringsdeklarasjonen.");
@@ -95,6 +148,20 @@ export function FoodForm({
           name: val(d, "name") || food.name,
           kcal100: decimal(energy),
           unit,
+          // A personal correction must not silently carry an incompatible nutrient basis.
+          nutrients100: isCustom
+            ? ownNutrients(d)
+            : food.kcal100 !== decimal(energy) ||
+                (food.unit !== null && food.unit !== unit)
+              ? undefined
+              : food.nutrients100,
+          originalEnergy:
+            food.kcal100 !== decimal(energy) ? undefined : food.originalEnergy,
+          names: corrected ? undefined : food.names,
+          portionNames:
+            val(d, "portionName") !== food.portionName
+              ? undefined
+              : food.portionNames,
           portion: portion ? decimal(portion, false) : null,
           portionName: val(d, "portionName") || food.portionName,
           source: corrected ? "Egen registrering" : food.source,
@@ -122,24 +189,28 @@ export function FoodForm({
                   amount: consumed,
                   kcal: kcal(f, consumed),
                   group: val(d, "group") as FoodLog["group"],
-                  note: "",
+                  note: entry?.note ?? "",
                 });
               }
             },
-            onlySave ? "Produktet er lagret" : "Maten er logget",
+            t(onlySave ? "Produktet er lagret" : "Maten er logget"),
           )
         )
           close();
       }}
     >
       {isCustom && (
-        <Field label="Produktnavn">
+        <Field label={t("Produktnavn")}>
           <input
             name="name"
             required
-            defaultValue={food.name === "Nytt produkt" ? "" : food.name}
+            defaultValue={
+              saveOnly && ["Nytt produkt", "New product"].includes(food.name)
+                ? ""
+                : food.name
+            }
             maxLength={250}
-            placeholder="For eksempel yoghurten min"
+            placeholder={t("For eksempel yoghurten min")}
           />
         </Field>
       )}
@@ -149,53 +220,62 @@ export function FoodForm({
             <Utensils size={22} />
           </span>
           <div>
-            <h3>{food.name}</h3>
+            <h3>{foodName(food)}</h3>
             <p>
               {food.brand}
               {food.packageSize ? ` · ${food.packageSize}` : ""}
             </p>
-            <small>Kilde: {food.source}</small>
+            <small>{t("Kilde: {source}", { source: t(food.source) })}</small>
           </div>
         </div>
       )}
       {isCustom && (
         <p className="help">
-          Skriv av kcal (ikke kJ) fra emballasjen, og velg om tallet gjelder 100 g eller
-          100 ml. Produktet lagres bare hos deg.
+          {t(
+            "Skriv av kcal (ikke kJ) fra emballasjen, og velg om tallet gjelder 100 g eller 100 ml. Produktet lagres bare hos deg.",
+          )}
         </p>
       )}
       {food.source === "Matvaretabellen" && (
         <p className="notice">
-          Verdien gjelder 100 g spiselig del. Velg riktig variant: rå, kokt og
-          tørr mat kan ha svært ulikt kaloriinnhold.
+          {t(
+            "Verdien gjelder 100 g spiselig del. Velg riktig variant: rå, kokt og tørr mat kan ha svært ulikt kaloriinnhold.",
+          )}
         </p>
       )}
       {food.source === "Open Food Facts" && (
         <p className="notice">
-          Kontroller kcal mot etiketten og riktig variant (som solgt eller
-          tilberedt). Gjelder verdien per 100 g eller per 100 ml? Vi gjetter
-          ikke måleenheten. Bekreft opplysningene nedenfor.
+          {t(
+            "Kontroller kcal mot etiketten og riktig variant (som solgt eller tilberedt). Gjelder verdien per 100 g eller per 100 ml? Vi gjetter ikke måleenheten. Bekreft opplysningene nedenfor.",
+          )}
         </p>
       )}
       {!isCustom && food.kcal100 === null && (
         <p className="notice">
-          Kaloriverdien mangler eller er usikker. Fyll inn kcal fra etiketten
-          for å fortsette.
+          {t(
+            "Kaloriverdien mangler eller er usikker. Fyll inn kcal fra etiketten for å fortsette.",
+          )}
+        </p>
+      )}
+      {food.originalEnergy?.unit === "kJ" && (
+        <p className="help">
+          {t(
+            "Kilden oppgir {value} kJ per 100. Kcal er beregnet som kJ ÷ 4,184.",
+            { value: num(food.originalEnergy.value) },
+          )}
         </p>
       )}
       <div className="form-row">
-        <Field
-          label="kcal per 100"
-        >
+        <Field label={t("kcal per 100")}>
           <input
             inputMode="decimal"
             required
-            aria-label="kcal per 100"
+            aria-label={t("kcal per 100")}
             value={energy}
             onChange={(e) => setEnergy(e.target.value)}
           />
         </Field>
-        <Field label="Næringsgrunnlag">
+        <Field label={t("Næringsgrunnlag")}>
           <select
             required
             value={unit}
@@ -205,9 +285,9 @@ export function FoodForm({
               setAmount("");
             }}
           >
-            <option value="">Velg fra etiketten</option>
-            <option value="g">Per 100 gram</option>
-            <option value="ml">Per 100 milliliter</option>
+            <option value="">{t("Velg fra etiketten")}</option>
+            <option value="g">{t("Per 100 gram")}</option>
+            <option value="ml">{t("Per 100 milliliter")}</option>
           </select>
         </Field>
       </div>
@@ -218,19 +298,23 @@ export function FoodForm({
             checked={logNow}
             onChange={(e) => setLogNow(e.target.checked)}
           />
-          Logg også det jeg spiste
+          {t("Logg også det jeg spiste")}
         </label>
       )}
       {!onlySave && (
         <>
           <Field
-            label={`Mengde spist eller drukket${unit ? ` (${unit})` : ""}`}
+            label={
+              unit
+                ? t("Mengde spist eller drukket ({unit})", { unit })
+                : t("Mengde spist eller drukket")
+            }
           >
             <input
               inputMode="decimal"
               autoFocus
               required
-              placeholder="Skriv mengde"
+              placeholder={t("Skriv mengde")}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
@@ -239,19 +323,37 @@ export function FoodForm({
             <button
               type="button"
               className="text-button"
-              onClick={() => setAmount(String(food.portion))}
+              onClick={() => setAmount(inputNumber(food.portion))}
             >
-              {food.portionName}: {num(food.portion)} {food.unit}
+              {food.portionNames?.[getLanguage()] ||
+                (food.portionName === "Porsjon"
+                  ? t("Porsjon")
+                  : food.portionName)}
+              : {num(food.portion)} {food.unit}
             </button>
           )}
           <div className="portion-preview">
-            <span>Denne registreringen</span>
+            <span>{t("Denne registreringen")}</span>
             <strong>
-              {preview === null ? "—" : num(preview)} <small>kcal</small>
+              {preview === null ? "—" : num(preview)} <small>{t("kcal")}</small>
             </strong>
           </div>
+          {food.nutrients100 && preview !== null && (
+            <Nutrition
+              food={{
+                ...food,
+                unit: food.unit ?? (unit || null),
+                nutrients100:
+                  !isCustom && !sourceNutrientsMatch
+                    ? undefined
+                    : food.nutrients100,
+              }}
+              amount={decimal(amount, false)}
+              unit={unit || null}
+            />
+          )}
           <div className="form-row">
-            <Field label="Dato">
+            <Field label={t("Dato")}>
               <input
                 name="date"
                 type="date"
@@ -259,11 +361,13 @@ export function FoodForm({
                 required
               />
             </Field>
-            <Field label="Måltid">
+            <Field label={t("Måltid")}>
               <select name="group" defaultValue={entry?.group ?? "Annet"}>
                 {["Frokost", "Lunsj", "Middag", "Mellommåltid", "Annet"].map(
                   (x) => (
-                    <option key={x}>{x}</option>
+                    <option key={x} value={x}>
+                      {t(x)}
+                    </option>
                   ),
                 )}
               </select>
@@ -272,24 +376,65 @@ export function FoodForm({
         </>
       )}
       <details className="form-details">
-        <summary>Husk en porsjon</summary>
+        <summary>{t("Husk en porsjon")}</summary>
         <div className="form-row">
-          <Field label="Navn på porsjonen">
+          <Field label={t("Navn på porsjonen")}>
             <input
               name="portionName"
-              defaultValue={food.portionName}
-              placeholder="For eksempel én boks"
+              defaultValue={
+                food.portionNames?.[getLanguage()] ||
+                (food.portionName === "Porsjon"
+                  ? t("Porsjon")
+                  : food.portionName)
+              }
+              placeholder={t("For eksempel én boks")}
             />
           </Field>
-          <Field label={`Mengde per porsjon (${unit || "g / ml"})`}>
+          <Field
+            label={t("Mengde per porsjon ({unit})", { unit: unit || "g / ml" })}
+          >
             <input
               inputMode="decimal"
               value={portion}
               onChange={(e) => setPortion(e.target.value)}
-              placeholder="Må være kjent"
+              placeholder={t("Må være kjent")}
             />
           </Field>
         </div>
+      </details>
+      <details className="form-details">
+        <summary>
+          {t(
+            isCustom
+              ? "Næringsinnhold per 100"
+              : "Opprinnelig næringsinnhold per 100",
+          )}
+        </summary>
+        {isCustom ? (
+          <div className="food-nutrient-inputs">
+            {nutrientLabels.map(([key, label]) => (
+              <Field
+                key={key}
+                label={t("{nutrient} (g)", { nutrient: t(label) })}
+              >
+                <input
+                  name={`nutrient-${key}`}
+                  inputMode="decimal"
+                  defaultValue={inputNumber(food.nutrients100?.[key])}
+                  placeholder={t("Ukjent")}
+                />
+              </Field>
+            ))}
+          </div>
+        ) : (
+          <Nutrition
+            food={{ ...food, unit: food.unit ?? (unit || null) }}
+            unit={food.unit ?? (unit || null)}
+          />
+        )}
+        <p className="help">
+          {t("Ukjente næringsverdier regnes ikke som null.")}
+        </p>
       </details>
       <label className="check-label">
         <input
@@ -297,7 +442,7 @@ export function FoodForm({
           name="favorite"
           defaultChecked={food.favorite || (isCustom && saveOnly)}
         />
-        Lagre som favoritt
+        {t("Lagre som favoritt")}
       </label>
       {food.url.startsWith("https://") && (
         <a
@@ -306,12 +451,14 @@ export function FoodForm({
           target="_blank"
           rel="noreferrer"
         >
-          Se opprinnelig kilde <ExternalLink size={13} />
+          {t("Se opprinnelig kilde")}
+          <ExternalLink size={13} />
         </a>
       )}
       <p className="help">
-        Lagres som et øyeblikksbilde. Senere produktendringer endrer ikke
-        historikken din.
+        {t(
+          "Lagres som et øyeblikksbilde. Senere produktendringer endrer ikke historikken din.",
+        )}
       </p>
     </Form>
   );
@@ -325,10 +472,11 @@ export function MealEntryForm({
   save: Save;
   close: () => void;
 }) {
+  useI18n();
   return (
     <Form
       cancel={close}
-      label="Oppdater måltid"
+      label={t("Oppdater måltid")}
       onSubmit={async (d) => {
         const amount = decimal(val(d, "amount"), false);
         const updated = {
@@ -343,30 +491,33 @@ export function MealEntryForm({
             if (s.modes.find((x) => x.date === updated.date)?.mode === "manual")
               throw Error("Bytt til matregistreringer for denne datoen først.");
             put(s.logs, updated);
-          }, "Måltidet er oppdatert")
+          }, t("Måltidet er oppdatert"))
         )
           close();
       }}
     >
       <p className="notice">
-        Bruker næringsverdiene fra det opprinnelige måltidet. Senere endringer i
-        oppskriften påvirker ikke denne registreringen.
+        {t(
+          "Bruker næringsverdiene fra det opprinnelige måltidet. Senere endringer i oppskriften påvirker ikke denne registreringen.",
+        )}
       </p>
-      <Field label="Porsjoner spist">
+      <Field label={t("Porsjoner spist")}>
         <input
           name="amount"
           inputMode="decimal"
           required
-          defaultValue={entry.amount}
+          defaultValue={inputNumber(entry.amount)}
         />
       </Field>
-      <Field label="Dato">
+      <Field label={t("Dato")}>
         <input type="date" name="date" required defaultValue={entry.date} />
       </Field>
-      <Field label="Måltid">
+      <Field label={t("Måltid")}>
         <select name="group" defaultValue={entry.group}>
           {["Frokost", "Lunsj", "Middag", "Mellommåltid", "Annet"].map((x) => (
-            <option key={x}>{x}</option>
+            <option key={x} value={x}>
+              {t(x)}
+            </option>
           ))}
         </select>
       </Field>
@@ -384,6 +535,7 @@ export function ManualCalories({
   save: Save;
   close: () => void;
 }) {
+  useI18n();
   const current = state.modes.find((x) => x.date === date);
   const [mode, setMode] = useState(current?.mode ?? "items");
   return (
@@ -397,44 +549,48 @@ export function ManualCalories({
         if (
           await save(
             (s) => put(s.modes, { date, mode, total }, "date"),
-            "Registreringsmåten er oppdatert",
+            t("Registreringsmåten er oppdatert"),
           )
         )
           close();
       }}
     >
-      <Field label="Hvordan vil du føre kalorier denne dagen?">
+      <Field label={t("Hvordan vil du føre kalorier denne dagen?")}>
         <select
           value={mode}
           onChange={(e) => setMode(e.target.value as "items" | "manual")}
         >
-          <option value="items">Tell individuelle matregistreringer</option>
-          <option value="manual">Skriv én kaloritotal</option>
+          <option value="items">
+            {t("Tell individuelle matregistreringer")}
+          </option>
+          <option value="manual">{t("Skriv én kaloritotal")}</option>
         </select>
       </Field>
       {mode === "manual" && (
-        <Field label="Dagens totale kcal">
+        <Field label={t("Dagens totale kcal")}>
           <input
             name="total"
             inputMode="decimal"
             required
-            defaultValue={current?.total ?? ""}
+            defaultValue={inputNumber(current?.total)}
           />
         </Field>
       )}
       <p className="notice">
-        Alle matregistreringer beholdes. I manuell modus telles bare
-        dagstotalen. Bytter du tilbake, telles bare matregistreringene.
-        Ingenting dobbelttelles eller slettes.
+        {t(
+          "Alle matregistreringer beholdes. I manuell modus telles bare dagstotalen. Bytter du tilbake, telles bare matregistreringene. Ingenting dobbelttelles eller slettes.",
+        )}
       </p>
       <p className="help">
-        {state.logs.filter((x) => x.date === date).length} matregistreringer er
-        lagret for denne datoen.
+        {t("Lagrede matregistreringer på denne datoen: {count}.", {
+          count: num(state.logs.filter((x) => x.date === date).length),
+        })}
       </p>
     </Form>
   );
 }
 function Scanner({ onCode }: { onCode: (code: string) => void }) {
+  useI18n();
   const video = useRef<HTMLVideoElement>(null);
   const stop = useRef<(() => void) | null>(null);
   const [active, setActive] = useState(false);
@@ -495,7 +651,7 @@ function Scanner({ onCode }: { onCode: (code: string) => void }) {
       {!active ? (
         <Btn type="button" secondary onClick={start}>
           <Camera size={18} />
-          Åpne kamera
+          {t("Åpne kamera")}
         </Btn>
       ) : (
         <Btn
@@ -506,17 +662,18 @@ function Scanner({ onCode }: { onCode: (code: string) => void }) {
             setActive(false);
           }}
         >
-          Stopp kamera
+          {t("Stopp kamera")}
         </Btn>
       )}
       {error && (
         <p role="alert" className="error-box">
-          {error}
+          {t(error)}
         </p>
       )}
       <p className="help">
-        Bildene behandles på enheten. Bare strekkoden sendes til Open Food
-        Facts.
+        {t(
+          "Bildene behandles på enheten. Bare strekkoden sendes til Open Food Facts.",
+        )}
       </p>
     </div>
   );
@@ -532,6 +689,7 @@ export function RecipeForm({
   save: Save;
   close: () => void;
 }) {
+  useI18n();
   const [ingredients, setIngredients] = useState(recipe?.ingredients ?? []);
   const usable = state.foods.filter(
     (f) =>
@@ -543,7 +701,7 @@ export function RecipeForm({
   return (
     <Form
       cancel={close}
-      label="Lagre måltid"
+      label={t("Lagre måltid")}
       onSubmit={async (d) => {
         if (!ingredients.length) throw Error("Legg til minst én ingrediens.");
         const meal: Meal = {
@@ -552,11 +710,11 @@ export function RecipeForm({
           servings: decimal(val(d, "servings"), false),
           ingredients: structuredClone(ingredients),
         };
-        if (await save((s) => put(s.meals, meal), "Måltidet er lagret"))
+        if (await save((s) => put(s.meals, meal), t("Måltidet er lagret")))
           close();
       }}
     >
-      <Field label="Navn på måltidet">
+      <Field label={t("Navn på måltidet")}>
         <input
           name="name"
           required
@@ -564,35 +722,38 @@ export function RecipeForm({
           defaultValue={recipe?.name}
         />
       </Field>
-      <Field label="Antall porsjoner i hele oppskriften">
+      <Field label={t("Antall porsjoner i hele oppskriften")}>
         <input
           name="servings"
           inputMode="decimal"
           required
-          defaultValue={recipe?.servings ?? 1}
+          defaultValue={inputNumber(recipe?.servings ?? 1)}
         />
       </Field>
       <p className="help">
-        Ingredienser hentes fra dine lagrede matvarer. Søk opp eller lagre
-        produkter først.
+        {t(
+          "Ingredienser hentes fra dine lagrede matvarer. Søk opp eller lagre produkter først.",
+        )}
       </p>
       {usable.length > 0 && (
         <>
-          <Field label="Ingrediens">
+          <Field label={t("Ingrediens")}>
             <select
               value={selected}
               onChange={(e) => setSelected(e.target.value)}
             >
               {usable.map((f) => (
                 <option key={f.id} value={f.id}>
-                  {f.name} ({f.unit})
+                  {foodName(f)} ({f.unit})
                 </option>
               ))}
             </select>
           </Field>
           <div className="form-row">
             <Field
-              label={`Mengde (${usable.find((x) => x.id === selected)?.unit ?? "g"})`}
+              label={t("Mengde ({unit})", {
+                unit: usable.find((x) => x.id === selected)?.unit ?? "g",
+              })}
             >
               <input
                 value={amount}
@@ -620,32 +781,34 @@ export function RecipeForm({
               }}
             >
               <Plus size={16} />
-              Legg til
+              {t("Legg til")}
             </Btn>
           </div>
         </>
       )}
-      {error && <p className="error-box">{error}</p>}
+      {error && <p className="error-box">{t(error)}</p>}
       {ingredients.map((item, i) => (
         <div className="record" key={i}>
           <div className="record-text">
-            <strong>{item.food.name}</strong>
+            <strong>{foodName(item.food)}</strong>
             <small>
               {num(item.amount)} {item.food.unit} ·{" "}
-              {num(kcal(item.food, item.amount))} kcal
+              {num(kcal(item.food, item.amount))} {t("kcal")}
             </small>
           </div>
           <button
             type="button"
             className="icon-button"
-            aria-label={`Fjern ${item.food.name}`}
+            aria-label={t("Fjern {name}", { name: foodName(item.food) })}
             onClick={() => setIngredients((a) => a.filter((_, j) => j !== i))}
           >
             <Trash2 size={15} />
           </button>
         </div>
       ))}
-      <p className="help">Endringer påvirker bare fremtidige registreringer.</p>
+      <p className="help">
+        {t("Endringer påvirker bare fremtidige registreringer.")}
+      </p>
     </Form>
   );
 }
@@ -660,6 +823,7 @@ export function LogRecipe({
   save: Save;
   close: () => void;
 }) {
+  useI18n();
   const total = recipe.ingredients.reduce(
     (a, x) => a + kcal(x.food, x.amount),
     0,
@@ -668,7 +832,7 @@ export function LogRecipe({
   return (
     <Form
       cancel={close}
-      label="Logg måltid"
+      label={t("Logg måltid")}
       onSubmit={async (d) => {
         const servings = decimal(val(d, "servings"), false);
         const date = val(d, "date");
@@ -694,37 +858,44 @@ export function LogRecipe({
               amount: servings,
               kcal: kcal(snapshot, servings),
               group: val(d, "group") as FoodLog["group"],
-              note: `${servings} porsjon(er). Oppskrift: ${recipe.ingredients
-                .map((x) => `${x.food.name}: ${x.amount} ${x.food.unit}`)
-                .join("; ")
-                .slice(0, 800)}`,
+              note: t("{servings} porsjoner. Oppskrift: {ingredients}", {
+                servings: num(servings),
+                ingredients: recipe.ingredients
+                  .map((x) => `${x.food.name}: ${x.amount} ${x.food.unit}`)
+                  .join("; ")
+                  .slice(0, 800),
+              }),
             });
-          }, "Måltidet er logget én gang")
+          }, t("Måltidet er logget én gang"))
         )
           close();
       }}
     >
       <p className="notice">
-        {num(per)} kcal per porsjon. Hele måltidet logges som én samlet
-        registrering.
+        {t(
+          "{calories} kcal per porsjon. Hele måltidet logges som én samlet registrering.",
+          { calories: num(per) },
+        )}
       </p>
-      <Field label="Porsjoner spist">
+      <Field label={t("Porsjoner spist")}>
         <input
           name="servings"
           inputMode="decimal"
-          placeholder="For eksempel 1 eller 0,5"
+          placeholder={t("For eksempel 1 eller 0,5")}
           required
         />
       </Field>
       <div className="form-row">
-        <Field label="Dato">
+        <Field label={t("Dato")}>
           <input name="date" type="date" required defaultValue={date} />
         </Field>
-        <Field label="Måltid">
+        <Field label={t("Måltid")}>
           <select name="group" defaultValue="Middag">
             {["Frokost", "Lunsj", "Middag", "Mellommåltid", "Annet"].map(
               (x) => (
-                <option key={x}>{x}</option>
+                <option key={x} value={x}>
+                  {t(x)}
+                </option>
               ),
             )}
           </select>
@@ -744,19 +915,22 @@ export function FoodLogs({
   edit: (e: FoodLog) => void;
   remove: (e: FoodLog) => void;
 }) {
+  useI18n();
   const logs = state.logs.filter((x) => x.date === date);
   const manual = state.modes.find((x) => x.date === date)?.mode === "manual";
   return (
     <>
       {manual && (
         <p className="notice">
-          Manuell total: {num(dailyCalories(state, date) ?? 0)} kcal.
-          Matregistreringene nedenfor er bevart, men telles ikke.
+          {t(
+            "Manuell total: {calories} kcal. Matregistreringene nedenfor er bevart, men telles ikke.",
+            { calories: num(dailyCalories(state, date) ?? 0) },
+          )}
         </p>
       )}
       {!logs.length ? (
-        <Empty title="Hva står på menyen?" icon={<Utensils size={25} />}>
-          Søk etter maten du har spist, velg mengde og logg den.
+        <Empty title={t("Hva står på menyen?")} icon={<Utensils size={25} />}>
+          {t("Søk etter maten du har spist, velg mengde og logg den.")}
         </Empty>
       ) : (
         logs.map((log) => (
@@ -765,22 +939,27 @@ export function FoodLogs({
               <Utensils size={17} />
             </span>
             <div className="record-text">
-              <strong>{log.food.name}</strong>
+              <strong>{foodName(log.food)}</strong>
               <small>
-                {log.group} ·{" "}
+                {t(log.group)} ·{" "}
                 {log.food.source === "Lagret måltid"
-                  ? `${num(log.amount)} porsjon(er)`
+                  ? t(
+                      log.amount === 1
+                        ? "{count} porsjon"
+                        : "{count} porsjoner",
+                      { count: num(log.amount) },
+                    )
                   : `${num(log.amount)} ${log.food.unit}`}{" "}
-                · {log.food.source}
+                · {t(log.food.source)}
               </small>
             </div>
             <strong>
-              {num(log.kcal)} <small>kcal</small>
+              {num(log.kcal)} <small>{t("kcal")}</small>
             </strong>
             {
               <button
                 className="icon-button quiet"
-                aria-label={`Rediger ${log.food.name}`}
+                aria-label={t("Rediger {name}", { name: foodName(log.food) })}
                 onClick={() => edit(log)}
               >
                 <Pencil size={14} />
@@ -788,7 +967,7 @@ export function FoodLogs({
             }
             <button
               className="icon-button quiet"
-              aria-label={`Slett ${log.food.name}`}
+              aria-label={t("Slett {name}", { name: foodName(log.food) })}
               onClick={() => remove(log)}
             >
               <Trash2 size={14} />
@@ -826,11 +1005,13 @@ export function FoodPage({
   logRecipe: (m: Meal) => void;
   initialScan?: boolean;
 }) {
+  const { language } = useI18n();
   const [query, setQuery] = useState("");
-  const [provider, setProvider] = useState<"mvt" | "off">("off");
+  const market = state.settings.foodMarket;
   const [results, setResults] = useState<Food[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [issues, setIssues] = useState<SearchIssue[]>([]);
   const [searched, setSearched] = useState(false);
   const [scan, setScan] = useState(initialScan);
   const [code, setCode] = useState("");
@@ -842,19 +1023,26 @@ export function FoodPage({
     controller.current = c;
     setBusy(true);
     setError("");
+    setIssues([]);
+    setResults([]);
     setSearched(true);
     try {
-      const found = await searchFood(
-        isBarcode ? "off" : provider,
+      const update = (found: FoodSearchResult) => {
+        if (!c.signal.aborted) {
+          setResults(found.foods.map((f) => preferredFood(f, state.foods)));
+          setIssues(found.issues);
+        }
+      };
+      const found = await searchFoods(
         value,
         c.signal,
-        isBarcode,
+        { barcode: isBarcode, market, language },
+        update,
       );
       if (!c.signal.aborted) {
-        setResults(found.map((f) => preferredFood(f, state.foods)));
-        if (isBarcode && found.length === 1) {
+        if (isBarcode && found.foods.length === 1) {
           setScan(false);
-          pick(found[0]);
+          pick(preferredFood(found.foods[0], state.foods));
         }
       }
     } catch (e) {
@@ -864,11 +1052,7 @@ export function FoodPage({
       if (!c.signal.aborted) setBusy(false);
     }
   }
-  const local = state.foods.filter((f) =>
-    `${f.name} ${f.brand}`
-      .toLocaleLowerCase("nb")
-      .includes(query.toLocaleLowerCase("nb")),
-  );
+  const local = state.foods.filter((f) => foodMatches(f, query));
   function rows(foods: Food[]) {
     return foods.length ? (
       <div className="food-results">
@@ -882,21 +1066,46 @@ export function FoodPage({
               </span>
             )}
             <button className="food-pick" onClick={() => pick(f)}>
-              <strong>{f.name}</strong>
+              <strong>{foodName(f)}</strong>
               <small>
                 {[f.brand, f.packageSize].filter(Boolean).join(" · ") ||
-                  f.source}
+                  t(f.source)}
               </small>
               <span>
                 {f.kcal100 === null
-                  ? "Kaloriverdi mangler"
-                  : `${num(f.kcal100)} kcal / 100 ${f.unit ?? "g eller ml · bekreft"}`}{" "}
-                · {f.source}
+                  ? t("Kaloriverdi mangler")
+                  : t("{calories} kcal / 100 {unit}", {
+                      calories: num(f.kcal100),
+                      unit: f.unit ?? t("g eller ml · bekreft"),
+                    })}{" "}
+                · {t(f.source)}
+              </span>
+              <span>
+                {f.source === "Matvaretabellen"
+                  ? t("Generell matvare · Norge")
+                  : f.source === "Egen registrering"
+                    ? t("Ditt eget produkt")
+                    : f.markets?.length
+                      ? t("Marked: {markets}", {
+                          markets: f.markets
+                            .map((m) =>
+                              m === "en:norway"
+                                ? t("Norge")
+                                : m
+                                    .replace(/^[a-z]{2}:/, "")
+                                    .replaceAll("-", " "),
+                            )
+                            .join(", "),
+                        })
+                      : t("Marked er ikke oppgitt")}
               </span>
             </button>
             <button
               className={`icon-button quiet ${state.foods.find((x) => x.id === f.id)?.favorite ? "favorite" : ""}`}
-              aria-label={`Favoritt: ${f.name}`}
+              aria-label={t("Favoritt: {name}", { name: foodName(f) })}
+              aria-pressed={
+                state.foods.find((x) => x.id === f.id)?.favorite ?? false
+              }
               onClick={() =>
                 save((s) => {
                   const current = s.foods.find((x) => x.id === f.id);
@@ -905,14 +1114,14 @@ export function FoodPage({
                     ...current,
                     favorite: !current?.favorite,
                   });
-                }, "Favoritter er oppdatert")
+                }, t("Favoritter er oppdatert"))
               }
             >
               <Star size={17} />
             </button>
             <button
               className="icon-button"
-              aria-label={`Velg ${f.name}`}
+              aria-label={t("Velg {name}", { name: foodName(f) })}
               onClick={() => pick(f)}
             >
               <Plus size={17} />
@@ -921,8 +1130,8 @@ export function FoodPage({
         ))}
       </div>
     ) : (
-      <Empty title="Ingen matvarer her ennå">
-        Søk i en matkilde eller lag ditt eget produkt.
+      <Empty title={t("Ingen matvarer her ennå")}>
+        {t("Søk i en matkilde eller lag ditt eget produkt.")}
       </Empty>
     );
   }
@@ -933,25 +1142,27 @@ export function FoodPage({
         <div className="actions">
           <Btn secondary onClick={() => setScan((v) => !v)}>
             <ScanLine size={17} />
-            Skann
+            {t("Skann")}
           </Btn>
         </div>
       </div>
-      <section className="custom-food-callout" aria-label="Eget produkt">
+      <section className="custom-food-callout" aria-label={t("Eget produkt")}>
         <div>
-          <h2>Din mat. Tall fra etiketten.</h2>
+          <h2>{t("Din mat. Tall fra etiketten.")}</h2>
           <p>
-            Legg inn navn og kalorier selv. Lagre én gang, bruk igjen uten nett.
+            {t(
+              "Legg inn navn og kalorier selv. Lagre én gang, bruk igjen uten nett.",
+            )}
           </p>
         </div>
         <Btn onClick={custom}>
           <Plus size={18} />
-          Legg inn eget produkt
+          {t("Legg inn eget produkt")}
         </Btn>
       </section>
       <div className="food-layout">
         <section className="panel">
-          <h2>Finn maten din</h2>
+          <h2>{t("Finn maten din")}</h2>
           <form
             className="food-search"
             onSubmit={(e) => {
@@ -962,62 +1173,41 @@ export function FoodPage({
             <label className="search-field">
               <Search size={19} />
               <input
-                aria-label="Søk etter mat"
+                aria-label={t("Søk etter mat")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Matvare, produkt eller merke …"
+                placeholder={t("Matvare, produkt eller merke …")}
                 minLength={2}
                 maxLength={100}
                 required
               />
             </label>
-            <Btn disabled={busy}>{busy ? "Søker …" : "Søk"}</Btn>
+            <Btn disabled={busy}>{t(busy ? "Søker …" : "Søk")}</Btn>
           </form>
-          <div
-            className="source-selector"
-            role="group"
-            aria-label="Velg matkilde"
-          >
-            <label>
-              <input
-                type="radio"
-                name="source"
-                checked={provider === "off"}
-                onChange={() => {
-                  controller.current?.abort();
-                  setBusy(false);
-                  setError("");
-                  setProvider("off");
-                  setResults([]);
-                  setSearched(false);
-                }}
-              />
-              Open Food Facts
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="source"
-                checked={provider === "mvt"}
-                onChange={() => {
-                  controller.current?.abort();
-                  setBusy(false);
-                  setError("");
-                  setProvider("mvt");
-                  setResults([]);
-                  setSearched(false);
-                }}
-              />
-              Matvaretabellen
-            </label>
-          </div>
+          <Field label={t("Matmarked")}>
+            <select
+              value={market}
+              onChange={async (e) => {
+                controller.current?.abort();
+                setBusy(false);
+                setError("");
+                setIssues([]);
+                setResults([]);
+                setSearched(false);
+                const next = e.target.value as "no" | "world";
+                await save((s) => {
+                  s.settings.foodMarket = next;
+                }, t("Matmarkedet er oppdatert"));
+              }}
+            >
+              <option value="no">{t("Norge først")}</option>
+              <option value="world">{t("Alle markeder")}</option>
+            </select>
+          </Field>
           <p className="help">
-            {provider === "mvt"
-              ? "Norske råvarer og tilberedte matvarer."
-              : "Pakkevarer, drikke og merkevarer fra flere land."}{" "}
-            {provider === "mvt" && Capacitor.isNativePlatform()
-              ? "Søk uten nett i Matvaretabellen, oppdatert 17.09.2026."
-              : "Søket sendes til valgt matkilde når du trykker Søk."}
+            {t(
+              "Ett søk i Matvaretabellen og Open Food Facts. Skriv norsk eller engelsk, og trykk Søk. Markedet endres ikke når du bytter språk.",
+            )}
           </p>
           {scan && (
             <section className="scan-area">
@@ -1034,7 +1224,7 @@ export function FoodPage({
                   search(code, true);
                 }}
               >
-                <Field label="Skriv strekkoden">
+                <Field label={t("Skriv strekkoden")}>
                   <input
                     inputMode="numeric"
                     value={code}
@@ -1043,35 +1233,52 @@ export function FoodPage({
                     required
                   />
                 </Field>
-                <Btn disabled={busy}>Finn produkt</Btn>
+                <Btn disabled={busy}>{t("Finn produkt")}</Btn>
               </form>
             </section>
           )}
           {busy && (
             <p className="search-status" role="status">
-              Henter matvarer … Du kan bytte matkilde mens du venter.
+              {t("Henter matvarer … Tilgjengelige treff vises med en gang.")}
             </p>
           )}
           {error && (
             <div className="error-box" role="alert">
-              {error}
+              {t(error)}
             </div>
           )}
-          {searched && !busy && !error && (
+          {issues.map((issue) => (
+            <p className="notice" role="status" key={issue.source}>
+              {issue.source}: {t(issue.message)}
+            </p>
+          ))}
+          {searched && !error && (results.length > 0 || !busy) && (
             <div className="external-results">
               <div className="section-head">
-                <h3>Søkeresultater</h3>
+                <h3>{t("Søkeresultater")}</h3>
                 <span className="subtle" role="status">
-                  {results.length} treff
+                  {t(results.length === 1 ? "Ett treff" : "{count} treff", {
+                    count: num(results.length),
+                  })}
                 </span>
               </div>
               {results.length ? (
                 rows(results)
               ) : (
-                <Empty title="Fant ikke produktet">
-                  Prøv et annet navn, eller{" "}
+                <Empty
+                  title={t(
+                    issues.length
+                      ? "Noen matkilder svarte ikke"
+                      : "Fant ikke produktet",
+                  )}
+                >
+                  {t(
+                    issues.length
+                      ? "Prøv søket igjen, bruk lagrede matvarer eller lag eget produkt."
+                      : "Prøv et annet navn, eller lag ditt eget produkt.",
+                  )}{" "}
                   <button className="text-button" onClick={custom}>
-                    lag eget produkt
+                    {t("lag eget produkt")}
                   </button>
                   .
                 </Empty>
@@ -1080,10 +1287,12 @@ export function FoodPage({
           )}
           <Tabs defaultValue="saved" className="food-tabs">
             <TabsList>
-              <TabsTrigger value="saved">Lagrede ({local.length})</TabsTrigger>
-              <TabsTrigger value="favorites">Favoritter</TabsTrigger>
-              <TabsTrigger value="recent">Nylig</TabsTrigger>
-              <TabsTrigger value="meals">Måltider</TabsTrigger>
+              <TabsTrigger value="saved">
+                {t("Lagrede ({count})", { count: num(local.length) })}
+              </TabsTrigger>
+              <TabsTrigger value="favorites">{t("Favoritter")}</TabsTrigger>
+              <TabsTrigger value="recent">{t("Nylig")}</TabsTrigger>
+              <TabsTrigger value="meals">{t("Måltider")}</TabsTrigger>
             </TabsList>
             <TabsContent value="saved">{rows(local)}</TabsContent>
             <TabsContent value="favorites">
@@ -1103,7 +1312,7 @@ export function FoodPage({
             <TabsContent value="meals">
               <button className="text-button" onClick={() => recipe()}>
                 <Plus size={16} />
-                Lag et måltid
+                {t("Lag et måltid")}
               </button>
               {state.meals.map((m) => (
                 <div key={m.id} className="record">
@@ -1116,18 +1325,18 @@ export function FoodPage({
                           0,
                         ) / m.servings,
                       )}{" "}
-                      kcal per porsjon
+                      {t("kcal per porsjon")}
                     </small>
                   </div>
                   <button
                     className="icon-button quiet"
-                    aria-label={`Endre ${m.name}`}
+                    aria-label={t("Endre {name}", { name: m.name })}
                     onClick={() => recipe(m)}
                   >
                     <Pencil size={15} />
                   </button>
                   <Btn secondary onClick={() => logRecipe(m)}>
-                    Logg
+                    {t("Logg")}
                   </Btn>
                 </div>
               ))}
@@ -1136,9 +1345,9 @@ export function FoodPage({
         </section>
         <section className="panel food-diary">
           <div className="section-head">
-            <h2>Matdagbok</h2>
+            <h2>{t("Matdagbok")}</h2>
             <button className="text-button" onClick={manual}>
-              Føringsmåte
+              {t("Føringsmåte")}
             </button>
           </div>
           <div className="calorie-total">
@@ -1147,30 +1356,31 @@ export function FoodPage({
                 ? "—"
                 : num(dailyCalories(state, date)!)}
             </strong>
-            <span>kcal registrert</span>
+            <span>{t("kcal registrert")}</span>
           </div>
           <FoodLogs state={state} date={date} edit={edit} remove={remove} />
         </section>
       </div>
       <p className="help section-note">
-        Kilder:{" "}
+        {t("Kilder:")}{" "}
         <a
           href="https://www.matvaretabellen.no/api/"
           target="_blank"
           rel="noreferrer"
         >
-          Matvaretabellen
+          {t("Matvaretabellen")}
         </a>{" "}
-        og{" "}
+        {t("og")}{" "}
         <a
           href="https://world.openfoodfacts.org/terms-of-use"
           target="_blank"
           rel="noreferrer"
         >
-          Open Food Facts (ODbL; bilder CC BY-SA)
+          {t("Open Food Facts (ODbL; bilder CC BY-SA)")}
         </a>
-        . Opplysningene kan inneholde feil. Kontroller produkt og mengde.
-        Lagrede matvarer virker også uten nett.
+        {t(
+          ". Opplysningene kan inneholde feil. Kontroller produkt og mengde. Lagrede matvarer virker også uten nett.",
+        )}
       </p>
     </>
   );

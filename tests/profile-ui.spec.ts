@@ -1,9 +1,11 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./legacy-test";
+import type { Page } from "@playwright/test";
+import type { State } from "../lib/tracker-core";
 test.skip(
   !process.env.MOBILE_PROFILE_TEST,
   "Run against standalone mobile build",
 );
-async function fill(page: any, age = "30") {
+async function fill(page: Page, age = "30") {
   await page
     .getByRole("textbox", { name: "Navn", exact: true })
     .fill("Test Noah");
@@ -25,7 +27,6 @@ async function fill(page: any, age = "30") {
 }
 test("onboarding opt-in goal, persistence, reload, and profile edit", async ({
   page,
-  context,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -71,7 +72,7 @@ test("onboarding opt-in goal, persistence, reload, and profile edit", async ({
   await page.getByRole("button", { name: "Lagre profil", exact: true }).click();
   const stored = await page.evaluate(
     async () =>
-      new Promise<any>((resolve) => {
+      new Promise<State>((resolve) => {
         const r = indexedDB.open("noah-tracker-private-v1", 1);
         r.onsuccess = () => {
           const db = r.result;
@@ -84,7 +85,7 @@ test("onboarding opt-in goal, persistence, reload, and profile edit", async ({
         };
       }),
   );
-  expect(stored.profile.weightKg).toBe(81.5);
+  expect(stored.profile!.weightKg).toBe(81.5);
   expect(stored.goals[0].calories).toBe(2850);
 });
 test("skip is remembered and under-18 profile has no auto-target", async ({
@@ -92,6 +93,9 @@ test("skip is remembered and under-18 profile has no auto-target", async ({
 }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Gjør dette senere" }).click();
+  await expect(
+    page.getByRole("button", { name: "Legg til utgift", exact: true }),
+  ).toBeVisible();
   await page.reload();
   await expect(
     page.getByRole("button", { name: "Legg til utgift", exact: true }),
@@ -141,7 +145,9 @@ test("user can choose an individual calorie goal without adopting the estimate",
     .getByRole("button", { name: "Innstillinger", exact: true })
     .click();
   await expect(
-    page.getByText("Kalorimål: 2300 kcal per dag. Du bestemmer målet selv."),
+    page.getByText(
+      /Kalorimål: 2\s300 kcal per dag\. Du bestemmer målet selv\./,
+    ),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Endre profil og kaloriforslag" })
@@ -152,6 +158,8 @@ test("user can choose an individual calorie goal without adopting the estimate",
   ).toBeChecked();
   await page.getByRole("button", { name: "Lagre profil", exact: true }).click();
   await expect(
-    page.getByText("Kalorimål: 2300 kcal per dag. Du bestemmer målet selv."),
+    page.getByText(
+      /Kalorimål: 2\s300 kcal per dag\. Du bestemmer målet selv\./,
+    ),
   ).toBeVisible();
 });

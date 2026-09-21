@@ -1,8 +1,12 @@
-import { test, expect } from "@playwright/test";
-import { emptyState, validateState } from "../lib/tracker-core";
+import { test, expect } from "./legacy-test";
+import { emptyState, validateState, type State } from "../lib/tracker-core";
 test("v2 update retains records and profile while adding system theme", () => {
-  const old: any = emptyState();
-  old.version = 2;
+  const old: Omit<State, "version" | "settings"> & {
+    version: 2;
+    settings: Omit<State["settings"], "theme"> & {
+      theme?: State["settings"]["theme"];
+    };
+  } = { ...emptyState(), version: 2 };
   delete old.settings.theme;
   old.settings.name = "Existing user";
   old.transactions.push({
@@ -15,7 +19,7 @@ test("v2 update retains records and profile while adding system theme", () => {
     note: "",
   });
   const updated = validateState(old);
-  expect(updated.version).toBe(3);
+  expect(updated.version).toBe(4);
   expect(updated.settings.theme).toBe("system");
   expect(updated.transactions).toEqual(old.transactions);
   expect(updated.settings.name).toBe("Existing user");

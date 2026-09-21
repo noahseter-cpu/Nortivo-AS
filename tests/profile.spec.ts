@@ -1,6 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { calorieSuggestion, profileSchema, type Profile } from "../lib/profile";
-import { emptyState, validateState, mergeStates } from "../lib/tracker-core";
+import {
+  emptyState,
+  validateState,
+  mergeStates,
+  type State,
+} from "../lib/tracker-core";
 const p: Profile = {
   heightCm: 180,
   weightKg: 80,
@@ -50,11 +55,15 @@ test("v1 migration preserves all history and v2 profile backup round trips", () 
     { date: "2026-09-01", steps: 5000, burned: null, note: "keep" },
   ];
   s.goals = [{ id: "goal", date: "2026-09-01", steps: 6000, calories: 2300 }];
-  const old: any = { ...s, version: 1 };
+  const old: Omit<State, "version" | "profile" | "profilePromptSeen"> & {
+    version: 1;
+    profile?: State["profile"];
+    profilePromptSeen?: boolean;
+  } = { ...s, version: 1 };
   delete old.profile;
   delete old.profilePromptSeen;
   const migrated = validateState(old);
-  expect(migrated.version).toBe(3);
+  expect(migrated.version).toBe(4);
   expect(migrated.activity).toEqual(s.activity);
   expect(migrated.goals).toEqual(s.goals);
   expect(migrated.profile).toBeNull();

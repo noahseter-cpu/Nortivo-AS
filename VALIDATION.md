@@ -1,4 +1,22 @@
-# Validation — 2026-09-16
+# Validation
+
+## Arc by Nortivo 1.0.0-rc.1 — 2026-09-21
+
+- Final TypeScript check passed. ESLint passed with zero errors and four `next/image` advisory warnings: local SVG marks and direct provider thumbnails intentionally work in the self-contained Android bundle without an image-optimization server. Generated build/runtime folders are excluded; no source rules or tests were disabled.
+- Final main suite: **63 passed, 10 environment-gated skipped**, 73 tests total. Includes bilingual source-name integrity, partial-source errors, submitted rather than per-keypress external search, never-resolving native bridge cancellation, zero/unknown nutrients, explicit kJ conversion, synthetic 375/200 kcal cases, saved source snapshots, corrected nutrient preview, locale parsing, large history, precision-boundary abort, v1/v2/v3 migration and validated backups.
+- Language browser tests cover Norway with English system locale, GB/SE/DK with Norwegian system locale, unknown country, manual preference beating delayed country, reload/travel, unsaved onboarding/settings drafts, and translated errors. Both themes and languages fit all six views at320/390/1440px. Profile/settings captures also cover320/1440px; source-food dialogs inspected at390/1440px. Keyboard-size dialog bounds, Save reachability, focus return and reduced-motion tests passed in Edge.
+- Standalone mobile preview suite: **12 passed** (seven additional environment-gated browser journeys plus five shared calculation/provider cases). Profile registration/skip/custom calorie goal, own-product save/log, offline MVT search, theme persistence and resized dialogs passed. This is a browser serving the APK's built assets, not an Android emulator.
+- Built local Worker: **offline reload/save/reload passed**, retaining steps and expense data. Final web build passed after stopping the local Worker that held the previous `dist` directory open on Windows. No remote deployment was performed.
+- Real MVT snapshot retrieval and the adapter's actual `banan` request passed. **Live production Open Food Facts integration failed with HTTP429** from this host; the two staging probes separately timed out after20seconds. Successful production OFF text/barcode availability is not claimed. Mocked parser, error, partial-result and deadline paths pass; offline saved food and local MVT remain available.
+- Android debug APK, v2 signature verification and release AAB build including vital lint passed. A pre-existing drawable-to-mipmap launcher alias blocked the first release build; it was replaced with a correctly typed equivalent vector, without changing the logo. No lint baseline/suppression was used. The AAB was verified **unsigned**; no release key was created or used.
+- APK manifest inspected: label Arc by Nortivo, package `no.noah.tracker.privatebeta`, versionCode10/versionName1.0.0-rc.1, minSDK24/target36. Debug signing certificate SHA-256 `cf55bc471b9b02bef4e6efc5af7b5a6f12185d57476b2af606236e30977533fa` matches0.4.6. Final APK SHA-256: `c9bd5ac831946e9a75999e19f923ec6711b4e514d83c8f51fd29031859bcd7ec`.
+- Impeccable/Visual Craft/Animate guided refinement of the implemented identity and existing motion. Final detector found214 advisory CSS/documentation mismatches (28colors,168font sizes,18radii), zero non-advisory findings; the context already reported a stale design sidecar. Existing palette/type values were preserved rather than silently replacing the design or expanding this task into documentation repair. Visual inspection found no new blocking defect.
+
+Files: `outputs/android/Arc-by-Nortivo-1.0.0-rc.1.apk`, its SHA-256 file, and `Arc-by-Nortivo-1.0.0-rc.1-unsigned.aab`. A copy of the APK/checksum is in the user's Downloads folder. Evidence: `outputs/release-1.0/`, `.sites-runtime/*final*.log`, source tests and the independent [release review](docs/RELEASE_REVIEW_1_0.md). Test data is isolated and synthetic.
+
+No Android device was attached (`adb devices` empty). Physical APK update retention, keyboard/camera/Back/share/region behavior, actual hosted country propagation, broad OFF load capacity and store privacy/signing declarations remain unverified or owner-dependent. See [the release checklist](docs/RELEASE_1_0.md). This is a private candidate, not a production acceptance claim.
+
+## Historical validation — 2026-09-16
 
 ## Executed
 

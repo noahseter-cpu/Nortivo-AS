@@ -13,5 +13,13 @@ export default defineConfig({
   },
   reporter: "list",
   workers: 1,
+  webServer: process.env.TEST_URL
+    ? undefined
+    : {
+        command: "npm run dev -- --port 5174",
+        url: "http://localhost:5174",
+        reuseExistingServer: !process.env.CI,
+        timeout: 120000,
+      },
   outputDir: ".sites-runtime/test-results",
 });

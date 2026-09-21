@@ -1,8 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./legacy-test";
 import { fromOFF, preferredFood } from "../lib/food-adapters";
 import { foodSchema, kcal } from "../lib/tracker-core";
 test("energy units and conflicting declarations cannot silently become calories", () => {
-  const product = (nutriments: any) =>
+  const product = (nutriments: Record<string, unknown>) =>
     fromOFF({ code: "12345678", product_name: "Fixture", nutriments });
   expect(product({ "energy-kcal_100g": "29" })?.kcal100).toBe(29);
   expect(

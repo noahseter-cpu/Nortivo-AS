@@ -1,20 +1,45 @@
-import { test, expect } from '@playwright/test';
-test('production shell reloads offline and retains recorded data', async ({ page, context }) => {
-  test.skip(!process.env.PRODUCTION_TEST, 'Needs built production service worker');
-  await page.goto('/');
-  await page.getByRole('button', {name:'Oppdater skritt',exact:true}).click();
-  await page.getByRole('textbox',{name:'Totalt antall skritt',exact:false}).fill('6421');
-  await page.getByRole('button',{name:'Lagre',exact:true}).click();
-  await expect(page.locator('.daily-stat').first()).toContainText('6 421');
-  await page.evaluate(async()=>{await navigator.serviceWorker.ready;});
-  await expect.poll(()=>page.evaluate(async()=>{const c=await caches.open('noah-shell-v1');const keys=await c.keys();return keys.filter(k=>k.url.endsWith('.js')).length;})).toBeGreaterThan(2);
+import { test, expect } from "./legacy-test";
+test("production shell reloads offline and retains recorded data", async ({
+  page,
+  context,
+}) => {
+  test.skip(
+    !process.env.PRODUCTION_TEST,
+    "Needs built production service worker",
+  );
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Oppdater skritt", exact: true })
+    .click();
+  await page
+    .getByRole("textbox", { name: "Totalt antall skritt", exact: false })
+    .fill("6421");
+  await page.getByRole("button", { name: "Lagre", exact: true }).click();
+  await expect(page.locator(".daily-stat").first()).toContainText("6 421");
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const names = await caches.keys();
+        const current = names.find((name) => name.startsWith("noah-shell-"));
+        if (!current) return 0;
+        const c = await caches.open(current);
+        const keys = await c.keys();
+        return keys.filter((k) => k.url.endsWith(".js")).length;
+      }),
+    )
+    .toBeGreaterThan(2);
   await context.setOffline(true);
   await page.reload();
-  await expect(page.locator('.daily-stat').first()).toContainText('6 421');
-  await page.getByRole('button',{name:'Legg til utgift',exact:true}).click();
-  await page.getByRole('textbox',{name:'Beløp i kroner'}).fill('75');
-  await page.getByRole('button',{name:'Lagre',exact:true}).click();
-  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await expect(page.locator(".daily-stat").first()).toContainText("6 421");
+  await page
+    .getByRole("button", { name: "Legg til utgift", exact: true })
+    .click();
+  await page.getByRole("textbox", { name: "Beløp i kroner" }).fill("75");
+  await page.getByRole("button", { name: "Lagre", exact: true }).click();
+  await expect(page.getByRole("dialog")).not.toBeVisible();
   await page.reload();
-  await expect(page.locator('.money-panel')).toContainText('75');
+  await expect(page.locator(".money-panel")).toContainText("75");
 });

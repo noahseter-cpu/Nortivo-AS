@@ -20,8 +20,9 @@ $trackerApk = "$trackerRoot/android/app/build/outputs/apk/debug/app-debug.apk"
 & "$env:ANDROID_HOME/build-tools/36.0.0/apksigner.bat" verify --verbose $trackerApk
 if ($LASTEXITCODE -ne 0) { throw 'APK signature verification failed.' }
 New-Item -ItemType Directory -Force "$trackerRoot/outputs/android" | Out-Null
-$trackerOutput = "$trackerRoot/outputs/android/Arc-by-Norvido-0.4.6-private.apk"
+$trackerOutput = "$trackerRoot/outputs/android/Arc-by-Nortivo-1.0.0-rc.1.apk"
 Copy-Item -LiteralPath $trackerApk -Destination $trackerOutput -Force
 $trackerHash = & $trackerNode -e "const fs=require('fs');const crypto=require('crypto');const p=process.argv[1];process.stdout.write(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'))" -- "$trackerOutput"
+if ($LASTEXITCODE -ne 0) { throw 'APK checksum generation failed.' }
 $trackerHash | Set-Content -LiteralPath "$trackerOutput.sha256"
 Write-Output $trackerOutput

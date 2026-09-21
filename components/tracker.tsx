@@ -1,5 +1,7 @@
 "use client";
-import { preferredFood } from "@/lib/food-adapters";
+import { t as tr, useI18n, errorMessage } from "@/lib/i18n";
+import { initializeLanguage, syncLanguage, getLanguage } from "@/lib/language";
+import { preferredFood, localizedFoodName } from "@/lib/food-adapters";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -16,21 +18,11 @@ import {
   ArrowRight,
   WifiOff,
   X,
-  Check,
-  SlidersHorizontal,
-  CalendarDays,
   Moon,
   Sun,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
-import {
-  Sidebar,
-  SidebarProvider,
-  SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import {
   type State,
   type Transaction,
@@ -49,10 +41,9 @@ import {
   netSpent,
   goalAt,
   balance,
+  categoryLabel,
   id,
   foodSchema,
-  put,
-  shiftDate,
 } from "@/lib/tracker-core";
 import { registerTrackerTools } from "@/lib/webmcp";
 import { readState, updateState } from "@/lib/tracker-store";
@@ -63,8 +54,6 @@ import {
   Empty,
   Progress,
   Form,
-  Field,
-  val,
   type Save,
 } from "./tracker-shared";
 import {
@@ -83,7 +72,7 @@ import {
   LogRecipe,
 } from "./tracker-food";
 import { ActivityPage, ActivityForm } from "./tracker-activity";
-import { SettingsPage, GoalsForm } from "./tracker-settings";
+import { SettingsPage, GoalsForm, LanguagePicker } from "./tracker-settings";
 import { ProfileSetup } from "./tracker-profile";
 import { applyAppearance } from "@/lib/appearance";
 const navigation = [
@@ -108,6 +97,7 @@ type Overlay =
       name: string;
     };
 export default function Tracker() {
+  useI18n();
   const [state, setState] = useState<State>(emptyState());
   const [ready, setReady] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
@@ -119,7 +109,7 @@ export default function Tracker() {
   const [overlay, setOverlay] = useState<Overlay | null>(null);
   const [offline, setOffline] = useState(false);
   const [initialScan, setInitialScan] = useState(false);
-  const trigger = useRef<HTMLElement | null>(null);
+  const [trigger, setTrigger] = useState<HTMLElement | null>(null);
   const saving = useRef(false);
   const channel = useRef<BroadcastChannel | null>(null);
   const heading = useRef<HTMLHeadingElement | null>(null);
@@ -134,19 +124,30 @@ export default function Tracker() {
     window.addEventListener("keydown", keyMode);
     window.addEventListener("pointerdown", pointerMode);
     readState()
+      .then(initializeLanguage)
       .then((s) => {
         if (active) {
           setState(s);
           setReady(true);
         }
       })
-      .catch((e) => setError(e.message));
+      .catch((e) => setError(errorMessage(e)));
     const refresh = () =>
       readState()
         .then((s) => {
-          if (active) setState(s);
+          if (active) {
+            syncLanguage(s);
+            setState(s);
+          }
         })
-        .catch((e) => setError(e.message));
+        .catch((e) => setError(errorMessage(e)));
+    const languageCommitted = (e: Event) => {
+      if (active) {
+        setState((e as CustomEvent<State>).detail);
+        channel.current?.postMessage("changed");
+      }
+    };
+    window.addEventListener("arc-language-committed", languageCommitted);
     if ("BroadcastChannel" in window) {
       channel.current = new BroadcastChannel("noah-tracker");
       channel.current.onmessage = refresh;
@@ -179,6 +180,7 @@ export default function Tracker() {
       window.removeEventListener("online", online);
       window.removeEventListener("offline", online);
       window.removeEventListener("focus", refresh);
+      window.removeEventListener("arc-language-committed", languageCommitted);
     };
   }, []);
   const latestState = useRef(state);
@@ -220,26 +222,29 @@ export default function Tracker() {
     window.addEventListener("noah-back", back);
     return () => window.removeEventListener("noah-back", back);
   }, [editProfile, view]);
-  latestState.current = state;
+  useEffect(() => {
+    latestState.current = state;
+  }, [state]);
   useEffect(
     () => (ready ? registerTrackerTools(() => latestState.current) : undefined),
     [ready],
   );
-  const save: Save = async (change, message = "Endringene er lagret") => {
+  const save: Save = async (change, message = tr("Endringene er lagret")) => {
     if (!ready || saving.current) return false;
     saving.current = true;
     try {
       const next = await updateState(change);
+      syncLanguage(next);
       setState(next);
       setError("");
       channel.current?.postMessage("changed");
       toast.success(message);
       return true;
     } catch (e) {
-      const message =
-        e instanceof Error && e.name !== "ZodError"
-          ? e.message
-          : "Kunne ikke lagre. Kontroller verdiene og prøv igjen.";
+      const message = errorMessage(
+        e,
+        "Kunne ikke lagre. Kontroller verdiene og prøv igjen.",
+      );
       setError(message);
       toast.error(message);
       return false;
@@ -249,7 +254,7 @@ export default function Tracker() {
   };
   function open(o: Overlay) {
     if (!ready) return;
-    trigger.current = document.activeElement as HTMLElement;
+    setTrigger(document.activeElement as HTMLElement);
     setOverlay(o);
   }
   function close() {
@@ -293,25 +298,50 @@ export default function Tracker() {
   const editFood = (entry: FoodLog) =>
     open({ kind: "food", food: entry.food, entry });
   const removeFood = (e: FoodLog) =>
-    open({ kind: "delete", entity: "logs", id: e.id, name: e.food.name });
+    open({
+      kind: "delete",
+      entity: "logs",
+      id: e.id,
+      name: localizedFoodName(e.food, getLanguage()),
+    });
   const goalForm = () => open({ kind: "goals" });
   const titles: Record<View, [string, string]> = {
     Oversikt: [
-      `Hei, ${state.settings.name}`,
-      "En liten oversikt. Litt mer ro i hverdagen.",
+      state.settings.name
+        ? tr("Hei, {name}", { name: state.settings.name })
+        : tr("Hei"),
+      tr("En liten oversikt. Litt mer ro i hverdagen."),
     ],
-    Økonomi: ["Pengene dine", "Små kjøp, store planer. Hold oversikten her."],
+    Økonomi: [
+      tr("Pengene dine"),
+      tr("Små kjøp, store planer. Hold oversikten her."),
+    ],
     "Mat og kalorier": [
-      "Mat og kalorier",
-      "Finn maten. Velg mengden. Resten regner vi ut.",
+      tr("Mat og kalorier"),
+      tr("Finn maten. Velg mengden. Resten regner vi ut."),
     ],
-    Aktivitet: ["I ditt eget tempo", "Skrittene dine, én dag av gangen."],
-    Historikk: ["Tilbakeblikk", "Finn en dag. Se hele bildet."],
+    Aktivitet: [
+      tr("I ditt eget tempo"),
+      tr("Skrittene dine, én dag av gangen."),
+    ],
+    Historikk: [tr("Tilbakeblikk"), tr("Finn en dag. Se hele bildet.")],
     Innstillinger: [
-      "Gjør den til din",
-      "Dine mål, dine innstillinger og dine data.",
+      tr("Gjør den til din"),
+      tr("Dine mål, dine innstillinger og dine data."),
     ],
   };
+  if (!ready)
+    return (
+      <main className="startup-view">
+        <img src="/arc-logo.svg" alt="Arc" width="64" height="64" />
+        <LanguagePicker />
+        {error && (
+          <p role="alert" className="error-box">
+            {errorMessage(new Error(error))}
+          </p>
+        )}
+      </main>
+    );
   if (
     ready &&
     (editProfile ||
@@ -319,7 +349,11 @@ export default function Tracker() {
   )
     return (
       <>
-        <Toaster position="top-center" richColors />
+        <Toaster
+          position="top-center"
+          richColors
+          containerAriaLabel={tr("Varsler")}
+        />
         <ProfileSetup
           state={state}
           save={save}
@@ -331,61 +365,86 @@ export default function Tracker() {
   return (
     <>
       <Toaster
+        containerAriaLabel={tr("Varsler")}
         position="top-center"
         richColors
         closeButton
-        toastOptions={{ className: "tracker-toast" }}
+        toastOptions={{
+          className: "tracker-toast",
+          closeButtonAriaLabel: tr("Lukk meldingen"),
+        }}
       />
       <SidebarProvider className="app-shell">
+        <a className="skip-link" href="#main">
+          {tr("Hopp til innhold")}
+        </a>
         <Sidebar collapsible="none" className="sidebar">
-          <a className="brand" href="/" aria-label="Arc by Norvido, oversikt">
+          <button
+            className="brand"
+            type="button"
+            onClick={() => setView("Oversikt")}
+            aria-label={tr("Arc by Nortivo, oversikt")}
+          >
             <span className="brand-mark">
               <img src="/arc-mark.svg" alt="" aria-hidden="true" />
             </span>
             <span>
-              Arc<span className="brand-sub">by Norvido</span>
+              Arc<span className="brand-sub">by Nortivo</span>
             </span>
-          </a>
-          <nav aria-label="Hovedmeny">
+          </button>
+          <nav aria-label={tr("Hovedmeny")}>
             {navigation.map(({ name, icon: Icon }) => (
               <button
                 disabled={!ready}
                 key={name}
-                aria-label={name}
+                aria-label={tr(name)}
                 aria-current={view === name ? "page" : undefined}
                 className={view === name ? "nav-item active" : "nav-item"}
                 onClick={() => navigate(name)}
               >
                 <Icon size={19} />
-                <span>{name}</span>
+                <span>
+                  {name === "Mat og kalorier" ? (
+                    <>
+                      <span className="nav-long">{tr(name)}</span>
+                      <span className="nav-short">{tr("Mat")}</span>
+                    </>
+                  ) : (
+                    tr(name)
+                  )}
+                </span>
               </button>
             ))}
           </nav>
           <div className="sidebar-bottom">
             <ShieldCheck size={18} />
             <span>
-              Bare på din enhet<small>Husk en sikkerhetskopi</small>
+              {tr("Bare på din enhet")}
+              <small>{tr("Husk en sikkerhetskopi")}</small>
             </span>
           </div>
         </Sidebar>
         <div className="workspace">
           <header className="topbar">
             <span>
-              <span className="brand-mobile" aria-label="Arc by Norvido">
-                <img src="/arc-mark.svg" alt="" aria-hidden="true" /><span>Arc</span>
+              <span className="brand-mobile" aria-label="Arc by Nortivo">
+                <img src="/arc-mark.svg" alt="" aria-hidden="true" />
+                <span>Arc</span>
               </span>
-              <span className="desktop-label">Din personlige oversikt</span>
+              <span className="desktop-label">
+                {tr("Din personlige oversikt")}
+              </span>
             </span>
             <div className="topbar-end">
               <button
                 className="icon-button theme-toggle"
-                aria-label="Bytt lyst eller mørkt tema"
+                aria-label={tr("Bytt lyst eller mørkt tema")}
                 aria-pressed={darkAppearance}
                 disabled={!ready}
                 onClick={() =>
                   save((s) => {
                     s.settings.theme = darkAppearance ? "light" : "dark";
-                  }, "Temaet er lagret")
+                  }, tr("Temaet er lagret"))
                 }
               >
                 {darkAppearance ? <Sun size={18} /> : <Moon size={18} />}
@@ -393,20 +452,20 @@ export default function Tracker() {
               {offline ? (
                 <span className="offline-label">
                   <WifiOff size={14} />
-                  Uten nett
+                  {tr("Uten nett")}
                 </span>
               ) : (
                 <span className="storage-label">
                   <span />
-                  Lokalt lagret
+                  {tr("Lokalt lagret")}
                 </span>
               )}
               <button
                 className="avatar"
-                aria-label="Åpne innstillinger"
+                aria-label={tr("Åpne innstillinger")}
                 onClick={() => navigate("Innstillinger")}
               >
-                {state.settings.name.slice(0, 1).toUpperCase()}
+                {state.settings.name.slice(0, 1).toUpperCase() || "A"}
               </button>
             </div>
           </header>
@@ -425,17 +484,17 @@ export default function Tracker() {
             </div>
             {error && (
               <div role="alert" className="error-box">
-                {error}
+                {errorMessage(new Error(error))}
                 <button className="text-button" onClick={() => setError("")}>
-                  Lukk meldingen
+                  {tr("Lukk meldingen")}
                 </button>
               </div>
             )}
             {!ready ? (
               <div className="loading-state" role="status">
                 {error
-                  ? "Lagring er utilgjengelig. Data blir ikke overskrevet."
-                  : "Åpner din lokale oversikt …"}
+                  ? tr("Lagring er utilgjengelig. Data blir ikke overskrevet.")
+                  : tr("Åpner din lokale oversikt …")}
               </div>
             ) : (
               <>
@@ -444,22 +503,26 @@ export default function Tracker() {
                     {!state.settings.setup && (
                       <div className="welcome-strip">
                         <div>
-                          <strong>Start med det som passer deg.</strong>
+                          <strong>{tr("Start med det som passer deg.")}</strong>
                           <span>
-                            Sett dine egne mål nå, eller begynn å registrere.
+                            {tr(
+                              "Sett dine egne mål nå, eller begynn å registrere.",
+                            )}
                           </span>
                         </div>
                         <div className="actions">
+                          <LanguagePicker />
                           <button className="text-button" onClick={goalForm}>
-                            Sett mål <ArrowRight size={15} />
+                            {tr("Sett mål")}
+                            <ArrowRight size={15} />
                           </button>
                           <button
                             className="icon-button quiet"
-                            aria-label="Hopp over oppsett"
+                            aria-label={tr("Hopp over oppsett")}
                             onClick={() =>
                               save((s) => {
                                 s.settings.setup = true;
-                              }, "Du kan sette mål i innstillinger senere")
+                              }, tr("Du kan sette mål i innstillinger senere"))
                             }
                           >
                             <X size={17} />
@@ -470,9 +533,9 @@ export default function Tracker() {
                     <div className="overview-grid">
                       <section className="panel money-panel">
                         <div className="section-head">
-                          <h2>Pengene dine</h2>
+                          <h2>{tr("Pengene dine")}</h2>
                           <button
-                            aria-label="Åpne økonomi"
+                            aria-label={tr("Åpne økonomi")}
                             className="icon-button quiet"
                             onClick={() => navigate("Økonomi")}
                           >
@@ -481,18 +544,23 @@ export default function Tracker() {
                         </div>
                         <div className="money-intro">
                           <span>
-                            Utgifter i {monthLabel(month).split(" ")[0]}
+                            {tr("Utgifter i {month}", {
+                              month: dateLabel(month + "-01", {
+                                month: "long",
+                              }),
+                            })}
                           </span>
                           <strong>{money(f.spent)}</strong>
                           <div className="inline-money">
                             <span>
-                              Inntekt <b>{money(f.income)}</b>
+                              {tr("Inntekt")}
+                              <b>{money(f.income)}</b>
                             </span>
                             <span>
-                              Registrert saldo{" "}
+                              {tr("Registrert saldo")}{" "}
                               <b>
                                 {balance(state) === null
-                                  ? "Ikke satt"
+                                  ? tr("Ikke satt")
                                   : money(balance(state)!)}
                               </b>
                             </span>
@@ -503,14 +571,14 @@ export default function Tracker() {
                             <div className="row-between">
                               <span>
                                 {hasFoodBudget
-                                  ? foodCategory?.name
-                                  : "Totalbudsjett"}
+                                  ? categoryLabel(foodCategory!)
+                                  : tr("Totalbudsjett")}
                               </span>
                               <button
                                 className="text-button"
                                 onClick={() => open({ kind: "budget" })}
                               >
-                                Endre
+                                {tr("Endre")}
                               </button>
                             </div>
                             <div className="budget-remaining">
@@ -527,8 +595,8 @@ export default function Tracker() {
                               <span>
                                 {selectedRemaining !== null &&
                                 selectedRemaining < 0
-                                  ? "over budsjett"
-                                  : "igjen av budsjettet"}
+                                  ? tr("over budsjett")
+                                  : tr("igjen av budsjettet")}
                               </span>
                             </div>
                             <Progress
@@ -543,16 +611,22 @@ export default function Tracker() {
                                         : b!.total!)) *
                                     100
                               }
-                              label="Budsjett brukt"
+                              label={tr("Budsjett brukt")}
                             />
                             <div className="row-between subtle">
                               <span>
-                                {money(hasFoodBudget ? foodSpent : f.spent)}{" "}
-                                brukt
+                                {tr("{amount} brukt", {
+                                  amount: money(
+                                    hasFoodBudget ? foodSpent : f.spent,
+                                  ),
+                                })}
                               </span>
                               <span>
-                                av{" "}
-                                {money(hasFoodBudget ? foodBudget! : b!.total!)}
+                                {tr("av {amount}", {
+                                  amount: money(
+                                    hasFoodBudget ? foodBudget! : b!.total!,
+                                  ),
+                                })}
                               </span>
                             </div>
                           </div>
@@ -565,9 +639,9 @@ export default function Tracker() {
                               <Wallet size={22} />
                             </span>
                             <span>
-                              <strong>Gi måneden en ramme</strong>
+                              <strong>{tr("Gi måneden en ramme")}</strong>
                               <small>
-                                Sett et budsjett og se hva du har igjen.
+                                {tr("Sett et budsjett og se hva du har igjen.")}
                               </small>
                             </span>
                             <ChevronRight size={18} />
@@ -576,7 +650,7 @@ export default function Tracker() {
                         <div className="money-actions">
                           <Btn onClick={add}>
                             <Plus size={18} />
-                            Legg til utgift
+                            {tr("Legg til utgift")}
                           </Btn>
                           <button
                             className="text-button"
@@ -584,13 +658,13 @@ export default function Tracker() {
                               open({ kind: "transaction", type: "income" })
                             }
                           >
-                            Legg til inntekt
+                            {tr("Legg til inntekt")}
                           </button>
                         </div>
                       </section>
                       <section className="daily-panel panel">
                         <div className="section-head">
-                          <h2>Dagen din</h2>
+                          <h2>{tr("Dagen din")}</h2>
                           <DatePicker value={date} onChange={setDate} />
                         </div>
                         <div className="daily-stat">
@@ -598,7 +672,7 @@ export default function Tracker() {
                             <Footprints />
                           </span>
                           <div>
-                            <span>Skritt</span>
+                            <span>{tr("Skritt")}</span>
                             <strong>
                               {activity?.steps == null
                                 ? "—"
@@ -606,15 +680,17 @@ export default function Tracker() {
                             </strong>
                             <small>
                               {goal?.steps
-                                ? `av ${num(goal.steps)} skritt`
+                                ? tr("av {count} skritt", {
+                                    count: num(goal.steps),
+                                  })
                                 : activity?.steps == null
-                                  ? "Ingen skritt registrert"
-                                  : "Mål ikke satt"}
+                                  ? tr("Ingen skritt registrert")
+                                  : tr("Mål ikke satt")}
                             </small>
                           </div>
                           <button
                             className="icon-button"
-                            aria-label="Oppdater skritt"
+                            aria-label={tr("Oppdater skritt")}
                             onClick={() => open({ kind: "activity" })}
                           >
                             <Plus size={18} />
@@ -625,20 +701,22 @@ export default function Tracker() {
                             <Utensils />
                           </span>
                           <div>
-                            <span>Kalorier</span>
+                            <span>{tr("Kalorier")}</span>
                             <strong>
                               {calories === null ? "—" : num(calories)}
                               <em> kcal</em>
                             </strong>
                             <small>
                               {goal?.calories
-                                ? `Ditt mål: ${num(goal.calories)} kcal`
-                                : "Målet bestemmer du selv"}
+                                ? tr("Ditt mål: {amount} kcal", {
+                                    amount: num(goal.calories),
+                                  })
+                                : tr("Målet bestemmer du selv")}
                             </small>
                           </div>
                           <button
                             className="icon-button"
-                            aria-label="Logg mat"
+                            aria-label={tr("Logg mat")}
                             onClick={() => navigate("Mat og kalorier")}
                           >
                             <Plus size={18} />
@@ -650,7 +728,7 @@ export default function Tracker() {
                           onClick={() => navigate("Mat og kalorier")}
                         >
                           <SearchIcon />
-                          Søk etter mat
+                          {tr("Søk etter mat")}
                           <ArrowRight size={16} />
                         </Btn>
                         <button
@@ -658,18 +736,19 @@ export default function Tracker() {
                           onClick={() => navigate("Mat og kalorier", true)}
                         >
                           <ScanLine size={15} />
-                          Skann en strekkode
+                          {tr("Skann en strekkode")}
                         </button>
                       </section>
                     </div>
                     <section className="recent-section">
                       <div className="section-head">
-                        <h2>Siste registreringer</h2>
+                        <h2>{tr("Siste registreringer")}</h2>
                         <button
                           className="text-button"
                           onClick={() => navigate("Historikk")}
                         >
-                          Se historikk <ArrowRight size={15} />
+                          {tr("Se historikk")}
+                          <ArrowRight size={15} />
                         </button>
                       </div>
                       {state.transactions.length ||
@@ -700,8 +779,12 @@ export default function Tracker() {
                                   <Utensils size={17} />
                                 </span>
                                 <span className="record-text">
-                                  <strong>{l.food.name}</strong>
-                                  <small>{dateLabel(l.date)} · Mat</small>
+                                  <strong>
+                                    {localizedFoodName(l.food, getLanguage())}
+                                  </strong>
+                                  <small>
+                                    {dateLabel(l.date)} · {tr("Mat")}
+                                  </small>
                                 </span>
                                 <strong>{num(l.kcal)} kcal</strong>
                                 <ChevronRight size={16} />
@@ -725,10 +808,14 @@ export default function Tracker() {
                                 <span className="record-text">
                                   <strong>
                                     {a.steps == null
-                                      ? "Dagens notat"
-                                      : `${num(a.steps)} skritt`}
+                                      ? tr("Dagens notat")
+                                      : tr("{count} skritt", {
+                                          count: num(a.steps),
+                                        })}
                                   </strong>
-                                  <small>{dateLabel(a.date)} · Aktivitet</small>
+                                  <small>
+                                    {dateLabel(a.date)} · {tr("Aktivitet")}
+                                  </small>
                                 </span>
                                 <ChevronRight size={16} />
                               </button>
@@ -736,12 +823,12 @@ export default function Tracker() {
                         </>
                       ) : (
                         <Empty
-                          title="Her begynner historien din"
+                          title={tr("Her begynner historien din")}
                           icon={<History size={26} />}
                         >
-                          Utgifter, måltider og aktivitet dukker opp her
-                          <br />
-                          etter hvert som du registrerer dem.
+                          {tr(
+                            "Utgifter, måltider og aktivitet dukker opp her etter hvert som du registrerer dem.",
+                          )}
                         </Empty>
                       )}
                     </section>
@@ -770,7 +857,7 @@ export default function Tracker() {
                         kind: "food",
                         food: foodSchema.parse({
                           id: `custom:${id()}`,
-                          name: "Nytt produkt",
+                          name: tr("Nytt produkt"),
                           source: "Egen registrering",
                           kcal100: null,
                           unit: null,
@@ -803,7 +890,7 @@ export default function Tracker() {
                         className="text-button"
                         onClick={() => setDate(today())}
                       >
-                        Til i dag
+                        {tr("Til i dag")}
                       </button>
                     </div>
                     <div className="week-strip">
@@ -831,29 +918,31 @@ export default function Tracker() {
                       <span>
                         <Footprints size={18} />
                         {activity?.steps == null
-                          ? "Ingen skritt ført"
-                          : `${num(activity.steps)} skritt`}
+                          ? tr("Ingen skritt ført")
+                          : tr("{count} skritt", {
+                              count: num(activity.steps),
+                            })}
                       </span>
                       <span>
                         <Utensils size={18} />
                         {calories === null
-                          ? "Ingen kalorier ført"
+                          ? tr("Ingen kalorier ført")
                           : `${num(calories)} kcal`}
                       </span>
                       <button
                         className="text-button"
                         onClick={() => open({ kind: "activity" })}
                       >
-                        Oppdater dagen
+                        {tr("Oppdater dagen")}
                       </button>
                     </div>
                     <div className="history-grid">
                       <section className="panel">
                         <div className="section-head">
-                          <h2>Økonomi</h2>
+                          <h2>{tr("Økonomi")}</h2>
                           <button className="text-button" onClick={add}>
                             <Plus size={16} />
-                            Legg til
+                            {tr("Legg til")}
                           </button>
                         </div>
                         <TransactionList
@@ -867,13 +956,13 @@ export default function Tracker() {
                       </section>
                       <section className="panel">
                         <div className="section-head">
-                          <h2>Mat og drikke</h2>
+                          <h2>{tr("Mat og drikke")}</h2>
                           <button
                             className="text-button"
                             onClick={() => navigate("Mat og kalorier")}
                           >
                             <Plus size={16} />
-                            Logg mat
+                            {tr("Logg mat")}
                           </button>
                         </div>
                         <FoodLogs
@@ -886,7 +975,7 @@ export default function Tracker() {
                     </div>
                     {activity?.note && (
                       <section className="panel note-panel">
-                        <h2>Dagens notat</h2>
+                        <h2>{tr("Dagens notat")}</h2>
                         <p>{activity.note}</p>
                       </section>
                     )}
@@ -905,9 +994,9 @@ export default function Tracker() {
             <footer>
               <span>
                 <ShieldCheck size={12} />
-                Lagres i denne nettleseren
+                {tr("Lagres på denne enheten")}
               </span>
-              <span>Din hverdag. Ditt tempo.</span>
+              <span>{tr("Din hverdag. Ditt tempo.")}</span>
             </footer>
           </main>
         </div>
@@ -917,30 +1006,30 @@ export default function Tracker() {
           title={
             overlay.kind === "transaction"
               ? overlay.entry
-                ? "Rediger registrering"
+                ? tr("Rediger registrering")
                 : overlay.type === "income"
-                  ? "Legg til inntekt"
-                  : "Ny registrering"
+                  ? tr("Legg til inntekt")
+                  : tr("Ny registrering")
               : overlay.kind === "budget"
-                ? `Budsjett · ${monthLabel(month)}`
+                ? tr("Budsjett · {month}", { month: monthLabel(month) })
                 : overlay.kind === "activity"
-                  ? "Oppdater dagen"
+                  ? tr("Oppdater dagen")
                   : overlay.kind === "goals"
-                    ? "Dine mål"
+                    ? tr("Dine mål")
                     : overlay.kind === "food"
                       ? overlay.saveOnly
-                        ? "Lagre eget produkt"
-                        : "Mengde og kalorier"
+                        ? tr("Lagre eget produkt")
+                        : tr("Mengde og kalorier")
                       : overlay.kind === "manual"
-                        ? "Dagens kaloriføring"
+                        ? tr("Dagens kaloriføring")
                         : overlay.kind === "recipe"
-                          ? "Ditt måltid"
+                          ? tr("Ditt måltid")
                           : overlay.kind === "logRecipe"
                             ? overlay.recipe.name
-                            : "Slett registrering?"
+                            : tr("Slett registrering?")
           }
           onClose={close}
-          trigger={trigger.current}
+          trigger={trigger}
         >
           {overlay.kind === "transaction" && (
             <TransactionForm
@@ -1002,7 +1091,7 @@ export default function Tracker() {
           )}{" "}
           {overlay.kind === "delete" && (
             <Form
-              label="Slett registrering"
+              label={tr("Slett registrering")}
               cancel={close}
               onSubmit={async () => {
                 if (
@@ -1012,14 +1101,16 @@ export default function Tracker() {
                         (x) => x.id !== overlay.id,
                       );
                     else s.logs = s.logs.filter((x) => x.id !== overlay.id);
-                  }, "Registreringen er slettet")
+                  }, tr("Registreringen er slettet"))
                 )
                   close();
               }}
             >
               <p className="notice">
-                Vil du slette «{overlay.name}»? Alle berørte totaler blir
-                oppdatert.
+                {tr(
+                  "Vil du slette «{name}»? Alle berørte totaler blir oppdatert.",
+                  { name: overlay.name },
+                )}
               </p>
             </Form>
           )}
@@ -1029,6 +1120,7 @@ export default function Tracker() {
   );
 }
 function SearchIcon() {
+  useI18n();
   return (
     <svg
       width="17"

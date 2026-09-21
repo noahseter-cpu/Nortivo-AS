@@ -1,5 +1,30 @@
 apply plugin: 'com.android.application'
 
+// Release signing is opt-in. Never fall back to the private beta's debug key.
+def uploadSigningNames = [
+    'ARC_UPLOAD_STORE_FILE',
+    'ARC_UPLOAD_STORE_PASSWORD',
+    'ARC_UPLOAD_KEY_ALIAS',
+    'ARC_UPLOAD_KEY_PASSWORD'
+]
+def uploadSigningValues = uploadSigningNames.collectEntries { name ->
+    [(name): System.getenv(name)]
+}
+def missingUploadSigning = uploadSigningNames.findAll { name ->
+    def value = uploadSigningValues[name]
+    value == null || value.trim().isEmpty()
+}
+def uploadSigningConfigured = missingUploadSigning.isEmpty()
+if (!uploadSigningConfigured && missingUploadSigning.size() != uploadSigningNames.size()) {
+    throw new GradleException(
+        'Incomplete Arc upload signing configuration. Set all four ARC_UPLOAD_* variables, ' +
+        'or clear all four for an unsigned release. Missing: ' + missingUploadSigning.join(', ')
+    )
+}
+if (uploadSigningConfigured && !rootProject.file(uploadSigningValues['ARC_UPLOAD_STORE_FILE']).isFile()) {
+    throw new GradleException('ARC_UPLOAD_STORE_FILE must point to an existing upload keystore file.')
+}
+
 android {
     namespace = "no.noah.tracker.privatebeta"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -7,8 +32,8 @@ android {
         applicationId "no.noah.tracker.privatebeta"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "0.4.6-private"
+        versionCode 10
+        versionName "1.0.0-rc.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,8 +41,21 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (uploadSigningConfigured) {
+            upload {
+                storeFile rootProject.file(uploadSigningValues['ARC_UPLOAD_STORE_FILE'])
+                storePassword uploadSigningValues['ARC_UPLOAD_STORE_PASSWORD']
+                keyAlias uploadSigningValues['ARC_UPLOAD_KEY_ALIAS']
+                keyPassword uploadSigningValues['ARC_UPLOAD_KEY_PASSWORD']
+            }
+        }
+    }
     buildTypes {
         release {
+            if (uploadSigningConfigured) {
+                signingConfig signingConfigs.upload
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

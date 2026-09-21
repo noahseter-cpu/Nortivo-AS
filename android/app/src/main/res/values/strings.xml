@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Arc by Norvido</string>
-    <string name="title_activity_main">Arc by Norvido</string>
+    <string name="app_name">Arc by Nortivo</string>
+    <string name="title_activity_main">Arc by Nortivo</string>
     <string name="package_name">no.noah.tracker.privatebeta</string>
     <string name="custom_url_scheme">no.noah.tracker.privatebeta</string>
 </resources>

@@ -162,6 +162,10 @@ a {
   z-index: 30;
 }
 .brand {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: left;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -292,6 +296,23 @@ a {
   align-items: center;
   gap: 8px;
 }
+.nav-short { display: none; }
+.startup-view { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
+.language-control { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 13px; color: var(--ink); }
+.language-control select { width: auto; max-width: 100%; min-height: 44px; }
+.language-control .error-box { flex-basis: 100%; }
+.profile-header { flex-wrap: wrap; gap: 16px; }
+.profile-header .language-control { margin-inline-start: auto; }
+.welcome-strip .actions { flex-wrap: wrap; }
+.language-panel > p { max-width: 65ch; }
+.food-nutrients { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 20px; margin-block: 16px; }
+.food-nutrients dt { color: var(--muted); font-size: 12px; }
+.food-nutrients dd { margin: 4px 0 0; font-variant-numeric: tabular-nums; }
+.food-nutrient-inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 520px) { .food-nutrients { grid-template-columns: repeat(2, minmax(0, 1fr)); } .profile-header .language-control { margin-inline-start: 0; flex-basis: 100%; } }
+@media (max-width: 360px) { .food-nutrient-inputs { grid-template-columns: minmax(0, 1fr); } }
+.skip-link { position: fixed; inset-block-start: 8px; inset-inline-start: 8px; z-index: 100; padding: 12px 20px; background: var(--paper); color: var(--ink); transform: translateY(-200%); }
+.skip-link:focus { transform: none; }
 .brand-mobile img {
   width: 25px;
   height: 25px;
@@ -1604,13 +1625,8 @@ details summary {
   .nav-item > span {
     display: block;
   }
-  .nav-item:nth-child(3) > span {
-    font-size: 0;
-  }
-  .nav-item:nth-child(3) > span:after {
-    content: "Mat";
-    font-size: 11px;
-  }
+  .nav-long { display: none; }
+  .nav-short { display: inline; }
   .workspace {
     margin-left: 0;
     padding-bottom: 90px;
@@ -2095,7 +2111,7 @@ html[data-input="keyboard"] [data-slot="dialog-overlay"] {
   border-bottom: 1px solid var(--line);
   padding-bottom: 24px;
 }
-.profile-header > span:last-child {
+.profile-header .profile-local {
   display: flex;
   gap: 8px;
   align-items: center;
@@ -2272,7 +2288,7 @@ html[data-input="keyboard"] [data-slot="dialog-overlay"] {
   .profile-intro .profile-step {
     margin-top: 16px;
   }
-  .profile-header > span:last-child {
+  .profile-header .profile-local {
     font-size: 11px;
   }
   .profile-estimate strong {

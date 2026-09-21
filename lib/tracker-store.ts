@@ -1,4 +1,5 @@
 import { emptyState, validateState, type State } from "./tracker-core";
+import { t } from "./i18n";
 const DB = "noah-tracker-private-v1";
 function openDB() {
   return new Promise<IDBDatabase>((resolve, reject) => {
@@ -7,7 +8,9 @@ function openDB() {
     r.onsuccess = () => resolve(r.result);
     r.onerror = () =>
       reject(
-        Error("Lokal lagring er utilgjengelig. Prøv en vanlig nettleserfane."),
+        Error(
+          t("Lokal lagring er utilgjengelig. Prøv en vanlig nettleserfane."),
+        ),
       );
   });
 }
@@ -23,7 +26,9 @@ export async function readState() {
         } catch {
           reject(
             Error(
-              "Lagrede data kunne ikke leses. De er bevart. Gjenopprett fra en sikkerhetskopi.",
+              t(
+                "Lagrede data kunne ikke leses. De er bevart. Gjenopprett fra en sikkerhetskopi.",
+              ),
             ),
           );
         }
@@ -60,7 +65,9 @@ export async function updateState(change: (s: State) => void): Promise<State> {
         reject(
           cause ??
             Error(
-              "Kunne ikke lagre. Ingen endringer er bekreftet. Sjekk ledig plass og prøv igjen.",
+              t(
+                "Kunne ikke lagre. Ingen endringer er bekreftet. Sjekk ledig plass og prøv igjen.",
+              ),
             ),
         );
     });

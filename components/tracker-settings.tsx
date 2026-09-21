@@ -1,5 +1,6 @@
 "use client";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
+import { t, useI18n } from "@/lib/i18n";
 import {
   Download,
   Upload,
@@ -23,7 +24,9 @@ import {
   csvTransactions,
   emptyState,
   dateLabel,
-  money,
+  num,
+  inputNumber,
+  categoryLabel,
 } from "@/lib/tracker-core";
 import {
   Btn,
@@ -35,6 +38,50 @@ import {
   download,
   type Save,
 } from "./tracker-shared";
+
+export function LanguagePicker() {
+  const { language, setLanguage } = useI18n();
+  const controlId = useId();
+  const [pending, setPending] = useState(false);
+  const [failed, setFailed] = useState(false);
+  return (
+    <div className="language-control">
+      <label htmlFor={controlId}>Språk / Language</label>
+      <select
+        id={controlId}
+        value={language}
+        disabled={pending}
+        aria-busy={pending}
+        aria-describedby={failed ? `${controlId}-error` : undefined}
+        onChange={async (event) => {
+          const next = event.target.value;
+          if (next !== "nb" && next !== "en") return;
+          setPending(true);
+          setFailed(false);
+          try {
+            await setLanguage(next);
+          } catch {
+            setFailed(true);
+          } finally {
+            setPending(false);
+          }
+        }}
+      >
+        <option value="nb" lang="nb">
+          Norsk (bokmål)
+        </option>
+        <option value="en" lang="en">
+          English
+        </option>
+      </select>
+      {failed && (
+        <p id={`${controlId}-error`} className="error-box" role="alert">
+          {t("Språket kunne ikke lagres. Prøv igjen.")}
+        </p>
+      )}
+    </div>
+  );
+}
 export function GoalsForm({
   state,
   date,
@@ -46,6 +93,7 @@ export function GoalsForm({
   save: Save;
   close: () => void;
 }) {
+  useI18n();
   const goal = goalAt(state, date);
   return (
     <Form
@@ -58,40 +106,41 @@ export function GoalsForm({
           steps !== null &&
           (!Number.isInteger(steps) || steps < 1 || steps > 500000)
         )
-          throw Error("Skrittmålet må være et positivt heltall.");
+          throw Error(t("Skrittmålet må være et positivt heltall."));
         if (calories !== null && calories <= 0)
-          throw Error("Kalorimålet må være positivt eller stå tomt.");
+          throw Error(t("Kalorimålet må være positivt eller stå tomt."));
         if (
           await save((s) => {
             const existing = s.goals.find((x) => x.date === date);
             put(s.goals, { id: existing?.id ?? id(), date, steps, calories });
-          }, "Målene er oppdatert")
+          }, t("Målene er oppdatert"))
         )
           close();
       }}
     >
-      <Field label="Gjelder fra dato">
+      <Field label={t("Gjelder fra dato")}>
         <input type="date" name="date" required defaultValue={date} />
       </Field>
-      <Field label="Skritt per dag (valgfritt)">
+      <Field label={t("Skritt per dag (valgfritt)")}>
         <input
           name="steps"
           inputMode="numeric"
-          placeholder="Ikke satt"
+          placeholder={t("Ikke satt")}
           defaultValue={goal?.steps ?? ""}
         />
       </Field>
-      <Field label="Kalorier per dag (valgfritt)">
+      <Field label={t("Kalorier per dag (valgfritt)")}>
         <input
           name="calories"
           inputMode="decimal"
-          placeholder="Ikke satt"
-          defaultValue={goal?.calories ?? ""}
+          placeholder={t("Ikke satt")}
+          defaultValue={inputNumber(goal?.calories)}
         />
       </Field>
       <p className="help">
-        Velg målene selv. Tomt felt fjerner målet fra valgt dato. Tidligere
-        dager beholder målene som gjaldt da.
+        {t(
+          "Velg målene selv. Tomt felt fjerner målet fra valgt dato. Tidligere dager beholder målene som gjaldt da.",
+        )}
       </p>
     </Form>
   );
@@ -107,6 +156,7 @@ export function SettingsPage({
   goals: () => void;
   profile: () => void;
 }) {
+  useI18n();
   const [incoming, setIncoming] = useState<State | null>(null);
   const [error, setError] = useState("");
   const [restoreMode, setRestoreMode] = useState("merge");
@@ -130,7 +180,8 @@ export function SettingsPage({
       setIncoming(validateState(raw.data));
     } catch (e) {
       setError(
-        e instanceof Error && e.name !== "ZodError"
+        e instanceof Error &&
+          e.message === "Ukjent sikkerhetskopi eller versjon."
           ? e.message
           : "Ugyldig sikkerhetskopi. Dine eksisterende data er uendret.",
       );
@@ -138,59 +189,86 @@ export function SettingsPage({
   }
   return (
     <div className="settings-grid">
-      <section className="panel appearance-panel">
-        <h2>Utseende</h2>
+      <section className="panel appearance-panel language-panel">
+        <h2>{t("Språk og utseende")}</h2>
+        <LanguagePicker />
         <p className="help">
-          Velg lyst eller mørkt tema, eller følg telefonens innstilling.
+          {t(
+            "Språkvalget huskes på denne enheten. Valuta, matmarked og måleenheter endres ikke.",
+          )}
         </p>
-        <div className="theme-options" role="group" aria-label="Fargetema">
-          {(
-            [
-              ["light", "Lyst"],
-              ["dark", "Mørkt"],
-              ["system", "System"],
-            ] as const
-          ).map(([value, label]) => (
-            <Btn
-              key={value}
-              secondary={state.settings.theme !== value}
-              aria-pressed={state.settings.theme === value}
-              onClick={() =>
-                save((s) => {
-                  s.settings.theme = value;
-                }, "Temaet er lagret")
-              }
-            >
-              {label}
-            </Btn>
-          ))}
+        <div className="settings-divider">
+          <h3>{t("Utseende")}</h3>
+          <p className="help">
+            {t(
+              "Velg lyst eller mørkt tema, eller følg telefonens innstilling.",
+            )}
+          </p>
+          <div
+            className="theme-options"
+            role="group"
+            aria-label={t("Fargetema")}
+          >
+            {(
+              [
+                ["light", "Lyst"],
+                ["dark", "Mørkt"],
+                ["system", "System"],
+              ] as const
+            ).map(([value, label]) => (
+              <Btn
+                key={value}
+                secondary={state.settings.theme !== value}
+                aria-pressed={state.settings.theme === value}
+                onClick={() =>
+                  save((s) => {
+                    s.settings.theme = value;
+                  }, t("Temaet er lagret"))
+                }
+              >
+                {t(label)}
+              </Btn>
+            ))}
+          </div>
         </div>
       </section>
       <section className="panel">
-        <h2>Din profil</h2>
+        <h2>{t("Din profil")}</h2>
         <div className="personal-goal-section">
-        <p className="help">
-          Kalorimål:{" "}
-          {goal?.calories ? goal.calories + " kcal per dag" : "Ikke satt"}. Du
-          bestemmer målet selv.
-        </p>
-        <Btn onClick={goals}>Velg mitt kalorimål</Btn>
+          <p className="help">
+            {goal?.calories
+              ? t(
+                  "Kalorimål: {calories} kcal per dag. Du bestemmer målet selv.",
+                  { calories: num(goal.calories) },
+                )
+              : t("Kalorimål: Ikke satt. Du bestemmer målet selv.")}
+          </p>
+          <Btn onClick={goals}>{t("Velg mitt kalorimål")}</Btn>
         </div>
         <div className="personal-profile-section">
-        <p className="help">
-          {state.profile
-            ? `${state.settings.name} · ${state.profile.heightCm} cm · ${state.profile.weightKg} kg · ${state.profile.age} år`
-            : "Navn, kroppsmål og et valgfritt kaloriforslag – lagret på denne enheten."}
-        </p>
-        <Btn secondary onClick={profile}>
-          {state.profile ? "Endre profil og kaloriforslag" : "Opprett profil"}
-        </Btn>
+          <p className="help">
+            {state.profile
+              ? t("{name} · {height} cm · {weight} kg · {age} år", {
+                  name: state.settings.name,
+                  height: num(state.profile.heightCm),
+                  weight: num(state.profile.weightKg),
+                  age: num(state.profile.age),
+                })
+              : t(
+                  "Navn, kroppsmål og et valgfritt kaloriforslag – lagret på denne enheten.",
+                )}
+          </p>
+          <Btn secondary onClick={profile}>
+            {state.profile
+              ? t("Endre profil og kaloriforslag")
+              : t("Opprett profil")}
+          </Btn>
         </div>
       </section>
       <section className="panel">
-        <h2>Din hverdag</h2>
+        <h2>{t("Din hverdag")}</h2>
         <Form
-          label="Lagre innstillinger"
+          label={t("Lagre innstillinger")}
           onSubmit={async (d) => {
             const openingAmount = optional(d, "opening", (s) =>
               amountOre(s, true),
@@ -211,7 +289,7 @@ export function SettingsPage({
             });
           }}
         >
-          <Field label="Navn">
+          <Field label={t("Navn")}>
             <input
               name="name"
               required
@@ -220,19 +298,19 @@ export function SettingsPage({
             />
           </Field>
           <div className="form-row">
-            <Field label="Åpningssaldo (kr, valgfritt)">
+            <Field label={t("Åpningssaldo (kr, valgfritt)")}>
               <input
                 name="opening"
                 inputMode="decimal"
                 defaultValue={
                   state.settings.opening
-                    ? state.settings.opening.amount / 100
+                    ? inputNumber(state.settings.opening.amount / 100)
                     : ""
                 }
-                placeholder="Ikke satt"
+                placeholder={t("Ikke satt")}
               />
             </Field>
-            <Field label="Ved starten av denne datoen">
+            <Field label={t("Ved starten av denne datoen")}>
               <input
                 name="openingDate"
                 type="date"
@@ -241,12 +319,12 @@ export function SettingsPage({
             </Field>
           </div>
           <p className="help">
-            Åpningssaldo er saldoen før dagens første registrering. Bare
-            transaksjoner fra og med denne datoen endrer registrert saldo. Eldre
-            registreringer er fortsatt med i sine månedsrapporter.
+            {t(
+              "Åpningssaldo er saldoen før dagens første registrering. Bare transaksjoner fra og med denne datoen endrer registrert saldo. Eldre registreringer er fortsatt med i sine månedsrapporter.",
+            )}
           </p>
           <div className="form-row">
-            <Field label="Tidlig budsjettvarsel (%)">
+            <Field label={t("Tidlig budsjettvarsel (%)")}>
               <input
                 name="warning"
                 type="number"
@@ -256,7 +334,7 @@ export function SettingsPage({
                 required
               />
             </Field>
-            <Field label="Grensevarsel (%)">
+            <Field label={t("Grensevarsel (%)")}>
               <input
                 name="danger"
                 type="number"
@@ -270,30 +348,39 @@ export function SettingsPage({
         </Form>
         <div className="settings-divider">
           <div className="section-head">
-            <h3>Dine mål</h3>
+            <h3>{t("Dine mål")}</h3>
             <button className="text-button" onClick={goals}>
-              Endre mål <Pencil size={14} />
+              {t("Endre mål")} <Pencil size={14} />
             </button>
           </div>
           <p>
-            {goal?.steps ?? "Ikke satt"} skritt ·{" "}
-            {goal?.calories ?? "Ikke satt"} kcal
+            {t("{steps} skritt · {calories} kcal", {
+              steps: goal?.steps == null ? t("Ikke satt") : num(goal.steps),
+              calories:
+                goal?.calories == null ? t("Ikke satt") : num(goal.calories),
+            })}
           </p>
           {state.goals.length > 0 && (
             <details>
-              <summary>Målhistorikk ({state.goals.length})</summary>
+              <summary>
+                {t("Målhistorikk ({count})", {
+                  count: num(state.goals.length),
+                })}
+              </summary>
               {[...state.goals]
                 .sort((a, b) => b.date.localeCompare(a.date))
                 .map((g) => (
                   <p className="help" key={g.id}>
-                    Fra{" "}
-                    {dateLabel(g.date, {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
+                    {t("Fra {date}: {steps} skrittmål · {calories} kalorimål", {
+                      date: dateLabel(g.date, {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }),
+                      steps: g.steps == null ? t("Ingen") : num(g.steps),
+                      calories:
+                        g.calories == null ? t("Ingen") : num(g.calories),
                     })}
-                    : {g.steps ?? "Ingen"} skrittmål · {g.calories ?? "Ingen"}{" "}
-                    kalorimål
                   </p>
                 ))}
             </details>
@@ -303,21 +390,25 @@ export function SettingsPage({
       <div className="settings-column">
         <section className="panel">
           <div className="section-head">
-            <h2>Dine data, på din enhet</h2>
+            <h2>{t("Dine data, på din enhet")}</h2>
             <ShieldCheck size={22} />
           </div>
           <p className="settings-copy">
-            Registreringene og profilen lagres på denne enheten. Telefon og PC
-            synkroniseres ikke. Avinstallering eller sletting av app- og
-            nettleserdata kan fjerne registreringene. Lag en sikkerhetskopi
-            først.
+            {t(
+              "Registreringene og profilen lagres på denne enheten. Telefon og PC synkroniseres ikke. Avinstallering eller sletting av app- og nettleserdata kan fjerne registreringene. Lag en sikkerhetskopi først.",
+            )}
+          </p>
+          <p className="help">
+            {t(
+              "Når du søker på nett, sendes søkeord eller strekkode og valgt matmarked til matkilden. Profil, notater og private matlogger deles ikke.",
+            )}
           </p>
           <div className="backup-actions">
             <Btn
               secondary
               onClick={() =>
                 download(
-                  `arc-by-norvido-${today()}.json`,
+                  `arc-by-nortivo-${today()}.json`,
                   JSON.stringify(
                     {
                       format: "noah-tracker-backup",
@@ -333,11 +424,11 @@ export function SettingsPage({
               }
             >
               <Download size={17} />
-              Sikkerhetskopi
+              {t("Sikkerhetskopi")}
             </Btn>
             <Btn secondary onClick={() => upload.current?.click()}>
               <Upload size={17} />
-              Gjenopprett
+              {t("Gjenopprett")}
             </Btn>
             <input
               ref={upload}
@@ -354,51 +445,57 @@ export function SettingsPage({
             className="text-button"
             onClick={() =>
               download(
-                `arc-by-norvido-transaksjoner-${today()}.csv`,
+                `arc-by-nortivo-transactions-${today()}.csv`,
                 csvTransactions(state),
                 "text/csv;charset=utf-8",
               )
             }
           >
             <Download size={14} />
-            Eksporter transaksjoner som CSV
+            {t("Eksporter transaksjoner som CSV")}
           </button>
           {error && (
             <div className="error-box" role="alert">
-              {error}
+              {t(error)}
             </div>
           )}
           <p className="help">
-            Sikkerhetskopier er ikke kryptert. Oppbevar filen et trygt sted.
-            Lagrede matvarer kan brukes uten nett. I Android-appen fungerer også
-            Matvaretabellen uten nett. Open Food Facts krever internett.
+            {t(
+              "Sikkerhetskopier er ikke kryptert. Oppbevar filen et trygt sted. Lagrede matvarer kan brukes uten nett. I Android-appen fungerer også Matvaretabellen uten nett. Open Food Facts krever internett.",
+            )}
           </p>
         </section>
         <section className="panel">
           <div className="section-head">
-            <h2>Kategorier</h2>
+            <h2>{t("Kategorier")}</h2>
             <button className="text-button" onClick={() => setAdding(true)}>
               <Plus size={16} />
-              Ny
+              {t("Ny")}
             </button>
           </div>
           {state.categories.map((c) => (
             <div className="category-row" key={c.id}>
               <span className={c.archived ? "subtle" : ""}>
-                {c.name}
-                {c.archived ? " · arkivert" : ""}
+                {categoryLabel(c)}
+                {c.archived ? t(" · arkivert") : ""}
               </span>
               <div className="actions">
                 <button
                   className="icon-button quiet"
-                  aria-label={`Gi ${c.name} nytt navn`}
+                  aria-label={t("Gi {name} nytt navn", {
+                    name: categoryLabel(c),
+                  })}
                   onClick={() => setCategory(c)}
                 >
                   <Pencil size={14} />
                 </button>
                 <button
                   className="icon-button quiet"
-                  aria-label={`${c.archived ? "Gjenåpne" : "Arkiver"} ${c.name}`}
+                  aria-label={
+                    c.archived
+                      ? t("Gjenåpne {name}", { name: categoryLabel(c) })
+                      : t("Arkiver {name}", { name: categoryLabel(c) })
+                  }
                   onClick={() =>
                     save((s) => {
                       const current = s.categories.find((x) => x.id === c.id)!;
@@ -406,9 +503,9 @@ export function SettingsPage({
                         !current.archived &&
                         s.categories.filter((x) => !x.archived).length <= 1
                       )
-                        throw Error("Behold minst én aktiv kategori.");
+                        throw Error(t("Behold minst én aktiv kategori."));
                       current.archived = !current.archived;
-                    }, "Kategorien er oppdatert")
+                    }, t("Kategorien er oppdatert"))
                   }
                 >
                   {c.archived ? <RefreshCw size={14} /> : <Archive size={14} />}
@@ -417,17 +514,17 @@ export function SettingsPage({
             </div>
           ))}
           <p className="help">
-            Arkivering beholder historikk og tilknyttede transaksjoner.
+            {t("Arkivering beholder historikk og tilknyttede transaksjoner.")}
           </p>
         </section>
         <button className="danger-link" onClick={() => setDeleting(true)}>
           <Trash2 size={15} />
-          Slett alle personlige data
+          {t("Slett alle personlige data")}
         </button>
       </div>
       {(adding || category) && (
         <Modal
-          title={category ? "Gi kategorien nytt navn" : "Ny kategori"}
+          title={category ? t("Gi kategorien nytt navn") : t("Ny kategori")}
           onClose={() => {
             setAdding(false);
             setCategory(null);
@@ -446,7 +543,7 @@ export function SettingsPage({
                           name.toLocaleLowerCase("nb"),
                     )
                   )
-                    throw Error("Kategorinavnet finnes allerede.");
+                    throw Error(t("Kategorinavnet finnes allerede."));
                   put(s.categories, {
                     id: category?.id ?? id(),
                     name,
@@ -459,7 +556,7 @@ export function SettingsPage({
               }
             }}
           >
-            <Field label="Navn">
+            <Field label={t("Navn")}>
               <input
                 name="name"
                 required
@@ -473,16 +570,21 @@ export function SettingsPage({
       )}
       {incoming && (
         <Modal
-          title="Gjenopprett sikkerhetskopi"
+          title={t("Gjenopprett sikkerhetskopi")}
           onClose={() => setIncoming(null)}
         >
           <p className="help">
-            Filen er validert: {incoming.transactions.length} transaksjoner,{" "}
-            {incoming.logs.length} matregistreringer og{" "}
-            {incoming.activity.length} aktivitetsdager.
+            {t(
+              "Filen er validert. Transaksjoner: {transactions}. Matregistreringer: {logs}. Aktivitetsdager: {days}.",
+              {
+                transactions: num(incoming.transactions.length),
+                logs: num(incoming.logs.length),
+                days: num(incoming.activity.length),
+              },
+            )}
           </p>
           <Form
-            label="Gjenopprett data"
+            label={t("Gjenopprett data")}
             cancel={() => setIncoming(null)}
             onSubmit={async () => {
               if (
@@ -492,58 +594,66 @@ export function SettingsPage({
                       ? mergeStates(s, incoming)
                       : incoming;
                   Object.assign(s, structuredClone(next));
-                }, "Sikkerhetskopien er gjenopprettet")
+                }, t("Sikkerhetskopien er gjenopprettet"))
               )
                 setIncoming(null);
             }}
           >
-            <Field label="Hvordan skal dataene brukes?">
+            <Field label={t("Hvordan skal dataene brukes?")}>
               <select
                 value={restoreMode}
                 onChange={(e) => setRestoreMode(e.target.value)}
               >
                 <option value="merge">
-                  Slå sammen · behold eksisterende ved konflikt
+                  {t("Slå sammen · behold eksisterende ved konflikt")}
                 </option>
                 <option value="replace">
-                  Erstatt alle personlige data med filen
+                  {t("Erstatt alle personlige data med filen")}
                 </option>
               </select>
             </Field>
             <p className="notice">
               {restoreMode === "merge"
-                ? "ID-er, aktivitetsdatoer, månedsbudsjetter og mål-datoer som allerede finnes, beholdes. Innstillingene dine beholdes. Ingen duplikater legges til."
-                : "Alle eksisterende personlige registreringer og innstillinger erstattes. Ta en sikkerhetskopi først."}
+                ? t(
+                    "ID-er, aktivitetsdatoer, månedsbudsjetter og mål-datoer som allerede finnes, beholdes. Innstillingene dine beholdes. Ingen duplikater legges til.",
+                  )
+                : t(
+                    "Alle eksisterende personlige registreringer og innstillinger erstattes. Ta en sikkerhetskopi først.",
+                  )}
             </p>
           </Form>
         </Modal>
       )}
       {deleting && (
         <Modal
-          title="Slette alle personlige data?"
+          title={t("Slette alle personlige data?")}
           onClose={() => setDeleting(false)}
         >
           <Form
-            label="Slett alt"
+            label={t("Slett alt")}
             cancel={() => setDeleting(false)}
             onSubmit={async (d) => {
-              if (val(d, "confirm") !== "SLETT")
-                throw Error("Skriv SLETT for å bekrefte.");
+              if (val(d, "confirm") !== t("SLETT"))
+                throw Error(
+                  t("Skriv {word} for å bekrefte.", { word: t("SLETT") }),
+                );
               if (
                 await save(
                   (s) => Object.assign(s, emptyState()),
-                  "Alle personlige registreringer er slettet",
+                  t("Alle personlige registreringer er slettet"),
                 )
               )
                 setDeleting(false);
             }}
           >
             <p className="notice">
-              Dette sletter transaksjoner, mål, mat, måltider og aktivitet i
-              denne nettleseren. Handlingen kan ikke angres uten en
-              sikkerhetskopi.
+              {t(
+                "Dette sletter transaksjoner, mål, mat, måltider og aktivitet i denne nettleseren. Handlingen kan ikke angres uten en sikkerhetskopi.",
+              )}
             </p>
-            <Field label="Skriv SLETT for å bekrefte">
+            <Field
+              label={t("Skriv {word} for å bekrefte", { word: t("SLETT") })}
+            >
               <input name="confirm" autoComplete="off" required />
             </Field>
           </Form>

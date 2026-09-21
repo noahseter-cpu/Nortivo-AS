@@ -1,14 +1,21 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./legacy-test";
+import type { Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
-async function nav(page: any, name: string) {
+type TrackerToolMock = {
+  execute(input: unknown): { transactionCount: number; steps: number | null };
+};
+type TrackerWindowMock = Window & { trackerTool?: TrackerToolMock };
+async function nav(page: Page, name: string) {
   await page
     .getByRole("navigation", { name: "Hovedmeny" })
     .getByRole("button", { name, exact: true })
     .click();
 }
-async function custom(page: any) {
+async function custom(page: Page) {
   await nav(page, "Mat og kalorier");
-  await page.getByRole("button", { name: "Legg inn eget produkt", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Legg inn eget produkt", exact: true })
+    .click();
   await page
     .getByRole("textbox", { name: "Produktnavn", exact: true })
     .fill("Fiktiv testdrikk");
@@ -87,27 +94,23 @@ test("backup download restore duplicate merge invalid import protects data", asy
   const dl = await downloadEvent;
   const path = await dl.path();
   const backup = await readFile(path!, "utf8");
-  await page
-    .locator("input[type=file]")
-    .setInputFiles({
-      name: "backup.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(backup),
-    });
-  await expect(page.getByRole("dialog")).toContainText("1 transaksjoner");
+  await page.locator("input[type=file]").setInputFiles({
+    name: "backup.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(backup),
+  });
+  await expect(page.getByRole("dialog")).toContainText("Transaksjoner: 1.");
   await page
     .getByRole("button", { name: "Gjenopprett data", exact: true })
     .click();
   await expect(page.getByRole("dialog")).not.toBeVisible();
-  await page
-    .locator("input[type=file]")
-    .setInputFiles({
-      name: "bad.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(
-        '{"format":"noah-tracker-backup","version":1,"data":{}}',
-      ),
-    });
+  await page.locator("input[type=file]").setInputFiles({
+    name: "bad.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      '{"format":"noah-tracker-backup","version":1,"data":{}}',
+    ),
+  });
   await expect(
     page.getByRole("alert").filter({ hasText: "Ugyldig sikkerhetskopi" }),
   ).toBeVisible();
@@ -152,7 +155,11 @@ test("rapid saves focus and storage failure never claim success", async ({
   await page.getByRole("button", { name: "Lagre", exact: true }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(page.locator(".money-intro>strong")).toContainText("90 kr");
-  await expect(page.getByText("Simulert lagringsfeil").first()).toBeVisible();
+  await expect(
+    page
+      .getByText("Kunne ikke lagre. Kontroller verdiene og prøv igjen.")
+      .first(),
+  ).toBeVisible();
 });
 test("missing products provider error and camera denial retain fallbacks", async ({
   page,
@@ -180,7 +187,9 @@ test("missing products provider error and camera denial retain fallbacks", async
     .getByRole("textbox", { name: "Søk etter mat", exact: true })
     .fill("rate limit");
   await page.getByRole("button", { name: "Søk", exact: true }).click();
-  await expect(page.getByRole("alert")).toContainText("Søkegrensen");
+  await expect(
+    page.getByRole("status").filter({ hasText: "Open Food Facts" }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Skann", exact: true }).click();
   await page.evaluate(() => {
     navigator.mediaDevices.getUserMedia = async () => {
@@ -199,24 +208,26 @@ test("WebMCP registration and valid invalid calls in simulated supported context
   await page.addInitScript(() => {
     Object.defineProperty(document, "modelContext", {
       value: {
-        registerTool(tool: unknown) {
-          (window as any).trackerTool = tool;
+        registerTool(tool: TrackerToolMock) {
+          (window as TrackerWindowMock).trackerTool = tool;
         },
       },
     });
   });
   await page.goto("/");
   await expect
-    .poll(() => page.evaluate(() => !!(window as any).trackerTool))
+    .poll(() =>
+      page.evaluate(() => !!(window as TrackerWindowMock).trackerTool),
+    )
     .toBe(true);
   const result = await page.evaluate(() =>
-    (window as any).trackerTool.execute({ date: "2026-09-16" }),
+    (window as TrackerWindowMock).trackerTool!.execute({ date: "2026-09-16" }),
   );
   expect(result.transactionCount).toBe(0);
   expect(result.steps).toBeNull();
   const invalid = await page.evaluate(() => {
     try {
-      (window as any).trackerTool.execute({ date: "no" });
+      (window as TrackerWindowMock).trackerTool!.execute({ date: "no" });
       return false;
     } catch {
       return true;

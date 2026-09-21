@@ -1,6 +1,8 @@
-# Arc by Norvido
+# Arc by Nortivo
 
-Norwegian Bokmål personal tracker for money, category and overall monthly budgets, daily steps and food intake. No sample personal records are seeded.
+Personal tracker for money, category and overall monthly budgets, daily steps and food intake, in Norwegian Bokmål and English. No sample personal records are seeded. Current candidate: **1.0.0-rc.1**, Android versionCode **10**. This is a private test candidate, not a published Play release.
+
+Start with [the 1.0 release checklist](docs/RELEASE_1_0.md), [language and migration details](docs/LANGUAGE_1_0.md), [food sources](docs/FOOD_SEARCH_1_0.md), and [Android release signing](docs/ANDROID_RELEASE_1_0.md). Historical beta notes below describe previous versions only.
 
 ## Run locally
 
@@ -35,14 +37,15 @@ Version 1 backups contain a full schema and are validated before mutation. Merge
 
 The essential production app shell and loaded resources are cached by a service worker after successful loading. Saved foods work without a network. New external searches, uncached product imagery and first-time camera decoder download need a connection. Local development intentionally does not register the service worker.
 
-External searches send only the chosen query or barcode to a read-only same-origin adapter and its selected provider. Private records, custom foods and camera frames are never sent. No analytics or bank/watch connection is included. Sites hosting may require the owner's platform sign-in; the tracker has no fake login or sync controls.
+External searches send the chosen query or barcode, language and food-market context to a read-only adapter on web, or directly to Open Food Facts on Android. Network providers receive ordinary connection metadata such as IP address; external product images are separate requests. Private records, profile measurements, custom foods and camera frames are never sent. No analytics or bank/watch connection is included. Sites hosting may require the owner's platform sign-in; the tracker has no app-owned accounts or sync controls. See [actual data handling and publication gaps](docs/PRIVACY_1_0.md).
 
 ## Provider integrations
 
-- Matvaretabellen: official `https://www.matvaretabellen.no/api/nb/foods.json`; all foods downloaded and parsed, result search local to the adapter; public cache for repeat queries. Calories use the explicit `calories.quantity` in kcal, per 100 g. Portions use only supplied weights in grams. Attribution preserved.
+- Matvaretabellen: official Norwegian and English API snapshots, joined by food ID. The 2,121-food bilingual snapshot supports local search on both web and Android, including offline use. Calories use explicit `calories.quantity` in kcal, per 100 g. Portions use only supplied weights in grams. Attribution preserved; refresh with `node scripts/refresh-matvaretabellen.mjs`.
 - Open Food Facts: barcode lookup pinned to `/api/v3.4/product/{code}.json`. The official September 2026 change log documents the incompatible nutrition structure introduced in 3.5, so 3.4 intentionally requests the previous documented nutrient representation. Barcode strings preserve zeros; normalization is delegated to OFF. Ordinary text search uses `/cgi/search.pl`; structured brand search uses `/api/v2/search`. v3 product lookup is not used for text searches. Norway context/ranking preserves international results.
 - OFF `energy-kcal_100g` is never confused with kJ or serving energy. The user explicitly confirms grams versus millilitres from the label, with personal corrections retained separately. Missing or suspicious energy stays missing. Rate limits verified on 2026-09-16: provider docs list 15 product/min and 10 search/min. Adapter permits at most 12/8 per minute per isolate, bounded caches, 15-second upstream deadline, no automatic retry storms. Provider HTTP 429/503 is surfaced with a wait message. Cloud deployments can use several isolates, so the provider's own limit remains authoritative.
-- API identification uses NoahTracker/1.0 and the app's real origin. Source docs: https://www.matvaretabellen.no/api/ ; https://openfoodfacts.github.io/openfoodfacts-server/api/ ; https://openfoodfacts.github.io/openfoodfacts-server/api/ref-api-and-product-schema-change-log/ . OFF's usage-registration form has not been submitted on your behalf.
+- One deliberate search combines local Matvaretabellen and remote Open Food Facts, with independent partial errors, source labels, saved corrections and a separate Norway/world market choice. USDA was assessed but not added: it requires a private API key and is unnecessary for this candidate's bilingual raw-food coverage. No paid service is required.
+- Source docs: https://www.matvaretabellen.no/api/ ; https://openfoodfacts.github.io/openfoodfacts-server/api/ ; https://openfoodfacts.github.io/openfoodfacts-server/api/ref-api-and-product-schema-change-log/ . OFF's usage-registration form has not been submitted on your behalf.
 - OFF data attribution: ODbL; contents DbCL; product photos CC BY-SA. The app does not publish a merged food database.
 
 `OFF_STAGING=1` selects the documented OFF staging service with its public staging credentials. No private diary data is sent in either mode. Camera decoding uses ZXing in the browser. HTTPS (or localhost) and explicit camera permission are required. Typed barcode/search remain available.
@@ -58,7 +61,7 @@ Tests use Playwright with Microsoft Edge on this Windows host. Override `TEST_UR
 
 React + TypeScript on the supplied Vinext/Vite Sites starter. Existing Radix/Shadcn primitives manage dialogs, focus and tabs; Lucide supplies icons. Pure calculations/validation: `lib/tracker-core.ts`. IndexedDB repository/cache: `lib/tracker-store.ts`. Provider adapters and read-only route: `lib/food-adapters.ts`, `app/api/foods/route.ts`. Feature views: `components/tracker-*.tsx`. CSS tokens and motion: `app/globals.css`. Manrope is self-hosted under its included SIL Open Font License.
 
-The initial requirement for image approval was explicitly superseded by Noah's request to stop showing previews and build directly. No rejected mockup is an approved visual reference.
+Ordinary refinements preserve the implemented identity. The accepted 1.0 brief requires three design images and approval before any future major redesign; no major redesign is part of this candidate.
 
 ## Android private beta (0.2.0)
 

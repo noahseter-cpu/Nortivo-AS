@@ -1,4 +1,5 @@
 "use client";
+import { t as tr, useI18n, errorMessage } from "@/lib/i18n";
 import {
   useEffect,
   useRef,
@@ -32,6 +33,7 @@ export function Btn({
   className = "",
   ...props
 }: React.ComponentProps<typeof Button> & { secondary?: boolean }) {
+  useI18n();
   return (
     <Button
       {...props}
@@ -50,6 +52,7 @@ export function Field({
   children: ReactNode;
   hint?: string;
 }) {
+  useI18n();
   return (
     <label className="field">
       <span>{label}</span>
@@ -61,7 +64,7 @@ export function Field({
 export function Form({
   children,
   onSubmit,
-  label = "Lagre",
+  label = tr("Lagre"),
   cancel,
 }: {
   children: ReactNode;
@@ -69,6 +72,7 @@ export function Form({
   label?: string;
   cancel?: () => void;
 }) {
+  useI18n();
   const lock = useRef(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -81,11 +85,7 @@ export function Form({
     try {
       await onSubmit(new FormData(e.currentTarget));
     } catch (e) {
-      setError(
-        e instanceof Error && e.name !== "ZodError"
-          ? e.message
-          : "Sjekk at alle feltene har gyldige verdier.",
-      );
+      setError(errorMessage(e, "Sjekk at alle feltene har gyldige verdier."));
     } finally {
       lock.current = false;
       setBusy(false);
@@ -96,17 +96,17 @@ export function Form({
       {children}
       {error && (
         <div className="error-box" role="alert">
-          {error}
+          {errorMessage(new Error(error))}
         </div>
       )}
       <div className="form-actions">
         {cancel && (
           <Btn type="button" secondary onClick={cancel}>
-            Avbryt
+            {tr("Avbryt")}
           </Btn>
         )}
         <Btn type="submit" disabled={busy}>
-          {busy ? "Lagrer …" : label}
+          {busy ? tr("Lagrer …") : label}
         </Btn>
       </div>
     </form>
@@ -125,6 +125,7 @@ export function Modal({
   onClose: () => void;
   trigger?: HTMLElement | null;
 }) {
+  useI18n();
   const dialog = useRef<HTMLDivElement>(null);
   const returnFocus = useRef<HTMLElement | null>(
     typeof document === "undefined"
@@ -181,7 +182,7 @@ export function Modal({
           {description ?? title}
         </DialogDescription>
         <DialogClose asChild>
-          <button aria-label="Lukk" className="dialog-close icon-button">
+          <button aria-label={tr("Lukk")} className="dialog-close icon-button">
             <X size={19} />
           </button>
         </DialogClose>
@@ -199,10 +200,11 @@ export function DatePicker({
   onChange: (x: string) => void;
   month?: boolean;
 }) {
+  useI18n();
   return (
     <div className="date-picker">
       <button
-        aria-label={month ? "Forrige måned" : "Forrige dag"}
+        aria-label={month ? tr("Forrige måned") : tr("Forrige dag")}
         className="icon-button"
         onClick={() =>
           onChange(month ? shiftMonth(value, -1) : shiftDate(value, -1))
@@ -217,7 +219,7 @@ export function DatePicker({
             : dateLabel(value, { day: "numeric", month: "long" })}
         </span>
         <input
-          aria-label={month ? "Velg måned" : "Velg dato"}
+          aria-label={month ? tr("Velg måned") : tr("Velg dato")}
           type={month ? "month" : "date"}
           value={value}
           min={month ? "1900-01" : "1900-01-01"}
@@ -228,7 +230,7 @@ export function DatePicker({
         />
       </label>
       <button
-        aria-label={month ? "Neste måned" : "Neste dag"}
+        aria-label={month ? tr("Neste måned") : tr("Neste dag")}
         className="icon-button"
         onClick={() =>
           onChange(month ? shiftMonth(value, 1) : shiftDate(value, 1))
@@ -248,6 +250,7 @@ export function Empty({
   children: ReactNode;
   icon?: ReactNode;
 }) {
+  useI18n();
   return (
     <div className="empty-state">
       <span className="empty-icon">{icon ?? <Inbox size={25} />}</span>
@@ -257,6 +260,7 @@ export function Empty({
   );
 }
 export function Progress({ value, label }: { value: number; label: string }) {
+  useI18n();
   return (
     <div
       className="progress-track"
@@ -295,14 +299,16 @@ async function exportFile(name: string, content: string, type: string) {
         encoding: Encoding.UTF8,
       });
       await Share.share({
-        title: "Arc by Norvido – sikkerhetskopi",
+        title: tr("Arc by Nortivo – sikkerhetskopi"),
         files: [file.uri],
-        dialogTitle: "Lagre en kopi",
+        dialogTitle: tr("Lagre en kopi"),
       });
     } catch {
       const { toast } = await import("sonner");
       toast.error(
-        "Eksporten ble ikke fullført. Prøv igjen og velg hvor kopien skal lagres.",
+        tr(
+          "Eksporten ble ikke fullført. Prøv igjen og velg hvor kopien skal lagres.",
+        ),
       );
     }
     return;

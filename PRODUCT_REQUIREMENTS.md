@@ -1,3 +1,5 @@
+CURRENT REQUIREMENTS: The user confirmed the 2026-09-21 1.0 brief in docs/ARC_1_0_BRIEF.md. It supersedes conflicting branding, language, source-search and design-approval requirements below. Implementation and launch status: docs/RELEASE_1_0.md. The original product brief is retained below for historical context.
+
 MASTER PROMPT — NOAH’S PERSONAL TRACKER
 IMPECCABLE + ANIMATE EDITION
 

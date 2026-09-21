@@ -15,3 +15,9 @@ Use the existing React/TypeScript/Vinext starter and its accessible primitives. 
 The company and product display name is Nortivo, per Noah's correction. Noah remains the user's personal name, not the brand. Keep the legacy Android package no.noah.tracker.privatebeta, localhost origin, IndexedDB database keys and backup identifiers unchanged for private-beta update/data compatibility. App display names and export filenames use Nortivo.
 
 Latest naming correction (2026-09-17): app display name is Arc by Norvido, exactly as requested. Retain all legacy compatibility identifiers.
+
+## Accepted 1.0 brief (2026-09-21)
+
+The user confirmed implementing `docs/ARC_1_0_BRIEF.md`. It supersedes older display-name/language requirements: **Arc by Nortivo**, complete `nb` and `en` UI, explicit language choice first, persisted preference second, permitted first-use country signal third, unknown country English. Keep NOK, metric units, Oslo dates and food market independent of UI language. Preserve schema1–3 data through schema4 validation/migration; never reset storage.
+
+Normal design refinements remain directly authorized. A future major redesign requires three actual design images and approval under this newer brief. Public publication, paid services and irreversible production actions require explicit approval. See docs/RELEASE_1_0.md for tested scope and remaining launch requirements.

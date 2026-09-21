@@ -1,4 +1,5 @@
 "use client";
+import { t as tr, useI18n } from "@/lib/i18n";
 import { useState } from "react";
 import {
   Plus,
@@ -14,6 +15,7 @@ import {
   type State,
   type Transaction,
   amountOre,
+  inputNumber,
   finances,
   money,
   netSpent,
@@ -25,6 +27,7 @@ import {
   dateLabel,
   today,
   balance,
+  categoryLabel,
 } from "@/lib/tracker-core";
 import {
   Btn,
@@ -52,6 +55,7 @@ export function TransactionForm({
   save: Save;
   close: () => void;
 }) {
+  useI18n();
   const [type, setType] = useState(entry?.type ?? kind);
   return (
     <Form
@@ -66,41 +70,41 @@ export function TransactionForm({
           title: val(d, "title"),
           note: val(d, "note"),
         };
-        if (tx.amount <= 0) throw Error("Beløpet må være større enn null.");
+        if (tx.amount <= 0) throw Error(tr("Beløpet må være større enn null."));
         if (
           await save(
             (s) => put(s.transactions, tx),
-            entry ? "Registreringen er oppdatert" : "Registreringen er lagret",
+            entry
+              ? tr("Registreringen er oppdatert")
+              : tr("Registreringen er lagret"),
           )
         )
           close();
       }}
     >
-      <Field label="Type">
+      <Field label={tr("Type")}>
         <select
           value={type}
           onChange={(e) => setType(e.target.value as Transaction["type"])}
         >
-          <option value="expense">Utgift</option>
-          <option value="income">Inntekt</option>
-          <option value="refund">Refusjon</option>
+          <option value="expense">{tr("Utgift")}</option>
+          <option value="income">{tr("Inntekt")}</option>
+          <option value="refund">{tr("Refusjon")}</option>
         </select>
       </Field>
-      <Field label="Beløp i kroner">
+      <Field label={tr("Beløp i kroner")}>
         <input
           name="amount"
           autoFocus
           inputMode="decimal"
           required
-          placeholder="0,00"
-          defaultValue={
-            entry ? (entry.amount / 100).toString().replace(".", ",") : ""
-          }
+          placeholder={tr("0,00")}
+          defaultValue={entry ? inputNumber(entry.amount / 100) : ""}
           className="amount-input"
         />
       </Field>
       <div className="form-row">
-        <Field label="Kategori">
+        <Field label={tr("Kategori")}>
           <select
             name="category"
             defaultValue={
@@ -111,13 +115,13 @@ export function TransactionForm({
               .filter((x) => !x.archived || x.id === entry?.categoryId)
               .map((x) => (
                 <option key={x.id} value={x.id}>
-                  {x.name}
-                  {x.archived ? " (arkivert)" : ""}
+                  {categoryLabel(x)}
+                  {x.archived ? tr(" (arkivert)") : ""}
                 </option>
               ))}
           </select>
         </Field>
-        <Field label="Dato">
+        <Field label={tr("Dato")}>
           <input
             type="date"
             name="date"
@@ -129,20 +133,22 @@ export function TransactionForm({
       <Field
         label={
           type === "income"
-            ? "Tittel (valgfritt)"
-            : "Butikk eller tittel (valgfritt)"
+            ? tr("Tittel (valgfritt)")
+            : tr("Butikk eller tittel (valgfritt)")
         }
       >
         <input
           name="title"
           maxLength={150}
           placeholder={
-            type === "income" ? "For eksempel lønn" : "For eksempel dagligvarer"
+            type === "income"
+              ? tr("For eksempel lønn")
+              : tr("For eksempel dagligvarer")
           }
           defaultValue={entry?.title}
         />
       </Field>
-      <Field label="Notat (valgfritt)">
+      <Field label={tr("Notat (valgfritt)")}>
         <textarea
           name="note"
           maxLength={1000}
@@ -152,8 +158,9 @@ export function TransactionForm({
       </Field>
       {type === "refund" && (
         <p className="help">
-          En refusjon reduserer forbruket i kategorien på refusjonsdatoen og
-          øker registrert saldo. Den regnes ikke som inntekt.
+          {tr(
+            "En refusjon reduserer forbruket i kategorien på refusjonsdatoen og øker registrert saldo. Den regnes ikke som inntekt.",
+          )}
         </p>
       )}
     </Form>
@@ -170,15 +177,17 @@ export function BudgetForm({
   save: Save;
   close: () => void;
 }) {
+  useI18n();
   const current = state.budgets.find((x) => x.month === month);
   const [source, setSource] = useState(current);
   const [version, setVersion] = useState(0);
   return (
     <>
       <p className="help">
-        Gjelder bare {monthLabel(month)}. Tomt felt betyr at grensen ikke er
-        satt. 0 betyr ingen planlagt bruk. Kategorigrenser legges ikke til
-        totalgrensen.
+        {tr(
+          "Gjelder bare {month}. Tomt felt betyr at grensen ikke er satt. 0 betyr ingen planlagt bruk. Kategorigrenser legges ikke til totalgrensen.",
+          { month: monthLabel(month) },
+        )}
       </p>
       <button
         className="text-button"
@@ -190,7 +199,7 @@ export function BudgetForm({
           setVersion((v) => v + 1);
         }}
       >
-        Kopier forrige måneds grenser
+        {tr("Kopier forrige måneds grenser")}
       </button>
       <Form
         key={version}
@@ -209,33 +218,37 @@ export function BudgetForm({
                   { month, total: optional(d, "total", amountOre), categories },
                   "month",
                 ),
-              "Månedens budsjett er lagret",
+              tr("Månedens budsjett er lagret"),
             )
           )
             close();
         }}
       >
-        <Field label="Samlet månedsgrense (kr)">
+        <Field label={tr("Samlet månedsgrense (kr)")}>
           <input
             name="total"
             inputMode="decimal"
-            placeholder="Ikke satt"
-            defaultValue={source?.total == null ? "" : source.total / 100}
+            placeholder={tr("Ikke satt")}
+            defaultValue={
+              source?.total == null ? "" : inputNumber(source.total / 100)
+            }
           />
         </Field>
         {state.categories.map((c) => (
           <Field
             key={c.id}
-            label={`${c.name}${c.archived ? " (arkivert)" : ""} (kr)`}
+            label={`${categoryLabel(c)}${c.archived ? tr(" (arkivert)") : ""} (kr)`}
           >
             <input
               name={c.id}
               inputMode="decimal"
-              placeholder={c.id === "cat-0" ? "Eksempel: 2 300" : "Ikke satt"}
+              placeholder={
+                c.id === "cat-0" ? tr("Eksempel: 2 300") : tr("Ikke satt")
+              }
               defaultValue={
                 source?.categories[c.id] === undefined
                   ? ""
-                  : source.categories[c.id] / 100
+                  : inputNumber(source.categories[c.id] / 100)
               }
             />
           </Field>
@@ -253,6 +266,7 @@ export function BudgetList({
   month: string;
   edit: () => void;
 }) {
+  useI18n();
   const f = finances(state, month);
   const limits = state.categories.filter(
     (c) => f.budget?.categories[c.id] !== undefined,
@@ -260,17 +274,19 @@ export function BudgetList({
   return (
     <section className="panel">
       <div className="section-head">
-        <h2>Budsjetter</h2>
+        <h2>{tr("Budsjetter")}</h2>
         <button className="text-button" onClick={edit}>
-          Endre grenser <Pencil size={13} />
+          {tr("Endre grenser")}
+          <Pencil size={13} />
         </button>
       </div>
       {limits.length === 0 ? (
-        <Empty title="En ramme for måneden" icon={<Wallet size={24} />}>
-          Sett for eksempel 2 300 kr til mat.
+        <Empty title={tr("En ramme for måneden")} icon={<Wallet size={24} />}>
+          {tr("Sett for eksempel 2 300 kr til mat.")}
           <br />
           <button className="text-button" onClick={edit}>
-            Sett opp budsjett <ArrowUpRight size={14} />
+            {tr("Sett opp budsjett")}
+            <ArrowUpRight size={14} />
           </button>
         </Empty>
       ) : (
@@ -283,35 +299,46 @@ export function BudgetList({
           const perDay = allowance(remaining, month);
           const status =
             remaining < 0
-              ? "Over budsjett"
+              ? tr("Over budsjett")
               : percent >= state.settings.danger
-                ? "Grensen er nådd"
+                ? tr("Grensen er nådd")
                 : percent >= state.settings.warning
-                  ? "Nær grensen"
-                  : "Innenfor grensen";
+                  ? tr("Nær grensen")
+                  : tr("Innenfor grensen");
           return (
             <div key={c.id} className="budget-row">
               <div className="row-between">
-                <strong>{c.name}</strong>
+                <strong>{categoryLabel(c)}</strong>
                 <span className={remaining < 0 ? "negative" : ""}>
-                  {money(Math.abs(remaining))}{" "}
-                  {remaining < 0 ? "over" : "igjen"}
+                  {remaining < 0
+                    ? tr("{amount} over", { amount: money(-remaining) })
+                    : tr("{amount} igjen", { amount: money(remaining) })}
                 </span>
               </div>
-              <Progress value={percent} label={`${c.name}: ${status}`} />
+              <Progress
+                value={percent}
+                label={`${categoryLabel(c)}: ${status}`}
+              />
               <div className="row-between subtle">
                 <span>
-                  {money(spent)} av {money(limit)}
+                  {tr("{spent} av {limit}", {
+                    spent: money(spent),
+                    limit: money(limit),
+                  })}
                 </span>
                 <span>
-                  {limit === 0 ? "Nullbudsjett" : `${Math.round(percent)} %`} ·{" "}
-                  {status}
+                  {limit === 0
+                    ? tr("Nullbudsjett")
+                    : `${Math.round(percent)} %`}{" "}
+                  · {status}
                 </span>
               </div>
               {perDay !== null && (
                 <p className="help">
-                  Ca. {money(perDay)} per dag resten av måneden, inkludert i
-                  dag.
+                  {tr(
+                    "Ca. {amount} per dag resten av måneden, inkludert i dag.",
+                    { amount: money(perDay) },
+                  )}
                 </p>
               )}
             </div>
@@ -319,8 +346,9 @@ export function BudgetList({
         })
       )}
       <p className="help">
-        Dagsbeløp er en veiledning. Grenser varsler i appen, men stopper ikke
-        kjøp.
+        {tr(
+          "Dagsbeløp er en veiledning. Grenser varsler i appen, men stopper ikke kjøp.",
+        )}
       </p>
     </section>
   );
@@ -336,10 +364,11 @@ export function TransactionList({
   edit: (t: Transaction) => void;
   remove: (t: Transaction) => void;
 }) {
+  useI18n();
   if (!entries.length)
     return (
-      <Empty title="Ingen registreringer her ennå">
-        Legg til en utgift, inntekt eller refusjon.
+      <Empty title={tr("Ingen registreringer her ennå")}>
+        {tr("Legg til en utgift, inntekt eller refusjon.")}
       </Empty>
     );
   return (
@@ -362,15 +391,21 @@ export function TransactionList({
             <div className="record-text">
               <strong>
                 {t.title ||
-                  state.categories.find((c) => c.id === t.categoryId)?.name}
+                  categoryLabel(
+                    state.categories.find((c) => c.id === t.categoryId),
+                  )}
               </strong>
               <small>
-                {state.categories.find((c) => c.id === t.categoryId)?.name} ·{" "}
-                {dateLabel(t.date)} ·{" "}
+                {categoryLabel(
+                  state.categories.find((c) => c.id === t.categoryId),
+                )}{" "}
+                · {dateLabel(t.date)} ·{" "}
                 {
-                  { expense: "Utgift", income: "Inntekt", refund: "Refusjon" }[
-                    t.type
-                  ]
+                  {
+                    expense: tr("Utgift"),
+                    income: tr("Inntekt"),
+                    refund: tr("Refusjon"),
+                  }[t.type]
                 }
               </small>
               {t.note && <small>{t.note}</small>}
@@ -381,14 +416,18 @@ export function TransactionList({
             </strong>
             <button
               className="icon-button quiet"
-              aria-label={`Rediger ${t.title || "registrering"}`}
+              aria-label={tr("Rediger {name}", {
+                name: t.title || tr("registrering"),
+              })}
               onClick={() => edit(t)}
             >
               <Pencil size={15} />
             </button>
             <button
               className="icon-button quiet"
-              aria-label={`Slett ${t.title || "registrering"}`}
+              aria-label={tr("Slett {name}", {
+                name: t.title || tr("registrering"),
+              })}
               onClick={() => remove(t)}
             >
               <Trash2 size={15} />
@@ -415,6 +454,7 @@ export function MoneyPage({
   budget: () => void;
   remove: (t: Transaction) => void;
 }) {
+  useI18n();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
@@ -434,70 +474,98 @@ export function MoneyPage({
         <DatePicker value={month} onChange={setMonth} month />
         <Btn onClick={add}>
           <Plus size={17} />
-          Legg til registrering
+          {tr("Legg til registrering")}
         </Btn>
       </div>
       <div className="money-summary">
         <div>
-          <span>Utgifter etter refusjoner</span>
+          <span>{tr("Utgifter etter refusjoner")}</span>
           <strong>{money(f.spent)}</strong>
         </div>
         <div>
-          <span>Inntekter</span>
+          <span>{tr("Inntekter")}</span>
           <strong>{money(f.income)}</strong>
         </div>
         <div>
-          <span>Igjen av totalbudsjett</span>
+          <span>{tr("Igjen av totalbudsjett")}</span>
           <strong
             className={
               f.remaining !== null && f.remaining < 0 ? "negative" : ""
             }
           >
-            {f.remaining === null ? "Ikke satt" : money(f.remaining)}
+            {f.remaining === null ? tr("Ikke satt") : money(f.remaining)}
           </strong>
         </div>
         <div>
-          <span>Registrert saldo · i dag</span>
+          <span>{tr("Registrert saldo · i dag")}</span>
           <strong>
-            {registered === null ? "Ikke satt" : money(registered)}
+            {registered === null ? tr("Ikke satt") : money(registered)}
           </strong>
         </div>
       </div>
-      {f.budget?.total!=null && <p className={f.remaining!==null&&f.remaining<0?"notice negative":"help section-note"}>
-        {f.remaining!==null&&f.remaining<0?`${money(-f.remaining)} over totalbudsjettet.`:f.spent>=(f.budget.total*state.settings.danger/100)?"Totalgrensen er nådd.":f.spent>=(f.budget.total*state.settings.warning/100)?"Du nærmer deg totalgrensen.":"Innenfor totalgrensen."}
-        {allowance(f.remaining,month)!==null?` Veiledning: ${money(allowance(f.remaining,month)!)} per dag resten av måneden, inkludert i dag.`:""}
-      </p>}
+      {f.budget?.total != null && (
+        <p
+          className={
+            f.remaining !== null && f.remaining < 0
+              ? "notice negative"
+              : "help section-note"
+          }
+        >
+          {f.remaining !== null && f.remaining < 0
+            ? tr("{amount} over totalbudsjettet.", {
+                amount: money(-f.remaining),
+              })
+            : f.spent >= (f.budget.total * state.settings.danger) / 100
+              ? tr("Totalgrensen er nådd.")
+              : f.spent >= (f.budget.total * state.settings.warning) / 100
+                ? tr("Du nærmer deg totalgrensen.")
+                : tr("Innenfor totalgrensen.")}
+          {allowance(f.remaining, month) !== null && (
+            <>
+              {" "}
+              {tr(
+                "Veiledning: {amount} per dag resten av måneden, inkludert i dag.",
+                { amount: money(allowance(f.remaining, month)!) },
+              )}
+            </>
+          )}
+        </p>
+      )}
       <div className="finance-grid">
         <BudgetList state={state} month={month} edit={budget} />
         <section className="panel">
           <div className="section-head">
-            <h2>Registreringer</h2>
-            <span className="subtle">{rows.length} treff</span>
+            <h2>{tr("Registreringer")}</h2>
+            <span className="subtle">
+              {rows.length === 1
+                ? tr("1 treff")
+                : tr("{count} treff", { count: rows.length })}
+            </span>
           </div>
           <div className="filters">
             <label className="search-field">
               <Search size={17} />
               <input
-                aria-label="Søk i transaksjoner"
+                aria-label={tr("Søk i transaksjoner")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Søk etter butikk eller notat"
+                placeholder={tr("Søk etter butikk eller notat")}
               />
             </label>
             <select
-              aria-label="Filtrer kategori"
+              aria-label={tr("Filtrer kategori")}
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="">Alle kategorier</option>
+              <option value="">{tr("Alle kategorier")}</option>
               {state.categories.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.name}
+                  {categoryLabel(c)}
                 </option>
               ))}
             </select>
             <input
-              aria-label="Filtrer dato"
+              aria-label={tr("Filtrer dato")}
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
@@ -511,7 +579,7 @@ export function MoneyPage({
                   setDate("");
                 }}
               >
-                Nullstill filtre
+                {tr("Nullstill filtre")}
               </button>
             )}
           </div>
@@ -524,8 +592,9 @@ export function MoneyPage({
         </section>
       </div>
       <p className="help section-note">
-        Registrert saldo bygger bare på det du har ført, og er ikke en
-        banksaldo. Utgifter uten kategoribudsjett er også med i totalen.
+        {tr(
+          "Registrert saldo bygger bare på det du har ført, og er ikke en banksaldo. Utgifter uten kategoribudsjett er også med i totalen.",
+        )}
       </p>
     </>
   );

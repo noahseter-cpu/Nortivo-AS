@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./legacy-test";
 test("desktop overview screenshot and complete finance interaction", async ({
   page,
 }) => {
