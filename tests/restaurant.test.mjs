@@ -72,3 +72,13 @@ test('refined restaurant preserves truthful imagery and native keyboard time cho
   assert.match(code,/reducedMotion\.matches/);
   assert.match(JSON.parse(read('dist/assets/lune-interior.webp.json')).prompt,/fictional/);
 });
+
+test('Lune editorial typography is scoped and controls retain explicit readable ink', () => {
+  const css=read('dist/assets/restaurant.css');
+  assert.match(css,/font-family:Gloock/);
+  assert.match(css,/prefers-reduced-motion:reduce/);
+  assert.match(css,/\.vegetarian-control\{[^}]*color:var\(--lune-ink\)/);
+  assert.match(css,/\.booking-fields label,\.booking-slots legend\{[^}]*color:var\(--lune-ink\)/);
+  assert.doesNotMatch(read('dist/assets/site.css'),/Gloock/);
+  assert.match(read('dist/assets/fonts/Gloock-OFL.txt'),/SIL OPEN FONT LICENSE/);
+});
