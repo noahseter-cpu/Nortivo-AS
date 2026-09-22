@@ -1,7 +1,7 @@
 // Netlify uses .js ES modules for edge functions; no package or external request is needed.
 // API: https://docs.netlify.com/build/edge-functions/api/
 // Routing: https://docs.netlify.com/build/edge-functions/declarations/
-const legacyPaths = ['/', '/products/', '/support/', '/admin/', '/privacy/'];
+const legacyPaths = ['/', '/products/', '/support/', '/admin/', '/privacy/', '/about/', '/services/', '/contact/', '/restaurant/'];
 const supported = value => value === 'nb' || value === 'en';
 
 function savedLanguage(request) {

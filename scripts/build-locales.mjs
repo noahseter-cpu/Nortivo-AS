@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const pages = ['home', 'products', 'support', 'admin', 'privacy'];
+export const pages = ['home', 'products', 'support', 'admin', 'privacy', 'about', 'services', 'contact', 'restaurant'];
 export const locales = ['nb', 'en'];
 const rawTextTags = new Set(['script', 'style', 'textarea']);
 const protectedTextTags = new Set(['input', 'textarea', 'script', 'style']);

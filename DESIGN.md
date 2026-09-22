@@ -116,6 +116,8 @@ components:
 
 # Design System: Nortivo
 
+The separate Lune restaurant demonstration is documented in [its scoped design system](docs/restaurant/DESIGN.md), with [durable component and motion extensions](docs/restaurant-design.json). Its tokens do not change the Nortivo system below.
+
 ## Refinement — 22 September 2026
 
 This update supersedes the older descriptions of the founder strip, support columns, mobile header and motion below. The user requested cleaner text/layout, Animate-based motion, their supplied professional biography, a refreshed tab icon and production publication. The existing navy art direction is retained.

@@ -6,4 +6,10 @@
   <url><loc>https://nortivo.no/en/products/</loc><xhtml:link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/products/"/><xhtml:link rel="alternate" hreflang="en" href="https://nortivo.no/en/products/"/></url>
   <url><loc>https://nortivo.no/nb/privacy/</loc><xhtml:link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/privacy/"/><xhtml:link rel="alternate" hreflang="en" href="https://nortivo.no/en/privacy/"/></url>
   <url><loc>https://nortivo.no/en/privacy/</loc><xhtml:link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/privacy/"/><xhtml:link rel="alternate" hreflang="en" href="https://nortivo.no/en/privacy/"/></url>
-</urlset>
+<url><loc>https://nortivo.no/nb/about/</loc></url>
+<url><loc>https://nortivo.no/en/about/</loc></url>
+<url><loc>https://nortivo.no/nb/services/</loc></url>
+<url><loc>https://nortivo.no/en/services/</loc></url>
+<url><loc>https://nortivo.no/nb/contact/</loc></url>
+<url><loc>https://nortivo.no/en/contact/</loc></url>
+<url><loc>https://nortivo.no/nb/restaurant/</loc></url><url><loc>https://nortivo.no/en/restaurant/</loc></url></urlset>

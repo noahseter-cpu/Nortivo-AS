@@ -16,11 +16,11 @@ Open `http://127.0.0.1:4399/nb/` or `/en/`. The local server deliberately return
 
 ## Editing
 
-- English source pages: `dist/index.html`, `dist/products/index.html`, `dist/support/index.html`, `dist/admin/index.html`, `dist/privacy/index.html`.
+- English source pages: `dist/index.html` and `dist/{products,services,about,contact,restaurant,support,admin,privacy}/index.html`.
 - Shared copy: `dist/assets/site-copy.json`. Runtime copy is embedded in `site.js`; the contract test checks they remain identical.
 - Support/admin copy: `dist/assets/portal-copy.json`; page scripts embed the relevant dictionaries.
 - Shared design: `dist/assets/site.css`; operational surfaces: `portal-v2.css`.
-- Run the locale build after source/copy changes. It writes ten static pages under `/nb/` and `/en/`, including translated metadata and alternate-language links.
+- Run the locale build after source/copy changes. It writes eighteen static pages under `/nb/` and `/en/`, including translated metadata and alternate-language links.
 - Existing non-prefixed routes are preserved. On Netlify, the edge function chooses an explicit language, saved cookie, Norway signal, then English. Explicit prefixed routes are never redirected by geolocation.
 
 ## Deployment boundary
@@ -38,3 +38,9 @@ Before production acceptance, test real ticket creation, confirmation delivery, 
 See `DESIGN.md`, `docs/design-2026-09-21/DIRECTION_STATUS.md` and `docs/design-2026-09-21/VERIFICATION.md`. The user explicitly requested direct implementation without further previews. The approved Arc wordmark and isolated empty-state app screenshots are retained; no public app launch, download, reviews or customers are invented.
 
 Generated artwork and screenshot origins are recorded in `docs/design-2026-09-21/asset-provenance.json`. Font sources/licences are documented in `docs/THIRD_PARTY_FONTS.md`. Reference websites informed composition, not copied content or code.
+
+## Separate pages and restaurant demo
+
+The homepage is a short introduction with a Products CTA and links to Services, About Nortivo and Contact. Previous homepage fragments redirect to their new localized pages. The contact page retains the same ticket backend; `?project=web` or `?project=app` prefills the service choice.
+
+The Lune restaurant demonstration lives at `/nb/restaurant/` and `/en/restaurant/`, linked from Services and Products. It is explicitly fictional, not client work. Menu filtering and table selection run locally without a reservation service, personal-data collection or storage. The demo calendar uses Europe/Oslo days and fictional opening hours. Original generated food imagery is documented in `docs/LUNE_IMAGE_PROMPT.txt` and its shipped WebP provenance sidecar; the 1536×1024 source was converted to quality-85 WebP (about 271 kB) without content edits.

@@ -78,14 +78,14 @@ test('localized metadata has canonical, hreflang and correct noindex rules', () 
   }
 });
 
-test('build creates all ten pages, merges portal keys, and does not duplicate assets or modify sources', async t => {
+test('build creates all localized pages, merges portal keys, and does not duplicate assets or modify sources', async t => {
   const { dist } = await fixture(t);
   const outputs = await buildLocales({ distDir: dist });
-  assert.equal(outputs.length, 10);
+  assert.equal(outputs.length, pages.length * 2);
   assert.equal(await readFile(path.join(dist, 'index.html'), 'utf8'), fixtureHtml);
   const support = await readFile(path.join(dist, 'nb/support/index.html'), 'utf8');
   assert.match(support, /Portal barn/);
-  assert.deepEqual((await readdir(path.join(dist, 'nb'))).sort(), ['admin', 'index.html', 'privacy', 'products', 'support']);
+  assert.deepEqual((await readdir(path.join(dist, 'nb'))).sort(), pages.map(page => page === 'home' ? 'index.html' : page).sort());
 });
 
 test('missing translations fail before any generated files are written', async t => {
@@ -130,7 +130,7 @@ test('edge has no shared caching, preserves other queries, and operates only on 
   assert.equal(result.headers.get('Vary'), 'Cookie');
   assert.equal(redirect(new Request('https://nortivo.no/support/', { method: 'POST' })), undefined);
   for (const route of ['/nb/', '/en/products/', '/assets/site.js', '/.netlify/functions/tickets', '/missing/', '/products']) assert.equal(redirect(new Request(`https://nortivo.no${route}`)), undefined);
-  assert.deepEqual(config.path, ['/', '/products/', '/support/', '/admin/', '/privacy/']);
+  assert.deepEqual(config.path, pages.map(page => page === 'home' ? '/' : `/${page}/`));
   assert.equal(config.cache, undefined);
   assert.equal(config.method, undefined, 'Do not emit unsupported HEAD in the Netlify manifest method filter');
 });

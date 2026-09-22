@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-22T12:00:00+02:00",
+  "title": "Design System: Lune restaurant demonstration",
+  "extensions": {
+    "typographyMeta": {
+      "display": {
+        "displayName": "Invitation display",
+        "purpose": "Hero heading; mobile 3.6rem, narrow mobile 3.1rem."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.23,1,.32,1)",
+        "purpose": "Shared hero settlement and pointer feedback."
+      },
+      {
+        "name": "hero-settlement",
+        "value": "600ms; delays 0ms, 60ms, 120ms",
+        "purpose": "Title, introduction and actions settle from translateY(12px), opacity .8; content stays visible."
+      },
+      {
+        "name": "button-feedback",
+        "value": "160ms ease; 120ms cubic-bezier(.23,1,.32,1)",
+        "purpose": "Background and pointer-only .98 press scale."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "none",
+        "purpose": "Shared CSS removes animations/transitions; Lune removes press transform. Menu and confirmation remain immediate."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "lune-tight-desktop",
+        "value": "1000px"
+      },
+      {
+        "name": "lune-stack",
+        "value": "720px"
+      },
+      {
+        "name": "lune-small-phone",
+        "value": "359px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Booking button",
+      "kind": "button",
+      "refersTo": "booking-button",
+      "description": "Dark ink action with pointer feedback and visible keyboard focus.",
+      "html": "<button class=\"ds-lune\" type=\"button\">Try table booking</button>",
+      "css": ".ds-lune{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:52px;background:#18343b;color:#fff;border:1px solid #18343b;border-radius:3px;font:700 .88rem/1.4 Manrope,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{background:#2b4c53;color:#fff}}:host-context(html[data-input=pointer]) .ds-lune:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-lune{transition:none;transform:none!important}}"
+    },
+    {
+      "name": "Closing enquiry",
+      "kind": "button",
+      "refersTo": "enquiry-button",
+      "description": "Pale yellow enquiry action in the dark closing section.",
+      "html": "<a class=\"ds-lune ds-lune-enquiry\" href=\"/contact/?project=web\">Talk to Nortivo</a>",
+      "css": ".ds-lune{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:52px;background:#18343b;color:#fff;border:1px solid #18343b;border-radius:3px;font:700 .88rem/1.4 Manrope,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{background:#2b4c53;color:#fff}}:host-context(html[data-input=pointer]) .ds-lune:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-lune{transition:none;transform:none!important}}.ds-lune-enquiry{background:#f1d582;color:#18343b;border-color:#f1d582}@media(hover:hover) and (pointer:fine){.ds-lune-enquiry:hover{background:#e4c369;color:#18343b}}"
+    },
+    {
+      "name": "Category control",
+      "kind": "chip",
+      "refersTo": "category",
+      "description": "Static selected-state specimen; actual filtering is implemented by restaurant.js.",
+      "html": "<button class=\"ds-lune\" type=\"button\" aria-pressed=\"true\">Full menu</button>",
+      "css": ".ds-lune{min-height:44px;border:1px solid #bac9cc;border-radius:3px;background:transparent;color:#18343b;padding:10px 16px;font:400 .86rem/1.65 Manrope,sans-serif;cursor:pointer}.ds-lune[aria-pressed=true]{background:#18343b;border-color:#18343b;color:#fff}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:not([aria-pressed=true]):hover{background:#e3eae8}}"
+    },
+    {
+      "name": "Booking date",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Native date field with persistent label; no personal information.",
+      "html": "<label class=\"ds-lune-label\" for=\"ds-lune-date\">Date</label><input class=\"ds-lune\" id=\"ds-lune-date\" type=\"date\" required>",
+      "css": ".ds-lune-label{display:block;font:400 .8rem/1.65 Manrope,sans-serif;color:#18343b;margin-bottom:8px}.ds-lune{color-scheme:light;background:#f5f7f6;color:#18343b;border:1px solid #789097;min-width:0;border-radius:3px;min-height:48px;padding:12px 14px;font:400 1rem/1.65 Manrope,sans-serif;caret-color:#18343b}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}"
+    },
+    {
+      "name": "Anchor navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Always-visible short navigation; wraps to a separate row on mobile.",
+      "html": "<nav class=\"ds-lune-nav\" aria-label=\"Restaurant\"><a class=\"ds-lune\" href=\"#menu\">Menu</a><a class=\"ds-lune\" href=\"#visit\">About Lune</a><a class=\"ds-lune ds-lune-book\" href=\"#booking\">Try table booking</a></nav>",
+      "css": ".ds-lune-nav{display:flex;align-items:center;gap:34px;background:#c5d5ed;color:#18343b}.ds-lune{font:700 .9rem/1.65 Manrope,sans-serif;padding-block:10px;text-decoration:none;color:inherit}.ds-lune-book{border-bottom:1px solid #18343b}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{text-decoration:underline}}@media(max-width:720px){.ds-lune-nav{gap:14px;justify-content:space-between}.ds-lune{font-size:.78rem}}@media(max-width:359px){.ds-lune-nav{gap:10px}.ds-lune{font-size:.72rem}}"
+    },
+    {
+      "name": "Booking workspace",
+      "kind": "card",
+      "refersTo": "booking-workspace",
+      "description": "Flat form container; confirmation explicitly remains a demonstration.",
+      "html": "<section class=\"ds-lune-workspace\"><h3 class=\"ds-lune-title\">An example confirmation</h3><p class=\"ds-lune-notice\">Demonstration only. No reservation has been made.</p></section>",
+      "css": ".ds-lune-workspace{padding:32px;background:#fff;color:#18343b;border:1px solid #bac9cc;border-radius:8px;font:400 16px/1.65 Manrope,sans-serif}.ds-lune-title{font:700 1.45rem/1.35 Manrope,sans-serif;letter-spacing:-.025em;margin:0 0 24px}.ds-lune-notice{background:#e3eae8;padding:15px;font-size:.88rem;margin:0 0 18px}@media(max-width:720px){.ds-lune-workspace{padding:24px 20px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Supper-club invitation",
+    "overview": "Lune uses cool invitation-paper fields, ivory-white reading surfaces and deep blue-green ink. Large compact headings and open menu rows let the generated food photograph supply the warmth.\n\nThis scoped system records the implemented fictional restaurant, extracted on 22 September 2026 from `dist/assets/restaurant.css`, shared `site.css`, restaurant HTML and `restaurant.js`. It extends the repository with a separate visual world; it does not replace the corporate Nortivo system. The descriptive north star comes from the existing [direction contract](../RESTAURANT_DIRECTION.md), not a new approval round.",
+    "keyCharacteristics": [
+      "Cool invitation paper and compact Manrope headings.",
+      "Open menu rows, tabular prices and explicit filter selection.",
+      "Dark booking actions and a pale yellow closing enquiry action.",
+      "Persistent fictional-demo disclosure and local-only table selection."
+    ],
+    "rules": [
+      {
+        "name": "The Separate World Rule",
+        "body": "Lune tokens apply only to the restaurant demonstration; Nortivo retains its incumbent navy and blue system.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do preserve the fictional-demo disclosure in both languages.",
+      "Do keep menu changes immediate and reduced-motion behavior intact.",
+      "Do keep booking selection local and free of personal data.",
+      "Do preserve visible focus, native fields and written selection feedback."
+    ],
+    "donts": [
+      "Don't apply Lune's palette to the Nortivo corporate pages.",
+      "Don't imply that demonstration confirmation reserves a real table.",
+      "Don't introduce invented customer evidence or remove image provenance."
+    ]
+  }
+}

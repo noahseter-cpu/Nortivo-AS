@@ -8,7 +8,7 @@ import vm from 'node:vm';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const read = file => readFileSync(path.join(dist, file), 'utf8');
-const pageFiles = ['index.html', 'products/index.html', 'support/index.html', 'admin/index.html', 'privacy/index.html', '404.html'];
+const pageFiles = ['index.html', 'products/index.html', 'support/index.html', 'admin/index.html', 'privacy/index.html', 'about/index.html', 'services/index.html', 'contact/index.html', 'restaurant/index.html', '404.html'];
 const sources = new Map(pageFiles.map(file => [file, read(file)]));
 const siteCopy = JSON.parse(read('assets/site-copy.json'));
 const portalCopy = JSON.parse(read('assets/portal-copy.json'));
@@ -97,6 +97,7 @@ function documentFixture(nodes = [], page = 'home', country = '') {
 function loadSite({ url = 'https://nortivo.no/', saved = '', country = '', nodes = [], deniedStorage = false } = {}) {
   const document = documentFixture(nodes, 'home', country);
   const location = new URL(url);
+  location.replace = target => { location.replacement = new URL(target, location).href; };
   const storage = new Map(saved ? [['nortivo-site-language', saved]] : []);
   const context = {
     document, location, URL, console,
@@ -147,6 +148,21 @@ function loadContact(fetchImplementation) {
   };
 }
 const response = (body, status = 200) => ({ ok: status >= 200 && status < 300, status, json: async () => body });
+
+test('legacy homepage sections redirect to separate localized pages', () => {
+  for (const [hash, page] of [['about','about'],['services','services'],['contact','contact'],['arc','products']]) {
+    const fixture=loadSite({url:`https://nortivo.no/nb/#${hash}`});
+    assert.equal(fixture.location.replacement, `https://nortivo.no/nb/${page}/`);
+  }
+});
+
+test('contact project query prefills known service types only', () => {
+  for (const type of ['web','app','other','invalid']) {
+    const select=new Element('select',{id:'project-type'});
+    loadSite({url:`https://nortivo.no/nb/contact/?project=${type}`,nodes:[select]});
+    assert.equal(select.value,type==='invalid'?'':type);
+  }
+});
 
 test('source dictionaries have matching complete Bokmål and English keys', () => {
   for (const copy of [siteCopy, portalCopy]) {
@@ -225,7 +241,7 @@ test('all referenced local assets exist and shipped imagery/fonts have valid fil
 });
 
 test('founder biography uses supplied career facts, links to the supplied profile and refreshes favicons', () => {
-  const home = sources.get('index.html');
+  const home = sources.get('about/index.html');
   assert.match(home, /linkedin\.com\/in\/noah-julian-christensen-s%C3%A6ter-a54791431\//);
   for (const lang of ['nb', 'en']) {
     assert.match(siteCopy[lang]['bio.coor.role'], /Coor Norge/);
