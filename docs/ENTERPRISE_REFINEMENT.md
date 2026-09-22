@@ -14,6 +14,10 @@ Responsive composition: two-column sections stack on smaller screens, text and l
 
 ## Checks
 
+### User correction: broader Arc explanation and persistent support navigation
+
+The follow-up replaces the homepage budget interaction with three linked explanations: money/budgets, food/calories and manual steps/history, plus local storage/backup/export context. The illustrative budget interaction remains only on Products, explicitly labelled as one feature rather than the whole app. Support now uses the identical homepage header, including Services, About and Contact on desktop and mobile. No support form or backend behavior changed. Verified local desktop and 390px mobile, menu-to-Services navigation, both locale builds and 61 passing tests, including header parity and all three feature links. This supersedes the homepage example placement described above.
+
 - 60 Node tests pass, including two new tests for the isolated example: exact integer-øre calculation, repeat-click guard, reset and no network/storage dependencies.
 - Browser captures: `.impeccable/review/enterprise-fix/`, desktop 1440×1000, mobile 390×844, narrow 320×740, intermediate 1024×900; viewport captures, not full-page screenshots.
 - Mouse and Enter produce 2,050 NOK spent and 2,950 NOK remaining; reset restores the baseline. Mobile menu opens and Escape closes it. Checked nb/en and no horizontal overflow at measured sizes.

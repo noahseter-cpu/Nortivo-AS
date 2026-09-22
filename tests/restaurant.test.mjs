@@ -42,9 +42,19 @@ test('homepage visibly previews the restaurant and retains concise product and s
     assert.match(html,/class="hero-demo-link" href="#work"/);
     assert.ok(html.indexOf('class="home-product-band"')<html.indexOf('class="home-work wrap"'));
     assert.match(html,/lune-table\.webp/);
-    assert.match(html,/data-arc-example/);
+    assert.match(html,/class="arc-overview"/);
+    assert.doesNotMatch(html,/data-arc-example/);
     assert.match(html,/home-services-list/);
     assert.match(html,new RegExp(`href="/${lang}/restaurant/"`));
     assert.doesNotMatch(html,/<iframe|<form/);
+  }
+});
+
+test('support retains the same complete desktop and mobile header as home in both languages', () => {
+  for (const lang of ['nb','en']) {
+    const header = html => html.match(/<header class="site-header">[\s\S]*?<\/header>/)[0];
+    assert.equal(header(read(`dist/${lang}/support/index.html`)), header(read(`dist/${lang}/index.html`)));
+    const home = read(`dist/${lang}/index.html`);
+    for (const feature of ['money','food','activity']) assert.match(home,new RegExp(`href="/${lang}/products/#${feature}"`));
   }
 });

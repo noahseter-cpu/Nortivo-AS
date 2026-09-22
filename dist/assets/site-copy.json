@@ -218,8 +218,8 @@
     "about.luneText": "En egenprodusert, fiktiv restaurantnettside med meny og bordvalg. Ikke et kundeoppdrag.",
     "about.talk": "Snakk med oss om prosjektet ditt",
     "demo.arc.label": "Interaktiv forklaring · Fiktive tall, ikke appens grensesnitt",
-    "demo.arc.title": "En utgift inn. En oppdatert oversikt.",
-    "demo.arc.text": "Prøv et enkelt eksempel på hvordan en registrert utgift påvirker budsjettet. Ingenting lagres eller sendes.",
+    "demo.arc.title": "Prøv én funksjon: utgifter og budsjett.",
+    "demo.arc.text": "Dette er bare et eksempel fra økonomidelen. Arc har også matregistrering, kalorier, manuelle skritt og historikk. Prøv en fiktiv utgift nedenfor; ingenting lagres eller sendes.",
     "demo.arc.budget": "Eksempelbudsjett",
     "demo.arc.spent": "Registrert forbruk",
     "demo.arc.remaining": "Igjen i budsjettet",
@@ -229,7 +229,11 @@
     "demo.arc.after": "Eksempelutgiften er lagt til: 2 050 kr brukt, 2 950 kr igjen. Ingen ekte oppføring er laget.",
     "products.evidenceTitle": "Slik ser Arc ut i dag.",
     "products.evidenceText": "Et ekte skjermbilde fra testversjonen. Eksemplet over forklarer budsjettlogikken; bildet under viser selve appen uten personlige data.",
-    "products.question": "Spør oss om Arc"
+    "products.question": "Spør oss om Arc",
+    "home.arcMoney": "Registrer inntekter og utgifter, sett budsjetter og følg med på hva du har igjen.",
+    "home.arcFood": "Søk etter matvarer, registrer mengder og måltider, og følg kalorier og næringsinnhold.",
+    "home.arcActivity": "Registrer skritt manuelt, sett egne mål og se tilbake på tidligere dager.",
+    "home.arcLocal": "Registreringene lagres på enheten din. Arc har også historikk, sikkerhetskopiering og eksport av økonomidata."
   },
   "en": {
     "nav.home": "Home",
@@ -450,8 +454,8 @@
     "about.luneText": "An original, fictional restaurant website with a menu and table selection. Not a client project.",
     "about.talk": "Talk to us about your project",
     "demo.arc.label": "Interactive explanation · Fictional figures, not the app interface",
-    "demo.arc.title": "One expense. An updated overview.",
-    "demo.arc.text": "Try a simple example of how a recorded expense affects a budget. Nothing is saved or sent.",
+    "demo.arc.title": "Try one feature: expenses and budgets.",
+    "demo.arc.text": "This is just one example from the money section. Arc also includes food logging, calories, manual steps and history. Try a fictional expense below; nothing is saved or sent.",
     "demo.arc.budget": "Example budget",
     "demo.arc.spent": "Recorded spending",
     "demo.arc.remaining": "Budget remaining",
@@ -461,6 +465,10 @@
     "demo.arc.after": "Example expense added: NOK 2,050 spent, NOK 2,950 remaining. No real record was created.",
     "products.evidenceTitle": "Inside Arc today.",
     "products.evidenceText": "A real screenshot from the test version. The example above explains the budget logic; the image below shows the app itself without personal data.",
-    "products.question": "Ask us about Arc"
+    "products.question": "Ask us about Arc",
+    "home.arcMoney": "Record income and expenses, set budgets and follow what remains.",
+    "home.arcFood": "Search for foods, log amounts and meals, and track calories and nutrition.",
+    "home.arcActivity": "Record steps manually, set your own goals and revisit previous days.",
+    "home.arcLocal": "Your entries stay on your device. Arc also includes history, backups and financial data export."
   }
 }
