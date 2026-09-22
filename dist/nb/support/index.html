@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="nb">
+  <head>
+    <title>Support — Nortivo</title>
+    <meta name="description" content="Få hjelp fra Nortivo. Opprett en supportsak eller følg en eksisterende sak med sikker tilgang." />
+    <link rel="canonical" href="https://nortivo.no/nb/support/" />
+    <link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/support/" />
+    <link rel="alternate" hreflang="en" href="https://nortivo.no/en/support/" />
+    <link rel="alternate" hreflang="x-default" href="https://nortivo.no/support/" />
+    <meta property="og:title" content="Support — Nortivo" />
+    <meta property="og:description" content="Få hjelp fra Nortivo. Opprett en supportsak eller følg en eksisterende sak med sikker tilgang." />
+    <meta property="og:url" content="https://nortivo.no/nb/support/" />
+    <meta property="og:locale" content="nb_NO" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#07131f" /><meta name="referrer" content="same-origin" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/assets/site.css" /><link rel="stylesheet" href="/assets/portal-v2.css" />
+    <script src="/assets/site.js" defer></script><script src="/assets/support.js" defer></script>
+  </head>
+  <body class="portal-page" data-page="support">
+    <a class="skip-link" href="#main" data-i18n="support.skip">Hopp til innhold</a>
+    <header class="site-header"><div class="nav-shell">
+      <a class="brand" href="/nb/" aria-label="Nortivo"><span>NORTIVO</span></a>
+      <nav class="desktop-nav" aria-label="Hovedmeny" data-i18n-aria="support.navigation"><a href="/nb/" data-i18n="support.home">Hjem</a><a href="/nb/products/" data-i18n="support.products">Produkter</a><a href="/nb/support/" aria-current="page" data-i18n="support.nav">Support</a></nav>
+      <div class="header-tools"><div class="language-switch" role="group" aria-label="Språk" data-i18n-aria="footer.language"><button type="button" data-language="nb" lang="nb" aria-label="Norsk bokmål" aria-pressed="true">Norsk</button><button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="false">English</button></div><button class="menu-toggle" type="button" aria-controls="mobile-nav" aria-expanded="false" data-i18n="support.menu">Meny</button></div>
+    </div><nav class="mobile-nav" id="mobile-nav" aria-label="Hovedmeny" data-i18n-aria="support.navigation" hidden><a href="/nb/" data-i18n="support.home">Hjem</a><a href="/nb/products/" data-i18n="support.products">Produkter</a><a href="/nb/support/" aria-current="page" data-i18n="support.nav">Support</a></nav></header>
+    <main class="portal-shell support-layout" id="main">
+      <div class="support-intro">
+        <h1 data-i18n="support.heading">Hva kan vi hjelpe deg med?</h1><p class="portal-lead" data-i18n="support.lead">Få hjelp med et Nortivo-produkt eller et prosjekt. Fortell oss hva du trenger, så svarer vi på e-post.</p>
+        <ol class="support-steps"><li><strong data-i18n="support.step1Title">Send inn saken</strong><span data-i18n="support.step1">Ta med produktnavnet og hva du trenger hjelp med.</span></li><li><strong data-i18n="support.step2Title">Ta vare på saksnummeret</strong><span data-i18n="support.step2">Du får det her med en gang saken er lagret.</span></li><li><strong data-i18n="support.step3Title">Følg samtalen</strong><span data-i18n="support.step3">Få svar på e-post, eller åpne saken sikkert her.</span></li></ol>
+        <p class="support-note" data-i18n="support.privacy">Ikke ta med passord, betalingsopplysninger eller andre sensitive opplysninger.</p>
+      </div>
+      <section class="portal-card support-workspace" aria-label="Nortivo supportportal" data-i18n-aria="support.portal">
+        <div class="tabs" role="tablist" aria-label="Supportalternativer" data-i18n-aria="support.options"><button class="tab active" id="new-tab" type="button" role="tab" aria-controls="new-panel" aria-selected="true" tabindex="0" data-i18n="support.newTab">Ny sak</button><button class="tab" id="lookup-tab" type="button" role="tab" aria-controls="lookup-panel" aria-selected="false" tabindex="-1" data-i18n="support.lookupTab">Finn sak</button></div>
+        <div class="portal-card-body">
+          <div class="panel" id="new-panel" role="tabpanel" aria-labelledby="new-tab" tabindex="0">
+            <h2 data-i18n="support.createHeading">Opprett en supportsak</h2><p class="panel-intro" data-i18n="support.required">Alle feltene må fylles ut.</p>
+            <form id="ticket-form" method="post" novalidate><div class="form-grid">
+              <div class="field"><label for="name" data-i18n="support.name">Navn</label><input id="name" name="name" autocomplete="name" maxlength="80" aria-describedby="name-error" required /><span class="field-error" id="name-error" hidden></span></div>
+              <div class="field"><label for="email" data-i18n="support.email">E-post</label><input id="email" name="email" type="email" autocomplete="email" maxlength="160" aria-describedby="email-error" required /><span class="field-error" id="email-error" hidden></span></div>
+              <div class="field full"><label for="subject" data-i18n="support.subject">Emne</label><input id="subject" name="subject" minlength="3" maxlength="140" aria-describedby="subject-error" required /><span class="field-error" id="subject-error" hidden></span></div>
+              <div class="field full"><label for="message" data-i18n="support.messageLabel">Hva trenger du hjelp med?</label><textarea id="message" name="message" minlength="10" maxlength="4000" aria-describedby="message-help message-error" required></textarea><span class="field-help" id="message-help" data-i18n="support.messageHelp">Ta med hva du forventet, og hva som skjedde. Inntil 4 000 tegn.</span><span class="field-error" id="message-error" hidden></span></div>
+              <div class="honeypot" aria-hidden="true"><label for="company">Company website</label><input id="company" name="company" tabindex="-1" autocomplete="off" /></div>
+            </div><div class="form-actions"><button class="button" type="submit" data-i18n="support.send">Send sak</button></div><p class="message" id="form-message" role="status" aria-live="polite" aria-atomic="true"></p></form>
+            <section class="ticket-result" id="created-ticket" aria-labelledby="created-title" tabindex="-1" hidden><div class="result-top"><span class="ticket-number" id="created-number"></span><span class="status open" data-i18n="support.open">Åpen</span></div><h3 class="result-subject" id="created-title" data-i18n="support.received">Saken er mottatt</h3><p class="result-body" data-i18n="support.receivedBody">Ta vare på saksnummeret. Bruk det sammen med e-postadressen din for å få en sikker lenke til saken.</p><button class="button secondary" type="button" id="follow-ticket" data-i18n="support.follow">Finn denne saken</button></section>
+          </div>
+          <div class="panel" id="lookup-panel" role="tabpanel" aria-labelledby="lookup-tab" tabindex="0" hidden>
+            <h2 data-i18n="support.findHeading">Finn saken din</h2><p class="panel-intro" data-i18n="support.findIntro">Skriv inn saksnummeret og e-postadressen du brukte. Vi sender en sikker lenke på e-post, slik at bare du kan åpne saken.</p>
+            <form id="lookup-form" method="post" novalidate><div class="form-grid">
+              <div class="field full"><label for="ticket-number" data-i18n="support.ticketNumber">Saksnummer</label><input id="ticket-number" name="ticket" placeholder="NT-2026-ABC123" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" aria-describedby="ticket-number-error" required /><span class="field-error" id="ticket-number-error" hidden></span></div>
+              <div class="field full"><label for="lookup-email" data-i18n="support.email">E-post</label><input id="lookup-email" name="email" type="email" autocomplete="email" maxlength="160" aria-describedby="lookup-email-error" required /><span class="field-error" id="lookup-email-error" hidden></span></div>
+            </div><div class="form-actions"><button class="button" type="submit" data-i18n="support.sendLink">Send meg en sikker lenke</button></div><p class="message" id="lookup-message" role="status" aria-live="polite" aria-atomic="true"></p></form>
+            <section class="ticket-result" id="ticket-result" aria-labelledby="result-subject" tabindex="-1" hidden><div class="result-top"><span class="ticket-number" id="result-number"></span><span class="status" id="result-status"></span></div><h3 class="result-subject" id="result-subject"></h3><p class="result-meta" id="result-date"></p><p class="result-body" id="result-body"></p><h4 class="replies-heading" data-i18n="support.replies">Svar fra Nortivo</h4><div class="reply-list" id="result-replies"></div></section>
+          </div>
+        </div>
+      </section>
+      <noscript><p class="no-script">This support form needs JavaScript. / Skjemaet krever JavaScript.</p></noscript>
+    </main>
+    <footer class="site-footer"><div class="footer-shell"><a class="brand footer-brand" href="/nb/">NORTIVO</a><p><span data-i18n="support.founded">Grunnlagt av</span> Noah J.C. Sæter</p><a href="/nb/products/" data-i18n="support.products">Produkter</a></div></footer>
+  </body>
+</html>

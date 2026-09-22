@@ -26,19 +26,19 @@ Nortivo builds focused digital products and also develops Arc, a personal progre
 - Netlify Functions provide ticket creation, lookup, authentication, administration and email replies.
 - Supabase stores tickets and replies; Resend handles email delivery.
 - Existing `/`, `/products/`, `/support/` and `/admin/` routes and all form IDs/API contracts must remain stable.
-- The public site currently uses English copy.
+- The complete public journey supports Norwegian Bokmål and English, with static `/nb/` and `/en/` routes. Explicit language choices are remembered independently of the Arc application.
 
 ## Brand Commitments
 
-- Company and product name: Nortivo.
+- Company name: Nortivo. Product display name: Arc by Nortivo.
 - Founder credit: Noah J.C. Sæter.
 - Arc is presented as a Nortivo product in development.
-- Nortivo Support may be presented as an available support product, but not as a commercial SaaS offering.
+- Nortivo Support is a service path for enquiries and existing customers, not a second commercial product.
 - Voice: direct, calm and confident; avoid inflated claims.
 
 ## Evidence on Hand
 
-- Working support and administration flows in this repository.
+- Support and administration flows are implemented in this repository. The current redesign has local automated coverage; real email delivery and authenticated production flows still need deployment verification.
 - No testimonials, customer logos, case studies or performance claims are supplied; the site must not fabricate them.
 
 ## Product Principles

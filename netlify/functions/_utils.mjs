@@ -7,6 +7,7 @@ export function json(statusCode, body, extraHeaders = {}) {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
       'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'no-referrer',
       ...extraHeaders,
     },
     body: JSON.stringify(body),
@@ -14,7 +15,12 @@ export function json(statusCode, body, extraHeaders = {}) {
 }
 
 export function parseBody(event) {
-  try { return JSON.parse(event.body || '{}'); }
+  try {
+    if (typeof event.body !== 'string' || Buffer.byteLength(event.body) > 20000 || event.isBase64Encoded) throw new Error();
+    const body = JSON.parse(event.body);
+    if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error();
+    return body;
+  }
   catch { throw new Error('Invalid request.'); }
 }
 
@@ -49,7 +55,7 @@ export async function supabase(path, options = {}) {
   const text = await response.text();
   const data = text ? JSON.parse(text) : null;
   if (!response.ok) {
-    console.error('Supabase error', response.status, data);
+    console.error('Supabase request failed', response.status);
     throw new Error('The ticket database is temporarily unavailable.');
   }
   return data;
@@ -64,7 +70,7 @@ export async function sendEmail({ to, subject, html, text }) {
     body: JSON.stringify({ from, to: [to], subject, html, text }),
   });
   if (!response.ok) {
-    console.error('Email error', response.status, await response.text());
+    console.error('Email delivery failed', response.status);
     throw new Error('The email could not be sent.');
   }
   return response.json();

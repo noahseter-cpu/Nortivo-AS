@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-21",
+  "hero": {
+    "tool": "Built-in ImageGen",
+    "useCase": "stylized-concept",
+    "purpose": "Decorative final website artwork, not documentary imagery or a UI mockup",
+    "originalGeneratedFile": "C:/Users/noahn/.codex/generated_images/01a0c575-dde0-79d1-ab1f-163546b63ad3/exec-d0676749-6586-4839-b1dc-a0db27f1857c.png",
+    "environmentReference": "C:/Users/noahn/.codex/generated_images/01a0ae54-c623-7e11-a729-ffb19029d33e/exec-92674cfd-4524-4117-925f-cf5c37f4a728.png",
+    "wordmarkReference": "C:/Users/noahn/Documents/ChatGPT/hjemme og personelig/outputs/arc-wordmark.png",
+    "exactPromptFile": "docs/design-2026-09-21/hero-prompt.txt",
+    "outputs": [
+      { "path": "docs/design-2026-09-21/nortivo-hero-source.png", "width": 1672, "height": 941, "provenance": "Development source only. Exact prompt embedded in PNG tEXt by Impeccable" },
+      { "path": "dist/assets/nortivo-hero.webp", "width": 1672, "height": 941, "conversion": "Sharp, WebP quality 82, effort 6; no cropping", "promptSidecar": "docs/design-2026-09-21/nortivo-hero.webp.json" },
+      { "path": "dist/assets/nortivo-hero-mobile.webp", "width": 960, "height": 540, "conversion": "Sharp, proportional resize to 960px width, WebP quality 82, effort 6; no cropping", "promptSidecar": "docs/design-2026-09-21/nortivo-hero-mobile.webp.json" }
+    ]
+  },
+  "productScreenshots": {
+    "state": "Isolated test-state product screenshots, as identified by the parent build. Illustrative product views; not personal user records.",
+    "sourceDate": "2026-09-21",
+    "conversion": "Sharp, WebP quality 90, effort 6; source pixels not edited, uncropped, original dimensions retained",
+    "outputs": [
+      { "source": "C:/Users/noahn/Documents/ChatGPT/hjemme og personelig/outputs/arc-logo/app-1440-light.png", "path": "dist/assets/arc-desktop.webp", "width": 1440, "height": 900, "originSidecar": "docs/design-2026-09-21/arc-desktop.webp.json" },
+      { "source": "C:/Users/noahn/Documents/ChatGPT/hjemme og personelig/outputs/arc-logo/app-390-light.png", "path": "dist/assets/arc-mobile.webp", "width": 390, "height": 900, "originSidecar": "docs/design-2026-09-21/arc-mobile.webp.json" }
+    ]
+  },
+  "wordmark": {
+    "source": "C:/Users/noahn/Documents/ChatGPT/hjemme og personelig/public/arc-wordmark.svg",
+    "path": "dist/assets/arc-wordmark.svg",
+    "operation": "Unchanged file copy of approved project wordmark"
+  },
+  "metadataNote": "Impeccable stores WebP provenance in sidecar JSON. Development-only sidecars retain original source paths. Shipping sidecars carry the exact generation prompt or a path-free screenshot origin; no local filesystem paths or personal records are published. Original source files remain unchanged."
+}

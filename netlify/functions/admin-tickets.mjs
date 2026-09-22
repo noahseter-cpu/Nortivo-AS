@@ -1,14 +1,16 @@
 import { clean, isAdmin, json, parseBody, supabase } from './_utils.mjs';
+import { sameOrigin } from './_ticket-security.mjs';
 
 export async function handler(event) {
   if (!isAdmin(event)) return json(401, { error: 'Not signed in.' });
+  if (!sameOrigin(event, { required: event.httpMethod === 'PATCH' })) return json(403, { error: 'Request origin is not allowed.', code: 'FORBIDDEN' });
   try {
-    if (event.httpMethod === 'GET') return getTickets(event);
-    if (event.httpMethod === 'PATCH') return updateTicket(event);
+    if (event.httpMethod === 'GET') return await getTickets(event);
+    if (event.httpMethod === 'PATCH') return await updateTicket(event);
     return json(405, { error: 'Method not allowed.' }, { Allow: 'GET, PATCH' });
-  } catch (error) {
-    console.error(error);
-    return json(500, { error: error.message || 'Could not load tickets.' });
+  } catch {
+    console.error('Admin ticket request could not be completed.');
+    return json(503, { error: 'Support is temporarily unavailable.', code: 'UNAVAILABLE' });
   }
 }
 

@@ -1,25 +1,37 @@
 import { clean, escapeHtml, json, parseBody, sendEmail, supabase, ticketNumber, validEmail } from './_utils.mjs';
+import { errorResponse, language } from './_support-language.mjs';
+import { normalizeEmail, normalizeTicket, rateLimit, sameOrigin, siteOrigin, ticketSession } from './_ticket-security.mjs';
 
 export async function handler(event) {
+  let locale = language(event.queryStringParameters?.language);
   try {
-    if (event.httpMethod === 'POST') return createTicket(event);
-    if (event.httpMethod === 'GET') return findTicket(event);
-    return json(405, { error: 'Method not allowed.' }, { Allow: 'GET, POST' });
-  } catch (error) {
-    console.error(error);
-    return json(500, { error: error.message || 'Support is temporarily unavailable.' });
+    if (event.httpMethod === 'POST') {
+      if (!sameOrigin(event, { required: true })) return errorResponse(403, 'FORBIDDEN', locale);
+      let body;
+      try { body = parseBody(event); } catch { return errorResponse(400, 'BAD_REQUEST', locale); }
+      locale = language(body.language);
+      return await createTicket(event, body, locale);
+    }
+    if (event.httpMethod === 'GET') return await findTicket(event, locale);
+    return errorResponse(405, 'METHOD_NOT_ALLOWED', locale, { Allow: 'GET, POST' });
+  } catch {
+    console.error('Support request could not be completed.');
+    return errorResponse(503, 'UNAVAILABLE', locale);
   }
 }
 
-async function createTicket(event) {
-  const body = parseBody(event);
-  if (clean(body.company, 200)) return json(200, { ticket: { ticket_number: 'received' } });
+async function createTicket(event, body, locale) {
+  // Autofill can populate this field too; never claim a ticket was saved when it was not.
+  if (clean(body.company, 200)) return errorResponse(400, 'INVALID_FIELDS', locale);
   const name = clean(body.name, 80);
-  const email = clean(body.email, 160).toLowerCase();
+  const email = normalizeEmail(body.email);
   const subject = clean(body.subject, 140);
   const message = clean(body.message, 4000);
   if (!name || !validEmail(email) || subject.length < 3 || message.length < 10) {
-    return json(400, { error: 'Please complete every field with a valid email and message.' });
+    return errorResponse(400, 'INVALID_FIELDS', locale);
+  }
+  if (!rateLimit(event, 'ticket-create', { email, ipLimit: 6, emailLimit: 3, windowMs: 60 * 60 * 1000 })) {
+    return errorResponse(429, 'TOO_MANY_REQUESTS', locale, { 'Retry-After': '3600' });
   }
   const number = ticketNumber();
   const rows = await supabase('tickets', {
@@ -30,31 +42,37 @@ async function createTicket(event) {
   const ticket = rows?.[0];
   if (!ticket) throw new Error('The ticket could not be created.');
 
-  const safeNumber = escapeHtml(number);
-  const safeSubject = escapeHtml(subject);
-  const safeName = escapeHtml(name);
+  const supportUrl = `${siteOrigin(event)}/support/`;
+  const text = locale === 'nb'
+    ? `Hei ${name},\n\nVi har mottatt supportsaken ${number}: ${subject}.\n\nTa vare på saksnummeret. Du kan be om en bekreftelseslenke for å åpne saken på ${supportUrl}\n\nNortivo Support`
+    : `Hi ${name},\n\nWe received your support ticket ${number}: ${subject}.\n\nKeep this number. You can request a verification link to open the ticket at ${supportUrl}\n\nNortivo Support`;
   const confirmation = sendEmail({
     to: email,
     subject: `Nortivo Support · ${number}`,
-    text: `Hi ${name},\n\nWe received your support ticket ${number}: ${subject}.\n\nKeep this number to check the ticket at https://nortivo.no/support/\n\nNortivo Support`,
-    html: `<p>Hi ${safeName},</p><p>We received your support ticket <strong>${safeNumber}</strong>:</p><p>${safeSubject}</p><p>Keep this number to check the ticket at <a href="https://nortivo.no/support/">nortivo.no/support</a>.</p><p>Nortivo Support</p>`,
-  }).catch(error => console.error('Confirmation email failed', error));
+    text,
+    html: `<p>${escapeHtml(text).replace(/\n/g, '<br>')}</p>`,
+  }).then(() => true).catch(() => { console.error('Ticket confirmation email failed.'); return false; });
 
   const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
   const notification = adminEmail ? sendEmail({
     to: adminEmail,
-    subject: `New support ticket · ${number}`,
-    text: `${name} (${email}) created ${number}: ${subject}\n\n${message}\n\nOpen https://nortivo.no/admin/`,
-    html: `<p><strong>${safeNumber}</strong> from ${safeName} (${escapeHtml(email)})</p><p><strong>${safeSubject}</strong></p><p>${escapeHtml(message).replace(/\n/g, '<br>')}</p><p><a href="https://nortivo.no/admin/">Open admin panel</a></p>`,
-  }).catch(error => console.error('Admin email failed', error)) : Promise.resolve();
-  await Promise.allSettled([confirmation, notification]);
-  return json(201, { ticket: { ticket_number: ticket.ticket_number, status: ticket.status } });
+    subject: `${locale === 'nb' ? 'Ny supportsak' : 'New support ticket'} · ${number}`,
+    text: `${name} (${email}) · ${number}: ${subject}\n\n${message}\n\n${siteOrigin(event)}/admin/`,
+    html: `<p><strong>${escapeHtml(number)}</strong> · ${escapeHtml(name)} (${escapeHtml(email)})</p><p><strong>${escapeHtml(subject)}</strong></p><p>${escapeHtml(message).replace(/\n/g, '<br>')}</p><p><a href="${escapeHtml(siteOrigin(event))}/admin/">${locale === 'nb' ? 'Åpne administrasjon' : 'Open admin panel'}</a></p>`,
+  }).catch(() => console.error('Admin notification email failed.')) : Promise.resolve();
+  const [confirmationSent] = await Promise.all([confirmation, notification]);
+  // Creating a ticket never grants access to its private conversation.
+  return json(201, { ticket: { ticket_number: ticket.ticket_number, status: ticket.status }, confirmationSent });
 }
 
-async function findTicket(event) {
-  const ticketNumberValue = clean(event.queryStringParameters?.ticket, 40).toUpperCase();
-  const email = clean(event.queryStringParameters?.email, 160).toLowerCase();
-  if (!ticketNumberValue || !validEmail(email)) return json(400, { error: 'Enter a valid ticket number and email.' });
+async function findTicket(event, locale) {
+  if (!sameOrigin(event)) return errorResponse(403, 'FORBIDDEN', locale);
+  const ticketNumberValue = normalizeTicket(event.queryStringParameters?.ticketNumber ?? event.queryStringParameters?.ticket);
+  const session = ticketSession(event);
+  // New clients omit email from the URL; legacy clients must still match the proof.
+  const email = event.queryStringParameters?.email === undefined ? session?.email : normalizeEmail(event.queryStringParameters.email);
+  if (!session || session.ticketNumber !== ticketNumberValue || session.email !== email) return errorResponse(401, 'ACCESS_REQUIRED', locale);
+  if (!rateLimit(event, 'ticket-read', { ipLimit: 60 })) return errorResponse(429, 'TOO_MANY_REQUESTS', locale, { 'Retry-After': '900' });
   const params = new URLSearchParams({
     select: 'id,ticket_number,subject,message,status,created_at,updated_at',
     ticket_number: `eq.${ticketNumberValue}`,
@@ -63,7 +81,7 @@ async function findTicket(event) {
   });
   const rows = await supabase(`tickets?${params}`);
   const ticket = rows?.[0];
-  if (!ticket) return json(404, { error: 'No ticket matched that number and email.' });
+  if (!ticket) return errorResponse(404, 'NOT_FOUND', locale);
   const replyParams = new URLSearchParams({
     select: 'body,created_at', ticket_id: `eq.${ticket.id}`, order: 'created_at.asc'
   });

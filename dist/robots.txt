@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /support/
+Disallow: /nb/admin/
+Disallow: /en/admin/
+Disallow: /nb/support/
+Disallow: /en/support/
+Disallow: /.netlify/functions/
+
+Sitemap: https://nortivo.no/sitemap.xml
