@@ -6,7 +6,7 @@
     "typographyMeta": {
       "display": {
         "displayName": "Invitation display",
-        "purpose": "Hero heading; mobile 3.6rem, narrow mobile 3.1rem."
+        "purpose": "Full-photo hero heading; desktop clamp(3.8rem,6.5vw,6rem), mobile clamp(3.4rem,12vw,4.6rem)."
       }
     },
     "shadows": [],
@@ -27,11 +27,35 @@
         "purpose": "Background and pointer-only .98 press scale."
       },
       {
+        "name": "image-settlement",
+        "value": "1000ms cubic-bezier(.23,1,.32,1)",
+        "purpose": "Hero image settles from scale(1.035) to scale(1), with reduced motion disabled."
+      },
+      {
+        "name": "selection-feedback",
+        "value": "160ms ease; 120ms cubic-bezier(.23,1,.32,1)",
+        "purpose": "Category and native-radio labels use background feedback and pointer-only .97 press scale; keyboard input removes transitions. Filtering is immediate."
+      },
+      {
+        "name": "confirmation",
+        "value": "220ms cubic-bezier(.23,1,.32,1)",
+        "purpose": "Pointer-only cancellable WAAPI from opacity .7 and translateY(8px), after state and focus update. Keyboard/reduced motion skip it; reset and reduced-motion changes cancel it."
+      },
+      {
         "name": "reduced-motion",
         "value": "none",
         "purpose": "Shared CSS removes animations/transitions; Lune removes press transform. Menu and confirmation remain immediate."
       }
     ],
+    "refinement": {
+      "date": "2026-09-22",
+      "scope": "Lune only; same palette, Manrope and supper-club identity. The following current composition supersedes earlier split-hero specimens.",
+      "hero": "Full-photo interior illustration, minimum 680px desktop / 600px mobile / 620px narrow phone; protected ink overlay and butter booking action.",
+      "menu": "Sticky food illustration beside a single-column folio; .75fr 1.25fr with 64px gap. Mobile feature is non-sticky and narrow-phone imagery stacks.",
+      "booking": "Native date, guest select and required radio time slots; live selection summary and written closed-day feedback. Workspace padding 36px, 28px at 1000px, 24px 20px at 720px; field gaps 24px 20px.",
+      "faq": "Native details/summary with retained markers; three disclosures explain fictional booking, menu filters and no saved reservation data.",
+      "review": "Independent finish review SHIP; no material findings across nine screenshots. 62 local tests pass; keyboard/pointer and closed-day flows checked. Six raster provenance sidecars checked, zero missing. Publication pending."
+    },
     "breakpoints": [
       {
         "name": "lune-tight-desktop",
@@ -48,6 +72,13 @@
     ]
   },
   "components": [
+    {
+      "name": "Native booking time",
+      "kind": "input",
+      "description": "Native radio with selected fill and visible keyboard focus; the live form groups required slots in a labelled fieldset.",
+      "html": "<label class=\"ds-slot\"><input type=\"radio\" name=\"ds-slot\" value=\"18:00\" required checked><span>18:00</span></label>",
+      "css": ".ds-slot{position:relative;display:inline-block;cursor:pointer;color:#18343b;font:400 .94rem/1.65 Manrope,sans-serif}.ds-slot input{position:absolute;opacity:0;width:1px;height:1px}.ds-slot span{display:block;min-height:48px;padding:12px 18px;border:1px solid #789097;border-radius:3px;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-slot input:checked+span{background:#18343b;color:#fff;border-color:#18343b}.ds-slot input:focus-visible+span{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-slot:hover span{border-color:#18343b}}:host-context(html[data-input=pointer]) .ds-slot:active span{transform:scale(.97)}:host-context(html[data-input=keyboard]) .ds-slot span{transition:none}@media(prefers-reduced-motion:reduce){.ds-slot span{transition:none;transform:none!important}}"
+    },
     {
       "name": "Booking button",
       "kind": "button",
