@@ -2,11 +2,12 @@
 .portal-page [hidden] { display: none !important; }
 .portal-page .site-footer { margin-top: auto; }
 .portal-shell { width: min(1160px, calc(100% - 64px)); margin-inline: auto; padding-block: 64px 88px; }
-.support-layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(40px, 7vw, 88px); align-items: start; }
+.portal-shell.support-layout { display: grid; grid-template-columns: minmax(0,1fr); max-width: 760px; gap: 32px; align-items: start; }
 .portal-page h1 { margin: 0; font-family: inherit; font-size: clamp(2rem, 3.4vw, 2.75rem); line-height: 1.16; letter-spacing: -.035em; font-weight: 700; text-wrap: balance; overflow-wrap: anywhere; }
 .portal-page h2 { margin: 0 0 8px; font-family: inherit; font-size: 1.4rem; line-height: 1.3; letter-spacing: -.025em; font-weight: 700; }
 .portal-lead { margin: 18px 0 0; max-width: 45ch; font-size: 1rem; line-height: 1.75; color: var(--portal-muted); }
-.support-intro { padding-top: 12px; }
+.support-intro { padding-top: 0; }
+.support-intro .portal-lead { max-width: 60ch; }
 .support-steps { list-style: none; margin: 38px 0 0; padding: 0; counter-reset: support-step; }
 .support-steps li { counter-increment: support-step; position: relative; padding: 20px 0 20px 38px; border-top: 1px solid var(--portal-line); }
 .support-steps li::before { content: counter(support-step); position: absolute; left: 0; top: 22px; color: var(--portal-blue); font-size: .85rem; font-weight: 700; font-variant-numeric: tabular-nums; }

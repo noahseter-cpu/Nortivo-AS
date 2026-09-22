@@ -13,24 +13,128 @@
     <meta property="og:locale" content="en_GB" />
     <meta property="og:locale:alternate" content="nb_NO" />
     <meta name="robots" content="noindex, nofollow" />
-    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#07131f" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" /><link rel="stylesheet" href="/assets/site.css" /><link rel="stylesheet" href="/assets/portal-v2.css" /><script src="/assets/site.js" defer></script><script src="/assets/admin.js" defer></script>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#07131f" />
+
+    
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922" />
+<link rel="stylesheet" href="/assets/site.css" />
+<link rel="stylesheet" href="/assets/portal-v2.css" />
+<script src="/assets/site.js" defer>
+</script>
+<script src="/assets/admin.js" defer>
+</script>
   </head>
   <body class="portal-page" data-page="admin">
     <a class="skip-link" href="#main" data-i18n="admin.skip">Skip to content</a>
-    <header class="site-header"><div class="nav-shell">
-      <a class="brand" href="/en/" aria-label="Nortivo"><span>NORTIVO</span></a><nav class="desktop-nav" aria-label="Main navigation" data-i18n-aria="admin.navigation"><a href="/en/" data-i18n="admin.home">Home</a><a href="/en/support/" data-i18n="admin.customerSupport">Customer support</a></nav><div class="header-tools"><div class="language-switch" role="group" aria-label="Language" data-i18n-aria="footer.language"><button type="button" data-language="nb" lang="nb" aria-label="Norsk bokmål" aria-pressed="false">Norsk</button><button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">English</button></div><button class="menu-toggle" type="button" aria-controls="mobile-nav" aria-expanded="false" data-i18n="admin.menu">Menu</button></div>
-    </div><nav class="mobile-nav" id="mobile-nav" aria-label="Main navigation" data-i18n-aria="admin.navigation" hidden><a href="/en/" data-i18n="admin.home">Home</a><a href="/en/support/" data-i18n="admin.customerSupport">Customer support</a></nav></header>
+    <header class="site-header">
+<div class="nav-shell">
+      <a class="brand" href="/en/" aria-label="Nortivo">
+<span>NORTIVO</span>
+</a>
+<nav class="desktop-nav" aria-label="Main navigation" data-i18n-aria="admin.navigation">
+<a href="/en/" data-i18n="admin.home">Home</a>
+<a href="/en/support/" data-i18n="admin.customerSupport">Customer support</a>
+</nav>
+<div class="header-tools">
+<div class="language-switch" role="group" aria-label="Language" data-i18n-aria="footer.language">
+<button type="button" data-language="nb" lang="nb" aria-label="Norsk bokmål" aria-pressed="false">Norsk</button>
+<button type="button" data-language="en" lang="en" aria-label="English" aria-pressed="true">English</button>
+</div>
+<button class="menu-toggle" type="button" aria-controls="mobile-nav" aria-expanded="false" data-i18n="admin.menu">Menu</button>
+</div>
+    </div>
+<nav class="mobile-nav" id="mobile-nav" aria-label="Main navigation" data-i18n-aria="admin.navigation" hidden>
+<a href="/en/" data-i18n="admin.home">Home</a>
+<a href="/en/support/" data-i18n="admin.customerSupport">Customer support</a>
+</nav>
+</header>
     <main class="portal-shell admin-page" id="main">
-      <section class="portal-card login-card" id="login-card" aria-labelledby="login-title"><div class="portal-card-body"><h1 id="login-title" data-i18n="admin.heading">Support admin</h1><p class="portal-lead" data-i18n="admin.lead">Sign in to view and answer Nortivo support tickets.</p><form id="login-form" method="post" novalidate><div class="field"><label for="password" data-i18n="admin.password">Admin password</label><input id="password" name="password" type="password" autocomplete="current-password" aria-describedby="password-error" required /><span class="field-error" id="password-error" hidden></span></div><div class="form-actions"><button class="button" type="submit" data-i18n="admin.signIn">Sign in</button></div><p class="message" id="login-message" role="status" aria-live="polite" aria-atomic="true"></p></form></div></section>
+      <section class="portal-card login-card" id="login-card" aria-labelledby="login-title">
+<div class="portal-card-body">
+<h1 id="login-title" data-i18n="admin.heading">Support admin</h1>
+<p class="portal-lead" data-i18n="admin.lead">Sign in to view and answer Nortivo support tickets.</p>
+<form id="login-form" method="post" novalidate>
+<div class="field">
+<label for="password" data-i18n="admin.password">Admin password</label>
+<input id="password" name="password" type="password" autocomplete="current-password" aria-describedby="password-error" required />
+<span class="field-error" id="password-error" hidden>
+</span>
+</div>
+<div class="form-actions">
+<button class="button" type="submit" data-i18n="admin.signIn">Sign in</button>
+</div>
+<p class="message" id="login-message" role="status" aria-live="polite" aria-atomic="true">
+</p>
+</form>
+</div>
+</section>
       <section class="dashboard" id="dashboard" aria-labelledby="dashboard-title" hidden>
-        <div class="dashboard-head"><div><h1 id="dashboard-title" tabindex="-1" data-i18n="admin.tickets">Support tickets</h1><p class="panel-intro" data-i18n="admin.workspaceIntro">Read requests, reply by email and manage their status.</p></div><div class="dashboard-actions"><button class="button secondary" id="refresh-button" type="button" data-i18n="admin.refresh">Refresh</button><button class="button secondary" id="logout-button" type="button" data-i18n="admin.signOut">Sign out</button></div></div>
-        <div class="stats" aria-label="Ticket summary" data-i18n-aria="admin.summary"><div class="stat"><span class="stat-label" data-i18n="admin.open">Open</span><strong class="stat-value" id="open-count">0</strong></div><div class="stat"><span class="stat-label" data-i18n="admin.answered">Answered</span><strong class="stat-value" id="answered-count">0</strong></div><div class="stat"><span class="stat-label" data-i18n="admin.total">Total</span><strong class="stat-value" id="total-count">0</strong></div></div>
-        <p class="message dashboard-message" id="dashboard-message" role="status" aria-live="polite" aria-atomic="true"></p>
-        <section class="portal-card workspace" aria-label="Ticket workspace" data-i18n-aria="admin.workspace"><div class="ticket-list"><div class="list-tools"><div class="field"><label for="search" data-i18n="admin.search">Search tickets</label><input id="search" type="search" placeholder="Number, name or subject" data-i18n-placeholder="admin.searchPlaceholder" /></div><div class="field"><label for="status-filter" data-i18n="admin.status">Status</label><select id="status-filter"><option value="all" data-i18n="admin.all">All statuses</option><option value="open" data-i18n="admin.open">Open</option><option value="answered" data-i18n="admin.answered">Answered</option><option value="closed" data-i18n="admin.closed">Closed</option></select></div></div><div class="tickets" id="tickets" aria-label="Support tickets" data-i18n-aria="admin.tickets"></div></div><div class="ticket-detail" id="ticket-detail" aria-busy="false"><div class="empty"><p data-i18n="admin.selectTicket">Select a ticket to read and answer it.</p></div></div></section>
+        <div class="dashboard-head">
+<div>
+<h1 id="dashboard-title" tabindex="-1" data-i18n="admin.tickets">Support tickets</h1>
+<p class="panel-intro" data-i18n="admin.workspaceIntro">Read requests, reply by email and manage their status.</p>
+</div>
+<div class="dashboard-actions">
+<button class="button secondary" id="refresh-button" type="button" data-i18n="admin.refresh">Refresh</button>
+<button class="button secondary" id="logout-button" type="button" data-i18n="admin.signOut">Sign out</button>
+</div>
+</div>
+        <div class="stats" aria-label="Ticket summary" data-i18n-aria="admin.summary">
+<div class="stat">
+<span class="stat-label" data-i18n="admin.open">Open</span>
+<strong class="stat-value" id="open-count">0</strong>
+</div>
+<div class="stat">
+<span class="stat-label" data-i18n="admin.answered">Answered</span>
+<strong class="stat-value" id="answered-count">0</strong>
+</div>
+<div class="stat">
+<span class="stat-label" data-i18n="admin.total">Total</span>
+<strong class="stat-value" id="total-count">0</strong>
+</div>
+</div>
+        <p class="message dashboard-message" id="dashboard-message" role="status" aria-live="polite" aria-atomic="true">
+</p>
+        <section class="portal-card workspace" aria-label="Ticket workspace" data-i18n-aria="admin.workspace">
+<div class="ticket-list">
+<div class="list-tools">
+<div class="field">
+<label for="search" data-i18n="admin.search">Search tickets</label>
+<input id="search" type="search" placeholder="Number, name or subject" data-i18n-placeholder="admin.searchPlaceholder" />
+</div>
+<div class="field">
+<label for="status-filter" data-i18n="admin.status">Status</label>
+<select id="status-filter">
+<option value="all" data-i18n="admin.all">All statuses</option>
+<option value="open" data-i18n="admin.open">Open</option>
+<option value="answered" data-i18n="admin.answered">Answered</option>
+<option value="closed" data-i18n="admin.closed">Closed</option>
+</select>
+</div>
+</div>
+<div class="tickets" id="tickets" aria-label="Support tickets" data-i18n-aria="admin.tickets">
+</div>
+</div>
+<div class="ticket-detail" id="ticket-detail" aria-busy="false">
+<div class="empty">
+<p data-i18n="admin.selectTicket">Select a ticket to read and answer it.</p>
+</div>
+</div>
+</section>
       </section>
-      <noscript><p class="no-script">Support administration needs JavaScript. / Administrasjon krever JavaScript.</p></noscript>
+      <noscript>
+<p class="no-script">Support administration needs JavaScript. / Administrasjon krever JavaScript.</p>
+</noscript>
     </main>
-    <footer class="site-footer"><div class="footer-shell"><a class="brand footer-brand" href="/en/">NORTIVO</a><p><span data-i18n="admin.founded">Founded by</span> Noah J.C. Sæter</p><a href="/en/support/" data-i18n="admin.customerSupport">Customer support</a></div></footer>
+    <footer class="site-footer">
+<div class="footer-shell">
+<a class="brand footer-brand" href="/en/">NORTIVO</a>
+<p>
+<span data-i18n="admin.founded">Founded by</span> Noah J.C. Sæter</p>
+<a href="/en/support/" data-i18n="admin.customerSupport">Customer support</a>
+</div>
+</footer>
   </body>
 </html>

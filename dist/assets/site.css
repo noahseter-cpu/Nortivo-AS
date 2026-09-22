@@ -40,7 +40,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .language-switch button[aria-pressed=true]{color:white;text-decoration:underline;text-decoration-color:#3697ff;text-underline-offset:6px}
 .language-switch span{color:#5e7186}
 .menu-toggle{display:none;align-items:center;gap:10px;background:transparent;border:1px solid var(--line);border-radius:6px;padding:9px 12px;min-height:44px;color:white;font-size:.87rem}
-.mobile-nav{border-top:1px solid var(--line);padding:12px 24px 20px;background:var(--surface)}
+.mobile-nav{position:absolute;top:100%;left:0;right:0;border-bottom:1px solid var(--line);padding:12px max(24px,calc((100% - 680px)/2)) 20px;background:var(--surface);transform-origin:top right}
 .mobile-nav a{display:block;padding:12px 0;text-decoration:none}
 .button,.primary-button,.primary-link{display:inline-flex;justify-content:center;align-items:center;gap:16px;min-height:50px;border:1px solid transparent;border-radius:7px;padding:13px 24px;background:var(--blue);color:white;font-size:.93rem;font-weight:700;text-decoration:none;line-height:1.4;transition:background-color 160ms ease,transform 120ms var(--ease-out)}
 .button svg,.text-link svg{width:19px;height:19px}
@@ -86,7 +86,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .about-copy p{color:var(--muted)}
 .founder-name{font-size:1.16rem;font-weight:700;color:white!important;margin-top:26px!important}
 .about-aside{padding:32px 0 0;border-top:1px solid var(--line)}
-.about-aside>p{color:#e2ecf7;font-size:1.5rem;line-height:1.45;max-width:24ch}
+.about-aside h3{font-size:1.1rem}
+.experience-list{list-style:none;padding:0;margin:24px 0 0}
+.experience-list li{padding:18px 0;border-top:1px solid var(--line)}
+.experience-list strong{display:block;font-size:.94rem;line-height:1.5}
+.experience-list span{display:block;margin-top:6px;font-size:.82rem;color:var(--muted)}
 .contact-section{background:#0b1928;border-block:1px solid var(--line)}
 .contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:90px;align-items:start}
 .contact-intro>p{color:var(--muted);margin-top:22px}
@@ -170,4 +174,28 @@ html[data-input=pointer] .button:active{transform:scale(.98)}
   .hero::after{background:linear-gradient(180deg,transparent 16%,rgba(6,17,30,.45) 38%,#06111e 55%)}
   .hero-copy{padding-top:175px;padding-bottom:34px}
 }
+/* One authored opening moment. Content is visible and actionable from frame one. */
+@keyframes hero-settle{from{transform:translateY(12px);opacity:.8}to{transform:none;opacity:1}}
+@keyframes stage-settle{from{transform:scale(1.035)}to{transform:scale(1)}}
+@media(prefers-reduced-motion:no-preference){
+  .hero-copy h1,.hero-copy p,.hero-copy .button{animation:hero-settle 600ms var(--ease-out) both}
+  .hero-copy p{animation-delay:60ms}
+  .hero-copy .button{animation-delay:120ms}
+  .hero-art{animation:stage-settle 1000ms var(--ease-out) both}
+}
+@media(hover:hover) and (pointer:fine){
+  .desktop-nav a{position:relative}
+  .desktop-nav a::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:1px;background:#79bdff;transform:scaleX(0);transform-origin:left;transition:transform 180ms var(--ease-out)}
+  .desktop-nav a:hover::after,.desktop-nav a[aria-current=page]::after{transform:scaleX(1)}
+}
+@media(max-width:560px){
+  .nav-shell{min-height:80px;padding:16px 0;align-items:center;gap:8px}
+  .header-tools{gap:10px}
+  .language-switch{position:static}
+  .language-switch button{min-height:44px;font-size:.72rem;padding:0 4px}
+  .menu-toggle{min-height:44px}
+  .brand{font-size:1.05rem}
+  .hero h1{font-size:1.95rem}
+}
+@media(max-width:359px){.header-tools{gap:5px}.menu-toggle{padding-inline:7px}.brand{font-size:.94rem}.language-switch button{font-size:.68rem}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.button:active,.text-link:hover svg{transform:none!important}}

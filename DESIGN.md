@@ -116,6 +116,18 @@ components:
 
 # Design System: Nortivo
 
+## Refinement — 22 September 2026
+
+This update supersedes the older descriptions of the founder strip, support columns, mobile header and motion below. The user requested cleaner text/layout, Animate-based motion, their supplied professional biography, a refreshed tab icon and production publication. The existing navy art direction is retained.
+
+- Removed the duplicate home feature-link row and founder strip. Arc details remain on Products; the founder's biography is grouped under About.
+- Added the user-supplied Nortivo, Coor Norge, Framtia Barnehage and Drømtorp entries in both languages. Source: profile text supplied directly by the user on 2026-09-22; no private LinkedIn analytics included.
+- Mobile header is one compact row with explicit language/menu controls. Pointer menu transitions use interruptible WAAPI, 180ms, opacity/translateY and the existing ease-out token; keyboard operations remain immediate.
+- The marketing hero has one non-blocking 600ms settlement, 60ms stagger and a 1000ms decorative image settlement. Content begins visibly at opacity .8; no scroll hiding or recurring movement. Reduced motion disables positional animation.
+- Support uses one centered 760px workspace and removes the repeated three-step explainer. Form IDs, functionality and backend contracts are unchanged.
+- The navy/white/blue N favicon uses a versioned URL to refresh browser caches. Netlify's own badge setting was switched off for all visitors; no CSS hiding workaround or paid upgrade.
+- Checked local desktop 1440px, mobile 390px, narrow English 320px, menu/Escape and translated biography; no horizontal overflow in the measured views. Real-device motion feel and assistive-technology testing remain untested.
+
 ## Overview
 
 **Creative North Star: "The Midnight Product Stage"**

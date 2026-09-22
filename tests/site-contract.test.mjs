@@ -206,7 +206,8 @@ test('all referenced local assets exist and shipped imagery/fonts have valid fil
   for (const css of ['assets/site.css', 'assets/portal-v2.css']) for (const match of read(css).matchAll(/url\(["']?([^\)"']+)["']?\)/g)) {
     if (match[1].startsWith('/')) assets.add(match[1]);
   }
-  for (const asset of assets) {
+  for (const reference of assets) {
+    const asset = new URL(reference, 'https://nortivo.no').pathname;
     const file = path.join(dist, asset.slice(1));
     assert.ok(existsSync(file), `Missing ${asset}`);
     const bytes = readFileSync(file);
@@ -221,6 +222,19 @@ test('all referenced local assets exist and shipped imagery/fonts have valid fil
     if (asset.endsWith('.ttf')) assert.equal(bytes.readUInt32BE(0), 0x00010000, asset);
     if (asset.endsWith('.js')) assert.doesNotThrow(() => new vm.Script(bytes.toString(), { filename: asset }));
   }
+});
+
+test('founder biography uses supplied career facts, links to the supplied profile and refreshes favicons', () => {
+  const home = sources.get('index.html');
+  assert.match(home, /linkedin\.com\/in\/noah-julian-christensen-s%C3%A6ter-a54791431\//);
+  for (const lang of ['nb', 'en']) {
+    assert.match(siteCopy[lang]['bio.coor.role'], /Coor Norge/);
+    assert.match(siteCopy[lang]['bio.kindergarten.role'], /Framtia Barnehage/);
+    assert.match(siteCopy[lang]['bio.school.role'], /Drømtorp/);
+  }
+  for (const source of sources.values()) assert.match(source, /favicon\.svg\?v=nortivo-20260922/);
+  assert.doesNotMatch(home, /class="founder-strip"|class="feature-links"/);
+  assert.match(read('assets/site.css'), /prefers-reduced-motion:no-preference/);
 });
 
 test('all source pages load shared UI before their page behavior and keep admin private', () => {
