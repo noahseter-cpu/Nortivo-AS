@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="/assets/site.css">
 <script defer src="/assets/site.js">
 </script>
+<script defer src="/assets/arc-example.js"></script>
 </head>
 <body data-page="products">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Hopp til innhold</a>
@@ -42,6 +43,7 @@
 <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
 <a href="/nb/about/" data-i18n="nav.about">Om Nortivo</a>
 <a href="/nb/support/" data-i18n="nav.support">Support</a>
+<a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
 </nav>
 <div class="header-tools">
 <div class="language-switch" role="group" aria-label="Språk" data-i18n-aria="footer.language">
@@ -85,15 +87,18 @@
 <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 </a>
+<p class="spaced-action"><a class="text-link" href="/nb/contact/?project=app" data-i18n="products.question">Spør oss om Arc</a></p>
 <p data-i18n="products.status" class="launch-note">Arc testes privat. Det finnes foreløpig ingen offentlig nedlasting her.</p>
 </div>
-<figure class="product-shot">
-<picture>
-<source media="(max-width:560px)" srcset="/assets/arc-mobile.webp" width="390" height="900">
-<img src="/assets/arc-desktop.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Arc by Nortivo: penger og dagsoversikt, norsk grensesnitt, tom testvisning" data-i18n-alt="arc.alt">
-</picture>
-<figcaption data-i18n="arc.caption" >Ekte appskjermbilde · Tom testvisning</figcaption>
-</figure>
+<div class="arc-example" data-arc-example>
+<p class="example-disclosure" data-i18n="demo.arc.label">Interaktiv forklaring · Fiktive tall, ikke appens grensesnitt</p>
+<h3 data-i18n="demo.arc.title">En utgift inn. En oppdatert oversikt.</h3>
+<p class="example-description" data-i18n="demo.arc.text">Prøv et enkelt eksempel på hvordan en registrert utgift påvirker budsjettet. Ingenting lagres eller sendes.</p>
+<dl class="example-ledger"><div><dt data-i18n="demo.arc.budget">Eksempelbudsjett</dt><dd>5 000 <small>NOK</small></dd></div><div><dt data-i18n="demo.arc.spent">Registrert forbruk</dt><dd data-example-spent>1 800 <small>NOK</small></dd></div><div class="example-balance"><dt data-i18n="demo.arc.remaining">Igjen i budsjettet</dt><dd data-example-remaining>3 200 <small>NOK</small></dd></div></dl>
+<button class="button" type="button" data-example-add data-i18n="demo.arc.add" hidden>Registrer eksempelutgift: 250 kr</button>
+<button class="example-reset" type="button" data-example-reset data-i18n="demo.arc.reset" hidden>Nullstill eksemplet</button>
+<p class="example-feedback" data-example-feedback role="status" data-i18n="demo.arc.before">Eksemplet starter med 1 800 kr i registrert forbruk.</p>
+</div>
 </div>
 <nav class="wrap product-index" aria-label="Funksjonene i Arc" data-i18n-aria="products.features">
 <a href="#money" data-i18n="arc.money">Penger og budsjetter</a>
@@ -101,6 +106,13 @@
 <a href="#activity" data-i18n="arc.activity">Skritt og fremgang</a>
 </nav>
 </section>
+<section class="wrap section product-evidence"><h2 data-i18n="products.evidenceTitle">Slik ser Arc ut i dag.</h2><p data-i18n="products.evidenceText">Et ekte skjermbilde fra testversjonen. Eksemplet over forklarer budsjettlogikken; bildet under viser selve appen uten personlige data.</p><figure class="product-shot">
+<picture>
+<source media="(max-width:560px)" srcset="/assets/arc-mobile.webp" width="390" height="900">
+<img src="/assets/arc-desktop.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Arc by Nortivo: penger og dagsoversikt, norsk grensesnitt, tom testvisning" data-i18n-alt="arc.alt">
+</picture>
+<figcaption data-i18n="arc.caption" >Ekte appskjermbilde · Tom testvisning</figcaption>
+</figure></section>
 <section class="wrap section" aria-label="Funksjonene i Arc" data-i18n-aria="products.features">
 <article id="money" class="product-story">
 <div class="story-title">

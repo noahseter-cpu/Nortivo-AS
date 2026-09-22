@@ -32,6 +32,7 @@
 <link rel="preload" as="image" href="/assets/nortivo-hero.webp" media="(min-width:701px)">
 <link rel="preload" as="image" href="/assets/nortivo-hero-mobile.webp" media="(max-width:700px)">
 
+<script defer src="/assets/arc-example.js"></script>
 </head>
 <body data-page="home">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
@@ -45,6 +46,7 @@
 <a href="/en/services/" data-i18n="nav.services">Services</a>
 <a href="/en/about/" data-i18n="nav.about">About Nortivo</a>
 <a href="/en/support/" data-i18n="nav.support">Support</a>
+<a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
 </nav>
 <div class="header-tools">
 <div class="language-switch" role="group" aria-label="Language" data-i18n-aria="footer.language">
@@ -75,8 +77,8 @@
 <img src="/assets/nortivo-hero.webp" width="1672" height="941" alt="" fetchpriority="high">
 </picture>
 <div class="hero-copy">
-<h1 data-i18n="hero.title" id="hero-title">Websites and apps. Made by Nortivo.</h1>
-<p data-i18n="hero.text" >We build digital solutions for others — and develop our own app, Arc.</p>
+<h1 data-i18n="hero.title" id="hero-title">Digital tools. Built for everyday life.</h1>
+<p data-i18n="hero.text" >We’re developing Arc for a clearer everyday overview — and building websites and apps for your business.</p>
 <a href="/en/products/" class="button" >
 <span data-i18n="hero.action" >Products</span>
 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -86,18 +88,26 @@
 <a class="hero-demo-link" href="#work" data-i18n="home.demoShortcut">Explore restaurant demo</a>
 </div>
 </section>
+<section class="home-product-band" id="arc-preview"><div class="wrap home-product">
+<div class="home-product-copy"><img class="arc-logo" src="/assets/arc-wordmark.svg" width="180" height="66" alt="Arc by Nortivo"><h2 data-i18n="home.arcTitle">Money, food and steps. Together in Arc.</h2><p data-i18n="home.arcText">Our own app brings your budget, the food you eat and the steps you record into one view. Built to help you see your day as a whole.</p><ul class="home-arc-features"><li data-i18n="arc.money">Money and budgets</li><li data-i18n="arc.food">Food and calories</li><li data-i18n="arc.activity">Steps and progress</li></ul><p class="home-product-status" data-i18n="status">In development · Private test version</p><a class="button" href="/en/products/" data-i18n="arc.action">See what Arc does</a></div>
+<div class="arc-example" data-arc-example>
+<p class="example-disclosure" data-i18n="demo.arc.label">Interactive explanation · Fictional figures, not the app interface</p>
+<h3 data-i18n="demo.arc.title">One expense. An updated overview.</h3>
+<p class="example-description" data-i18n="demo.arc.text">Try a simple example of how a recorded expense affects a budget. Nothing is saved or sent.</p>
+<dl class="example-ledger"><div><dt data-i18n="demo.arc.budget">Example budget</dt><dd>5 000 <small>NOK</small></dd></div><div><dt data-i18n="demo.arc.spent">Recorded spending</dt><dd data-example-spent>1 800 <small>NOK</small></dd></div><div class="example-balance"><dt data-i18n="demo.arc.remaining">Budget remaining</dt><dd data-example-remaining>3 200 <small>NOK</small></dd></div></dl>
+<button class="button" type="button" data-example-add data-i18n="demo.arc.add" hidden>Record example expense: NOK 250</button>
+<button class="example-reset" type="button" data-example-reset data-i18n="demo.arc.reset" hidden>Reset example</button>
+<p class="example-feedback" data-example-feedback role="status" data-i18n="demo.arc.before">This example starts with NOK 1,800 in recorded spending.</p>
+</div>
+</div></section>
 <section class="home-work wrap" id="work" aria-labelledby="work-title">
-<div class="home-work-heading"><div><h2 id="work-title" data-i18n="home.workTitle">See what we build.</h2><p data-i18n="home.workText">A website says more when you can try it. Explore our restaurant demo, from the menu to table booking.</p></div><a href="/en/restaurant/" class="button" data-i18n="demo.action">View restaurant demo</a></div>
+<div class="home-work-heading"><div><h2 id="work-title" data-i18n="home.workTitle">A restaurant experience you can explore.</h2><p data-i18n="home.workText">From first impression to menu and table selection. Lune brings our design and development together in one website.</p></div><a href="/en/restaurant/" class="button" data-i18n="demo.action">View restaurant demo</a></div>
 <a class="lune-preview" href="/en/restaurant/" aria-label="Open the Lune restaurant demo" data-i18n-aria="home.previewLabel">
 <div class="lune-preview-copy"><span class="lune-preview-brand" aria-hidden="true">lune.</span><span class="lune-preview-title" data-i18n="lune.title">Good food. Take your time.</span><span class="lune-preview-description" data-i18n="lune.intro">A little place for long dinners. Seasonal ingredients, something good on your plate and room for one more story.</span><span class="lune-preview-open" data-i18n="demo.action">View restaurant demo</span></div>
 <img src="/assets/lune-table.webp" width="1536" height="1024" loading="lazy" alt="">
 </a>
 <p class="home-preview-caption" data-i18n="home.previewCaption">Lune website preview · A fictional restaurant, made by Nortivo.</p>
 </section>
-<section class="home-product-band" id="arc-preview"><div class="wrap home-product">
-<div class="home-product-copy"><img class="arc-logo" src="/assets/arc-wordmark.svg" width="180" height="66" alt="Arc by Nortivo"><h2 data-i18n="home.arcTitle">Money, food and steps. Together in Arc.</h2><p data-i18n="home.arcText">Our own app brings your budget, the food you eat and the steps you record into one view. Built to help you see your day as a whole.</p><ul class="home-arc-features"><li data-i18n="arc.money">Money and budgets</li><li data-i18n="arc.food">Food and calories</li><li data-i18n="arc.activity">Steps and progress</li></ul><p class="home-product-status" data-i18n="status">In development · Private test version</p><a class="button" href="/en/products/" data-i18n="arc.action">See what Arc does</a></div>
-<figure class="home-product-image"><a href="/en/products/" aria-label="Arc by Nortivo"><img src="/assets/arc-desktop.webp" width="1440" height="900" loading="lazy" alt="Arc by Nortivo: money and daily overview, Norwegian interface, empty test state" data-i18n-alt="arc.alt"></a><figcaption data-i18n="arc.caption">Actual app screenshot · Norwegian interface · Empty test view</figcaption></figure>
-</div></section>
 <section class="home-services wrap" aria-labelledby="home-services-title"><h2 id="home-services-title" data-i18n="home.servicesTitle">What can we build for you?</h2><div class="home-services-list"><article><h3 data-i18n="services.web.title">Websites</h3><p data-i18n="services.web.text">Clear content, a distinctive visual identity and an experience that works on mobile and desktop.</p><a class="text-link" href="/en/contact/?project=web" data-i18n="services.web.action">Ask about a website</a></article><article><h3 data-i18n="services.app.title">Apps</h3><p data-i18n="services.app.text">From the first user flows to a tool that is easy to understand. We start with what the app should help someone do.</p><a class="text-link" href="/en/contact/?project=app" data-i18n="services.app.action">Ask about an app</a></article></div><a class="home-services-more" href="/en/services/" data-i18n="nav.services">Services</a></section>
 <nav class="home-paths home-paths-close wrap" aria-label="Explore Nortivo" data-i18n-aria="home.paths"><a href="/en/about/"><strong data-i18n="nav.about">About Nortivo</strong><span data-i18n="home.about">Meet the person behind Nortivo.</span></a><a href="/en/contact/"><strong data-i18n="nav.contact">Get in touch</strong><span data-i18n="home.contact">Tell us what you want to build.</span></a></nav></main>
 <footer class="site-footer">

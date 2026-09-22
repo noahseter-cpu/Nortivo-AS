@@ -40,9 +40,9 @@ test('homepage visibly previews the restaurant and retains concise product and s
     const html=read(`dist/${lang}/index.html`);
     assert.match(html,/class="lune-preview"/);
     assert.match(html,/class="hero-demo-link" href="#work"/);
-    assert.ok(html.indexOf('class="home-work wrap"')<html.indexOf('class="home-product-band"'));
+    assert.ok(html.indexOf('class="home-product-band"')<html.indexOf('class="home-work wrap"'));
     assert.match(html,/lune-table\.webp/);
-    assert.match(html,/arc-desktop\.webp/);
+    assert.match(html,/data-arc-example/);
     assert.match(html,/home-services-list/);
     assert.match(html,new RegExp(`href="/${lang}/restaurant/"`));
     assert.doesNotMatch(html,/<iframe|<form/);
