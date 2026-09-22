@@ -20,4 +20,4 @@ Responsive composition: two-column sections stack on smaller screens, text and l
 - Detector returned five cramped-padding warnings on section wrappers. The inner `.wrap` containers and `.section`/`.home-product` padding provide the insets; captured views confirm these are not flush text boundaries.
 - Real devices, assistive technology and new production email delivery are not retested in this visual-only update. Existing support integration tests remain passing.
 
-Independent review returned **SHIP** after checking all 11 evidence captures, with no material findings. Publication remains pending.
+Independent review returned **SHIP** after checking all 11 evidence captures, with no material findings. Netlify published implementation commit `8da7796` on 22 September 2026 (deploy `6ab24e5e0861f70008127b37`). Both localized homepages and Products serve the new explanation; its add/reset interaction was checked on production. Contact and Support return HTTP 200 with CSP; Support retains `no-store`, and an unauthenticated admin-ticket read returns 401. No production ticket or email was created in this verification.
