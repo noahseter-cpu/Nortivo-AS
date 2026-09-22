@@ -15,20 +15,20 @@ colors:
   error: "#823824"
 typography:
   display:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "clamp(3.8rem, 6.5vw, 6rem)"
-    fontWeight: 700
-    lineHeight: 1.02
-    letterSpacing: "-.035em"
+    fontFamily: "Gloock, Georgia, serif"
+    fontSize: "clamp(3.5rem, 7.4vw, 6rem)"
+    fontWeight: 400
+    lineHeight: 1.03
+    letterSpacing: "-.025em"
   headline:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "clamp(2rem, 3.2vw, 3.2rem)"
-    fontWeight: 700
-    lineHeight: 1.13
-    letterSpacing: "-.035em"
+    fontFamily: "Gloock, Georgia, serif"
+    fontSize: "clamp(2.5rem, 4.6vw, 4.5rem)"
+    fontWeight: 400
+    lineHeight: 1.1
+    letterSpacing: "-.025em"
   title:
     fontFamily: "Manrope, sans-serif"
-    fontSize: "1.16rem"
+    fontSize: "1.125rem"
     fontWeight: 700
     lineHeight: 1.4
     letterSpacing: "0"
@@ -39,19 +39,19 @@ typography:
     lineHeight: 1.65
   label:
     fontFamily: "Manrope, sans-serif"
-    fontSize: ".9rem"
+    fontSize: ".875rem"
     fontWeight: 700
     lineHeight: 1.65
 rounded:
-  control: "3px"
-  workspace: "8px"
+  control: "2px"
+  workspace: "2px"
 spacing:
-  label-gap: "8px"
+  label-gap: "10px"
   field-column-gap: "20px"
-  field-row-gap: "24px"
+  field-row-gap: "26px"
   workspace-padding: "36px"
-  section-mobile: "56px"
-  section-desktop: "100px"
+  section-mobile: "64px"
+  section-desktop: "112px"
 components:
   booking-button:
     backgroundColor: "{colors.ink}"
@@ -59,22 +59,20 @@ components:
     rounded: "{rounded.control}"
     padding: "15px 24px"
   enquiry-button:
-    backgroundColor: "{colors.butter}"
-    textColor: "{colors.ink}"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.white}"
     rounded: "{rounded.control}"
     padding: "15px 24px"
   category:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.control}"
-    padding: "10px 14px"
+    textColor: "{colors.muted}"
+    padding: "10px 12px"
   category-selected:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.white}"
-    rounded: "{rounded.control}"
-    padding: "10px 14px"
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    padding: "10px 12px"
   field:
-    backgroundColor: "{colors.paper}"
+    backgroundColor: "{colors.white}"
     textColor: "{colors.ink}"
     rounded: "{rounded.control}"
     padding: "12px 14px"
@@ -82,7 +80,7 @@ components:
     backgroundColor: "{colors.invitation}"
     textColor: "{colors.ink}"
   booking-workspace:
-    backgroundColor: "{colors.white}"
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.workspace}"
     padding: "36px"
@@ -92,79 +90,86 @@ components:
 
 ## Overview
 
-**Creative North Star: "Supper-club invitation"**
+**Creative North Star: "Contemporary bistro dining journal"**
 
-Lune uses cool invitation-paper fields, ivory-white reading surfaces and deep blue-green ink. Large compact headings and open menu rows let the generated food photograph supply the warmth.
+Lune pairs cool invitation paper and deep blue-green ink with Gloock’s expressive serif and precise Manrope controls. An asymmetric invitation, un-darkened interior photograph and offset circular food detail introduce a spacious menu folio and an ink booking chapter.
 
-This scoped system records the implemented fictional restaurant, extracted on 22 September 2026 from `dist/assets/restaurant.css`, shared `site.css`, restaurant HTML and `restaurant.js`. It extends the repository with a separate visual world; it does not replace the corporate Nortivo system. The descriptive north star comes from the existing [direction contract](../RESTAURANT_DIRECTION.md), not a new approval round.
+This scoped system records the implementation in `dist/assets/restaurant.css`, shared `site.css`, restaurant HTML and `restaurant.js` on 22 September 2026. The [editorial direction](../LUNE_EDITORIAL.md) supplies its descriptive language. It applies only to the fictional restaurant demonstration; corporate Nortivo documentation remains separate.
 
 **Key Characteristics:**
 
-- Cool invitation paper and compact Manrope headings.
-- Open menu rows, tabular prices and explicit filter selection.
-- Dark booking actions and a pale yellow closing enquiry action.
+- Gloock invitation, section headings and lowercase wordmark; Manrope body and controls.
+- Light asymmetric hero with an offset circular food detail.
+- Open menu folio, tabular prices and underlined category selection.
+- Full-width ink booking chapter with a paper form workspace.
 - Persistent fictional-demo disclosure and local-only table selection.
 
 ## Colors
 
 ### Primary
 
-Ink anchors the form action, selected categories, selected times and text. Butter distinguishes the hero booking and closing Nortivo enquiry buttons; the demo-banner return link also uses it.
+Ink anchors text, primary actions, selected times and the full-width booking chapter. Butter remains the sticky demo-banner return-link accent. Invitation fills the header, hero, bistro section and closing enquiry section.
 
 ### Neutral
 
-Invitation fills the header and bistro section. Paper supports reading and hero text; white isolates the booking workspace. Muted carries secondary descriptions, line divides dishes, and soft-surface separates the confirmation notice. Focus and field-line define keyboard focus and input boundaries. Error accompanies written validation feedback.
+Paper supports the menu, FAQ and booking workspace; white distinguishes native fields. Muted carries secondary copy, line divides menu rows and selection summaries, and soft-surface highlights the synthetic confirmation notice. Focus and field-line define focus rings and input boundaries. Error accompanies written validation feedback. The booking introduction uses a lighter ink-compatible text tone (`#ccdadc`).
 
 **The Separate World Rule.** Lune tokens apply only to the restaurant demonstration; Nortivo retains its incumbent navy and blue system.
 
 ## Typography
 
-**Display Font:** Manrope, sans-serif fallback.
-**Body Font:** Manrope, sans-serif fallback.
+**Display Font:** Gloock, Georgia, serif.
+**Body Font:** Manrope, sans-serif.
 
-Shared `site.css` supplies locally served regular (400) and bold (700), with `font-display: swap`. See [font licences](../THIRD_PARTY_FONTS.md). Display is the invitation heading; headline is the base section-title role, amplified to `clamp(2.5rem,4.5vw,4rem)` for menu, bistro and booking; title defines dish names; label identifies booking fields. Body measure is 56ch, with the hero introduction restricted to 36ch (31ch on mobile). Prices use bold tabular numerals. The wordmark is bold lowercase text (3.7rem), with a contrasting blue punctuation mark; mobile reduces it to 3rem.
+Gloock regular (400) is self-hosted at `/assets/fonts/gloock-regular.ttf` with `font-display: swap`; shared `site.css` supplies local Manrope regular and bold. See [font licences](../THIRD_PARTY_FONTS.md). Gloock serves the invitation, section headings, wordmark and menu-feature heading. Dish names, form labels, prices and confirmation titles remain Manrope. The lowercase wordmark is 3.6rem, reducing to 3rem on mobile, with ink punctuation.
+
+The invitation measures at most 19ch; section headings at most 16ch. Paragraphs use 1.75 line height and at most 56ch; the hero introduction is 31ch, widening to 38ch on mobile. Prices use bold tabular numerals. Menu-feature display is 2.4rem, reducing to 1.75rem on mobile; FAQ and closing headings have local size overrides.
 
 ## Layout
 
-The main content width is `min(1160px, calc(100% - 80px))`. The full-photo hero is at least 680px high; its protected reading area uses `min(1280px, calc(100% - 80px))`. The menu pairs a sticky food illustration with a single-column folio in `.75fr 1.25fr` columns with a 64px gap. Section introductions use `1.2fr 1fr`; booking and FAQ use `1fr 1.2fr` with a 70px gap. The demo banner stays sticky above ordinary anchor navigation; anchor sections reserve 72px scroll margin.
+The content width is `min(1240px, calc(100% - 96px))`. The light hero places its full-width heading above a `.85fr 1.8fr` copy/image grid with a 64px column gap. The interior image is 450px high; the circular food detail sits near the lower left, clear of the actions. The menu pairs a sticky food illustration (top 88px) with a single-column folio in `.8fr 1.2fr` columns separated by 90px. Section introductions use `1.2fr 1fr`; bistro, booking and FAQ use `1fr 1.1fr`, with 80px gaps. Booking spans the viewport with content-aligned inner padding. Anchor targets reserve 80px above them for the sticky disclosure.
 
-At 1000px, content gutters become 28px, hero gutters 32px and major gaps tighten. At 720px, gutters become 20px, menu/visit/booking/FAQ stack, and navigation wraps into its own visible row. The hero remains photographic with a 600px minimum height and `clamp(3.4rem,12vw,4.6rem)` display at a 10ch measure. The menu feature becomes a non-sticky image/text pair. Menu and booking use section-mobile spacing; workspace padding becomes 24px 20px (28px at 1000px). At 359px, hero minimum height becomes 620px, the menu feature stacks with a 4:3 image, and booking fields become one column. Otherwise the field grid is `1.25fr 1fr`, with time spanning both columns.
+At 1000px, gutters become 28px and major gaps tighten to 40px (32px in the hero). At 720px, gutters become 20px; hero, menu, visit, booking, FAQ and closing content stack. Navigation wraps into its own visible row. The invitation becomes `clamp(3.4rem,12vw,4.7rem)` at 12ch; the room image is 330px high and the offset food detail 120px across. The non-sticky menu feature becomes an image/text pair. Booking workspace padding steps from 36px to 28px and then 24px 20px. Its field grid is `1.2fr 1fr`, with time spanning both columns. Below 359px, fields and menu feature stack, invitation size becomes 3.2rem, and room image height becomes 280px.
 
 ## Elevation & Depth
 
-No box shadows or glass effects are introduced. Tonal fields, thin dividers and imagery provide depth. The hero protects its reading area with a dark ink gradient from .96 opacity through .82 at 32% to .1 at 76%; mobile uses a uniform .78 overlay. Its caption uses solid ink. The sticky disclosure is a functional layer (z-index 10).
+Tonal chapters, photographic overlap and thin dividers provide depth without shadows or glass. Hero imagery stays un-darkened; its small caption has an ink backing. The circular detail has an invitation-coloured rim. The sticky disclosure is a functional layer (z-index 10).
 
 ## Shapes
 
-Controls use the control radius; the booking workspace uses the workspace radius. Menu entries remain open rows separated by a single line. Images have square corners: hero crops at `center 56%` (`65% center` on mobile), food at `60% center` in a 4:5 frame, and the bistro detail at `center 70%` in a 16:9 frame. No decorative card system is introduced.
+Buttons, fields, time labels and the booking workspace use restrained control corners. Categories use underlines rather than filled chips. Most photographs remain rectangular: room hero crops at center 58% (58% center on mobile), menu food at 62% center in a 4:5 frame (3:4 mobile, 4:3 narrow), and bistro interior at center 70% in 5:4 (4:3 mobile). The circular hero food detail crops at 67% center.
 
 ## Components
 
 ### Buttons
 
-The full-width form action is dark with white text; hero booking and closing enquiry use butter. Actions have a 52px minimum height. Fine-pointer hover changes dark fill to `#2b4c53`; butter hover uses `#e4c369`. Focus is a 3px outline with 4px offset. Pointer press scales to .98; background feedback takes 160ms ease and press feedback takes 120ms with the shared `cubic-bezier(.23,1,.32,1)` curve. Underlined text actions remain unfilled.
+Hero booking, form submission and closing enquiry use ink with white text and a 52px minimum height. Fine-pointer hover changes fill to `#2b4c53`. Focus uses a 3px outline with 4px offset. Pointer press scales to .98; background feedback takes 160ms ease and press feedback takes 120ms with `cubic-bezier(.23,1,.32,1)`. Keyboard input removes transitions. Text actions are underlined and unfilled.
 
 ### Chips
 
-Category controls have 44px minimum height, line borders and transparent resting fill. `aria-pressed` and the selected ink fill identify the active category. Fine-pointer hover uses soft-surface. Filtering updates the written count and empty state immediately, without animation.
+Category controls are transparent, with 44px minimum height and a 2px bottom border. Active categories use ink text, bold weight, an ink underline and `aria-pressed`; others use muted text and a transparent underline. Hover changes text to ink. Filtering updates the written count and empty state immediately.
 
 ### Inputs / Fields
 
-Native date and guest select controls use persistent bold labels, paper fill, field-line boundaries and 48px minimum height. Times are native required radios inside a labelled fieldset: visible labels wrap, selected times use ink fill, and keyboard focus outlines the visible label. Written status messages accompany invalid selection and closed days; a live summary reflects valid date/time/guest selections. The form contains no personal-information fields. Confirmation is synthetic, held only in memory, and receives focus; reset returns focus to date. Reservation code sends no requests and writes no storage. The shared language preference is separate from reservation state.
+White native date and guest controls use persistent bold ink labels, field-line boundaries and 48px minimum height. Times are required native radios in a labelled fieldset; selected labels use ink fill, and keyboard focus outlines the visible label. Written status messages accompany invalid selection and closed days. A live summary reflects date, time and guest choices. The form contains no personal-information fields.
+
+Confirmation exists only in memory and receives focus; reset returns focus to date. Reservation code sends no requests and writes no storage. Shared language preference remains separate from reservation state. The paper workspace sits within the full-width ink booking chapter.
 
 ### FAQ
 
-Native details/summary disclosures retain their markers and keyboard behavior. Three entries explain fictional booking, menu filters and the absence of saved reservation data. Opening disclosures needs no custom animation.
+Native details/summary disclosures retain markers and keyboard behavior. Three entries explain fictional booking, menu filters and the absence of saved reservation data. Opening needs no custom animation.
 
 ### Navigation
 
-Always-visible short anchor navigation sits beside the wordmark and language choices. Links are bold (.9rem), becoming .85rem at 720px and .78rem at 359px. Hover underlines links. The selected language is underlined and uses `aria-pressed`. The demo notice and return link stay visible above the header.
+Always-visible anchor navigation sits beside the serif wordmark and language choices. Links are bold (.875rem), becoming .8rem at 720px and .72rem at 359px. Hover underlines them. Selected language is underlined and uses `aria-pressed`. The demo notice and return link stay above the header.
 
 ### Motion and imagery
 
-The invitation title, introduction and actions use the shared visible-from-start hero settlement: 600ms, staggered 0/60/120ms, from 12px translation and opacity .8. The hero image settles from scale 1.035 to 1 over 1000ms. Pointer category/time presses scale to .97 over 120ms; keyboard input removes their transitions. Menu filtering is immediate. Occasional pointer confirmation uses cancellable WAAPI for 220ms from opacity .7/translateY(8px), after state and focus update. Keyboard and reduced motion skip confirmation animation; reset and reduced-motion changes cancel it. Reduced motion also removes CSS animations, transitions and press transforms.
+The title, invitation block and circular detail settle over 600ms with 0/60/120ms delays, from 12px translation and opacity .8. The room image settles from scale 1.035 to 1 over 1000ms. Time-label pointer presses scale to .98 over 120ms; keyboard input removes transitions. Menu filtering is immediate. Pointer confirmation uses cancellable WAAPI for 220ms from opacity .7/translateY(8px), after state and focus update. Keyboard and reduced motion skip confirmation animation; reset and reduced-motion changes cancel it. Reduced motion removes CSS settlement, transitions and press transforms.
 
-Keep the AI illustration captions and alternate text. Food provenance is [lune-table.webp.json](../../dist/assets/lune-table.webp.json), with its [authoring prompt](../LUNE_IMAGE_PROMPT.txt); interior provenance and exact prompt are in [lune-interior.webp.json](../../dist/assets/lune-interior.webp.json). No real restaurant, client relationship, availability, allergen assurance or booking is implied. Current review and tested scope are recorded in [LUNE_REFINEMENT.md](../LUNE_REFINEMENT.md); [SPLIT_DEMO_VERIFICATION.md](../SPLIT_DEMO_VERIFICATION.md) retains earlier history. This extraction adds no hardware or assistive-technology test claim.
+Keep AI illustration captions and alternate text; the repeated circular detail is decorative and hidden from accessibility APIs. Food provenance is [lune-table.webp.json](../../dist/assets/lune-table.webp.json), with its [authoring prompt](../LUNE_IMAGE_PROMPT.txt); interior provenance and prompt are in [lune-interior.webp.json](../../dist/assets/lune-interior.webp.json). No real restaurant, client relationship, availability, allergen assurance or booking is implied.
+
+The independent finish review returned SHIP within eight section viewport captures, with no material fixes requested; this is not user aesthetic approval. [Editorial verification](../LUNE_EDITORIAL_VERIFICATION.md) records the 63 passing tests, desktop/mobile/narrow viewport scope, interaction checks and limitations. Netlify publication is blocked by exhausted deployment credits; production remains fe4bb0a. This revision is not verified live, and no real-device or assistive-technology audit is claimed.
 
 ## Do's and Don'ts
 

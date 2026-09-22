@@ -6,7 +6,7 @@
     "typographyMeta": {
       "display": {
         "displayName": "Invitation display",
-        "purpose": "Full-photo hero heading; desktop clamp(3.8rem,6.5vw,6rem), mobile clamp(3.4rem,12vw,4.6rem)."
+        "purpose": "Gloock invitation heading on light paper; desktop clamp(3.5rem,7.4vw,6rem), mobile clamp(3.4rem,12vw,4.7rem), narrow 3.2rem."
       }
     },
     "shadows": [],
@@ -19,7 +19,7 @@
       {
         "name": "hero-settlement",
         "value": "600ms; delays 0ms, 60ms, 120ms",
-        "purpose": "Title, introduction and actions settle from translateY(12px), opacity .8; content stays visible."
+        "purpose": "Title, invitation block and circular detail settle from translateY(12px), opacity .8; content stays visible."
       },
       {
         "name": "button-feedback",
@@ -33,8 +33,8 @@
       },
       {
         "name": "selection-feedback",
-        "value": "160ms ease; 120ms cubic-bezier(.23,1,.32,1)",
-        "purpose": "Category and native-radio labels use background feedback and pointer-only .97 press scale; keyboard input removes transitions. Filtering is immediate."
+        "value": "120ms cubic-bezier(.23,1,.32,1)",
+        "purpose": "Native-radio labels use pointer-only .98 press scale; keyboard input removes transitions. Category filtering is immediate and selection is underlined."
       },
       {
         "name": "confirmation",
@@ -49,12 +49,13 @@
     ],
     "refinement": {
       "date": "2026-09-22",
-      "scope": "Lune only; same palette, Manrope and supper-club identity. The following current composition supersedes earlier split-hero specimens.",
-      "hero": "Full-photo interior illustration, minimum 680px desktop / 600px mobile / 620px narrow phone; protected ink overlay and butter booking action.",
-      "menu": "Sticky food illustration beside a single-column folio; .75fr 1.25fr with 64px gap. Mobile feature is non-sticky and narrow-phone imagery stacks.",
-      "booking": "Native date, guest select and required radio time slots; live selection summary and written closed-day feedback. Workspace padding 36px, 28px at 1000px, 24px 20px at 720px; field gaps 24px 20px.",
-      "faq": "Native details/summary with retained markers; three disclosures explain fictional booking, menu filters and no saved reservation data.",
-      "review": "Independent finish review SHIP; no material findings across nine screenshots. 62 local tests pass; keyboard/pointer and closed-day flows checked. Six raster provenance sidecars checked, zero missing. Publication pending."
+      "scope": "Lune editorial only; unchanged blue, ink and paper palette. Local Gloock display, headings and logo contrast with Manrope controls.",
+      "hero": "Light asymmetric invitation above copy and un-darkened room photograph, with offset circular food detail. Mobile stacks title, copy/actions and photograph.",
+      "menu": "Sticky food illustration beside a single-column menu folio; .8fr 1.2fr with 90px gap. Categories use underlines. Mobile feature is non-sticky; narrow-phone imagery stacks.",
+      "booking": "Full-width ink chapter and paper workspace. Native date, guest select and required radio times; live summary and written closed-day feedback. Workspace padding 36px, 28px at 1000px, 24px 20px at 720px; field gaps 26px 20px.",
+      "faq": "Native details/summary with retained markers; three disclosures explain fictional booking, filters and no saved reservation data.",
+      "review": "Independent finish review SHIP within eight section viewport captures; no material fixes requested. Not user aesthetic approval. 63 local tests pass; see docs/LUNE_EDITORIAL_VERIFICATION.md for scope and limitations.",
+      "publication": "Netlify production deployment blocked by exhausted team credits. Existing published version remains fe4bb0a; this editorial revision is not verified live."
     },
     "breakpoints": [
       {
@@ -77,7 +78,7 @@
       "kind": "input",
       "description": "Native radio with selected fill and visible keyboard focus; the live form groups required slots in a labelled fieldset.",
       "html": "<label class=\"ds-slot\"><input type=\"radio\" name=\"ds-slot\" value=\"18:00\" required checked><span>18:00</span></label>",
-      "css": ".ds-slot{position:relative;display:inline-block;cursor:pointer;color:#18343b;font:400 .94rem/1.65 Manrope,sans-serif}.ds-slot input{position:absolute;opacity:0;width:1px;height:1px}.ds-slot span{display:block;min-height:48px;padding:12px 18px;border:1px solid #789097;border-radius:3px;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-slot input:checked+span{background:#18343b;color:#fff;border-color:#18343b}.ds-slot input:focus-visible+span{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-slot:hover span{border-color:#18343b}}:host-context(html[data-input=pointer]) .ds-slot:active span{transform:scale(.97)}:host-context(html[data-input=keyboard]) .ds-slot span{transition:none}@media(prefers-reduced-motion:reduce){.ds-slot span{transition:none;transform:none!important}}"
+      "css": ".ds-slot{position:relative;display:inline-block;cursor:pointer;color:#18343b;font:400 .94rem/1.65 Manrope,sans-serif}.ds-slot input{position:absolute;opacity:0;width:1px;height:1px}.ds-slot span{display:block;min-height:48px;padding:12px 16px;border:1px solid #789097;border-radius:2px;transition:transform 120ms cubic-bezier(.23,1,.32,1)}.ds-slot input:checked+span{background:#18343b;color:#fff;border-color:#18343b}.ds-slot input:focus-visible+span{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-slot:hover span{border-color:#18343b}}:host-context(html[data-input=pointer]) .ds-slot:active span{transform:scale(.98)}:host-context(html[data-input=keyboard]) .ds-slot span{transition:none}@media(prefers-reduced-motion:reduce){.ds-slot span{transition:none;transform:none!important}}"
     },
     {
       "name": "Booking button",
@@ -85,23 +86,23 @@
       "refersTo": "booking-button",
       "description": "Dark ink action with pointer feedback and visible keyboard focus.",
       "html": "<button class=\"ds-lune\" type=\"button\">Try table booking</button>",
-      "css": ".ds-lune{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:52px;background:#18343b;color:#fff;border:1px solid #18343b;border-radius:3px;font:700 .88rem/1.4 Manrope,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{background:#2b4c53;color:#fff}}:host-context(html[data-input=pointer]) .ds-lune:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-lune{transition:none;transform:none!important}}"
+      "css": ".ds-lune{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:52px;background:#18343b;color:#fff;border:1px solid #18343b;border-radius:2px;font:700 .875rem/1.4 Manrope,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{background:#2b4c53;color:#fff}}:host-context(html[data-input=pointer]) .ds-lune:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-lune{transition:none;transform:none!important}}"
     },
     {
       "name": "Closing enquiry",
       "kind": "button",
       "refersTo": "enquiry-button",
-      "description": "Pale yellow enquiry action in the dark closing section.",
+      "description": "Ink enquiry action on the invitation-coloured closing section.",
       "html": "<a class=\"ds-lune ds-lune-enquiry\" href=\"/contact/?project=web\">Talk to Nortivo</a>",
-      "css": ".ds-lune{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:52px;background:#18343b;color:#fff;border:1px solid #18343b;border-radius:3px;font:700 .88rem/1.4 Manrope,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{background:#2b4c53;color:#fff}}:host-context(html[data-input=pointer]) .ds-lune:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-lune{transition:none;transform:none!important}}.ds-lune-enquiry{background:#f1d582;color:#18343b;border-color:#f1d582}@media(hover:hover) and (pointer:fine){.ds-lune-enquiry:hover{background:#e4c369;color:#18343b}}"
+      "css": ".ds-lune{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:52px;background:#18343b;color:#fff;border:1px solid #18343b;border-radius:2px;font:700 .875rem/1.4 Manrope,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{background:#2b4c53;color:#fff}}:host-context(html[data-input=pointer]) .ds-lune:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-lune{transition:none;transform:none!important}}"
     },
     {
       "name": "Category control",
       "kind": "chip",
       "refersTo": "category",
-      "description": "Static selected-state specimen; actual filtering is implemented by restaurant.js.",
+      "description": "Underlined selected category; filtering is implemented by restaurant.js.",
       "html": "<button class=\"ds-lune\" type=\"button\" aria-pressed=\"true\">Full menu</button>",
-      "css": ".ds-lune{min-height:44px;border:1px solid #bac9cc;border-radius:3px;background:transparent;color:#18343b;padding:10px 16px;font:400 .86rem/1.65 Manrope,sans-serif;cursor:pointer}.ds-lune[aria-pressed=true]{background:#18343b;border-color:#18343b;color:#fff}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:not([aria-pressed=true]):hover{background:#e3eae8}}"
+      "css": ".ds-lune{min-height:44px;border:0;border-bottom:2px solid transparent;background:transparent;color:#4a6169;padding:10px 12px;font:400 .875rem/1.65 Manrope,sans-serif;cursor:pointer}.ds-lune[aria-pressed=true]{border-color:#18343b;color:#18343b;font-weight:700}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{color:#18343b}}@media(max-width:720px){.ds-lune{padding-inline:10px}}"
     },
     {
       "name": "Booking date",
@@ -109,7 +110,7 @@
       "refersTo": "field",
       "description": "Native date field with persistent label; no personal information.",
       "html": "<label class=\"ds-lune-label\" for=\"ds-lune-date\">Date</label><input class=\"ds-lune\" id=\"ds-lune-date\" type=\"date\" required>",
-      "css": ".ds-lune-label{display:block;font:400 .8rem/1.65 Manrope,sans-serif;color:#18343b;margin-bottom:8px}.ds-lune{color-scheme:light;background:#f5f7f6;color:#18343b;border:1px solid #789097;min-width:0;border-radius:3px;min-height:48px;padding:12px 14px;font:400 1rem/1.65 Manrope,sans-serif;caret-color:#18343b}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}"
+      "css": ".ds-lune-label{display:block;font:700 .875rem/1.65 Manrope,sans-serif;color:#18343b;margin-bottom:10px}.ds-lune{color-scheme:light;background:#fff;color:#18343b;border:1px solid #789097;min-width:0;border-radius:2px;min-height:48px;padding:12px 14px;font:400 1rem/1.65 Manrope,sans-serif;caret-color:#18343b}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}"
     },
     {
       "name": "Anchor navigation",
@@ -117,24 +118,25 @@
       "refersTo": "navigation",
       "description": "Always-visible short navigation; wraps to a separate row on mobile.",
       "html": "<nav class=\"ds-lune-nav\" aria-label=\"Restaurant\"><a class=\"ds-lune\" href=\"#menu\">Menu</a><a class=\"ds-lune\" href=\"#visit\">About Lune</a><a class=\"ds-lune ds-lune-book\" href=\"#booking\">Try table booking</a></nav>",
-      "css": ".ds-lune-nav{display:flex;align-items:center;gap:34px;background:#c5d5ed;color:#18343b}.ds-lune{font:700 .9rem/1.65 Manrope,sans-serif;padding-block:10px;text-decoration:none;color:inherit}.ds-lune-book{border-bottom:1px solid #18343b}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{text-decoration:underline}}@media(max-width:720px){.ds-lune-nav{gap:14px;justify-content:space-between}.ds-lune{font-size:.78rem}}@media(max-width:359px){.ds-lune-nav{gap:10px}.ds-lune{font-size:.72rem}}"
+      "css": ".ds-lune-nav{display:flex;align-items:center;gap:32px;background:#c5d5ed;color:#18343b}.ds-lune{font:700 .875rem/1.65 Manrope,sans-serif;padding-block:12px;text-decoration:none;color:inherit}.ds-lune-book{border-bottom:1px solid #18343b}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{text-decoration:underline}}@media(max-width:720px){.ds-lune-nav{gap:12px;justify-content:space-between}.ds-lune{font-size:.8rem}}@media(max-width:359px){.ds-lune-nav{gap:10px}.ds-lune{font-size:.72rem}}"
     },
     {
       "name": "Booking workspace",
       "kind": "card",
       "refersTo": "booking-workspace",
-      "description": "Flat form container; confirmation explicitly remains a demonstration.",
+      "description": "Paper form workspace within the full-width ink booking chapter; confirmation remains a demonstration.",
       "html": "<section class=\"ds-lune-workspace\"><h3 class=\"ds-lune-title\">An example confirmation</h3><p class=\"ds-lune-notice\">Demonstration only. No reservation has been made.</p></section>",
-      "css": ".ds-lune-workspace{padding:32px;background:#fff;color:#18343b;border:1px solid #bac9cc;border-radius:8px;font:400 16px/1.65 Manrope,sans-serif}.ds-lune-title{font:700 1.45rem/1.35 Manrope,sans-serif;letter-spacing:-.025em;margin:0 0 24px}.ds-lune-notice{background:#e3eae8;padding:15px;font-size:.88rem;margin:0 0 18px}@media(max-width:720px){.ds-lune-workspace{padding:24px 20px}}"
+      "css": ".ds-lune-workspace{padding:36px;background:#f5f7f6;color:#18343b;border-radius:2px;font:400 16px/1.65 Manrope,sans-serif}.ds-lune-title{font:700 1.45rem/1.35 Manrope,sans-serif;letter-spacing:-.025em;margin:0 0 24px}.ds-lune-notice{background:#e3eae8;padding:15px;font-size:.875rem;margin:0 0 18px}@media(max-width:1000px){.ds-lune-workspace{padding:28px}}@media(max-width:720px){.ds-lune-workspace{padding:24px 20px}}"
     }
   ],
   "narrative": {
-    "northStar": "Supper-club invitation",
-    "overview": "Lune uses cool invitation-paper fields, ivory-white reading surfaces and deep blue-green ink. Large compact headings and open menu rows let the generated food photograph supply the warmth.\n\nThis scoped system records the implemented fictional restaurant, extracted on 22 September 2026 from `dist/assets/restaurant.css`, shared `site.css`, restaurant HTML and `restaurant.js`. It extends the repository with a separate visual world; it does not replace the corporate Nortivo system. The descriptive north star comes from the existing [direction contract](../RESTAURANT_DIRECTION.md), not a new approval round.",
+    "northStar": "Contemporary bistro dining journal",
+    "overview": "Lune pairs cool invitation paper and deep blue-green ink with Gloock’s expressive serif and precise Manrope controls. An asymmetric invitation, un-darkened interior photograph and offset circular food detail introduce a spacious menu folio and an ink booking chapter.\n\nThis scoped system records the implementation in `dist/assets/restaurant.css`, shared `site.css`, restaurant HTML and `restaurant.js` on 22 September 2026. The [editorial direction](../LUNE_EDITORIAL.md) supplies its descriptive language. It applies only to the fictional restaurant demonstration; corporate Nortivo documentation remains separate.",
     "keyCharacteristics": [
-      "Cool invitation paper and compact Manrope headings.",
-      "Open menu rows, tabular prices and explicit filter selection.",
-      "Dark booking actions and a pale yellow closing enquiry action.",
+      "Gloock invitation, section headings and lowercase wordmark; Manrope body and controls.",
+      "Light asymmetric hero with an offset circular food detail.",
+      "Open menu folio, tabular prices and underlined category selection.",
+      "Full-width ink booking chapter with a paper form workspace.",
       "Persistent fictional-demo disclosure and local-only table selection."
     ],
     "rules": [

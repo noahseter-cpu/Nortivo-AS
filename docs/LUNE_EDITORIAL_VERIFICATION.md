@@ -12,4 +12,8 @@
 
 ## Publication blocker
 
+Independent finish reviewer disposition: **ship**, scoped to the eight supplied captures and source review. No material corrections requested. Nonblocking limits: the English mobile headline wraps less gracefully than Norwegian; repeated image assets limit visual storytelling. This is not user aesthetic approval or a real-device motion assessment.
+
+Implementation pushed to GitHub main as `fcc5e51`. Netlify attempt `6ab2581d271c8200080b6b56` is explicitly **Skipped due to account credit usage exceeded**, and still identifies `fe4bb0a` as Published. Local working preview: `http://127.0.0.1:4399/nb/restaurant/`.
+
 Netlify deployment dashboard explicitly reports production deploys paused because the team's available credits are exhausted; Trigger deploy is disabled. The existing published version remains fe4bb0a. No billing change, upgrade or quota bypass was attempted. This revision must not be described as live until a later successful production deploy is verified.
