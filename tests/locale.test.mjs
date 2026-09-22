@@ -132,6 +132,7 @@ test('edge has no shared caching, preserves other queries, and operates only on 
   for (const route of ['/nb/', '/en/products/', '/assets/site.js', '/.netlify/functions/tickets', '/missing/', '/products']) assert.equal(redirect(new Request(`https://nortivo.no${route}`)), undefined);
   assert.deepEqual(config.path, ['/', '/products/', '/support/', '/admin/', '/privacy/']);
   assert.equal(config.cache, undefined);
+  assert.equal(config.method, undefined, 'Do not emit unsupported HEAD in the Netlify manifest method filter');
 });
 
 test('local preview serves source/localized pages, MIME types, HEAD, robots and real 404s without redirect', async t => {

@@ -32,4 +32,6 @@ export default function languageRedirect(request, context = {}) {
 }
 
 // Do not opt into manual edge caching: this decision depends on each visitor.
-export const config = { path: legacyPaths, method: ['GET', 'HEAD'], onError: 'bypass' };
+// HEAD is not accepted by Netlify's method-filter manifest schema. The handler
+// above gates GET/HEAD itself, so omit the optional deployment-level filter.
+export const config = { path: legacyPaths, onError: 'bypass' };
