@@ -77,4 +77,79 @@ html[data-input=pointer] .lune-button:active{transform:scale(.98)}
 @media(max-width:1000px){.lune-header{gap:24px}.lune-header nav{gap:22px}.lune-invitation{padding:50px 32px}.lune-hero{min-height:510px}.lune-photo img{min-height:510px}.lune-booking{gap:36px}.lune-visit-grid{gap:50px}.lune-wrap{width:calc(100% - 56px)}}
 @media(max-width:720px){.demo-banner{justify-content:space-between;gap:18px;font-size:.75rem;padding:9px 18px}.demo-banner span{max-width:30ch}.lune-header{flex-wrap:wrap;padding:20px;gap:18px;min-height:0}.lune-brand{font-size:3rem}.lune-header nav{order:3;width:100%;justify-content:space-between;gap:14px}.lune-header nav a{font-size:.78rem}.lune-header .language-switch{position:static;margin-left:auto}.lune-header .language-switch button{min-height:44px}.lune-hero{grid-template-columns:1fr;min-height:0}.lune-invitation{padding:36px 24px 40px}.lune-invitation h1{font-size:3.6rem;max-width:10ch}.lune-invitation>p{font-size:.95rem;margin-top:22px;max-width:37ch}.lune-photo img{min-height:0;height:auto;aspect-ratio:4/3;object-fit:cover}.lune-actions{gap:20px;margin-top:26px}.lune-wrap{width:calc(100% - 40px)}.lune-menu,.lune-booking{padding-block:52px}.lune-section-intro,.lune-visit-grid,.lune-booking{grid-template-columns:1fr;gap:26px}.lune-section-intro{margin-bottom:26px}.menu-controls{gap:20px}.menu-list{grid-template-columns:1fr;gap:0}.dish{padding-block:23px}.lune-visit{padding-block:48px}.lune-hours{margin-top:8px}.booking-workspace{padding:24px 20px}.lune-project-close{padding-block:46px}.lune-project-close .lune-wrap{gap:24px}.lune-footer{padding:28px 20px;flex-direction:column;gap:12px}}
 @media(max-width:359px){.lune-invitation h1{font-size:3.1rem}.lune-invitation{padding-inline:20px}.booking-fields{grid-template-columns:1fr}.menu-categories{gap:6px}.menu-categories button{padding-inline:12px}.lune-header nav{gap:10px}.lune-header nav a{font-size:.72rem}}
-@media(prefers-reduced-motion:reduce){.lune-page .lune-button{transition:none;transform:none!important}}
+/* Lune's editorial refinement keeps its invitation-paper and blue-green system. */
+.lune-header{min-height:100px;border-bottom:1px solid var(--lune-line);padding-inline:max(40px,calc((100vw - 1280px)/2))}
+.lune-hero{position:relative;isolation:isolate;display:flex;min-height:680px;background:var(--lune-ink);color:var(--lune-paper)}
+.lune-invitation{width:min(1280px,calc(100% - 80px));margin:auto;padding:76px 0 92px;position:relative;z-index:1}
+.lune-invitation h1{font-size:clamp(3.8rem,6.5vw,6rem);max-width:9ch;line-height:1.02}
+.lune-invitation>p{max-width:36ch;font-size:1.05rem;color:var(--lune-paper);margin-top:24px}
+.lune-hero .lune-photo{position:absolute;inset:0;z-index:-2}
+.lune-hero .lune-photo img{height:100%;min-height:0;object-position:center 56%}
+.lune-hero .lune-photo::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(24,52,59,.96),rgba(24,52,59,.82) 32%,rgba(24,52,59,.1) 76%)}
+.lune-hero .lune-photo figcaption{z-index:1;left:auto;background:var(--lune-ink);font-size:.75rem}
+.lune-hero .lune-button{background:var(--lune-butter);border-color:var(--lune-butter);color:var(--lune-ink)}
+.lune-hero .lune-text-link{color:var(--lune-paper)}
+.lune-menu{padding-block:100px}
+.lune-section-intro{grid-template-columns:1.2fr 1fr;margin-bottom:52px;align-items:center}
+.lune-section-intro h2{max-width:15ch;font-size:clamp(2.5rem,4.5vw,4rem)}
+.lune-menu-spread{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:64px;align-items:start}
+.lune-menu-feature{position:sticky;top:80px}
+.lune-menu-feature img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:60% center}
+.lune-menu-feature figcaption{color:var(--lune-muted);font-size:.75rem;line-height:1.5;margin-top:12px}
+.lune-menu-feature h3{font-size:1.6rem;line-height:1.2;margin-top:28px}
+.lune-menu-feature>p{font-size:.94rem;margin-top:16px;color:var(--lune-muted)}
+.menu-list{grid-template-columns:1fr}
+.menu-controls{gap:20px;padding-bottom:20px}
+.menu-categories{gap:6px}
+.menu-categories button{padding:10px 14px;transition:background-color 160ms ease,transform 120ms var(--ease-out)}
+.dish{padding-block:26px;gap:20px}
+.dish h3{font-size:1.16rem}
+.dish p{font-size:.9rem}
+.dish-price{font-size:1rem;font-weight:700}
+.menu-count{font-size:.85rem}
+.lune-visit{background:var(--lune-blue);padding-block:88px}
+.lune-visit-grid{grid-template-columns:1fr 1.1fr;gap:80px}
+.lune-visit h2{font-size:clamp(2.5rem,4.5vw,4rem);max-width:12ch}
+.lune-visit .lune-fine{font-size:.875rem}
+.lune-room-detail{overflow:hidden}
+.lune-room-detail img{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:center 70%}
+.lune-hours{border:0;padding-bottom:0}
+.lune-hours h3{margin-bottom:14px}
+.lune-hours p{display:block;padding-bottom:10px;border-bottom:1px solid #a6b8b9}
+.lune-hours p+p{margin-top:10px}
+.lune-booking{padding-block:100px;align-items:start}
+.lune-booking h2{font-size:clamp(2.5rem,4.5vw,4rem)}
+.booking-workspace{padding:36px;border-radius:8px}
+.booking-fields{gap:24px 20px}
+.booking-fields label,.booking-slots legend{font-size:.9rem;font-weight:700}
+.booking-fields .booking-slots{grid-column:1/-1;min-width:0}
+.booking-slots legend{padding:0;margin-bottom:12px}
+.time-slots{display:flex;flex-wrap:wrap;gap:10px}
+.time-slot{position:relative;cursor:pointer;display:block;margin:0!important}
+.time-slot input{position:absolute;opacity:0;width:1px;height:1px;min-height:0}
+.time-slot span{display:block;padding:12px 18px;border:1px solid #789097;border-radius:3px;font-size:.94rem;font-weight:400;min-height:48px;transition:background-color 160ms ease,transform 120ms var(--ease-out)}
+.time-slot input:checked+span{background:var(--lune-ink);color:white;border-color:var(--lune-ink)}
+.time-slot input:focus-visible+span{outline:3px solid #295f86;outline-offset:4px}
+.booking-slots .lune-fine{margin-top:14px;font-size:.8rem}
+#slots-hint{font-size:.9rem;color:var(--lune-muted);margin-top:8px}
+.booking-preview{border-block:1px solid var(--lune-line);padding-block:18px;margin-bottom:24px}
+.booking-preview>span{font-size:.8rem;color:var(--lune-muted)}
+.booking-preview p{margin-top:8px;font-size:.94rem;font-weight:700;min-height:3.3em}
+.booking-workspace .lune-button{width:100%}
+.confirmation-mark{width:48px;height:48px;margin-bottom:24px}
+.lune-faq{display:grid;grid-template-columns:1fr 1.2fr;gap:70px;padding-bottom:88px}
+.lune-faq h2{font-size:2.4rem}
+.lune-faq details{border-color:var(--lune-line)}
+.lune-faq summary{font-size:1rem;line-height:1.5;list-style:revert;padding-right:0}
+.lune-faq details p{color:var(--lune-muted);font-size:.94rem}
+.lune-project-close{padding-block:80px}
+.lune-project-close h2{font-size:2.8rem}
+.lune-footer{font-size:.85rem}
+@media(hover:hover) and (pointer:fine){.time-slot:hover span{border-color:var(--lune-ink)}.lune-hero .lune-button:hover{background:#e4c369;color:var(--lune-ink)}}
+html[data-input=pointer] .time-slot:active span,html[data-input=pointer] .menu-categories button:active{transform:scale(.97)}
+html[data-input=keyboard] .time-slot span,html[data-input=keyboard] .menu-categories button{transition:none}
+@media(prefers-reduced-motion:no-preference){.lune-hero .lune-photo img{animation:stage-settle 1000ms var(--ease-out) both}}
+@media(max-width:1000px){.lune-menu-spread{gap:36px;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr)}.lune-invitation{width:calc(100% - 64px)}.lune-visit-grid{gap:40px}.lune-faq{gap:36px}.booking-workspace{padding:28px}}
+@media(max-width:720px){.lune-header{padding:20px}.lune-header nav a{font-size:.85rem}.lune-hero{min-height:600px}.lune-invitation{width:calc(100% - 40px);padding-block:60px 86px}.lune-invitation h1{font-size:clamp(3.4rem,12vw,4.6rem);max-width:10ch}.lune-invitation>p{font-size:1rem;max-width:31ch}.lune-hero .lune-photo::after{background:rgba(24,52,59,.78)}.lune-hero .lune-photo img{height:100%;aspect-ratio:auto;object-position:65% center}.lune-hero .lune-photo figcaption{font-size:.7rem;padding:8px 12px}.lune-menu,.lune-booking{padding-block:56px}.lune-section-intro,.lune-menu-spread,.lune-visit-grid,.lune-faq{grid-template-columns:1fr;gap:28px}.lune-menu-feature{position:static;display:grid;grid-template-columns:1fr 1fr;column-gap:20px;align-items:start}.lune-menu-feature figure{grid-row:1/3}.lune-menu-feature img{aspect-ratio:4/5}.lune-menu-feature h3{font-size:1.35rem;margin:0}.lune-menu-feature>p{font-size:.875rem;margin-top:12px}.lune-menu-feature figcaption{font-size:.7rem}.lune-section-intro{margin-bottom:32px}.menu-controls{gap:16px}.lune-visit{padding-block:56px}.lune-visit h2{max-width:16ch}.booking-workspace{padding:24px 20px}.lune-faq{padding-bottom:56px}.lune-project-close{padding-block:52px}.lune-project-close h2{font-size:2.4rem}.lune-button,.lune-text-link{font-size:.875rem}}
+@media(max-width:359px){.lune-header nav{gap:8px}.lune-header nav a{font-size:.78rem}.lune-hero{min-height:620px}.lune-menu-feature{grid-template-columns:1fr}.lune-menu-feature figure{grid-row:auto}.lune-menu-feature img{aspect-ratio:4/3}.lune-menu-feature h3{margin-top:20px}.booking-fields{grid-template-columns:1fr}.time-slot span{padding-inline:14px}}
+@media(prefers-reduced-motion:reduce){.lune-page .lune-button,.time-slot span,.menu-categories button{transition:none;transform:none!important}}

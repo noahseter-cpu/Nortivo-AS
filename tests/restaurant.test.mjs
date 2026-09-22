@@ -58,3 +58,17 @@ test('support retains the same complete desktop and mobile header as home in bot
     for (const feature of ['money','food','activity']) assert.match(home,new RegExp(`href="/${lang}/products/#${feature}"`));
   }
 });
+
+test('refined restaurant preserves truthful imagery and native keyboard time choices', () => {
+  const html=read('dist/restaurant/index.html');
+  assert.match(html,/lune-interior\.webp/);
+  assert.match(html,/lune-table\.webp/);
+  assert.match(html,/class="booking-slots"/);
+  assert.match(html,/id="selection-preview" role="status"/);
+  const code=read('dist/assets/restaurant.js');
+  assert.match(code,/input\.type = 'radio'/);
+  assert.match(code,/input\.required = true/);
+  assert.match(code,/document\.documentElement\.dataset\.input === 'pointer'/);
+  assert.match(code,/reducedMotion\.matches/);
+  assert.match(JSON.parse(read('dist/assets/lune-interior.webp.json')).prompt,/fictional/);
+});
