@@ -35,3 +35,16 @@ test('homepage stays brief and all new pages have one main heading', () => {
   assert.match(read('dist/nb/index.html'),/data-i18n="hero.action"\s*>Produkter</);
   for(const route of ['about','services','contact','restaurant']) assert.equal((read(`dist/${route}/index.html`).match(/<h1\b/g)||[]).length,1);
 });
+test('homepage visibly previews the restaurant and retains concise product and service context', () => {
+  for(const lang of ['nb','en']) {
+    const html=read(`dist/${lang}/index.html`);
+    assert.match(html,/class="lune-preview"/);
+    assert.match(html,/class="hero-demo-link" href="#work"/);
+    assert.ok(html.indexOf('class="home-work wrap"')<html.indexOf('class="home-product-band"'));
+    assert.match(html,/lune-table\.webp/);
+    assert.match(html,/arc-desktop\.webp/);
+    assert.match(html,/home-services-list/);
+    assert.match(html,new RegExp(`href="/${lang}/restaurant/"`));
+    assert.doesNotMatch(html,/<iframe|<form/);
+  }
+});

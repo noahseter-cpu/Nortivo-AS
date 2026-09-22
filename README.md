@@ -41,6 +41,6 @@ Generated artwork and screenshot origins are recorded in `docs/design-2026-09-21
 
 ## Separate pages and restaurant demo
 
-The homepage is a short introduction with a Products CTA and links to Services, About Nortivo and Contact. Previous homepage fragments redirect to their new localized pages. The contact page retains the same ticket backend; `?project=web` or `?project=app` prefills the service choice.
+The homepage combines a short introduction with a Products CTA, a prominent clickable Lune visual preview, a dedicated Arc product section with an actual app screenshot, and compact service descriptions. Detailed services, biography and contact remain on separate pages. Previous homepage fragments redirect to their new localized pages. The contact page retains the same ticket backend; `?project=web` or `?project=app` prefills the service choice.
 
 The Lune restaurant demonstration lives at `/nb/restaurant/` and `/en/restaurant/`, linked from Services and Products. It is explicitly fictional, not client work. Menu filtering and table selection run locally without a reservation service, personal-data collection or storage. The demo calendar uses Europe/Oslo days and fictional opening hours. Original generated food imagery is documented in `docs/LUNE_IMAGE_PROMPT.txt` and its shipped WebP provenance sidecar; the 1536×1024 source was converted to quality-85 WebP (about 271 kB) without content edits.

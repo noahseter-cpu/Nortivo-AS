@@ -201,7 +201,15 @@
     "dish.chocolate": "Mørk sjokolade",
     "dish.chocolate.desc": "Krem, bringebær · Egg, melk",
     "lune.filterOne": "rett vises",
-    "lune.categories": "Menykategorier"
+    "lune.categories": "Menykategorier",
+    "home.workTitle": "Se hva vi lager.",
+    "home.workText": "En nettside sier mer når du kan prøve den. Utforsk restaurantdemoen vår, fra meny til bordbestilling.",
+    "home.demoShortcut": "Se restaurantdemo",
+    "home.previewLabel": "Åpne Lune restaurantdemo",
+    "home.previewCaption": "Forhåndsvisning av Lune · Fiktiv restaurant, laget av Nortivo.",
+    "home.arcTitle": "Penger, mat og skritt. Samlet i Arc.",
+    "home.arcText": "Vår egen app gir deg oversikt over budsjettet, maten du spiser og skrittene du registrerer. Bygget for å se dagen i sammenheng.",
+    "home.servicesTitle": "Hva kan vi lage for deg?"
   },
   "en": {
     "nav.home": "Home",
@@ -405,6 +413,14 @@
     "dish.chocolate": "Dark chocolate",
     "dish.chocolate.desc": "Cream, raspberries · Eggs, milk",
     "lune.filterOne": "dish shown",
-    "lune.categories": "Menu categories"
+    "lune.categories": "Menu categories",
+    "home.workTitle": "See what we build.",
+    "home.workText": "A website says more when you can try it. Explore our restaurant demo, from the menu to table booking.",
+    "home.demoShortcut": "Explore restaurant demo",
+    "home.previewLabel": "Open the Lune restaurant demo",
+    "home.previewCaption": "Lune website preview · A fictional restaurant, made by Nortivo.",
+    "home.arcTitle": "Money, food and steps. Together in Arc.",
+    "home.arcText": "Our own app brings your budget, the food you eat and the steps you record into one view. Built to help you see your day as a whole.",
+    "home.servicesTitle": "What can we build for you?"
   }
 }

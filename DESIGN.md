@@ -118,6 +118,8 @@ components:
 
 The separate Lune restaurant demonstration is documented in [its scoped design system](docs/restaurant/DESIGN.md), with [durable component and motion extensions](docs/restaurant-design.json). Its tokens do not change the Nortivo system below.
 
+The [homepage showcase refinement](docs/HOME_SHOWCASE.md) extends this system with a visible, clickable Lune preview immediately after the hero, a prominent Arc section using the real app screenshot, and compact website/app service summaries. The preview reuses Lune's existing scoped colors and food asset; the surrounding sections retain Nortivo's typography, navy surfaces, blue actions and responsive stacking. This ordinary extension preserves the incumbent token files and adds no motion system.
+
 ## Refinement — 22 September 2026
 
 This update supersedes the older descriptions of the founder strip, support columns, mobile header and motion below. The user requested cleaner text/layout, Animate-based motion, their supplied professional biography, a refreshed tab icon and production publication. The existing navy art direction is retained.
