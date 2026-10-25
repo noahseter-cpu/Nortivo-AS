@@ -1,12 +1,12 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-22T12:00:00+02:00",
+  "generatedAt": "2026-10-25",
   "title": "Design System: Lune restaurant demonstration",
   "extensions": {
     "typographyMeta": {
       "display": {
         "displayName": "Invitation display",
-        "purpose": "Gloock invitation heading on light paper; desktop clamp(3.5rem,7.4vw,6rem), mobile clamp(3.4rem,12vw,4.7rem), narrow 3.2rem."
+        "purpose": "Manrope 700 invitation heading on paper; desktop clamp(3.4rem,5.5vw,5rem), mobile clamp(2.75rem,10vw,3.7rem), narrow 2.75rem. Section headings use Manrope 700 clamp(2rem,3.2vw,3rem), 2.1rem on mobile. Gloock 400 is reserved for the 3rem wordmark, 2.7rem on mobile."
       }
     },
     "shadows": [],
@@ -18,8 +18,8 @@
       },
       {
         "name": "hero-settlement",
-        "value": "600ms; delays 0ms, 60ms, 120ms",
-        "purpose": "Title, invitation block and circular detail settle from translateY(12px), opacity .8; content stays visible."
+        "value": "600ms; delays 0ms, 60ms",
+        "purpose": "Title and invitation block settle from translateY(12px), opacity .8; content stays visible."
       },
       {
         "name": "button-feedback",
@@ -48,14 +48,15 @@
       }
     ],
     "refinement": {
-      "date": "2026-09-22",
-      "scope": "Lune editorial only; unchanged blue, ink and paper palette. Local Gloock display, headings and logo contrast with Manrope controls.",
-      "hero": "Light asymmetric invitation above copy and un-darkened room photograph, with offset circular food detail. Mobile stacks title, copy/actions and photograph.",
-      "menu": "Sticky food illustration beside a single-column menu folio; .8fr 1.2fr with 90px gap. Categories use underlines. Mobile feature is non-sticky; narrow-phone imagery stacks.",
+      "date": "2026-10-25",
+      "scope": "Modest Lune refinement superseding September layout and typography descriptions. Existing blue, ink and paper palette; Gloock wordmark, Manrope headings/body/controls. Corporate documentation remains separate.",
+      "hero": "Paper 1fr 1.1fr grid with 72px gap: title and copy/actions left, one un-darkened room image spanning both rows right. Image height 520px, 480px at 1000px, 300px at 720px and 260px below 359px. Mobile stacks title, copy/actions and image. Circular food detail removed.",
+      "menu": "Shorter copy and tighter menu: sticky food illustration beside a single-column list in .7fr 1.3fr columns with 72px gap; padding 72px/88px, 44px/56px on mobile. Categories remain underlined. Feature heading is Manrope 1.25rem, 1.1rem mobile. Mobile image/text pair is non-sticky with square image; narrow-phone imagery stacks in 4:3.",
+      "about": "Compact blue copy-and-hours section, 1.2fr 1fr columns with 96px gap and 64px vertical padding; mobile stacks with 44px padding. Repeated room image removed.",
       "booking": "Full-width ink chapter and paper workspace. Native date, guest select and required radio times; live summary and written closed-day feedback. Workspace padding 36px, 28px at 1000px, 24px 20px at 720px; field gaps 26px 20px.",
       "faq": "Native details/summary with retained markers; three disclosures explain fictional booking, filters and no saved reservation data.",
-      "review": "Independent finish review SHIP within eight section viewport captures; no material fixes requested. Not user aesthetic approval. 63 local tests pass; see docs/LUNE_EDITORIAL_VERIFICATION.md for scope and limitations.",
-      "publication": "Netlify production deployment blocked by exhausted team credits. Existing published version remains fe4bb0a; this editorial revision is not verified live."
+      "review": "docs/LUNE_EDITORIAL_VERIFICATION.md records historical September evidence, not verification of the October refinement. Booking behavior is unchanged. Current QA must be confirmed separately.",
+      "publication": "Publication and live verification of the October refinement are not established by this design record."
     },
     "breakpoints": [
       {
@@ -92,7 +93,7 @@
       "name": "Closing enquiry",
       "kind": "button",
       "refersTo": "enquiry-button",
-      "description": "Ink enquiry action on the invitation-coloured closing section.",
+      "description": "Ink enquiry action on the paper closing section.",
       "html": "<a class=\"ds-lune ds-lune-enquiry\" href=\"/contact/?project=web\">Talk to Nortivo</a>",
       "css": ".ds-lune{display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;min-height:52px;background:#18343b;color:#fff;border:1px solid #18343b;border-radius:2px;font:700 .875rem/1.4 Manrope,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{background:#2b4c53;color:#fff}}:host-context(html[data-input=pointer]) .ds-lune:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){.ds-lune{transition:none;transform:none!important}}"
     },
@@ -118,7 +119,7 @@
       "refersTo": "navigation",
       "description": "Always-visible short navigation; wraps to a separate row on mobile.",
       "html": "<nav class=\"ds-lune-nav\" aria-label=\"Restaurant\"><a class=\"ds-lune\" href=\"#menu\">Menu</a><a class=\"ds-lune\" href=\"#visit\">About Lune</a><a class=\"ds-lune ds-lune-book\" href=\"#booking\">Try table booking</a></nav>",
-      "css": ".ds-lune-nav{display:flex;align-items:center;gap:32px;background:#c5d5ed;color:#18343b}.ds-lune{font:700 .875rem/1.65 Manrope,sans-serif;padding-block:12px;text-decoration:none;color:inherit}.ds-lune-book{border-bottom:1px solid #18343b}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{text-decoration:underline}}@media(max-width:720px){.ds-lune-nav{gap:12px;justify-content:space-between}.ds-lune{font-size:.8rem}}@media(max-width:359px){.ds-lune-nav{gap:10px}.ds-lune{font-size:.72rem}}"
+      "css": ".ds-lune-nav{display:flex;align-items:center;gap:32px;background:#f5f7f6;color:#18343b}.ds-lune{font:700 .875rem/1.65 Manrope,sans-serif;padding-block:12px;text-decoration:none;color:inherit}.ds-lune-book{border-bottom:1px solid #18343b}.ds-lune:focus-visible{outline:3px solid #295f86;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-lune:hover{text-decoration:underline}}@media(max-width:720px){.ds-lune-nav{gap:12px;justify-content:space-between}.ds-lune{font-size:.8rem}}@media(max-width:359px){.ds-lune{font-size:.75rem}}"
     },
     {
       "name": "Booking workspace",
@@ -130,12 +131,13 @@
     }
   ],
   "narrative": {
-    "northStar": "Contemporary bistro dining journal",
-    "overview": "Lune pairs cool invitation paper and deep blue-green ink with Gloock’s expressive serif and precise Manrope controls. An asymmetric invitation, un-darkened interior photograph and offset circular food detail introduce a spacious menu folio and an ink booking chapter.\n\nThis scoped system records the implementation in `dist/assets/restaurant.css`, shared `site.css`, restaurant HTML and `restaurant.js` on 22 September 2026. The [editorial direction](../LUNE_EDITORIAL.md) supplies its descriptive language. It applies only to the fictional restaurant demonstration; corporate Nortivo documentation remains separate.",
+    "northStar": "A clear, contemporary neighbourhood bistro",
+    "overview": "Lune pairs light paper and deep blue-green ink with Manrope headings and controls, retaining Gloock in the lowercase wordmark. A concise introduction sits beside a single interior image, followed by a tighter menu, a compact blue about-and-hours section and the established ink booking chapter.\n\nThis scoped system records the 25 October 2026 refinement in `dist/assets/restaurant.css` and restaurant HTML, with shared `site.css` and existing `restaurant.js` behavior. It supersedes earlier layout and typography descriptions in the September editorial direction. It applies only to the fictional restaurant demonstration; corporate Nortivo documentation remains separate. Publication and live verification are not established by this document.",
     "keyCharacteristics": [
-      "Gloock invitation, section headings and lowercase wordmark; Manrope body and controls.",
-      "Light asymmetric hero with an offset circular food detail.",
-      "Open menu folio, tabular prices and underlined category selection.",
+      "Gloock lowercase wordmark; Manrope headings, body and controls.",
+      "Paper hero with title and copy on the left and one rectangular room image on the right.",
+      "Tighter menu, shorter descriptive copy, tabular prices and underlined category selection.",
+      "Compact blue about-and-hours section without a repeated interior image or circular food detail.",
       "Full-width ink booking chapter with a paper form workspace.",
       "Persistent fictional-demo disclosure and local-only table selection."
     ],

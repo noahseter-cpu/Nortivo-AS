@@ -82,3 +82,11 @@ test('Lune editorial typography is scoped and controls retain explicit readable 
   assert.doesNotMatch(read('dist/assets/site.css'),/Gloock/);
   assert.match(read('dist/assets/fonts/Gloock-OFL.txt'),/SIL OPEN FONT LICENSE/);
 });
+
+test('restaurant refinement avoids repeated imagery and keeps both language headings concise', () => {
+  const html=read('dist/restaurant/index.html');
+  assert.equal((html.match(/<img /g)||[]).length,2);
+  assert.doesNotMatch(html,/class="lune-taste"|class="lune-room-detail"/);
+  assert.match(read('dist/nb/restaurant/index.html'),/>På menyen<\/h2>/);
+  assert.match(read('dist/en/restaurant/index.html'),/>Find a table<\/h2>/);
+});
