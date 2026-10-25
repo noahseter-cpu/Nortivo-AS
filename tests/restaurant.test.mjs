@@ -32,14 +32,14 @@ test('restaurant is explicitly fictional and contains no reservation network or 
 test('homepage stays brief and all new pages have one main heading', () => {
   const home=read('dist/index.html');
   assert.doesNotMatch(home,/<form|class="career|id="contact"/);
-  assert.match(read('dist/nb/index.html'),/data-i18n="hero.action"\s*>Produkter</);
+  assert.match(read('dist/nb/index.html'),/data-i18n="home.exploreArc"\s*>Utforsk Arc</);
   for(const route of ['about','services','contact','restaurant']) assert.equal((read(`dist/${route}/index.html`).match(/<h1\b/g)||[]).length,1);
 });
 test('homepage visibly previews the restaurant and retains concise product and service context', () => {
   for(const lang of ['nb','en']) {
     const html=read(`dist/${lang}/index.html`);
     assert.match(html,/class="lune-preview"/);
-    assert.match(html,/class="hero-demo-link" href="#work"/);
+    assert.match(html,/class="home-business-link" href="#work"/);
     assert.ok(html.indexOf('class="home-product-band"')<html.indexOf('class="home-work wrap"'));
     assert.match(html,/lune-table\.webp/);
     assert.match(html,/class="arc-overview"/);
@@ -48,6 +48,26 @@ test('homepage visibly previews the restaurant and retains concise product and s
     assert.match(html,new RegExp(`href="/${lang}/restaurant/"`));
     assert.doesNotMatch(html,/<iframe|<form/);
   }
+});
+
+test('homepage leads with real Arc evidence and keeps the refinement isolated', () => {
+  for (const lang of ['nb', 'en']) {
+    const html = read(`dist/${lang}/index.html`);
+    assert.equal((html.match(/<h1\b/g) || []).length, 1);
+    assert.match(html, /class="home-arc-screen"/);
+    assert.match(html, /src="\/assets\/arc-desktop\.webp"/);
+    assert.match(html, /srcset="\/assets\/arc-mobile\.webp"/);
+    assert.match(html, /<figcaption>[\s\S]*data-i18n="home.screenCaption"/);
+    assert.match(html, /data-i18n="status"/);
+    assert.match(html, new RegExp(`href="/${lang}/products/#app-view"`));
+    assert.doesNotMatch(html, /class="hero-art"|nortivo-hero-mobile\.webp/);
+    assert.match(html, /href="\/assets\/home\.css"/);
+    for (const route of ['support', 'products', 'restaurant']) {
+      assert.doesNotMatch(read(`dist/${lang}/${route}/index.html`), /href="\/assets\/home\.css"/);
+    }
+  }
+  assert.match(read('dist/products/index.html'), /id="app-view"/);
+  assert.match(read('dist/assets/home.css'), /prefers-reduced-motion:reduce/);
 });
 
 test('support retains the same complete desktop and mobile header as home in both languages', () => {

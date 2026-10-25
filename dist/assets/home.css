@@ -1,0 +1,52 @@
+/* Homepage composition; shared product and support surfaces retain site.css. */
+.home-product-band{background:var(--ink);border:0}
+.home-launch{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:center;gap:56px;padding-block:80px 56px}
+.home-launch-copy h1{font-size:clamp(2.6rem,4.15vw,3.7rem);line-height:1.08;letter-spacing:-.035em;text-wrap:initial}
+.home-launch-copy h1 span{display:block}
+.home-launch-copy h1 span:last-child{color:#a9ccf0}
+.home-launch-intro{font-size:1.06rem;line-height:1.75;color:var(--muted);margin-top:28px;max-width:43ch}
+.home-launch-actions{display:flex;align-items:center;flex-wrap:wrap;gap:18px 24px;margin-top:30px}
+.home-business-link{font-size:.9rem;color:var(--paper);padding-block:10px}
+.home-launch-status{margin-top:22px;color:var(--muted);font-size:.8125rem}
+.home-arc-screen{min-width:0;margin:0}
+.home-arc-screen>a{display:block;border-radius:10px}
+.home-arc-screen picture{display:block;overflow:hidden;border-radius:10px;background:#f9f8f4}
+.home-arc-screen picture img{width:100%;height:auto}
+.home-arc-screen figcaption{display:flex;align-items:center;gap:20px;margin-top:18px;color:var(--muted);font-size:.75rem;line-height:1.6}
+.home-arc-screen figcaption img{width:76px;height:auto;flex:none}
+.home-capabilities{padding-block:0 42px}
+.arc-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px;border-top:1px solid var(--line)}
+.arc-overview-link,.arc-overview-link:first-child{padding:26px 34px 10px 0;border:0}
+.arc-overview-link h2{font-size:1.14rem;line-height:1.3}
+.arc-overview-link p{font-size:.9375rem;line-height:1.7;margin-top:12px}
+.arc-overview-link svg,.arc-overview-link:first-child svg{top:29px;width:19px;height:19px}
+.arc-overview-note{font-size:.8125rem;margin-top:26px;max-width:none}
+.home-work{display:grid;grid-template-columns:minmax(0,.65fr) minmax(0,1.35fr);align-items:center;gap:64px;padding-block:72px;border-top:1px solid var(--line)}
+.home-work-heading{display:block;margin:0}
+.home-work-heading h2{font-size:clamp(1.8rem,3vw,2.65rem);max-width:15ch;margin-bottom:22px}
+.home-work-heading p{font-size:.9375rem;line-height:1.75}
+.home-work-heading .home-work-note{font-size:.8125rem;margin-top:20px}
+.home-work-heading .text-link{margin-top:24px;min-height:44px}
+.lune-preview{grid-template-columns:1fr 1fr;border-radius:7px;min-width:0}
+.lune-preview-copy{padding:28px;justify-content:space-between;min-height:340px}
+.lune-preview-brand{font-size:2.3rem;margin-bottom:40px}
+.lune-preview-title{font-size:clamp(1.8rem,2.6vw,2.5rem);max-width:12ch;line-height:1.12}
+.lune-preview-open{margin-top:28px;font-size:.8125rem}
+.lune-preview>img{height:100%;min-height:340px;object-fit:cover}
+.home-services{display:grid;grid-template-columns:minmax(0,.65fr) minmax(0,1.35fr);gap:64px;padding-block:64px 80px;border-top:1px solid var(--line)}
+.home-services-intro h2{max-width:16ch}
+.home-services-intro p{color:var(--muted);font-size:.9375rem;margin-top:22px}
+.home-services-intro .text-link{margin-top:24px;min-height:44px}
+.home-services-list{display:block;margin:0}
+.home-services-list article{padding-block:0 28px;border-top:0}
+.home-services-list article+article{padding-block:28px 0;border-top:1px solid var(--line)}
+.home-services-list h3{font-size:1.3rem}
+.home-services-list p{margin-block:12px 16px;max-width:60ch;font-size:.9375rem}
+.home-services-list .text-link{min-height:44px}
+@media(hover:hover) and (pointer:fine){.arc-overview-link:hover h2{color:#79bdff}}
+@media(prefers-reduced-motion:no-preference){.home-arc-screen{animation:hero-settle 600ms var(--ease-out) both}}
+@media(max-width:1080px){.home-launch{gap:36px;padding-block:60px 44px}.home-launch-copy h1{font-size:clamp(2.5rem,4.2vw,3.3rem)}.home-work,.home-services{gap:40px}.arc-overview{gap:24px}}
+@media(max-width:880px){.home-launch{grid-template-columns:1fr;gap:36px;padding-block:48px 36px}.home-launch-copy h1{font-size:clamp(2.6rem,6vw,3.5rem)}.home-launch-intro{max-width:50ch}.home-launch-actions{margin-top:24px}.home-launch-status{margin-top:16px}.home-arc-screen figcaption{margin-top:16px}.arc-overview{gap:20px}.arc-overview-link,.arc-overview-link:first-child{padding-right:0}.arc-overview-link svg{display:none}.arc-overview-link h2{font-size:1.05rem}.arc-overview-link p{font-size:.875rem}.home-work{grid-template-columns:1fr;gap:32px;padding-block:48px}.home-work-heading h2{max-width:none}.home-work-heading p{max-width:54ch}.home-work-heading .text-link{margin-top:16px}.lune-preview-copy{min-height:320px}.lune-preview>img{min-height:320px}.home-services{grid-template-columns:1fr;gap:32px;padding-block:48px 56px}.home-services-intro h2{max-width:22ch}.home-services-intro p{max-width:48ch}}
+@media(max-width:560px){.home-launch{padding-top:36px;gap:30px}.home-launch-copy h1{font-size:clamp(2.35rem,8.5vw,3rem);line-height:1.12}.home-launch-intro{font-size:1rem;margin-top:22px}.home-launch-actions{gap:10px 22px}.home-launch-status{font-size:.8125rem}.home-arc-screen picture{max-height:420px}.home-arc-screen picture img{margin:0;width:100%;height:auto}.home-arc-screen figcaption{gap:16px;font-size:.75rem;align-items:flex-start}.home-arc-screen figcaption img{width:68px}.arc-overview{grid-template-columns:1fr;gap:0}.arc-overview-link,.arc-overview-link:first-child{padding:22px 38px 22px 0;border-bottom:1px solid var(--line)}.arc-overview-link svg,.arc-overview-link:first-child svg{display:block;top:25px}.arc-overview-link h2{font-size:1.15rem}.arc-overview-link p{font-size:.9375rem;margin-top:8px}.arc-overview-note{margin-top:22px}.home-capabilities{padding-bottom:36px}.lune-preview{grid-template-columns:1fr 1fr}.lune-preview-copy{padding:22px 18px;min-height:275px}.lune-preview-brand{font-size:2rem;margin-bottom:26px}.lune-preview-title{font-size:clamp(1.3rem,5vw,1.7rem);letter-spacing:-.025em}.lune-preview-open{font-size:.75rem;line-height:1.6;margin-top:24px}.lune-preview>img{height:100%;min-height:275px;aspect-ratio:auto}.home-work-heading h2,.home-services-intro h2{font-size:2rem}.home-work{padding-block:40px}.home-services{padding-block:40px 48px}}
+@media(min-width:561px) and (max-width:720px){.arc-overview{grid-template-columns:1fr;gap:0}.arc-overview-link,.arc-overview-link:first-child{padding:22px 38px 22px 0;border-bottom:1px solid var(--line)}.arc-overview-link h2{font-size:1.15rem}.arc-overview-link p{font-size:.9375rem;margin-top:8px}.arc-overview-link svg,.arc-overview-link:first-child svg{display:block;top:25px}}
+@media(prefers-reduced-motion:reduce){.home-arc-screen{animation:none}}

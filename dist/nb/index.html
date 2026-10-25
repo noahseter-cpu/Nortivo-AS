@@ -27,10 +27,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/home.css">
 <script defer src="/assets/site.js">
 </script>
-<link rel="preload" as="image" href="/assets/nortivo-hero.webp" media="(min-width:701px)">
-<link rel="preload" as="image" href="/assets/nortivo-hero-mobile.webp" media="(max-width:700px)">
+<link rel="preload" as="image" href="/assets/arc-desktop.webp" media="(min-width:561px)">
+<link rel="preload" as="image" href="/assets/arc-mobile.webp" media="(max-width:560px)">
 
 </head>
 <body data-page="home">
@@ -70,41 +71,35 @@
 <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
 </nav>
 </header>
-<main id="main"><section class="hero" aria-labelledby="hero-title">
-<picture class="hero-art">
-<source media="(max-width:700px)" srcset="/assets/nortivo-hero-mobile.webp">
-<img src="/assets/nortivo-hero.webp" width="1672" height="941" alt="" fetchpriority="high">
-</picture>
-<div class="hero-copy">
-<h1 data-i18n="hero.title" id="hero-title">Digitale verktøy. Laget for hverdagen.</h1>
-<p data-i18n="hero.text" >Vi utvikler Arc for oversikt i hverdagen — og lager nettsider og apper for din bedrift.</p>
-<a href="/nb/products/" class="button" >
-<span data-i18n="hero.action" >Produkter</span>
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-</a>
-<a class="hero-demo-link" href="#work" data-i18n="home.demoShortcut">Se restaurantdemo</a>
+<main id="main">
+<section class="home-product-band" id="arc-preview" aria-labelledby="hero-title">
+<div class="wrap home-launch">
+<div class="home-launch-copy">
+<h1 id="hero-title"><span data-i18n="home.headline">Hverdagen din.</span><span data-i18n="home.headlineArc">Samlet i Arc.</span></h1>
+<p class="home-launch-intro" data-i18n="home.launchIntro">Budsjett, måltider og manuelle skritt i én app. Arc er vårt eget produkt, utviklet for å gi deg bedre oversikt.</p>
+<div class="home-launch-actions"><a href="/nb/products/" class="button"><span data-i18n="home.exploreArc">Utforsk Arc</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="home-business-link" href="#work" data-i18n="home.businessAction">Se nettsidearbeidet</a></div>
+<p class="home-launch-status" data-i18n="status">Under utvikling · Privat testversjon</p>
 </div>
+<figure class="home-arc-screen">
+<a href="/nb/products/#app-view" data-i18n-aria="home.screenLink" aria-label="Se mer av testversjonen av Arc"><picture><source media="(max-width:560px)" srcset="/assets/arc-mobile.webp" width="390" height="900"><img src="/assets/arc-desktop.webp" width="1440" height="900" fetchpriority="high" alt="Arc by Nortivo: penger og dagsoversikt, norsk grensesnitt, tom testvisning" data-i18n-alt="arc.alt"></picture></a>
+<figcaption><img src="/assets/arc-wordmark.svg" width="180" height="66" alt="Arc by Nortivo"><span data-i18n="home.screenCaption">Skjermbilde fra testversjon · September 2026 · Uten persondata</span></figcaption>
+</figure>
+</div>
+<div class="wrap home-capabilities"><div class="arc-overview">
+<a class="arc-overview-link" href="/nb/products/#money"><h2 data-i18n="arc.money">Penger og budsjetter</h2><p data-i18n="home.arcMoney">Registrer inntekter og utgifter, sett budsjetter og følg med på hva du har igjen.</p><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8"/></svg></a>
+<a class="arc-overview-link" href="/nb/products/#food"><h2 data-i18n="arc.food">Mat og kalorier</h2><p data-i18n="home.arcFood">Søk etter matvarer, registrer mengder og måltider, og følg kalorier og næringsinnhold.</p><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8"/></svg></a>
+<a class="arc-overview-link" href="/nb/products/#activity"><h2 data-i18n="arc.activity">Skritt og fremgang</h2><p data-i18n="home.arcActivity">Registrer skritt manuelt, sett egne mål og se tilbake på tidligere dager.</p><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8"/></svg></a>
+ </div><p class="arc-overview-note" data-i18n="home.arcLocal">Registreringene lagres på enheten din. Arc har også historikk, sikkerhetskopiering og eksport av økonomidata.</p></div>
 </section>
-<section class="home-product-band" id="arc-preview"><div class="wrap home-product">
-<div class="home-product-copy"><img class="arc-logo" src="/assets/arc-wordmark.svg" width="180" height="66" alt="Arc by Nortivo"><h2 data-i18n="home.arcTitle">Penger, mat og skritt. Samlet i Arc.</h2><p data-i18n="home.arcText">Vår egen app gir deg oversikt over budsjettet, maten du spiser og skrittene du registrerer. Bygget for å se dagen i sammenheng.</p><p class="home-product-status" data-i18n="status">Under utvikling · Privat testversjon</p><a class="button" href="/nb/products/" data-i18n="arc.action">Se hva Arc gjør</a></div>
-<div class="arc-overview">
-<a class="arc-overview-link" href="/nb/products/#money"><h3 data-i18n="arc.money">Penger og budsjetter</h3><p data-i18n="home.arcMoney">Registrer inntekter og utgifter, sett budsjetter og følg med på hva du har igjen.</p><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8"/></svg></a>
-<a class="arc-overview-link" href="/nb/products/#food"><h3 data-i18n="arc.food">Mat og kalorier</h3><p data-i18n="home.arcFood">Søk etter matvarer, registrer mengder og måltider, og følg kalorier og næringsinnhold.</p><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8"/></svg></a>
-<a class="arc-overview-link" href="/nb/products/#activity"><h3 data-i18n="arc.activity">Skritt og fremgang</h3><p data-i18n="home.arcActivity">Registrer skritt manuelt, sett egne mål og se tilbake på tidligere dager.</p><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8"/></svg></a>
-<p class="arc-overview-note" data-i18n="home.arcLocal">Registreringene lagres på enheten din. Arc har også historikk, sikkerhetskopiering og eksport av økonomidata.</p></div>
-</div></section>
 <section class="home-work wrap" id="work" aria-labelledby="work-title">
-<div class="home-work-heading"><div><h2 id="work-title" data-i18n="home.workTitle">Se nettsidearbeidet vårt: Lune.</h2><p data-i18n="home.workText">En fiktiv bistro. En fungerende nettsidedemo. Utforsk designet, den digitale menyen og et eksempel på bordbestilling.</p></div><a href="/nb/restaurant/" class="button" data-i18n="demo.action">Se restaurantdemo</a></div>
+<div class="home-work-heading"><h2 id="work-title" data-i18n="home.studioTitle">Vi bygger også nettsider.</h2><p data-i18n="home.studioText">Lune viser hvordan vi samler restaurantens meny, atmosfære og bordvalg på nett.</p><p class="home-work-note" data-i18n="home.studioNote">En fiktiv restaurant. Designet og utviklet av Nortivo.</p><a href="/nb/restaurant/" class="text-link" data-i18n="demo.action">Se restaurantdemo</a></div>
 <a class="lune-preview" href="/nb/restaurant/" aria-label="Åpne Lune restaurantdemo" data-i18n-aria="home.previewLabel">
-<div class="lune-preview-copy"><span class="lune-preview-brand" aria-hidden="true">lune.</span><span class="lune-preview-title" data-i18n="lune.title">Din neste kveld på Lune.</span><span class="lune-preview-description" data-i18n="lune.intro">En nabolagsbistro med småretter, sesongbasert mat og tid rundt bordet. Se menyen og prøv et bordvalg.</span><span class="lune-preview-open" data-i18n="demo.action">Se restaurantdemo</span></div>
+<div class="lune-preview-copy"><span class="lune-preview-brand" aria-hidden="true">lune.</span><span class="lune-preview-title" data-i18n="lune.title">Din neste kveld på Lune.</span><span class="lune-preview-open" data-i18n="demo.action">Se restaurantdemo</span></div>
 <img src="/assets/lune-table.webp" width="1536" height="1024" loading="lazy" alt="">
 </a>
-<p class="home-preview-caption" data-i18n="home.previewCaption">Forhåndsvisning av Lune · Fiktiv restaurant, laget av Nortivo.</p>
 </section>
-<section class="home-services wrap" aria-labelledby="home-services-title"><h2 id="home-services-title" data-i18n="home.servicesTitle">Hva kan vi lage for deg?</h2><div class="home-services-list"><article><h3 data-i18n="services.web.title">Nettsider</h3><p data-i18n="services.web.text">Tydelig innhold, et eget visuelt uttrykk og en opplevelse som fungerer på både mobil og desktop.</p><a class="text-link" href="/nb/contact/?project=web" data-i18n="services.web.action">Spør om en nettside</a></article><article><h3 data-i18n="services.app.title">Apper</h3><p data-i18n="services.app.text">Fra de første brukerflytene til et verktøy som er lett å forstå. Vi starter med hva appen skal hjelpe noen å gjøre.</p><a class="text-link" href="/nb/contact/?project=app" data-i18n="services.app.action">Spør om en app</a></article></div><a class="home-services-more" href="/nb/services/" data-i18n="nav.services">Tjenester</a></section>
-<nav class="home-paths home-paths-close wrap" aria-label="Utforsk Nortivo" data-i18n-aria="home.paths"><a href="/nb/about/"><strong data-i18n="nav.about">Om Nortivo</strong><span data-i18n="home.about">Bli kjent med personen bak Nortivo.</span></a><a href="/nb/contact/"><strong data-i18n="nav.contact">Ta kontakt</strong><span data-i18n="home.contact">Fortell hva du vil bygge.</span></a></nav></main>
+<section class="home-services wrap" aria-labelledby="home-services-title"><div class="home-services-intro"><h2 id="home-services-title" data-i18n="home.servicesTitle">Hva kan vi lage for deg?</h2><p data-i18n="home.servicesIntro">Fortell hva du trenger. Sammen kan vi avklare omfanget og veien videre.</p><a class="text-link" href="/nb/about/" data-i18n="nav.about">Om Nortivo</a></div><div class="home-services-list"><article><h3 data-i18n="services.web.title">Nettsider</h3><p data-i18n="services.web.text">Tydelig innhold, et eget visuelt uttrykk og en opplevelse som fungerer på både mobil og desktop.</p><a class="text-link" href="/nb/contact/?project=web" data-i18n="services.web.action">Spør om en nettside</a></article><article><h3 data-i18n="services.app.title">Apper</h3><p data-i18n="services.app.text">Fra de første brukerflytene til et verktøy som er lett å forstå. Vi starter med hva appen skal hjelpe noen å gjøre.</p><a class="text-link" href="/nb/contact/?project=app" data-i18n="services.app.action">Spør om en app</a></article></div></section>
+</main>
 <footer class="site-footer">
 <div class="footer-shell">
 <div class="footer-brand">
