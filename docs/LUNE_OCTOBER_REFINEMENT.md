@@ -22,4 +22,8 @@ User requested a modest, more modern and less generic refinement plus pushing th
 
 ## Release
 
-Before this change, public HTML/CSS still matched fe4bb0a, not the September editorial commit. User signed in to Netlify during this task; Trigger deploy was enabled. Publication must be verified against the new production revision after push.
+Before this change, public HTML/CSS still matched fe4bb0a, not the September editorial commit. User signed in to Netlify during this task; Trigger deploy was enabled.
+
+Implementation pushed as `bd749ea`. Netlify deploy `6ade8a65e2d96df59e6bf177` is **Published**. Production `/en/restaurant/`, `/nb/restaurant/` and `/assets/restaurant.css` return HTTP 200 with CSP and byte-identical SHA-256 hashes to the local build. The refreshed live English page was visually inspected; `live.png` records it. Temporary viewport override was reset.
+
+Independent finish reviewer disposition: **SHIP** after the single contrast correction; final source and recaptured about section verified at 8.859:1. Scope is the supplied six viewport sections and source, not user taste approval or a full accessibility audit.
