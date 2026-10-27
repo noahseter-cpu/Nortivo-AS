@@ -77,6 +77,21 @@ test('catalog requires existing valid admin proof and rejects forged identity he
   assert.ok(projects.every(item => item.name.nb && item.name.en));
 });
 
+test('practice app and code browser stay authenticated, with framing limited to the app on the same origin', async () => {
+  for (const suffix of ['workspace.html', 'app/', 'app/history', 'app/assets/app.js']) {
+    assert.equal((await course(event('/admin/projects/vibb/' + suffix))).statusCode, suffix === 'app/assets/app.js' ? 401 : 302);
+    const response = await course(withCookie('/admin/projects/vibb/' + suffix));
+    assert.equal(response.statusCode, 200);
+    assert.match(response.headers['Cache-Control'], /private, no-store/);
+    const app = suffix.startsWith('app/');
+    assert.equal(response.headers['X-Frame-Options'], app ? 'SAMEORIGIN' : 'DENY');
+    assert.ok(response.headers['Content-Security-Policy'].includes(app ? "frame-ancestors 'self'" : "frame-ancestors 'none'"));
+    assert.ok(response.headers['Content-Security-Policy'].includes("frame-src 'self'"));
+  }
+  const coursePage = await course(withCookie('/admin/projects/vibb/'));
+  assert.equal(coursePage.headers['X-Frame-Options'], 'DENY');
+});
+
 test('unsigned, forged and expired sessions cannot import private source or call its tutor', async () => {
   let calls = 0;
   const wrapper = createHandler({ loadWorker: () => { calls++; throw new Error('Must not load'); } });

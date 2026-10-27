@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import crypto from 'node:crypto';
 import { packagePrivateWorkspace } from './package-private-workspace.mjs';
+import { buildPrivateVibbApp } from './build-private-vibb-app.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const prefix = '/admin/projects/vibb/';
@@ -15,17 +16,25 @@ export async function refreshPrivateVibb(sourcePath = defaultSource) {
   if (start < 0 || end < 0 || !source.endsWith('export default createWorker(assets,catalog);\n')) throw new Error('Unsupported compiled Vibb Worker. Rebuild the source project first.');
   const assets = JSON.parse(source.slice(start + '\nconst assets='.length, end));
   for (const name of ['/index.html', '/tutor.js']) if (!assets[name]?.body) throw new Error(`Missing required course asset: ${name}`);
+  const practice = await buildPrivateVibbApp(assets);
+  Object.assign(assets, practice.assets);
+  for (const name of ['workspace.html', 'workspace.css', 'workspace.js', 'course-preview.css', 'course-preview.js']) {
+    const type = name.endsWith('.html') ? 'text/html' : name.endsWith('.css') ? 'text/css' : 'text/javascript';
+    assets['/' + name] = { type: type + '; charset=utf-8', body: (await readFile(path.join(root, 'scripts/private-vibb-ui', name))).toString('base64') };
+  }
   const transform = (name, operation) => {
     assets[name].body = Buffer.from(operation(Buffer.from(assets[name].body, 'base64').toString('utf8'))).toString('base64');
   };
   transform('/index.html', html => html.replace(/<head>/i, `<head>\n<base href="${prefix}">\n<meta name="robots" content="noindex, nofollow">\n<link rel="stylesheet" href="${prefix}admin-return.css">`)
+    .replace('</head>', '<link rel="stylesheet" href="course-preview.css"></head>')
+    .replace('</body>', '<script src="course-preview.js"></script></body>')
     .replace(/<body([^>]*)>/i, `<body$1><a class="admin-return" href="/admin/">Tilbake til admin / Back to admin</a>`));
   transform('/tutor.js', js => js.replaceAll('/api/tutor', prefix + 'api/tutor')
     .replaceAll('/signin-with-chatgpt?return_to=%2F%23assistant', '/admin/?return=vibb')
     .replaceAll('Logg inn med ChatGPT', 'Logg inn hos Nortivo'));
   // Other absolute course assets stay under the authenticated prefix too.
   for (const [name, asset] of Object.entries(assets)) {
-    if (/\.(?:html|css|js)$/.test(name)) transform(name, text => text
+    if (!name.startsWith('/app/') && /\.(?:html|css|js)$/.test(name)) transform(name, text => text
       .replace(/(["'(])\/(fonts|moods)\//g, `$1${prefix}$2/`));
   }
   assets['/admin-return.css'] = {
@@ -44,6 +53,8 @@ export async function refreshPrivateVibb(sourcePath = defaultSource) {
     runtimeSha256: crypto.createHash('sha256').update(runtime).digest('hex'),
     assets: Object.keys(assets).length,
     basePath: prefix,
+    practiceVersion: practice.version,
+    practiceSourceSha256: practice.sourceHash,
   };
   await writeFile(path.join(root, 'docs/PRIVATE_VIBB_SNAPSHOT.json'), JSON.stringify(metadata, null, 2) + '\n');
   await packagePrivateWorkspace();

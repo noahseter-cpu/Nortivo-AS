@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <base href="/admin/projects/vibb/">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Vibb – app og kode</title>
+  <link rel="stylesheet" href="fonts/manrope.css">
+  <link rel="stylesheet" href="workspace.css">
+</head>
+<body>
+  <a class="skip-link" href="workspace.html#workspace-main">Hopp til arbeidsområdet</a>
+  <header class="workspace-header">
+    <div><a class="workspace-brand" href="./">Vibb</a><h1>App og kode</h1></div>
+    <nav aria-label="Tilbake"><a href="./">Øvingsrommet</a><a href="/admin/">Admin</a></nav>
+  </header>
+  <main id="workspace-main" tabindex="-1">
+    <div class="workspace-intro"><p>Prøv appen. Finn filen som gjør jobben.</p><a href="app/" target="_blank" rel="noopener">Åpne bare Vibb i ny fane</a></div>
+    <div class="workspace-modes" role="group" aria-label="Velg visning">
+      <button type="button" data-layout="both" aria-pressed="true">App og kode</button>
+      <button type="button" data-layout="app" aria-pressed="false">Bare app</button>
+      <button type="button" data-layout="code" aria-pressed="false">Bare kode</button>
+    </div>
+    <div class="workspace-columns" data-layout="both">
+      <section class="app-pane" aria-labelledby="app-title">
+        <div class="pane-heading"><h2 id="app-title">Vibb-appen</h2><span>Øvingskopi</span></div>
+        <p id="workspace-app-status" class="pane-note" role="status">Laster Vibb …</p>
+        <iframe id="workspace-app" src="app/" title="Vibb – øvingskopi" referrerpolicy="no-referrer"></iframe>
+        <p class="pane-note">Humør du legger inn her er egne øvingsdata. Innleveringen din blir ikke endret.</p>
+      </section>
+      <section class="code-pane" aria-labelledby="code-title">
+        <div class="pane-heading"><h2 id="code-title">Koden din</h2><span>Lesekopi</span></div>
+        <label class="file-picker" for="workspace-file">Velg fil<select id="workspace-file"></select></label>
+        <form id="workspace-search-form" class="code-search"><label for="workspace-search">Finn i denne filen<input id="workspace-search" type="search" placeholder="For eksempel NavLink" autocomplete="off"></label><button type="submit">Finn</button></form>
+        <div class="file-explanation" id="workspace-file-info"></div>
+        <p id="workspace-search-result" role="status"></p>
+        <div class="source-reader" id="workspace-code" tabindex="0" aria-label="Kildekode"></div>
+      </section>
+    </div>
+  </main>
+  <script src="course-data.js"></script>
+  <script src="course-setup.js"></script>
+  <script src="exam-content.js"></script>
+  <script src="workspace.js"></script>
+</body>
+</html>

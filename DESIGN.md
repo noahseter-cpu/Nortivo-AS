@@ -122,6 +122,8 @@ components:
 
 # Design System: Nortivo
 
+The private [Vibb app and code workspace](docs/private-vibb/DESIGN.md) extends the existing warm Vibb learning surface. Its paper, green, ink and source-reader colors are scoped to the authenticated learning tool; they are not Nortivo public tokens. The [implementation and verification record](docs/PRIVATE_VIBB_APP.md) records the local SHIP verdict and publication boundary. This ordinary extension preserves the public frontmatter and `.impeccable/design.json`.
+
 The [27 October studio and private-workspace refinement](docs/STUDIO_PRIVATE_WORKSPACE_2026_10_27.md) supersedes the earlier homepage composition, home type and entrance-motion descriptions below. The homepage now introduces the company, presents unequal Lune and Arc previews, then open service rows and contact. Shared public shells extend to 1320px, with a larger wordmark and a blue contact link; restaurant and admin retain their own skins. The source is `dist/assets/studio-refresh.css`; `admin-workspace.css` adds private project rows beside the existing support workflow. These are directly authorized extensions of the incumbent navy/Manrope system. Independent review returned **SHIP**. This refinement is locally verified and awaits separate approval for Nortivo production publication.
 
 The separate Lune restaurant demonstration is documented in [its scoped design system](docs/restaurant/DESIGN.md), with [durable component and motion extensions](docs/restaurant-design.json). Its tokens do not change the Nortivo system below.

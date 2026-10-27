@@ -21,6 +21,7 @@ export async function packagePrivateWorkspace() {
     sourceSha256: prior.sourceSha256, runtimeSha256: prior.runtimeSha256,
     encryptedPackageSha256: crypto.createHash('sha256').update(ciphertextModule).digest('hex'),
     assets: prior.assets,
+    ...(prior.practiceVersion ? { practiceVersion: prior.practiceVersion, practiceSourceSha256: prior.practiceSourceSha256 } : {}),
   };
   await writeFile(path.join(root, 'docs/PRIVATE_VIBB_SNAPSHOT.json'), JSON.stringify(metadata, null, 2) + '\n');
   return { encrypted: true, localKeyFileExists: true };

@@ -35,6 +35,8 @@ Before production acceptance, test real ticket creation, confirmation delivery, 
 
 ## Design and evidence
 
+Latest local extension: [private Vibb app and code](docs/PRIVATE_VIBB_APP.md), with [scoped Vibb design guidance](docs/private-vibb/DESIGN.md). The real React practice app sits beside its read-only source or opens inside the course. Independent review returned SHIP and 76/76 local tests pass. Publication is authorized but pending at this checkpoint; the earlier release evidence below remains separate.
+
 Current local work: [27 October studio and private workspace](docs/STUDIO_PRIVATE_WORKSPACE_2026_10_27.md), including final review, responsive checks and deployment requirements. The homepage now introduces the company, shows Lune and Arc work, then services and contact. Admin provides private projects/tools beside support; [PRIVATE_WORKSPACE.md](docs/PRIVATE_WORKSPACE.md) documents authenticated loading and the encrypted public-repository boundary. Published with explicit approval on 27 October 2026. The private course and Groq helper were verified through the administrator session; anonymous course/assets are blocked. See the linked brief for the production deployment and access checks.
 
 See `DESIGN.md`, `docs/design-2026-09-21/DIRECTION_STATUS.md` and `docs/design-2026-09-21/VERIFICATION.md`. The user explicitly requested direct implementation without further previews. The approved Arc wordmark and isolated empty-state app screenshots are retained; no public app launch, download, reviews or customers are invented.

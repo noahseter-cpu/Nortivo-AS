@@ -29,6 +29,7 @@ Nortivo builds focused digital products and also develops Arc, a personal progre
 - The complete public journey supports Norwegian Bokmål and English, with static `/nb/` and `/en/` routes. Explicit language choices are remembered independently of the Arc application.
 - Admin opens on Projects & tools with Support tickets as a separate choice. The project registry is read-only; external shortcuts keep their destination's authentication.
 - The private course runs under `/admin/projects/vibb/` with authentication on every asset and tutor request. It remains distinct from the separately hosted Vibb site. The optional tutor requires a server-only provider key; unconfigured requests report 503.
+- Its private [Vibb app and code workspace](docs/PRIVATE_VIBB_APP.md) pairs a compiled practice copy with the protected source catalog and can open beside the course. Code is read-only; practice records use separate browser storage. This learning surface retains Vibb's own warm identity.
 - The public Git repository may contain only the encrypted private-content package. Plaintext local inputs and the content key remain ignored; see [PRIVATE_WORKSPACE.md](docs/PRIVATE_WORKSPACE.md).
 
 ## Brand Commitments

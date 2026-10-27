@@ -13,7 +13,7 @@ const privateHeaders = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'",
 };
 
 function coursePath(event) {
@@ -35,8 +35,9 @@ export function createHandler({ loadWorker = privateContent.worker } = {}) {
   return async event => {
     // All course bytes, metadata and tutor actions share the existing signed admin cookie.
     if (!isAdmin(event)) {
-      const isIndex = coursePath(event) === '/';
-      if (isIndex && event.httpMethod === 'GET') return { statusCode: 302, headers: { ...privateHeaders, Location: '/admin/?return=vibb' }, body: '' };
+      const documentPaths = ['/', '/workspace.html', '/app', '/app/', '/app/history', '/app/history/', '/app/about', '/app/about/'];
+      const isDocument = documentPaths.includes(coursePath(event));
+      if (isDocument && event.httpMethod === 'GET') return { statusCode: 302, headers: { ...privateHeaders, Location: '/admin/?return=vibb' }, body: '' };
       return json(401, { error: 'Økten er utløpt. Logg inn igjen. / Your session expired. Sign in again.', code: 'NOT_SIGNED_IN', signInPath: '/admin/?return=vibb' }, privateHeaders);
     }
     if (!sameOrigin(event, { required: event.httpMethod === 'POST' })) return json(403, { error: 'Request origin is not allowed.', code: 'FORBIDDEN' }, privateHeaders);
@@ -68,6 +69,12 @@ export function createHandler({ loadWorker = privateContent.worker } = {}) {
         'Content-Type': response.headers.get('content-type') || 'application/octet-stream',
         ...privateHeaders,
       };
+      // Only the trusted practice app can be framed, and only on this origin.
+      // Course/workspace pages retain denied framing. Authentication is unchanged.
+      if (suffix === '/app' || suffix.startsWith('/app/')) {
+        responseHeaders['X-Frame-Options'] = 'SAMEORIGIN';
+        responseHeaders['Content-Security-Policy'] = privateHeaders['Content-Security-Policy'].replace("frame-ancestors 'none'", "frame-ancestors 'self'");
+      }
       return {
         statusCode: response.status, headers: responseHeaders,
         body: event.httpMethod === 'HEAD' ? '' : Buffer.from(await response.arrayBuffer()).toString('base64'),
