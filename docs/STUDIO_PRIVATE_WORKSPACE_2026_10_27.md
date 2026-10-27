@@ -22,8 +22,12 @@ Independent finish review returned **SHIP**, with no material corrections reques
 
 Production Netlify routing/cookies/CSP, live Groq availability/quota, real database/email delivery, assistive technology and physical hardware were not tested in this pass. Pre-existing older design-document drift and the missing Impeccable `buildPath` configuration were reported, not repaired or made normative.
 
-## Publication boundary
+## Approved production publication
 
-**Nortivo has not been pushed or published in this pass.** Public publication requires the user's explicit final approval under [the direction record](design-2026-09-21/DIRECTION_STATUS.md). A push to the linked production branch triggers Netlify.
+The user explicitly approved Nortivo publication and Groq connection on 27 October 2026, with Vibb restricted to the private admin workspace. Source `d83d577` is published as Netlify deploy `6ae0a2122c636d9d4fa27d77`. Production has the approved design, authenticated project registry/course and a working Groq chat. The final route uses explicit publish-directory `_redirects` rules to the exact Function endpoint; a regression test covers the original raw URL after rewriting.
 
-The repository is public. Its private registry/course package uses AES-256-GCM ciphertext; plaintext inputs and the local key file are gitignored. An approved release must securely configure the matching `NORTIVO_PRIVATE_CONTENT_KEY` in the Functions runtime. The optional tutor also needs server-only `GROQ_API_KEY`; `GROQ_MODEL` is optional. No secret value belongs in Git, public assets, documentation, logs or chat. No production secret was provisioned here.
+The repository is public. Its private registry/course package uses AES-256-GCM ciphertext; plaintext inputs and the local key file are gitignored. An approved release must securely configure the matching `NORTIVO_PRIVATE_CONTENT_KEY` in the Functions runtime. The optional tutor also needs server-only `GROQ_API_KEY`; `GROQ_MODEL` is optional. No secret value belongs in Git, public assets, documentation, logs or chat. The matching content key and Groq key were securely provisioned as secret Production variables. No plan, billing, customer data or support integration was changed.
+
+Anonymous production checks: nb/en homepage200; private course index302 to admin; course JS, tutor status and catalog401; plaintext/key file paths404. All protected responses tested use no-store. An authenticated browser opened the code reader and received an actual Groq explanation for Header.jsx. The old standalone course Site is owner-only and returns401 anonymously. Production routing, admin access and the exercised chat are now verified; email/database delivery, physical hardware and provider load remain outside this release test. Progress on another origin is not automatically imported.
+
+The final regression suite after the production routing correction passed75/75 tests.

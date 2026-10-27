@@ -1,6 +1,6 @@
 # Private administrator workspace
 
-Implemented locally 27 October 2026. No publication, production requests, real tickets, email delivery or external credential provisioning were performed.
+Implemented locally and published with explicit approval on 27 October 2026. Production admin/course access and an actual Groq answer were verified. No real support ticket or email was created in this release.
 
 The existing admin login opens **Projects & tools**, with **Support tickets** as a separate choice in the same dashboard. Ticket search, detail, drafts, reply, close/reopen, counts, refresh and logout retain their existing IDs and server contracts. Projects never become ticket records. The admin interface supports nb/en. Learning content remains in its supplied language, identified by the English description. External shortcuts retain their destination's own authentication. The registry is read-only; project CRUD is not implemented.
 
@@ -24,7 +24,7 @@ The wrapper accepts its known route/function prefix only. Encoded traversal, dot
 
 Course responses use `private, no-store`, noindex, nosniff and denied framing. Legacy style attributes require `style-src 'self' 'unsafe-inline'` on this response only. Scripts, connections, fonts and assets stay same-origin; inline scripts/eval remain forbidden. Netlify custom static headers do not apply to Function responses: the wrapper CSP is authoritative. Public/support/admin CSP is unchanged. A private base and rewritten tutor URLs keep assets/API calls inside the authenticated prefix. Recovery and return links lead to admin. Existing course close/Escape/focus behavior is preserved inside the encrypted snapshot.
 
-Netlify rewrites `/admin/projects/vibb/*` to `/.netlify/functions/admin-vibb/:splat` and redirects the exact no-slash route to the trailing-slash route. The locale edge function handles exact legacy routes and does not redirect the course path.
+The deployed `dist/_redirects` explicitly rewrites both `/admin/projects/vibb` and `/admin/projects/vibb/*` to the exact `/.netlify/functions/admin-vibb` endpoint with status 200 and force enabled. Equivalent rules remain in `netlify.toml`, but the publish-directory rules were required for the verified production route. The handler extracts the original course path from `rawUrl`, including after Netlify rewrites `event.path`. Index requests and asset/API requests retain different anonymous recovery behavior. The locale edge function handles exact legacy routes and does not redirect the course path. Routing reference: https://docs.netlify.com/build/functions/configuration/.
 
 ## Refresh and provenance
 
@@ -42,9 +42,9 @@ The default source is the existing sibling course build. Refresh adds protected 
 
 ## Deployment configuration and approval
 
-**Do not publish or provision secrets without the user's final approval.** An approved deployment needs `NORTIVO_PRIVATE_CONTENT_KEY` configured securely in Netlify's Functions runtime environment, matching the package key. It must never enter Git, public assets, commands, logs, a PR description or a chat response. No external secret was provisioned here.
+The user explicitly approved publication and Groq configuration on 27 October 2026. Future publication and secret provisioning require the applicable user authorization. This deployment uses `NORTIVO_PRIVATE_CONTENT_KEY` configured securely in Netlify's Functions runtime environment, matching the package key. It must never enter Git, public assets, commands, logs, a PR description or a chat response. The matching key was securely provisioned for Production on Netlify and rotated before public source publication.
 
-The optional tutor additionally needs server-only `GROQ_API_KEY`; `GROQ_MODEL` is optional. Packaging and fixture startup never read provider keys. Without a provider key, the course works, status reports unconfigured and tutor submission returns an honest 503. Actual provider availability, quota and production requests are untested.
+The optional tutor additionally needs server-only `GROQ_API_KEY`; `GROQ_MODEL` is optional. Packaging and fixture startup never read provider keys. Without a provider key, the course works, status reports unconfigured and tutor submission returns an honest 503. An actual authenticated production chat request succeeded with the displayed code file as context. Provider quota and load limits were not stress-tested. Both private-content and Groq keys are secret Production values; preview/branch/local contexts are empty. The existing plan applies Builds/Functions/Runtime scopes together; no plan upgrade was made.
 
 ## Local verification
 
@@ -56,3 +56,7 @@ node scripts/preview-private-admin.mjs --fixtures
 The fixture server binds only loopback port4400 (optional `--port`). Explicit fixture startup discards inherited provider/service settings, reads only the exact local content-key file and creates random per-process login/session credentials. It exercises the real admin cookie, encrypted catalog and course. One labelled synthetic support ticket and reply/status changes stay in memory; no database, email or Groq request occurs. Restart after changing server modules or ciphertext because Node caches imports; browser reload is insufficient. Restart invalidates preview sessions. The ordinary preview server remains unchanged and returns 503 for Functions.
 
 Nine private-workspace tests use random synthetic content keys and synthetic registry/course fixtures. They never read the real local key or plaintext course. Coverage includes decrypt, missing/wrong keys, authenticated tampering, cached-key invalidation, unsigned/forged/expired sessions, identity isolation, HTML/JS/binary delivery, tutor recovery, origin/path/body/method guards, generic failures and Git publication-candidate isolation. Existing support tests use synthetic providers/storage. Tests do not establish deployed Netlify routing, production cookies/CSP or provider configuration. Browser verification belongs to the encompassing local redesign pass.
+
+## Verified production release
+
+Netlify published source `d83d577` as deploy `6ae0a2122c636d9d4fa27d77`. Anonymous index requests redirect302 to admin; course JavaScript and tutor status return401 with no-store. The project catalog also returns401 without a session. Ignored local inputs and the content-key file return404. The authenticated catalog, course, source reader and Groq chat work in the browser. The former standalone course Site now has a custom owner-only allowlist (no other users/groups) and returns401 to anonymous requests. The separate Vibb mood-tracker application was not changed. Notes from its old course origin are not imported automatically.
