@@ -12,7 +12,6 @@
   let currentFile = 'Header.jsx'
   const requestedFile = new URLSearchParams(location.search).get('file')
   if (requestedFile && Object.hasOwn(sources, requestedFile)) currentFile = requestedFile
-  if (requestedFile && Object.hasOwn(routes, currentFile)) frame.src = 'app/' + routes[currentFile]
   let markedLine = 0
   frame.addEventListener('load', function () {
     const status = document.querySelector('#workspace-app-status')
@@ -21,6 +20,10 @@
     status.hidden = loaded
     if (!loaded) status.textContent = 'Kunne ikke laste Vibb. Last siden på nytt, eller logg inn igjen via Admin.'
   })
+  // Start the iframe after its load listener exists, also when assets are cached.
+  let initialPage = ''
+  if (requestedFile && Object.hasOwn(routes, currentFile)) initialPage = routes[currentFile]
+  frame.src = 'app/' + initialPage
 
   function escapeText(value) {
     return String(value).replace(/[&<>"']/g, function (character) {
