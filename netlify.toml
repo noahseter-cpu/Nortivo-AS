@@ -8,12 +8,13 @@
 
 [[redirects]]
   from = "/admin/projects/vibb"
-  to = "/admin/projects/vibb/"
-  status = 301
+  to = "/.netlify/functions/admin-vibb"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/admin/projects/vibb/*"
-  to = "/.netlify/functions/admin-vibb/:splat"
+  to = "/.netlify/functions/admin-vibb"
   status = 200
   force = true
 

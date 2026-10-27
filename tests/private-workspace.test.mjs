@@ -47,6 +47,21 @@ const withCookie = (pathname, token = signed(), extra = {}) => event(pathname, {
 const expiredPayload = Buffer.from(JSON.stringify({ exp: Date.now() - 1000 })).toString('base64url');
 const expired = cookie(expiredPayload + '.' + crypto.createHmac('sha256', process.env.ADMIN_SESSION_SECRET).update(expiredPayload).digest('base64url'));
 
+test('Netlify rewrite keeps the original course path while invoking the exact function endpoint', async () => {
+  const rewritten = suffix => withCookie('/.netlify/functions/admin-vibb', signed(), {
+    rawUrl: 'https://nortivo.no/admin/projects/vibb/' + suffix,
+  });
+  const source = await course(rewritten('tutor.js'));
+  assert.equal(source.statusCode, 200);
+  assert.match(decoded(source), /fetch\('\/admin\/projects\/vibb\/api\/tutor'\)/);
+  const anonymousAsset = rewritten('tutor.js');
+  anonymousAsset.headers = {};
+  assert.equal((await course(anonymousAsset)).statusCode, 401);
+  const anonymousIndex = rewritten('');
+  anonymousIndex.headers = {};
+  assert.equal((await course(anonymousIndex)).statusCode, 302);
+});
+
 test('catalog requires existing valid admin proof and rejects forged identity headers', async () => {
   for (const token of ['', 'nortivo_admin=fake.sig', expired]) {
     const response = await catalog(withCookie('/.netlify/functions/admin-projects', token, { headers: { 'oai-authenticated-user-id': 'owner', 'oai-authenticated-user-email': 'owner@example.invalid' } }));

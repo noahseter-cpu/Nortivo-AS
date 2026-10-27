@@ -35,7 +35,7 @@ export function createHandler({ loadWorker = privateContent.worker } = {}) {
   return async event => {
     // All course bytes, metadata and tutor actions share the existing signed admin cookie.
     if (!isAdmin(event)) {
-      const isIndex = [PRIVATE_PREFIX, PRIVATE_PREFIX + '/', functionPrefix, functionPrefix + '/'].includes(event.path);
+      const isIndex = coursePath(event) === '/';
       if (isIndex && event.httpMethod === 'GET') return { statusCode: 302, headers: { ...privateHeaders, Location: '/admin/?return=vibb' }, body: '' };
       return json(401, { error: 'Økten er utløpt. Logg inn igjen. / Your session expired. Sign in again.', code: 'NOT_SIGNED_IN', signInPath: '/admin/?return=vibb' }, privateHeaders);
     }
