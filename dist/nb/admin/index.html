@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="nb">
   <head>
-    <title>Supportadministrasjon — Nortivo</title>
-    <meta name="description" content="Logg inn for å lese og besvare supportsaker hos Nortivo." />
+    <title>Privat arbeidsområde — Nortivo</title>
+    <meta name="description" content="Åpne dine private prosjekter og håndter supportsaker." />
     <link rel="canonical" href="https://nortivo.no/nb/admin/" />
     <link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/admin/" />
     <link rel="alternate" hreflang="en" href="https://nortivo.no/en/admin/" />
     <link rel="alternate" hreflang="x-default" href="https://nortivo.no/admin/" />
-    <meta property="og:title" content="Supportadministrasjon — Nortivo" />
-    <meta property="og:description" content="Logg inn for å lese og besvare supportsaker hos Nortivo." />
+    <meta property="og:title" content="Privat arbeidsområde — Nortivo" />
+    <meta property="og:description" content="Åpne dine private prosjekter og håndter supportsaker." />
     <meta property="og:url" content="https://nortivo.no/nb/admin/" />
     <meta property="og:locale" content="nb_NO" />
     <meta property="og:locale:alternate" content="en_GB" />
@@ -21,6 +21,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922" />
 <link rel="stylesheet" href="/assets/site.css" />
 <link rel="stylesheet" href="/assets/portal-v2.css" />
+<link rel="stylesheet" href="/assets/admin-workspace.css" />
 <script src="/assets/site.js" defer>
 </script>
 <script src="/assets/admin.js" defer>
@@ -54,8 +55,8 @@
     <main class="portal-shell admin-page" id="main">
       <section class="portal-card login-card" id="login-card" aria-labelledby="login-title">
 <div class="portal-card-body">
-<h1 id="login-title" data-i18n="admin.heading">Supportadministrasjon</h1>
-<p class="portal-lead" data-i18n="admin.lead">Logg inn for å lese og besvare supportsaker hos Nortivo.</p>
+<h1 id="login-title" data-i18n="admin.heading">Logg inn hos Nortivo</h1>
+<p class="portal-lead" data-i18n="admin.lead">Åpne dine private prosjekter og håndter supportsaker.</p>
 <form id="login-form" method="post" novalidate>
 <div class="field">
 <label for="password" data-i18n="admin.password">Administratorpassord</label>
@@ -74,14 +75,30 @@
       <section class="dashboard" id="dashboard" aria-labelledby="dashboard-title" hidden>
         <div class="dashboard-head">
 <div>
-<h1 id="dashboard-title" tabindex="-1" data-i18n="admin.tickets">Supportsaker</h1>
-<p class="panel-intro" data-i18n="admin.workspaceIntro">Les henvendelser, svar på e-post og oppdater status.</p>
+<h1 id="dashboard-title" tabindex="-1" data-i18n="admin.privateWorkspace">Arbeidsområdet ditt</h1>
+<p class="panel-intro" data-i18n="admin.privateIntro">Dine private prosjekter, verktøy og kundesupport.</p>
 </div>
 <div class="dashboard-actions">
 <button class="button secondary" id="refresh-button" type="button" data-i18n="admin.refresh">Oppdater</button>
 <button class="button secondary" id="logout-button" type="button" data-i18n="admin.signOut">Logg ut</button>
 </div>
 </div>
+        <nav class="workspace-choices" aria-label="Velg arbeidsområde" data-i18n-aria="admin.workspaceChoice">
+<button type="button" id="projects-choice" aria-pressed="true" aria-controls="projects-panel" data-i18n="admin.projectsTools">Prosjekter og verktøy</button>
+<button type="button" id="support-choice" aria-pressed="false" aria-controls="support-panel" data-i18n="admin.tickets">Supportsaker</button>
+</nav>
+<p class="message dashboard-message" id="dashboard-message" role="status" aria-live="polite" aria-atomic="true"></p>
+<section class="private-projects" id="projects-panel" aria-labelledby="projects-title">
+<div class="projects-heading">
+<h2 id="projects-title" tabindex="-1" data-i18n="admin.projectsTools">Prosjekter og verktøy</h2>
+<p data-i18n="admin.projectsIntro">Åpne et prosjekt og fortsett der du slapp.</p>
+</div>
+<div id="project-list" class="project-list" aria-busy="false"></div>
+<p class="private-workspace-note" data-i18n="admin.projectsNote">Dette arbeidsområdet er privat. Kundesaker har sitt eget område.</p>
+</section>
+<section id="support-panel" aria-labelledby="support-title" hidden>
+<h2 id="support-title" tabindex="-1" data-i18n="admin.tickets">Supportsaker</h2>
+<p class="panel-intro" data-i18n="admin.workspaceIntro">Les henvendelser, svar på e-post og oppdater status.</p>
         <div class="stats" aria-label="Saksoversikt" data-i18n-aria="admin.summary">
 <div class="stat">
 <span class="stat-label" data-i18n="admin.open">Åpne</span>
@@ -96,8 +113,6 @@
 <strong class="stat-value" id="total-count">0</strong>
 </div>
 </div>
-        <p class="message dashboard-message" id="dashboard-message" role="status" aria-live="polite" aria-atomic="true">
-</p>
         <section class="portal-card workspace" aria-label="Arbeidsområde for supportsaker" data-i18n-aria="admin.workspace">
 <div class="ticket-list">
 <div class="list-tools">
@@ -124,6 +139,7 @@
 </div>
 </div>
 </section>
+      </section>
       </section>
       <noscript>
 <p class="no-script">Support administration needs JavaScript. / Administrasjon krever JavaScript.</p>

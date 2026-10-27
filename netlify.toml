@@ -6,6 +6,18 @@
 [functions]
   node_bundler = "esbuild"
 
+[[redirects]]
+  from = "/admin/projects/vibb"
+  to = "/admin/projects/vibb/"
+  status = 301
+
+[[redirects]]
+  from = "/admin/projects/vibb/*"
+  to = "/.netlify/functions/admin-vibb/:splat"
+  status = 200
+  force = true
+
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -60,3 +72,10 @@
   from = "/admin"
   to = "/admin/"
   status = 301
+
+[[headers]]
+  for = "/admin/projects/vibb/*"
+  [headers.values]
+    Cache-Control = "private, no-store, max-age=0"
+    X-Robots-Tag = "noindex, nofollow"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'"

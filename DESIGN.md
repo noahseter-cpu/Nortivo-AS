@@ -51,6 +51,12 @@ typography:
     fontWeight: 700
     lineHeight: 1.16
     letterSpacing: "-.035em"
+  studio-display:
+    fontFamily: "Manrope, sans-serif"
+    fontSize: "clamp(2.65rem, 4.6vw, 4.6rem)"
+    fontWeight: 700
+    lineHeight: 1.08
+    letterSpacing: "-.035em"
 rounded:
   compact: "6px"
   control: "7px"
@@ -115,6 +121,8 @@ components:
 ---
 
 # Design System: Nortivo
+
+The [27 October studio and private-workspace refinement](docs/STUDIO_PRIVATE_WORKSPACE_2026_10_27.md) supersedes the earlier homepage composition, home type and entrance-motion descriptions below. The homepage now introduces the company, presents unequal Lune and Arc previews, then open service rows and contact. Shared public shells extend to 1320px, with a larger wordmark and a blue contact link; restaurant and admin retain their own skins. The source is `dist/assets/studio-refresh.css`; `admin-workspace.css` adds private project rows beside the existing support workflow. These are directly authorized extensions of the incumbent navy/Manrope system. Independent review returned **SHIP**. This refinement is locally verified and awaits separate approval for Nortivo production publication.
 
 The separate Lune restaurant demonstration is documented in [its scoped design system](docs/restaurant/DESIGN.md), with [durable component and motion extensions](docs/restaurant-design.json). Its tokens do not change the Nortivo system below.
 
@@ -195,7 +203,8 @@ The single family keeps marketing and support visibly related. Headings are comp
 
 ### Hierarchy
 
-- **Display:** the public page heading role in the frontmatter. The home hero limits its heading to 560px on desktop; its final mobile size is 2.08rem, then 1.9rem below 360px.
+- **Display:** the incumbent public page heading role in the frontmatter, retained outside the studio homepage.
+- **Studio display:** the scoped company-introduction role in the frontmatter. It steps to 3.6rem at 1100px, 3.8rem at 900px after stacking, and 2.65rem at 620px with 1.12 line-height and -.03em tracking. Its second line uses a scoped pale-blue tint (`#a9ccf0`).
 - **Headline:** section headings. Arc introductions and product-page headings have their own smaller contextual clamps in the stylesheet.
 - **Title:** the shared subheading role. Service headings use 1.5rem on desktop and 1.3rem on narrow screens.
 - **Body:** regular text with a default measure of 65ch. Descriptions and metadata commonly step down below the base size.
@@ -203,9 +212,17 @@ The single family keeps marketing and support visibly related. Headings are comp
 - **Portal display:** operational page headings. Login uses 2rem; the authenticated dashboard uses a smaller contextual clamp.
 - **Numeric detail:** ticket identifiers, support step numbers and summary values use tabular numerals.
 
+The studio introduction uses 17px body text at 1.8 line-height, reducing to 16px on phones. Studio section headings use `clamp(1.9rem,3vw,2.7rem)`; work titles are 24px (23px on phones), service-row titles 23px (22px on phones). Project descriptions use 14px at 1.7 line-height. The shared public wordmark is 25px, reducing to 23px at 620px; navigation is 14px. These contextual roles do not replace the smaller operational hierarchy.
+
 **The Single Family Rule.** Use the existing Manrope regular and bold files for the website; do not reintroduce Syne from the archived design.
 
 ## Layout
+
+The current public studio stylesheet overrides shared content, header and footer widths with `min(1320px,calc(100% - 64px))`; at 620px it uses 18px gutters. This applies to public pages loading `studio-refresh.css`, including support's shared header/footer, while restaurant and admin retain their separate skins. The desktop header remains at least 88px tall and becomes 76px at 620px.
+
+The homepage introduction uses a 1.25:.75 split and 80px gap, stacking at 900px. Work previews use an unequal 1.15:.85 split with 28px gap, stacking at 620px. Preview height steps from 340px through 300px at 1100px to 270px at 900px; mobile food imagery has a 1.48 aspect ratio, and the Arc matte has a 1.4 aspect ratio with a 250px minimum height. The screenshot retains automatic height and its original aspect ratio inside the matte (`#dce5ed`). Services use open rows and a .8:1.2 introductory/content split with a 90px gap, stacking at 900px. These values describe the homepage expression, not required compositions for future pages.
+
+The following paragraphs record the older base stylesheet, whose widths/header descriptions are superseded where the current studio extension applies. Other page-specific grids remain in place.
 
 Public content uses a centered container with a maximum width of 1200px and 32px side gutters. The header is part of normal document flow, with an 88px desktop minimum height. Sections use 88px vertical padding, reducing to 64px at the tablet layout and 52px at the phone layout.
 
@@ -254,6 +271,8 @@ Portal fields use the inset field background, 46px minimum height, 12px by 13px 
 
 ### Navigation and language
 
+The current public header adds a solid blue, 7px-radius contact link with 11px by 17px padding. The desktop links use 27px gaps, tightening at 1100px. The restaurant and admin headers are outside this extension.
+
 The text wordmark anchors a compact header. Desktop links use .87rem bold text, with muted default and white current/hover states. The mobile menu is an in-flow panel with a visible toggle, `aria-expanded` and an immediate open/close state. Escape closes it and restores toggle focus.
 
 Language buttons use `aria-pressed`, a visible underline on the chosen language and immediate text replacement. They do not animate layout or wait for an effect to finish. Keep both language names visible and preserve the selected-language styling.
@@ -273,6 +292,12 @@ Tabs use actual tab roles, linked panels and keyboard selection. Switching is im
 ### Product evidence and disclosure
 
 Keep the original Arc wordmark and actual empty-test screenshots, their aspect ratios, and a nearby caption describing the image. Native `details`/`summary` disclosures provide the product FAQ, with a simple bottom divider and visible keyboard focus. Hero artwork is decorative; product screenshots have meaningful alternate text.
+
+The current homepage uses the existing Lune food image and dated Arc screenshot in 12px-radius previews. Image feedback is a scale of 1.018 over 180ms with the existing ease-out curve, activated only on fine-pointer hover. Reduced motion removes the transform and transition. The former home entrance settlement is absent from this composition.
+
+### Private projects and workspace choices
+
+Admin uses open project rows separated by the existing portal line. Desktop rows align a 52px mark, flexible description and action with 24px gaps and 28px vertical padding. At 700px the mark becomes 40px, gaps become 14px, and the action moves below the description. Workspace choices are ordinary buttons with `aria-pressed`; the active choice has a Portal Blue underline. Switching is immediate, focus remains clearly outlined and the support workflow retains its own controls.
 
 ## Do's and Don'ts
 

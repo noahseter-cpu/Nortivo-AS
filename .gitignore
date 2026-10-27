@@ -3,3 +3,7 @@
 .env.*
 !.env.example
 .netlify/
+# Plaintext private workspace inputs and its local-only encryption key.
+netlify/private/projects.mjs
+netlify/private/vibb-runtime.mjs
+.env.private-workspace.local

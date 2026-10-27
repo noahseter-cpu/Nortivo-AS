@@ -10,11 +10,11 @@ web
 
 - Prospective customers evaluating Nortivo’s web, app and digital design work.
 - Customers who need to create or follow a support ticket.
-- Nortivo’s administrator, who reviews, answers and closes support tickets.
+- Nortivo’s administrator, who uses private side projects/tools and reviews, answers and closes support tickets.
 
 ## Product Purpose
 
-Nortivo presents the company’s digital product work and provides a direct support workflow. Success means visitors quickly understand what Nortivo builds, while customers can create and follow tickets and the administrator can answer them.
+Nortivo presents the company’s digital product work, provides a direct support workflow and gives its owner an authenticated workspace. Success means visitors quickly understand what Nortivo builds and inspect real work, customers can create and follow tickets, and the administrator can open private tools or answer support.
 
 ## Positioning
 
@@ -27,6 +27,9 @@ Nortivo builds focused digital products and also develops Arc, a personal progre
 - Supabase stores tickets and replies; Resend handles email delivery.
 - Existing `/`, `/products/`, `/support/` and `/admin/` routes and all form IDs/API contracts must remain stable.
 - The complete public journey supports Norwegian Bokmål and English, with static `/nb/` and `/en/` routes. Explicit language choices are remembered independently of the Arc application.
+- Admin opens on Projects & tools with Support tickets as a separate choice. The project registry is read-only; external shortcuts keep their destination's authentication.
+- The private course runs under `/admin/projects/vibb/` with authentication on every asset and tutor request. It remains distinct from the separately hosted Vibb site. The optional tutor requires a server-only provider key; unconfigured requests report 503.
+- The public Git repository may contain only the encrypted private-content package. Plaintext local inputs and the content key remain ignored; see [PRIVATE_WORKSPACE.md](docs/PRIVATE_WORKSPACE.md).
 
 ## Brand Commitments
 

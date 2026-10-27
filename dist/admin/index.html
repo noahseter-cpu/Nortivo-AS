@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#07131f" />
 <meta name="robots" content="noindex, nofollow" />
-    <title>Support Admin — Nortivo</title>
+    <title>Private Workspace — Nortivo</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922" />
 <link rel="stylesheet" href="/assets/site.css" />
 <link rel="stylesheet" href="/assets/portal-v2.css" />
+<link rel="stylesheet" href="/assets/admin-workspace.css" />
 <script src="/assets/site.js" defer>
 </script>
 <script src="/assets/admin.js" defer>
@@ -42,8 +43,8 @@
     <main class="portal-shell admin-page" id="main">
       <section class="portal-card login-card" id="login-card" aria-labelledby="login-title">
 <div class="portal-card-body">
-<h1 id="login-title" data-i18n="admin.heading">Support admin</h1>
-<p class="portal-lead" data-i18n="admin.lead">Sign in to view and answer Nortivo support tickets.</p>
+<h1 id="login-title" data-i18n="admin.heading">Sign in to Nortivo</h1>
+<p class="portal-lead" data-i18n="admin.lead">Open your private projects and manage support tickets.</p>
 <form id="login-form" method="post" novalidate>
 <div class="field">
 <label for="password" data-i18n="admin.password">Admin password</label>
@@ -62,14 +63,30 @@
       <section class="dashboard" id="dashboard" aria-labelledby="dashboard-title" hidden>
         <div class="dashboard-head">
 <div>
-<h1 id="dashboard-title" tabindex="-1" data-i18n="admin.tickets">Support tickets</h1>
-<p class="panel-intro" data-i18n="admin.workspaceIntro">Read requests, reply by email and manage their status.</p>
+<h1 id="dashboard-title" tabindex="-1" data-i18n="admin.privateWorkspace">Your workspace</h1>
+<p class="panel-intro" data-i18n="admin.privateIntro">Your private projects, tools and customer support.</p>
 </div>
 <div class="dashboard-actions">
 <button class="button secondary" id="refresh-button" type="button" data-i18n="admin.refresh">Refresh</button>
 <button class="button secondary" id="logout-button" type="button" data-i18n="admin.signOut">Sign out</button>
 </div>
 </div>
+        <nav class="workspace-choices" aria-label="Workspace" data-i18n-aria="admin.workspaceChoice">
+<button type="button" id="projects-choice" aria-pressed="true" aria-controls="projects-panel" data-i18n="admin.projectsTools">Projects &amp; tools</button>
+<button type="button" id="support-choice" aria-pressed="false" aria-controls="support-panel" data-i18n="admin.tickets">Support tickets</button>
+</nav>
+<p class="message dashboard-message" id="dashboard-message" role="status" aria-live="polite" aria-atomic="true"></p>
+<section class="private-projects" id="projects-panel" aria-labelledby="projects-title">
+<div class="projects-heading">
+<h2 id="projects-title" tabindex="-1" data-i18n="admin.projectsTools">Projects &amp; tools</h2>
+<p data-i18n="admin.projectsIntro">Open a project to continue where you left off.</p>
+</div>
+<div id="project-list" class="project-list" aria-busy="false"></div>
+<p class="private-workspace-note" data-i18n="admin.projectsNote">This workspace is private. Customer tickets stay in their own area.</p>
+</section>
+<section id="support-panel" aria-labelledby="support-title" hidden>
+<h2 id="support-title" tabindex="-1" data-i18n="admin.tickets">Support tickets</h2>
+<p class="panel-intro" data-i18n="admin.workspaceIntro">Read requests, reply by email and manage their status.</p>
         <div class="stats" aria-label="Ticket summary" data-i18n-aria="admin.summary">
 <div class="stat">
 <span class="stat-label" data-i18n="admin.open">Open</span>
@@ -84,8 +101,6 @@
 <strong class="stat-value" id="total-count">0</strong>
 </div>
 </div>
-        <p class="message dashboard-message" id="dashboard-message" role="status" aria-live="polite" aria-atomic="true">
-</p>
         <section class="portal-card workspace" aria-label="Ticket workspace" data-i18n-aria="admin.workspace">
 <div class="ticket-list">
 <div class="list-tools">
@@ -112,6 +127,7 @@
 </div>
 </div>
 </section>
+      </section>
       </section>
       <noscript>
 <p class="no-script">Support administration needs JavaScript. / Administrasjon krever JavaScript.</p>

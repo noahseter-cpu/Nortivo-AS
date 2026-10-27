@@ -35,6 +35,8 @@ Before production acceptance, test real ticket creation, confirmation delivery, 
 
 ## Design and evidence
 
+Current local work: [27 October studio and private workspace](docs/STUDIO_PRIVATE_WORKSPACE_2026_10_27.md), including final review, responsive checks and deployment requirements. The homepage now introduces the company, shows Lune and Arc work, then services and contact. Admin provides private projects/tools beside support; [PRIVATE_WORKSPACE.md](docs/PRIVATE_WORKSPACE.md) documents authenticated loading and the encrypted public-repository boundary. Nortivo production publication remains pending explicit approval.
+
 See `DESIGN.md`, `docs/design-2026-09-21/DIRECTION_STATUS.md` and `docs/design-2026-09-21/VERIFICATION.md`. The user explicitly requested direct implementation without further previews. The approved Arc wordmark and isolated empty-state app screenshots are retained; no public app launch, download, reviews or customers are invented.
 
 Generated artwork and screenshot origins are recorded in `docs/design-2026-09-21/asset-provenance.json`. Font sources/licences are documented in `docs/THIRD_PARTY_FONTS.md`. Reference websites informed composition, not copied content or code.

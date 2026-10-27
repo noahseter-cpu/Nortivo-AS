@@ -1,0 +1,25 @@
+.admin-page .dashboard-head { gap: 24px; }
+.admin-page .dashboard-head .panel-intro { margin-top: 12px; margin-bottom: 0; }
+.workspace-choices { display: flex; flex-wrap: wrap; gap: 4px 22px; border-bottom: 1px solid var(--portal-line); margin: 32px 0 0; }
+.workspace-choices button { position: relative; border: 0; border-bottom: 2px solid transparent; padding: 14px 0; background: transparent; color: var(--portal-muted); font: inherit; font-size: .95rem; font-weight: 700; cursor: pointer; }
+.workspace-choices button[aria-pressed="true"] { color: var(--portal-text); border-bottom-color: var(--portal-blue); }
+.workspace-choices button:hover { color: var(--portal-text); }
+.admin-page .dashboard-message { margin: 12px 0 18px; }
+.projects-heading { padding-block: 12px 22px; }
+.projects-heading p, .private-workspace-note { color: var(--portal-muted); font-size: .9rem; line-height: 1.65; }
+.projects-heading p { margin: 8px 0 0; }
+.private-project-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 24px; align-items: center; border-block-start: 1px solid var(--portal-line); padding: 28px 0; }
+.private-project-mark { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 12px; color: var(--portal-blue); background: #142d46; font-size: 1.5rem; font-weight: 700; }
+.private-project-row h3 { font-size: 1.2rem; margin: 0 0 8px; letter-spacing: -.02em; }
+.private-project-row p { color: var(--portal-muted); max-width: 65ch; margin: 0; font-size: .9rem; line-height: 1.65; }
+.private-project-row .private-project-kind { margin-top: 12px; font-size: .78rem; color: var(--portal-blue); }
+.private-project-row .button { white-space: nowrap; }
+.private-workspace-note { margin-top: 12px; padding-top: 22px; border-top: 1px solid var(--portal-line); font-size: .8rem; }
+.admin-page #support-title { margin: 20px 0 8px; }
+.admin-page button:focus-visible, .admin-page a:focus-visible { outline: 3px solid var(--portal-blue); outline-offset: 4px; }
+@media(max-width: 700px) {
+  .private-project-row { grid-template-columns: 40px minmax(0, 1fr); gap: 14px; padding: 24px 0; align-items: start; }
+  .private-project-mark { width: 40px; height: 40px; font-size: 1.2rem; border-radius: 8px; }
+  .private-project-row .button { grid-column: 2; justify-self: start; white-space: normal; }
+  .workspace-choices { margin-top: 22px; }
+}

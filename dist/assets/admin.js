@@ -2,14 +2,14 @@
 (() => {
   const copy = {
   "nb": {
-    "admin.title": "Supportadministrasjon — Nortivo",
+    "admin.title": "Privat arbeidsområde — Nortivo",
     "admin.skip": "Hopp til innhold",
     "admin.navigation": "Hovedmeny",
     "admin.home": "Hjem",
     "admin.customerSupport": "Kundesupport",
     "admin.menu": "Meny",
-    "admin.heading": "Supportadministrasjon",
-    "admin.lead": "Logg inn for å lese og besvare supportsaker hos Nortivo.",
+    "admin.heading": "Logg inn hos Nortivo",
+    "admin.lead": "Åpne dine private prosjekter og håndter supportsaker.",
     "admin.password": "Administratorpassord",
     "admin.signIn": "Logg inn",
     "admin.tickets": "Supportsaker",
@@ -60,18 +60,28 @@
     "admin.loaded": "Sakslisten er oppdatert.",
     "admin.replyFailed": "Svaret kunne ikke sendes. Utkastet er beholdt. Prøv igjen.",
     "admin.statusOpen": "Åpen",
-    "meta.admin.title": "Supportadministrasjon — Nortivo",
-    "meta.admin.description": "Logg inn for å lese og besvare supportsaker hos Nortivo."
+    "meta.admin.title": "Privat arbeidsområde — Nortivo",
+    "meta.admin.description": "Åpne dine private prosjekter og håndter supportsaker.",
+    "admin.privateWorkspace": "Arbeidsområdet ditt",
+    "admin.privateIntro": "Dine private prosjekter, verktøy og kundesupport.",
+    "admin.workspaceChoice": "Velg arbeidsområde",
+    "admin.projectsTools": "Prosjekter og verktøy",
+    "admin.projectsIntro": "Åpne et prosjekt og fortsett der du slapp.",
+    "admin.projectsNote": "Dette arbeidsområdet er privat. Kundesaker har sitt eget område.",
+    "admin.loadingProjects": "Henter prosjekter…",
+    "admin.projectsLoaded": "Prosjektene er oppdatert.",
+    "admin.noProjects": "Ingen prosjekter tilgjengelige. Prøv Oppdater.",
+    "admin.newTab": "Åpnes i en ny fane."
   },
   "en": {
-    "admin.title": "Support Admin — Nortivo",
+    "admin.title": "Private Workspace — Nortivo",
     "admin.skip": "Skip to content",
     "admin.navigation": "Main navigation",
     "admin.home": "Home",
     "admin.customerSupport": "Customer support",
     "admin.menu": "Menu",
-    "admin.heading": "Support admin",
-    "admin.lead": "Sign in to view and answer Nortivo support tickets.",
+    "admin.heading": "Sign in to Nortivo",
+    "admin.lead": "Open your private projects and manage support tickets.",
     "admin.password": "Admin password",
     "admin.signIn": "Sign in",
     "admin.tickets": "Support tickets",
@@ -122,8 +132,18 @@
     "admin.loaded": "Ticket list refreshed.",
     "admin.replyFailed": "The reply could not be sent. Your draft has been kept. Try again.",
     "admin.statusOpen": "Open",
-    "meta.admin.title": "Support Admin — Nortivo",
-    "meta.admin.description": "Sign in to read and answer Nortivo support tickets."
+    "meta.admin.title": "Private Workspace — Nortivo",
+    "meta.admin.description": "Open your private projects and manage support tickets.",
+    "admin.privateWorkspace": "Your workspace",
+    "admin.privateIntro": "Your private projects, tools and customer support.",
+    "admin.workspaceChoice": "Choose workspace",
+    "admin.projectsTools": "Projects & tools",
+    "admin.projectsIntro": "Open a project to continue where you left off.",
+    "admin.projectsNote": "This workspace is private. Customer tickets stay in their own area.",
+    "admin.loadingProjects": "Loading projects…",
+    "admin.projectsLoaded": "Projects refreshed.",
+    "admin.noProjects": "No projects available. Try Refresh.",
+    "admin.newTab": "Opens in a new tab."
   }
 };
   const site = window.Nortivo;
@@ -141,6 +161,9 @@
   let listRequest = null;
   let loginBusy = false;
   let logoutBusy = false;
+  let projects = [];
+  let workspaceView = "projects";
+  let projectsRequest = null;
   const formatDate = value => new Intl.DateTimeFormat(site.getLanguage() === "nb" ? "nb-NO" : "en-GB", {dateStyle:"medium", timeStyle:"short", timeZone:"Europe/Oslo"}).format(new Date(value));
   function node(tag, className, text) {
     const item = document.createElement(tag);
@@ -166,10 +189,85 @@
     return item;
   }
   function showLogin(key, focus = true) {
+    authVersion++;
+    projects = [];
+    tickets = [];
+    activeId = null;
+    detailVersion++;
+    el("project-list").replaceChildren();
+    el("tickets").replaceChildren();
+    el("ticket-detail").replaceChildren();
+    updateStats();
     el("dashboard").hidden = true;
     el("login-card").hidden = false;
     if (key) message(el("login-message"), key, key === "signedOut" ? "success" : "error");
     if (focus) el("password").focus();
+  }
+  function renderProjects() {
+    const list = el("project-list");
+    list.replaceChildren();
+    const language = site.getLanguage();
+    for (const project of projects) {
+      // URLs originate only from the authenticated registry; reject malformed responses too.
+      if (!project || !/^[a-z0-9-]+$/.test(project.id) || typeof project.href !== "string") continue;
+      let url;
+      try { url = new URL(project.href, location.origin); } catch { continue; }
+      if (project.external ? url.protocol !== "https:" : url.origin !== location.origin) continue;
+      const localized = field => typeof project[field]?.[language] === "string" ? project[field][language] : "";
+      const row = node("article", "private-project-row");
+      const mark = node("div", "private-project-mark", localized("name").slice(0, 1));
+      mark.setAttribute("aria-hidden", "true");
+      const text = node("div", "private-project-content");
+      text.append(node("h3", "", localized("name")), node("p", "", localized("description")), node("p", "private-project-kind", localized("note")));
+      const link = node("a", "button secondary", localized("action"));
+      link.href = project.href;
+      if (project.external) { link.target = "_blank"; link.rel = "noopener noreferrer"; link.setAttribute("aria-label", localized("action") + ". " + t("newTab")); }
+      row.append(mark, text, link);
+      list.append(row);
+    }
+    if (!list.childElementCount) list.append(translated("p", "message", "noProjects"));
+  }
+  async function loadProjects(announce = true) {
+    if (projectsRequest) return projectsRequest;
+    const version = authVersion;
+    el("project-list").setAttribute("aria-busy", "true");
+    el("refresh-button").disabled = true;
+    if (announce) message(el("dashboard-message"), "loadingProjects");
+    projectsRequest = (async () => {
+      try {
+        const data = await api("admin-projects");
+        if (version !== authVersion) return false;
+        if (!Array.isArray(data.projects)) throw new Error("Invalid project response");
+        projects = data.projects;
+        renderProjects();
+        if (announce) message(el("dashboard-message"), "projectsLoaded", "success");
+        return true;
+      } catch (error) {
+        if (version === authVersion) message(el("dashboard-message"), errorKey(error), "error");
+        return false;
+      } finally {
+        projectsRequest = null;
+        el("project-list").setAttribute("aria-busy", "false");
+        el("refresh-button").disabled = false;
+      }
+    })();
+    return projectsRequest;
+  }
+  function selectWorkspace(view, focus = false) {
+    workspaceView = view;
+    const isProjects = view === "projects";
+    el("projects-panel").hidden = !isProjects;
+    el("support-panel").hidden = isProjects;
+    el("projects-choice").setAttribute("aria-pressed", String(isProjects));
+    el("support-choice").setAttribute("aria-pressed", String(!isProjects));
+    message(el("dashboard-message"), "");
+    if (focus) el(isProjects ? "projects-title" : "support-title").focus({preventScroll:true});
+    if (!isProjects) loadTickets();
+  }
+  function showDashboard() {
+    el("login-card").hidden = true;
+    el("dashboard").hidden = false;
+    selectWorkspace("projects");
   }
   async function api(path, options = {}, context = "general") {
     const version = authVersion;
@@ -425,10 +523,9 @@
     try {
       await api("admin-login", json("POST", {password:password.value}), "login");
       form.reset();
-      el("login-card").hidden = true;
-      el("dashboard").hidden = false;
+      showDashboard();
       el("dashboard-title").focus();
-      await loadTickets();
+      await loadProjects();
     } catch (error) {
       message(el("login-message"), errorKey(error, "login"), "error");
       password.focus();
@@ -442,7 +539,9 @@
     el("password").removeAttribute("aria-invalid");
     el("password-error").hidden = true;
   });
-  el("refresh-button").addEventListener("click", () => loadTickets());
+  el("refresh-button").addEventListener("click", () => workspaceView === "projects" ? loadProjects() : loadTickets());
+  el("projects-choice").addEventListener("click", () => selectWorkspace("projects", true));
+  el("support-choice").addEventListener("click", () => selectWorkspace("support", true));
   el("search").addEventListener("input", renderList);
   el("status-filter").addEventListener("change", renderList);
   el("logout-button").addEventListener("click", async () => {
@@ -472,6 +571,7 @@
   document.addEventListener("nortivo:language", () => {
     document.title = t("title");
     renderList();
+    if (!el("dashboard").hidden) renderProjects();
     for (const item of document.querySelectorAll("[data-date]")) item.textContent = (item.dataset.datePrefix ? t(item.dataset.datePrefix) + " " : "") + formatDate(item.dataset.date);
   });
   site.applyTranslations();
@@ -479,13 +579,12 @@
   (async () => {
     const version = authVersion;
     try {
-      const data = await api("admin-tickets?language=" + site.getLanguage(), {}, "session-check");
+      const data = await api("admin-projects", {}, "session-check");
       if (version !== authVersion) return;
-      tickets = Array.isArray(data.tickets) ? data.tickets : [];
-      el("login-card").hidden = true;
-      el("dashboard").hidden = false;
-      updateStats();
-      renderList();
+      if (!Array.isArray(data.projects)) throw new Error("Invalid project response");
+      projects = data.projects;
+      showDashboard();
+      renderProjects();
     } catch (error) {
       if (version === authVersion && error.status !== 401) message(el("login-message"), errorKey(error), "error");
     }
