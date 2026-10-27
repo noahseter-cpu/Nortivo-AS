@@ -1,0 +1,3 @@
+# Private course routes must reach authentication before static file handling.
+/admin/projects/vibb /.netlify/functions/admin-vibb 200!
+/admin/projects/vibb/* /.netlify/functions/admin-vibb 200!
