@@ -1,10 +1,10 @@
 # Private Vibb app and code
 
-27 October 2026. Implemented and verified locally; independent review returned **SHIP** with no material fixes. Publication is already authorized, but this extension has not been verified live at this documentation checkpoint. The previous course/Groq deployment remains recorded in [PRIVATE_WORKSPACE.md](PRIVATE_WORKSPACE.md).
+27 October 2026. Implemented and verified locally; independent review returned **SHIP** with no material fixes. Published and verified live with existing authorization. Netlify deploy `6ae0b57c471afa5741926d79` publishes source `6a73e60`. The previous course/Groq deployment remains recorded in [PRIVATE_WORKSPACE.md](PRIVATE_WORKSPACE.md).
 
 ## Use
 
-The authenticated admin project registry opens the course, **App og kode**, and the practice app. `/admin/projects/vibb/workspace.html` pairs the real Vibb app with a read-only file selector, file explanation, numbered source and literal, case-insensitive search. Repeated Find advances through matches and wraps. Register, History and About files offer an explicit action to open their corresponding app page. This does not edit or hot-reload code.
+The authenticated admin project registry provides the course and **App og kode** entries. The workspace also links to the practice app alone in a new tab. `/admin/projects/vibb/workspace.html` pairs the real Vibb app with a read-only file selector, file explanation, numbered source and literal, case-insensitive search. Repeated Find advances through matches and wraps. Register, History and About files offer an explicit action to open their corresponding app page. This does not edit or hot-reload code.
 
 The course toolbar adds **Vis Vibb** and **App og kode i ny fane**. The separate workspace receives the current file where available. The practice app and AI helper are mutually exclusive companions. Closing the app with its close control returns focus to the toggle. Loading/session failure has written recovery text.
 
@@ -20,7 +20,7 @@ Refresh incorporates the compiled app and five workspace/companion files into th
 
 The existing admin cookie protects every workspace, app, direct app route, asset and tutor request. Anonymous course/workspace documents and known app-page routes redirect to admin login; scripts, other assets and APIs return 401. Only authenticated `/app` responses permit same-origin framing (`SAMEORIGIN`, `frame-ancestors 'self'`). Course and workspace parents retain denied framing and allow their same-origin child through `frame-src 'self'`. Existing no-store, noindex, origin/path/body/method checks and encryption remain in force.
 
-This pass changes no Production Groq key or provider configuration. Local fixture verification disables providers; it makes no Groq, email or database calls. The earlier authenticated Production Groq success is not evidence of this extension's deployment. The former standalone course remains owner-private.
+This pass changes no Production Groq key or provider configuration. Local fixture verification disables providers; it makes no Groq, email or database calls. The existing Groq configuration is preserved; this extension required no additional provider request to validate the app and code browser. The former standalone course remains owner-private.
 
 ## Design and local verification
 
@@ -32,4 +32,4 @@ The [scoped design system](private-vibb/DESIGN.md) preserves the incumbent Vibb 
 - Evidence: `.impeccable/review/vibb-workspace-desktop.png`, `vibb-workspace-706.png`, `vibb-course-preview-desktop.png`, `vibb-course-preview-706.png`. These are review captures, not shipped product imagery.
 - Independent visual/source review: **SHIP**, no material fixes. The hover contrast correction is incorporated. Logical-padding detector warnings and cross-project palette advisories were reviewed without promoting them to a new global design rule.
 
-The requested target is PC. The ≤640px stacked fallback is implemented but not visually tested on a phone. Physical hardware, assistive technology and live deployment of this extension remain unverified here.
+The requested target is PC. The ≤640px stacked fallback is implemented but not visually tested on a phone. Physical hardware and assistive technology remain unverified. Production workspace, iframe app rendering, page navigation, course embedding and admin entry were verified. Initial and repeated warm reloads complete the loading state; the iframe starts only after its load handler is registered. Anonymous document routes redirect302 to login and assets return401, all with no-store. Live evidence: `.impeccable/review/vibb-app-and-code-live.png` and `vibb-course-preview-live.png`.

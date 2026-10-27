@@ -62,3 +62,5 @@ Private-workspace tests use random synthetic content keys and synthetic registry
 ## Verified production release
 
 Netlify published source `d83d577` as deploy `6ae0a2122c636d9d4fa27d77`. Anonymous index requests redirect302 to admin; course JavaScript and tutor status return401 with no-store. The project catalog also returns401 without a session. Ignored local inputs and the content-key file return404. The authenticated catalog, course, source reader and Groq chat work in the browser. The former standalone course Site now has a custom owner-only allowlist (no other users/groups) and returns401 to anonymous requests. The separate Vibb mood-tracker application was not changed. Notes from its old course origin are not imported automatically.
+
+The app-and-code extension is now live as source `6a73e60`, deploy `6ae0b57c471afa5741926d79`; see [PRIVATE_VIBB_APP.md](PRIVATE_VIBB_APP.md) for the final browser/access verification. No admin credential or Groq setting changed.
