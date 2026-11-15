@@ -85,7 +85,7 @@ test('build creates all localized pages, merges portal keys, and does not duplic
   assert.equal(await readFile(path.join(dist, 'index.html'), 'utf8'), fixtureHtml);
   const support = await readFile(path.join(dist, 'nb/support/index.html'), 'utf8');
   assert.match(support, /Portal barn/);
-  assert.deepEqual((await readdir(path.join(dist, 'nb'))).sort(), pages.map(page => page === 'home' ? 'index.html' : page).sort());
+  assert.deepEqual((await readdir(path.join(dist, 'nb'))).sort(), [...new Set(pages.map(page => page === 'home' ? 'index.html' : page.split('/')[0]))].sort());
 });
 
 test('missing translations fail before any generated files are written', async t => {

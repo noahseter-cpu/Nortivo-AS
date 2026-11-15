@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
     <title>Services — Nortivo</title>
-    <meta name="description" content="We help with websites and apps. Tell us what you need, and we’ll take it from there." />
+    <meta name="description" content="Investment guides, trading bot development and crypto automation." />
     <link rel="canonical" href="https://nortivo.no/en/services/" />
     <link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/services/" />
     <link rel="alternate" hreflang="en" href="https://nortivo.no/en/services/" />
     <link rel="alternate" hreflang="x-default" href="https://nortivo.no/services/" />
     <meta property="og:title" content="Services — Nortivo" />
-    <meta property="og:description" content="We help with websites and apps. Tell us what you need, and we’ll take it from there." />
+    <meta property="og:description" content="Investment guides, trading bot development and crypto automation." />
     <meta property="og:url" content="https://nortivo.no/en/services/" />
     <meta property="og:locale" content="en_GB" />
     <meta property="og:locale:alternate" content="nb_NO" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07131f">
+<meta name="theme-color" content="#f3f4ed">
 
 
 
@@ -22,109 +22,64 @@
 
 
 
-<meta property="og:image" content="https://nortivo.no/assets/nortivo-hero.webp">
 <meta property="og:site_name" content="Nortivo">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
 <link rel="stylesheet" href="/assets/site.css">
 <script defer src="/assets/site.js">
 </script>
 
-<link rel="stylesheet" href="/assets/studio-refresh.css">
+<link rel="stylesheet" href="/assets/investment.css">
+<link rel="stylesheet" href="/assets/market.css">
 </head>
-<body data-page="services">
+<body class="invest market" data-page="services">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
-<header class="site-header">
-<div class="nav-shell">
-<a class="brand" href="/en/" aria-label="Nortivo">
-<span class="brand-name">Nortivo</span>
-</a>
-<nav class="desktop-nav" aria-label="Main navigation" data-i18n-aria="nav.label">
-<a href="/en/products/" data-i18n="nav.products">Products</a>
-<a href="/en/services/" data-i18n="nav.services">Services</a>
-<a href="/en/about/" data-i18n="nav.about">About Nortivo</a>
-<a href="/en/support/" data-i18n="nav.support">Support</a>
-<a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
-</nav>
-<div class="header-tools">
-<div class="language-switch" role="group" aria-label="Language" data-i18n-aria="footer.language">
-<button type="button" data-language="nb" aria-pressed="false">Norsk</button>
-<span aria-hidden="true">/</span>
-<button type="button" data-language="en" aria-pressed="true">English</button>
-</div>
-<button type="button" class="menu-toggle" aria-controls="mobile-nav" aria-expanded="false">
-<span data-i18n="nav.menu" >Menu</span>
-<svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8"/>
-</svg>
-</button>
-</div>
-</div>
-<nav id="mobile-nav" class="mobile-nav" hidden aria-label="Main navigation" data-i18n-aria="nav.label">
-<a href="/en/" data-i18n="nav.home">Home</a>
-<a href="/en/products/" data-i18n="nav.products">Products</a>
-<a href="/en/services/" data-i18n="nav.services">Services</a>
-<a href="/en/about/" data-i18n="nav.about">About Nortivo</a>
-<a href="/en/support/" data-i18n="nav.support">Support</a>
-<a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
-</nav>
+<header class="site-header market-header">
+  <div class="nav-shell">
+    <a class="brand invest-brand" href="/en/">Nortivo<span aria-hidden="true"></span></a>
+    <nav class="desktop-nav" aria-label="Main navigation" data-i18n-aria="nav.label">
+      <a href="/en/services/" data-i18n="nav.services">Services</a>
+      <a href="/en/products/" data-i18n="market.tools">Tools</a>
+      <a href="/en/about/" data-i18n="market.about">About Nortivo</a>
+      <a href="/en/support/" data-i18n="nav.support">Support</a>
+      <a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
+    </nav>
+    <div class="header-tools">
+      <div class="invest-languages" role="group" aria-label="Language" data-i18n-aria="footer.language">
+        <button type="button" data-language="nb" aria-pressed="false" lang="nb">NO</button>
+        <button type="button" data-language="en" aria-pressed="true" lang="en">EN</button>
+      </div>
+      <button type="button" class="menu-toggle" aria-controls="mobile-nav" aria-expanded="false">
+        <span data-i18n="nav.menu">Menu</span>
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="mobile-nav" hidden aria-label="Main navigation" data-i18n-aria="nav.label">
+    <a href="/en/services/" data-i18n="nav.services">Services</a>
+    <a href="/en/products/" data-i18n="market.tools">Tools</a>
+    <a href="/en/about/" data-i18n="market.about">About Nortivo</a>
+    <a href="/en/support/" data-i18n="nav.support">Support</a>
+    <a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
+  </nav>
 </header>
-<main id="main"><section id="services" class="section services" aria-labelledby="services-title">
-<div class="wrap">
-<div class="section-heading">
-<h1 data-i18n="services.title" id="services-title">Have a project in mind?</h1>
-<p data-i18n="services.intro" >We help with websites and apps. Tell us what you need, and we’ll take it from there.</p>
-</div>
-<div class="service-list">
-<article class="service">
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-<rect x="2" y="4" width="20" height="16" rx="2"/>
-<path d="M2 9h20M6 6.5h.01M9 6.5h.01"/>
-</svg>
-<h2 data-i18n="services.web.title" >Websites</h2>
-<p data-i18n="services.web.text" >Clear content, a distinctive visual identity and an experience that works on mobile and desktop.</p>
-<a href="/en/contact/?project=web" class="text-link" data-project-type="web">
-<span data-i18n="services.web.action" >Ask about a website</span>
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-</a>
-</article>
-<article class="service">
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-<rect x="6" y="2" width="12" height="20" rx="2"/>
-<path d="M10 5h4m-3 14h2"/>
-</svg>
-<h2 data-i18n="services.app.title" >Apps</h2>
-<p data-i18n="services.app.text" >From the first user flows to a tool that is easy to understand. We start with what the app should help someone do.</p>
-<a href="/en/contact/?project=app" class="text-link" data-project-type="app">
-<span data-i18n="services.app.action" >Ask about an app</span>
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-</a>
-</article>
-</div>
-</div>
-</section><section class="demo-showcase wrap" aria-labelledby="demo-title"><a href="/en/restaurant/" aria-label="Lune restaurant demo"><img src="/assets/lune-table.webp" width="1536" height="1024" loading="lazy" alt="" /></a><div><h2 id="demo-title" data-i18n="demo.title">See what a restaurant website can be.</h2><p data-i18n="demo.text">Explore Lune: a fictional restaurant with a digital menu and an interactive table-booking demonstration.</p><a class="button" href="/en/restaurant/" data-i18n="demo.action">View restaurant demo</a><p class="demo-label" data-i18n="demo.label">Original demonstration — not a real client.</p></div></section></main>
-<footer class="site-footer">
-<div class="footer-shell">
-<div class="footer-brand">
-<a class="brand" href="/en/">NORTIVO</a>
-<p data-i18n="footer.note" >Websites. Apps. Nortivo.</p>
-</div>
-<nav class="footer-links" aria-label="Footer navigation" data-i18n-aria="nav.footer">
-<a href="/en/products/" data-i18n="nav.products">Products</a>
-<a href="/en/support/" data-i18n="nav.support">Support</a>
-<a href="/en/privacy/" data-i18n="footer.privacy">About your information</a>
-<a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
-<a href="/en/admin/" data-i18n="studio.admin">Admin</a>
-</nav>
-</div>
-<div class="footer-bottom wrap">
-<span data-i18n="founder" >Founded by Noah J.C. Sæter</span>
-<span data-i18n="footer.rights" >© 2026 Nortivo</span>
-</div>
+<main id="main">
+<section class="invest-shell market-title"><h1 data-i18n="market.servicesTitle">Investment guides and trading software</h1><p data-i18n="market.servicesLead">Choose what you want to learn or build. Share a short brief so we can work out what the project needs.</p><nav class="market-jump" aria-label="Services" data-i18n-aria="invest.services"><a href="#guide" data-i18n="market.guideLink">Investment guides</a><a href="#bot" data-i18n="market.botLink">Trading bots</a><a href="#crypto" data-i18n="market.cryptoLink">Crypto automation</a></nav></section><div class="invest-shell market-service-stack"><section class="market-service" id="guide"><h2 data-i18n="invest.guide">Investment guides</h2><div><p data-i18n="market.guideDetail">A guide can explain how stocks differ from funds, how fees are calculated, and what historical volatility shows. We tailor the material to your topic and level.</p><a class="invest-button" href="/en/contact/?project=guide" data-i18n="invest.guideAction">Enquire about a guide</a></div></section><section class="market-service" id="bot"><h2 data-i18n="invest.bot">Custom investment bots</h2><div><p data-i18n="market.botDetail">We define signals, position limits and when the bot should stop. A historical test can show which orders the rules would have produced under your chosen assumptions.</p><a class="invest-button" href="/en/contact/?project=bot" data-i18n="invest.botAction">Discuss a bot</a></div></section><section class="market-service" id="crypto"><h2 data-i18n="invest.crypto">Automated crypto trading</h2><div><p data-i18n="market.cryptoDetail">We can develop and test order handling, logging and emergency stops in a practice environment. Tests can also cover rejected orders and exchange connection failures.</p><a class="invest-button" href="/en/contact/?project=crypto" data-i18n="invest.cryptoAction">Discuss crypto automation</a></div></section></div>
+</main>
+<footer class="site-footer market-footer">
+  <div class="footer-shell">
+    <div><a class="brand invest-brand" href="/en/">Nortivo<span aria-hidden="true"></span></a><p data-i18n="market.footer">Investment guides and trading software</p></div>
+    <nav class="footer-links" aria-label="Footer navigation" data-i18n-aria="nav.footer">
+      <a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
+      <a href="/en/support/" data-i18n="nav.support">Support</a>
+      <a href="/en/privacy/" data-i18n="market.privacy">Privacy</a>
+      <a href="/en/studio/" data-i18n="invest.archive">Nortivo archive</a>
+      <a href="/en/admin/" data-i18n="studio.admin">Admin</a>
+    </nav>
+  </div>
+  <div class="footer-bottom wrap">
+    <span data-i18n="founder">Founded by Noah J.C. Sæter</span>
+    <span data-i18n="footer.rights">© 2026 Nortivo</span>
+  </div>
 </footer>
 </body>
 </html>

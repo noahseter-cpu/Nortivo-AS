@@ -1,0 +1,135 @@
+body.market {
+  --ink: var(--invest-ink);
+  --paper: var(--invest-paper);
+  --muted: var(--invest-muted);
+  --line: var(--invest-line);
+  --surface: #fafbf6;
+  --surface-raised: #e8eee4;
+  --blue: #244831;
+}
+.market .market-header { background: var(--surface); border-color: var(--line); }
+.market-header .nav-shell { width: min(1240px, calc(100% - 48px)); min-height: 72px; padding-block: 8px; align-items: center; }
+.market-header .desktop-nav { margin-inline-start: auto; }
+.market-header .desktop-nav a, .market-header .mobile-nav a { color: var(--ink); }
+.market-header .desktop-nav a { display: inline-flex; align-items: center; min-height: 44px; }
+.market-header .desktop-nav a[href$="/contact/"] {
+  border-radius: 7px;
+  padding-inline: 14px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.market-header .desktop-nav a:hover { text-decoration: underline; }
+.market-header .menu-toggle { min-height: 44px; color: var(--ink); }
+.market-header .mobile-nav { background: var(--surface); }
+.market-footer, .market[data-page="admin"] .site-footer {
+  background: #e8eee4;
+  color: var(--ink);
+  border-top: 1px solid var(--line);
+}
+.market-footer p { margin: 6px 0 0; color: var(--muted); font-size: .9rem; }
+.market-footer .footer-links { font-size: .9rem; }
+.market-footer .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
+.market-footer .footer-bottom { border-color: var(--line); color: var(--muted); }
+
+.market-title {
+  padding-top: clamp(54px, 8vw, 112px);
+  padding-bottom: clamp(32px, 5vw, 64px);
+}
+.market .market-title h1 { font-size: clamp(2.65rem, 6vw, 5rem); max-width: 17ch; overflow-wrap: anywhere; hyphens: auto; }
+.market-title > p, .market-tool-notes > p { max-width: 57ch; color: var(--muted); margin: 20px 0 0; font-size: clamp(1rem, 2vw, 1.2rem); }
+.market-title .invest-button { margin-top: 26px; }
+.market-jump { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 26px; }
+.market-jump a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 700; }
+.market-service-stack { padding-bottom: clamp(48px, 7vw, 96px); }
+.market-service {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: 24px 64px;
+  border-top: 1px solid var(--line);
+  padding-block: clamp(30px, 5vw, 64px);
+}
+.market-service h2 { margin: 0; max-width: 16ch; font-size: clamp(1.8rem, 4vw, 3.4rem); overflow-wrap: anywhere; hyphens: auto; }
+.market-service p { max-width: 54ch; color: var(--muted); margin: 0 0 22px; }
+.market-tool-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .85fr);
+  gap: clamp(28px, 6vw, 82px);
+  align-items: center;
+  padding-block: clamp(48px, 7vw, 100px);
+}
+.market-tool-hero .market-title { padding-block: 0; }
+.market-tool-notes { padding-block: 28px clamp(56px, 8vw, 100px); border-top: 1px solid var(--line); }
+.market-tool-notes > div, .market-company {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 5vw, 64px);
+}
+.market-tool-notes > div { margin-top: 26px; }
+.market-tool-notes article, .market-company section { border-top: 1px solid var(--line); padding-top: 22px; }
+.market-tool-notes article p, .market-company p, .market-founder p { color: var(--muted); max-width: 57ch; }
+.market-founder { border-top: 1px solid var(--line); margin-top: 48px; padding-block: 34px 68px; }
+.market-founder a, .market-company a { font-weight: 700; }
+.market-founder .history-list { margin-top: 24px; }
+.market-founder .history-list li { margin-block: 8px; }
+
+.market[data-page="contact"] .contact-section { background: var(--paper); }
+.market .contact-grid { gap: 24px clamp(24px, 5vw, 72px); }
+.market #contact-form { padding: clamp(18px, 4vw, 38px); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; min-width: 0; }
+.market .contact-next { margin-top: 0; }
+@media (min-width: 881px) {
+  .market .contact-grid { grid-template-rows: auto 1fr; }
+  .market #contact-form { grid-column: 2; grid-row: 1 / span 2; }
+  .market .contact-secondary { grid-column: 1; }
+}
+.market .legal-page { max-width: 780px; }
+.market .notice { color: var(--ink); background: var(--surface-raised); border-color: var(--line); }
+.market .text-link { color: #244d35; }
+.market .button, .market.portal-page .button { background: var(--ink); color: var(--paper); }
+.market.portal-page .button.secondary { color: var(--ink); background: transparent; border-color: #718478; }
+.market.portal-page {
+  --portal-bg: var(--paper);
+  --portal-panel: var(--surface);
+  --portal-line: var(--line);
+  --portal-muted: var(--muted);
+  --portal-text: var(--ink);
+  --portal-blue: #2d573d;
+  --portal-error: #922e2b;
+  --portal-success: #24573f;
+}
+.market label { color: var(--ink); }
+.market input, .market textarea, .market select,
+.market.portal-page input, .market.portal-page textarea, .market.portal-page select {
+  color: var(--ink);
+  background: #fff;
+  border-color: #758b7e;
+  caret-color: #2d573d;
+}
+.market input::placeholder, .market textarea::placeholder { color: #526459; }
+.market :is(input, textarea, select)[aria-invalid="true"] { border-color: #922e2b; }
+.market .field-error, .market .form-feedback.error { color: #922e2b; }
+.market .form-feedback.error { background: #fbece7; }
+.market .form-feedback.success { background: #e3efe5; color: #24573f; }
+.market .form-note a { color: #244d35; }
+.market .tab[aria-selected="true"], .market .ticket-item.active { color: var(--ink); background: #e5efdd; border-color: #718478; }
+.market .status, .market .status.open, .market .status.answered, .market .status.closed {
+  background: #e4ece0;
+  border-color: #758b7e;
+  color: var(--ink);
+}
+.market .support-layout .support-note { max-width: 60ch; }
+.market[data-page="admin"] .site-header { background: var(--surface); }
+.market[data-page="admin"] .site-header .brand { color: var(--ink); }
+.market[data-page="admin"] .site-header .menu-toggle { color: var(--ink); }
+@media (hover: hover) {
+  .market.portal-page .button:not(:disabled):hover, .market .button:hover { background: #2d513d; color: #fff; }
+  .market.portal-page .button.secondary:not(:disabled):hover,
+  .market .tab:not([aria-selected="true"]):hover, .market .ticket-item:not(.active):hover {
+    background: #e8eee4;
+    color: var(--ink);
+  }
+}
+@media (max-width: 720px) {
+  .market-service, .market-tool-hero, .market-tool-notes > div, .market-company { grid-template-columns: 1fr; }
+  .market-service h2 { max-width: none; }
+  .market-header .nav-shell { width: calc(100% - 36px); }
+}

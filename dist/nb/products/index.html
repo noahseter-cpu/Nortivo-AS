@@ -1,20 +1,20 @@
 <!doctype html>
 <html lang="nb">
 <head>
-    <title>Arc by Nortivo — Produkter</title>
-    <meta name="description" content="Bli kjent med Arc: penger, budsjetter, mat og manuelle skritt i én oversikt. Under utvikling og privat testing." />
+    <title>Handelsverktøy og simulering — Nortivo</title>
+    <meta name="description" content="Test en handelsregel med fiktive priser og se hvordan Nortivo utvikler handelsprogramvare." />
     <link rel="canonical" href="https://nortivo.no/nb/products/" />
     <link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/products/" />
     <link rel="alternate" hreflang="en" href="https://nortivo.no/en/products/" />
     <link rel="alternate" hreflang="x-default" href="https://nortivo.no/products/" />
-    <meta property="og:title" content="Arc by Nortivo — Produkter" />
-    <meta property="og:description" content="Bli kjent med Arc: penger, budsjetter, mat og manuelle skritt i én oversikt. Under utvikling og privat testing." />
+    <meta property="og:title" content="Handelsverktøy og simulering — Nortivo" />
+    <meta property="og:description" content="Test en handelsregel med fiktive priser og se hvordan Nortivo utvikler handelsprogramvare." />
     <meta property="og:url" content="https://nortivo.no/nb/products/" />
     <meta property="og:locale" content="nb_NO" />
     <meta property="og:locale:alternate" content="en_GB" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07131f">
+<meta name="theme-color" content="#f3f4ed">
 
 
 
@@ -22,208 +22,80 @@
 
 
 
-<meta property="og:image" content="https://nortivo.no/assets/nortivo-hero.webp">
 <meta property="og:site_name" content="Nortivo">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
 <link rel="stylesheet" href="/assets/site.css">
 <script defer src="/assets/site.js">
 </script>
 <script defer src="/assets/arc-example.js"></script>
-<link rel="stylesheet" href="/assets/studio-refresh.css">
+<script defer src="/assets/investment.js"></script>
+<link rel="stylesheet" href="/assets/investment.css">
+<link rel="stylesheet" href="/assets/market.css">
 </head>
-<body data-page="products">
+<body class="invest market" data-page="products">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Hopp til innhold</a>
-<header class="site-header">
-<div class="nav-shell">
-<a class="brand" href="/nb/" aria-label="Nortivo">
-<span class="brand-name">Nortivo</span>
-</a>
-<nav class="desktop-nav" aria-label="Hovedmeny" data-i18n-aria="nav.label">
-<a href="/nb/products/" data-i18n="nav.products">Produkter</a>
-<a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
-<a href="/nb/about/" data-i18n="nav.about">Om Nortivo</a>
-<a href="/nb/support/" data-i18n="nav.support">Support</a>
-<a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
-</nav>
-<div class="header-tools">
-<div class="language-switch" role="group" aria-label="Språk" data-i18n-aria="footer.language">
-<button type="button" data-language="nb" aria-pressed="true">Norsk</button>
-<span aria-hidden="true">/</span>
-<button type="button" data-language="en" aria-pressed="false">English</button>
-</div>
-<button type="button" class="menu-toggle" aria-controls="mobile-nav" aria-expanded="false">
-<span data-i18n="nav.menu" >Meny</span>
-<svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8"/>
-</svg>
-</button>
-</div>
-</div>
-<nav id="mobile-nav" class="mobile-nav" hidden aria-label="Hovedmeny" data-i18n-aria="nav.label">
-<a href="/nb/" data-i18n="nav.home">Hjem</a>
-<a href="/nb/products/" data-i18n="nav.products">Produkter</a>
-<a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
-<a href="/nb/about/" data-i18n="nav.about">Om Nortivo</a>
-<a href="/nb/support/" data-i18n="nav.support">Support</a>
-<a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
-</nav>
+<header class="site-header market-header">
+  <div class="nav-shell">
+    <a class="brand invest-brand" href="/nb/">Nortivo<span aria-hidden="true"></span></a>
+    <nav class="desktop-nav" aria-label="Hovedmeny" data-i18n-aria="nav.label">
+      <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
+      <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
+      <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
+      <a href="/nb/support/" data-i18n="nav.support">Support</a>
+      <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
+    </nav>
+    <div class="header-tools">
+      <div class="invest-languages" role="group" aria-label="Språk" data-i18n-aria="footer.language">
+        <button type="button" data-language="nb" aria-pressed="true" lang="nb">NO</button>
+        <button type="button" data-language="en" aria-pressed="false" lang="en">EN</button>
+      </div>
+      <button type="button" class="menu-toggle" aria-controls="mobile-nav" aria-expanded="false">
+        <span data-i18n="nav.menu">Meny</span>
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="mobile-nav" hidden aria-label="Hovedmeny" data-i18n-aria="nav.label">
+    <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
+    <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
+    <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
+    <a href="/nb/support/" data-i18n="nav.support">Support</a>
+    <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
+  </nav>
 </header>
 <main id="main">
-<section class="product-hero">
-<div class="wrap arc-stage">
-<div>
-<div class="arc-lockup">
-<img class="arc-logo" src="/assets/arc-wordmark.svg" width="180" height="66" alt="Arc">
-<span>by Nortivo</span>
-</div>
-<div>
-<span data-i18n="status" class="status">Under utvikling · Privat testversjon</span>
-</div>
-<h1 data-i18n="products.title" >Møt Arc by Nortivo.</h1>
-<p data-i18n="products.intro" class="lead">En samlet oversikt over det du bruker, det du spiser og dagene dine.</p>
-<a href="#money" class="button" >
-<span data-i18n="products.action" >Utforsk funksjonene</span>
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-</a>
-<p class="spaced-action"><a class="text-link" href="/nb/contact/?project=app" data-i18n="products.question">Spør oss om Arc</a></p>
-<p data-i18n="products.status" class="launch-note">Arc testes privat. Det finnes foreløpig ingen offentlig nedlasting her.</p>
-</div>
-<div class="arc-example" data-arc-example>
-<p class="example-disclosure" data-i18n="demo.arc.label">Interaktiv forklaring · Fiktive tall, ikke appens grensesnitt</p>
-<h3 data-i18n="demo.arc.title">Prøv én funksjon: utgifter og budsjett.</h3>
-<p class="example-description" data-i18n="demo.arc.text">Dette er bare et eksempel fra økonomidelen. Arc har også matregistrering, kalorier, manuelle skritt og historikk. Prøv en fiktiv utgift nedenfor; ingenting lagres eller sendes.</p>
-<dl class="example-ledger"><div><dt data-i18n="demo.arc.budget">Eksempelbudsjett</dt><dd>5 000 <small>NOK</small></dd></div><div><dt data-i18n="demo.arc.spent">Registrert forbruk</dt><dd data-example-spent>1 800 <small>NOK</small></dd></div><div class="example-balance"><dt data-i18n="demo.arc.remaining">Igjen i budsjettet</dt><dd data-example-remaining>3 200 <small>NOK</small></dd></div></dl>
-<button class="button" type="button" data-example-add data-i18n="demo.arc.add" hidden>Registrer eksempelutgift: 250 kr</button>
-<button class="example-reset" type="button" data-example-reset data-i18n="demo.arc.reset" hidden>Nullstill eksemplet</button>
-<p class="example-feedback" data-example-feedback role="status" data-i18n="demo.arc.before">Eksemplet starter med 1 800 kr i registrert forbruk.</p>
-</div>
-</div>
-<nav class="wrap product-index" aria-label="Funksjonene i Arc" data-i18n-aria="products.features">
-<a href="#money" data-i18n="arc.money">Penger og budsjetter</a>
-<a href="#food" data-i18n="arc.food">Mat og kalorier</a>
-<a href="#activity" data-i18n="arc.activity">Skritt og fremgang</a>
-</nav>
-</section>
-<section class="wrap section product-evidence" id="app-view"><h2 data-i18n="products.evidenceTitle">Slik ser Arc ut i dag.</h2><p data-i18n="products.evidenceText">Et ekte skjermbilde fra testversjonen. Eksemplet over forklarer budsjettlogikken; bildet under viser selve appen uten personlige data.</p><figure class="product-shot">
-<picture>
-<source media="(max-width:560px)" srcset="/assets/arc-mobile.webp" width="390" height="900">
-<img src="/assets/arc-desktop.webp" width="1440" height="900" loading="lazy" decoding="async" alt="Arc by Nortivo: penger og dagsoversikt, norsk grensesnitt, tom testvisning" data-i18n-alt="arc.alt">
-</picture>
-<figcaption data-i18n="arc.caption" >Ekte appskjermbilde · Tom testvisning</figcaption>
-</figure></section>
-<section class="wrap section" aria-label="Funksjonene i Arc" data-i18n-aria="products.features">
-<article id="money" class="product-story">
-<div class="story-title">
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-<rect x="3" y="5" width="18" height="15" rx="2"/>
-<path d="M3 9h18m-6 5h3"/>
-</svg>
-<h2 data-i18n="products.money.title" >Mer oversikt over egne penger.</h2>
-</div>
-<div>
-<p data-i18n="products.money.text" >Registrer inntekter, utgifter og refusjoner. Sett et månedsbudsjett, fordel egne kategorigrenser og se hva som gjenstår. Tallene bygger på dine registreringer, ikke en bankkobling.</p>
-<p data-i18n="products.money.note" class="fine">Budsjettene hjelper deg å følge med. De blokkerer ikke kjøp.</p>
-</div>
-</article>
-<article id="food" class="product-story">
-<div class="story-title">
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-<path d="M5 3v7c0 2 4 2 4 0V3M7 3v18m10-18c-3 3-3 8 0 9h2V3h-2Zm2 9v9"/>
-</svg>
-<h2 data-i18n="products.food.title" >Fra matvare til måltid.</h2>
-</div>
-<div>
-<p data-i18n="products.food.text" >Søk i Matvaretabellen og Open Food Facts, velg mengde og registrer maten. Lagre favoritter, egne produkter og måltider du bruker igjen.</p>
-<p data-i18n="products.food.note" class="fine">Matdata kan være ufullstendige. Kontroller mengde og innhold mot emballasjen.</p>
-</div>
-</article>
-<article id="activity" class="product-story">
-<div class="story-title">
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-<path d="m5 16 4-2 2-5 4 4 5 2v5H4v-2l1-2ZM10 5l1-2 4 1-1 3"/>
-</svg>
-<h2 data-i18n="products.activity.title" >Se dagene i sammenheng.</h2>
-</div>
-<div>
-<p data-i18n="products.activity.text" >Legg inn dagens skritt manuelt, sett egne mål og åpne tidligere dager. Registrert null og en dag uten registrering behandles forskjellig.</p>
-<p data-i18n="products.activity.note" class="fine">Arc leser ikke automatisk fra klokken eller telefonens skritteller.</p>
-</div>
-</article>
-<article id="local" class="product-story">
-<div class="story-title">
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-<path d="m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4Z"/>
-<path d="m8 12 3 3 5-6"/>
-</svg>
-<h2 data-i18n="products.local.title" >Dine registreringer. På din enhet.</h2>
-</div>
-<div>
-<p data-i18n="products.local.text" >Registreringene lagres lokalt. Du kan ta JSON-sikkerhetskopi og eksportere økonomidata til CSV. Telefon og PC synkroniseres ikke automatisk.</p>
-<p data-i18n="products.local.note" class="fine">Ta sikkerhetskopi jevnlig. Fjerning av nettleser- eller appdata kan fjerne registreringer.</p>
-</div>
-</article>
-</section>
-<section class="section services">
-<div class="wrap faq">
-<h2 data-i18n="products.faq.title" >Greit å vite</h2>
-<details>
-<summary data-i18n="products.faq.one" >Kan jeg laste ned Arc nå?</summary>
-<p data-i18n="products.faq.one.a" >Arc er en privat testversjon under utvikling. Vi legger inn en reell nedlasting når en offentlig lansering er klar.</p>
-</details>
-<details>
-<summary data-i18n="products.faq.two" >Finnes Arc på norsk og engelsk?</summary>
-<p data-i18n="products.faq.two.a" >Ja, appen har bokmål og engelsk. Språkvalg på denne nettsiden endrer ikke appens språk, data, valuta eller matmarked.</p>
-</details>
-<details>
-<summary data-i18n="products.faq.three" >Fungerer Arc uten internett?</summary>
-<p data-i18n="products.faq.three.a" >Lokale registreringer og lagrede matvarer kan brukes uten nett. Nye eksterne matsøk og enkelte ressurser trenger en tilkobling.</p>
-</details>
-<details>
-<summary data-i18n="products.faq.four" >Hvordan får jeg hjelp?</summary>
-<p data-i18n="products.faq.four.a" >Bruk supportsiden. Du får et saksnummer og svar på e-post. Bekreft e-postadressen før du åpner en privat samtale.</p>
-</details>
-</div>
-</section>
-<section class="section wrap">
-<div class="contact-grid">
-<div>
-<h2 data-i18n="help.title" >Trenger du hjelp med et produkt?</h2>
-</div>
-<div>
-<p data-i18n="help.text" >Har du allerede en sak? Åpne support for å lese svaret eller be om hjelp.</p>
-<p class="spaced-action">
-<a href="/nb/support/" class="button" >
-<span data-i18n="help.action" >Åpne support</span>
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-</a>
-</p>
-</div>
-</div>
-</section>
-<section class="section wrap"><h2 data-i18n="demo.title">Se hva en restaurantnettside kan være.</h2><p class="spaced-action" data-i18n="demo.label">Egenprodusert demo — ikke en ekte kunde.</p><p class="spaced-action"><a class="text-link" href="/nb/restaurant/" data-i18n="demo.action">Se restaurantdemo</a></p></section></main>
-<footer class="site-footer">
-<div class="footer-shell">
-<div class="footer-brand">
-<a class="brand" href="/nb/">NORTIVO</a>
-<p data-i18n="footer.note" >Nettsider. Apper. Nortivo.</p>
-</div>
-<nav class="footer-links" aria-label="Bunnmeny" data-i18n-aria="nav.footer">
-<a href="/nb/products/" data-i18n="nav.products">Produkter</a>
-<a href="/nb/support/" data-i18n="nav.support">Support</a>
-<a href="/nb/privacy/" data-i18n="footer.privacy">Om opplysningene dine</a>
-<a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
-<a href="/nb/admin/" data-i18n="studio.admin">Admin</a>
-</nav>
-</div>
-<div class="footer-bottom wrap">
-<span data-i18n="founder" >Grunnlagt av Noah J.C. Sæter</span>
-<span data-i18n="footer.rights" >© 2026 Nortivo</span>
-</div>
+<section class="invest-shell market-tool-hero"><div class="market-title"><h1 data-i18n="market.toolsTitle">Se hva en handelsregel gjør</h1><p data-i18n="market.toolsIntro">Velg en fiktiv kurs og se hvordan regelen bestemmer om en simulert ordre skal opprettes.</p><a class="invest-button" href="/nb/contact/?project=bot" data-i18n="market.practice">Diskuter en bot</a></div><section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
+        <div class="invest-lab-header">
+          <h2 id="lab-heading" data-i18n="invest.lab">Test en handelsregel</h2>
+          <p data-i18n="invest.sample">Simulering med fiktive priser</p>
+        </div>
+        <p class="invest-rule" data-i18n="invest.rule">Regel: Lag en simulert kjøpsordre ved kurs 100 eller lavere.</p>
+        <div class="invest-scenarios" role="group" aria-label="Velg et kurseksempel" data-i18n-aria="invest.scenario" hidden>
+          <button type="button" data-demo-price="104" aria-pressed="true">104</button>
+          <button type="button" data-demo-price="98" aria-pressed="false">98</button>
+        </div>
+        <dl class="invest-result" aria-live="polite" aria-atomic="true">
+          <div><dt data-i18n="invest.price">Eksempelpris</dt><dd id="demo-price">104</dd></div>
+          <div><dt data-i18n="invest.outcome">Resultat</dt><dd id="demo-outcome" data-i18n="invest.wait">Ingen ordre</dd></div>
+        </dl>
+        <noscript><p data-i18n="invest.noscript">Slå på JavaScript for å bytte eksempelpris.</p></noscript>
+      </section></section><section class="invest-shell market-tool-notes"><h2 data-i18n="market.method">Fra regel til test</h2><p data-i18n="market.methodLead">En bot trenger tydelige regler for når den handler, hvor mye den kan handle, og når den skal stoppe.</p><div><article><h3 data-i18n="market.limitTitle">Avklar grensene</h3><p data-i18n="market.limitText">Velg hvor stor en posisjon kan bli, og hva boten skal gjøre hvis en pris mangler eller en ordre blir avvist.</p></article><article><h3 data-i18n="market.testTitle">Test med realistiske antakelser</h3><p data-i18n="market.testText">Historiske tester og simuleringer kan vise hvordan reglene reagerer på ulike priser og kostnader. Fremtidige resultater kan avvike.</p></article></div></section>
+</main>
+<footer class="site-footer market-footer">
+  <div class="footer-shell">
+    <div><a class="brand invest-brand" href="/nb/">Nortivo<span aria-hidden="true"></span></a><p data-i18n="market.footer">Investeringsguider og handelsprogramvare</p></div>
+    <nav class="footer-links" aria-label="Bunnmeny" data-i18n-aria="nav.footer">
+      <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
+      <a href="/nb/support/" data-i18n="nav.support">Support</a>
+      <a href="/nb/privacy/" data-i18n="market.privacy">Personvern</a>
+      <a href="/nb/studio/" data-i18n="invest.archive">Tidligere Nortivo</a>
+      <a href="/nb/admin/" data-i18n="studio.admin">Admin</a>
+    </nav>
+  </div>
+  <div class="footer-bottom wrap">
+    <span data-i18n="founder">Grunnlagt av Noah J.C. Sæter</span>
+    <span data-i18n="footer.rights">© 2026 Nortivo</span>
+  </div>
 </footer>
 </body>
 </html>

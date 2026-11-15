@@ -150,7 +150,7 @@ function loadContact(fetchImplementation) {
 const response = (body, status = 200) => ({ ok: status >= 200 && status < 300, status, json: async () => body });
 
 test('legacy homepage sections redirect to separate localized pages', () => {
-  for (const [hash, page] of [['about','about'],['services','services'],['contact','contact'],['arc','products']]) {
+  for (const [hash, page] of [['about','about'],['services','services'],['contact','contact'],['arc','arc']]) {
     const fixture=loadSite({url:`https://nortivo.no/nb/#${hash}`});
     assert.equal(fixture.location.replacement, `https://nortivo.no/nb/${page}/`);
   }

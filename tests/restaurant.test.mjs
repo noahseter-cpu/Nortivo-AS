@@ -46,7 +46,7 @@ test('studio archive shows both real projects and honest private-test/demo conte
     assert.match(html,/data-i18n="status"/);
     assert.match(html,/data-i18n="home.screenCaption"/);
     assert.match(html,new RegExp(`href="/${lang}/restaurant/"`));
-    assert.match(html,new RegExp(`href="/${lang}/products/#app-view"`));
+    assert.match(html,new RegExp(`href="/${lang}/arc/#app-view"`));
     assert.match(html,new RegExp(`href="/${lang}/contact/"`));
     assert.doesNotMatch(html,/<iframe|<form|Vibb|vibb|data-arc-example/);
   }
@@ -54,23 +54,23 @@ test('studio archive shows both real projects and honest private-test/demo conte
 
 test('public studio styling remains separate from the private workspace and restaurant identity', () => {
   for(const lang of ['nb','en']) {
-    for(const route of ['studio/','products/','services/','about/','contact/','support/','privacy/']) {
+    for(const route of ['studio/','arc/','studio/services/']) {
       assert.match(read(`dist/${lang}/${route}index.html`),/href="\/assets\/studio-refresh\.css"/);
     }
     for(const route of ['restaurant','admin']) {
       assert.doesNotMatch(read(`dist/${lang}/${route}/index.html`),/href="\/assets\/studio-refresh\.css"/);
     }
   }
-  assert.match(read('dist/products/index.html'),/id="app-view"/);
+  assert.match(read('dist/arc/index.html'),/id="app-view"/);
   assert.match(read('dist/assets/studio-refresh.css'),/prefers-reduced-motion:reduce/);
 });
 
-test('support retains the same complete desktop and mobile header as the studio archive in both languages', () => {
+test('support retains the same complete desktop and mobile header as the investment site in both languages', () => {
   for (const lang of ['nb','en']) {
-    const header = html => html.match(/<header class="site-header">[\s\S]*?<\/header>/)[0];
-    assert.equal(header(read(`dist/${lang}/support/index.html`)), header(read(`dist/${lang}/studio/index.html`)));
+    const header = html => html.match(/<header class="site-header market-header">[\s\S]*?<\/header>/)[0];
+    assert.equal(header(read(`dist/${lang}/support/index.html`)), header(read(`dist/${lang}/index.html`)));
     const home = read(`dist/${lang}/studio/index.html`);
-    assert.match(home,new RegExp(`href="/${lang}/products/#app-view"`));
+    assert.match(home,new RegExp(`href="/${lang}/arc/#app-view"`));
   }
 });
 

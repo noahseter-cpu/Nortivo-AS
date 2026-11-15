@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#07131f">
+<meta name="theme-color" content="#f3f4ed">
 <title>Your information — Nortivo</title>
 <meta name="description" content="How information is used in Nortivo’s contact and support forms.">
 <link rel="canonical" href="https://nortivo.no/privacy/">
@@ -11,51 +11,44 @@
 <meta property="og:title" content="Your information — Nortivo">
 <meta property="og:description" content="How information is used in Nortivo’s contact and support forms.">
 <meta property="og:locale" content="en_GB">
-<meta property="og:image" content="https://nortivo.no/assets/nortivo-hero.webp">
 <meta property="og:site_name" content="Nortivo">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
 <link rel="stylesheet" href="/assets/site.css">
 <script defer src="/assets/site.js">
 </script>
-<link rel="stylesheet" href="/assets/studio-refresh.css">
+<link rel="stylesheet" href="/assets/investment.css">
+<link rel="stylesheet" href="/assets/market.css">
 </head>
-<body data-page="privacy">
+<body class="invest market" data-page="privacy">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
-<header class="site-header">
-<div class="nav-shell">
-<a class="brand" href="/" aria-label="Nortivo">
-<span class="brand-name">Nortivo</span>
-</a>
-<nav class="desktop-nav" aria-label="Main navigation" data-i18n-aria="nav.label">
-<a href="/products/" data-i18n="nav.products">Products</a>
-<a href="/services/" data-i18n="nav.services">Services</a>
-<a href="/about/" data-i18n="nav.about">About Nortivo</a>
-<a href="/support/" data-i18n="nav.support">Support</a>
-<a href="/contact/" data-i18n="nav.contact">Get in touch</a>
-</nav>
-<div class="header-tools">
-<div class="language-switch" role="group" aria-label="Language" data-i18n-aria="footer.language">
-<button type="button" data-language="nb" aria-pressed="false">Norsk</button>
-<span aria-hidden="true">/</span>
-<button type="button" data-language="en" aria-pressed="true">English</button>
-</div>
-<button type="button" class="menu-toggle" aria-controls="mobile-nav" aria-expanded="false">
-<span data-i18n="nav.menu" >Menu</span>
-<svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8"/>
-</svg>
-</button>
-</div>
-</div>
-<nav id="mobile-nav" class="mobile-nav" hidden aria-label="Mobile navigation" data-i18n-aria="nav.label">
-<a href="/" data-i18n="nav.home">Home</a>
-<a href="/products/" data-i18n="nav.products">Products</a>
-<a href="/services/" data-i18n="nav.services">Services</a>
-<a href="/about/" data-i18n="nav.about">About Nortivo</a>
-<a href="/support/" data-i18n="nav.support">Support</a>
-<a href="/contact/" data-i18n="nav.contact">Get in touch</a>
-</nav>
+<header class="site-header market-header">
+  <div class="nav-shell">
+    <a class="brand invest-brand" href="/">Nortivo<span aria-hidden="true"></span></a>
+    <nav class="desktop-nav" aria-label="Main navigation" data-i18n-aria="nav.label">
+      <a href="/services/" data-i18n="nav.services">Services</a>
+      <a href="/products/" data-i18n="market.tools">Tools</a>
+      <a href="/about/" data-i18n="market.about">About Nortivo</a>
+      <a href="/support/" data-i18n="nav.support">Support</a>
+      <a href="/contact/" data-i18n="nav.contact">Get in touch</a>
+    </nav>
+    <div class="header-tools">
+      <div class="invest-languages" role="group" aria-label="Language" data-i18n-aria="footer.language">
+        <button type="button" data-language="nb" aria-pressed="false" lang="nb">NO</button>
+        <button type="button" data-language="en" aria-pressed="true" lang="en">EN</button>
+      </div>
+      <button type="button" class="menu-toggle" aria-controls="mobile-nav" aria-expanded="false">
+        <span data-i18n="nav.menu">Menu</span>
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="mobile-nav" hidden aria-label="Mobile navigation" data-i18n-aria="nav.label">
+    <a href="/services/" data-i18n="nav.services">Services</a>
+    <a href="/products/" data-i18n="market.tools">Tools</a>
+    <a href="/about/" data-i18n="market.about">About Nortivo</a>
+    <a href="/support/" data-i18n="nav.support">Support</a>
+    <a href="/contact/" data-i18n="nav.contact">Get in touch</a>
+  </nav>
 </header>
 <main class="section wrap legal-page" id="main">
 <h1 data-i18n="privacy.title" >Information in contact and support.</h1>
@@ -77,24 +70,21 @@
 </a>
 </p>
 </main>
-<footer class="site-footer">
-<div class="footer-shell">
-<div class="footer-brand">
-<a class="brand" href="/">NORTIVO</a>
-<p data-i18n="footer.note" >Websites. Apps. Nortivo.</p>
-</div>
-<nav class="footer-links" aria-label="Footer" data-i18n-aria="nav.footer">
-<a href="/products/" data-i18n="nav.products">Products</a>
-<a href="/support/" data-i18n="nav.support">Support</a>
-<a href="/privacy/" data-i18n="footer.privacy">About your information</a>
-<a href="/contact/" data-i18n="nav.contact">Get in touch</a>
-<a href="/admin/" data-i18n="studio.admin">Admin</a>
-</nav>
-</div>
-<div class="footer-bottom wrap">
-<span data-i18n="founder" >Founded by Noah J.C. Sæter</span>
-<span data-i18n="footer.rights" >© 2026 Nortivo</span>
-</div>
+<footer class="site-footer market-footer">
+  <div class="footer-shell">
+    <div><a class="brand invest-brand" href="/">Nortivo<span aria-hidden="true"></span></a><p data-i18n="market.footer">Investment guides and trading software</p></div>
+    <nav class="footer-links" aria-label="Footer" data-i18n-aria="nav.footer">
+      <a href="/contact/" data-i18n="nav.contact">Get in touch</a>
+      <a href="/support/" data-i18n="nav.support">Support</a>
+      <a href="/privacy/" data-i18n="market.privacy">Privacy</a>
+      <a href="/studio/" data-i18n="invest.archive">Nortivo archive</a>
+      <a href="/admin/" data-i18n="studio.admin">Admin</a>
+    </nav>
+  </div>
+  <div class="footer-bottom wrap">
+    <span data-i18n="founder">Founded by Noah J.C. Sæter</span>
+    <span data-i18n="footer.rights">© 2026 Nortivo</span>
+  </div>
 </footer>
 </body>
 </html>
