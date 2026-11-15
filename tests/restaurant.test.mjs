@@ -32,12 +32,12 @@ test('restaurant is explicitly fictional and contains no reservation network or 
 test('homepage stays brief and all new pages have one main heading', () => {
   const home=read('dist/index.html');
   assert.doesNotMatch(home,/<form|class="career|id="contact"/);
-  assert.match(read('dist/nb/index.html'),/data-i18n="studio.headline"\s*>Nettsider og apper\.</);
+  assert.match(read('dist/nb/index.html'),/data-i18n="invest.heading"/);
   for(const route of ['about','services','contact','restaurant']) assert.equal((read(`dist/${route}/index.html`).match(/<h1\b/g)||[]).length,1);
 });
-test('company homepage shows both real projects and honest private-test/demo context', () => {
+test('studio archive shows both real projects and honest private-test/demo context', () => {
   for(const lang of ['nb','en']) {
-    const html=read(`dist/${lang}/index.html`);
+    const html=read(`dist/${lang}/studio/index.html`);
     assert.equal((html.match(/<h1\b/g)||[]).length,1);
     assert.match(html,/class="studio-projects"/);
     assert.match(html,/lune-table\.webp/);
@@ -54,7 +54,7 @@ test('company homepage shows both real projects and honest private-test/demo con
 
 test('public studio styling remains separate from the private workspace and restaurant identity', () => {
   for(const lang of ['nb','en']) {
-    for(const route of ['','products/','services/','about/','contact/','support/','privacy/']) {
+    for(const route of ['studio/','products/','services/','about/','contact/','support/','privacy/']) {
       assert.match(read(`dist/${lang}/${route}index.html`),/href="\/assets\/studio-refresh\.css"/);
     }
     for(const route of ['restaurant','admin']) {
@@ -65,11 +65,11 @@ test('public studio styling remains separate from the private workspace and rest
   assert.match(read('dist/assets/studio-refresh.css'),/prefers-reduced-motion:reduce/);
 });
 
-test('support retains the same complete desktop and mobile header as home in both languages', () => {
+test('support retains the same complete desktop and mobile header as the studio archive in both languages', () => {
   for (const lang of ['nb','en']) {
     const header = html => html.match(/<header class="site-header">[\s\S]*?<\/header>/)[0];
-    assert.equal(header(read(`dist/${lang}/support/index.html`)), header(read(`dist/${lang}/index.html`)));
-    const home = read(`dist/${lang}/index.html`);
+    assert.equal(header(read(`dist/${lang}/support/index.html`)), header(read(`dist/${lang}/studio/index.html`)));
+    const home = read(`dist/${lang}/studio/index.html`);
     assert.match(home,new RegExp(`href="/${lang}/products/#app-view"`));
   }
 });

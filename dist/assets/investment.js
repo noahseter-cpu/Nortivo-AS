@@ -1,0 +1,35 @@
+(() => {
+  const choices = document.querySelector('.invest-scenarios');
+  const result = document.querySelector('.invest-result');
+  const price = document.querySelector('#demo-price');
+  const outcome = document.querySelector('#demo-outcome');
+  const buttons = choices.querySelectorAll('[data-demo-price]');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let feedback;
+
+  choices.addEventListener('click', event => {
+    const button = event.target.closest('[data-demo-price]');
+    if (!button || button.getAttribute('aria-pressed') === 'true') return;
+
+    const value = Number(button.dataset.demoPrice);
+    const createsOrder = value <= 100;
+    buttons.forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
+    price.textContent = String(value);
+    outcome.dataset.order = String(createsOrder);
+    outcome.dataset.i18n = createsOrder ? 'invest.buy' : 'invest.wait';
+    outcome.textContent = window.Nortivo.translate(outcome.dataset.i18n);
+
+    feedback?.cancel();
+    if (event.detail && !reducedMotion.matches && result.animate) {
+      feedback = result.animate(
+        [{ opacity: .75, transform: 'translateY(4px)' }, { opacity: 1, transform: 'translateY(0)' }],
+        { duration: 180, easing: 'cubic-bezier(.23, 1, .32, 1)' }
+      );
+    }
+  });
+
+  reducedMotion.addEventListener('change', event => {
+    if (event.matches) feedback?.cancel();
+  });
+  choices.hidden = false;
+})();

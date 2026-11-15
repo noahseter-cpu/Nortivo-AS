@@ -18,7 +18,7 @@ Nortivo presents the company’s digital product work, provides a direct support
 
 ## Positioning
 
-Nortivo builds focused digital products and also develops Arc, a personal progress product. The site should feel considered and product-led rather than like a generic agency template.
+Nortivo’s homepage presents investment education, custom trading software and crypto automation development. The browser demo uses fictional prices to explain how a rule produces a simulated order. Enquiries use the existing contact and support system. The earlier digital studio homepage lives at `/studio/` in both languages and links to Arc and Lune.
 
 ## Capabilities and Constraints
 

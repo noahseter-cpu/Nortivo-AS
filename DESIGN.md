@@ -320,3 +320,7 @@ Admin uses open project rows separated by the existing portal line. Desktop rows
 - Don't hide initial content behind entrance animations, parallax or scroll control.
 - Don't add glass blur, floating-card shadows or substitute logo geometry to this system.
 - Don't use color alone for status, field errors or the selected language.
+
+## Investment homepage
+
+The investment homepage uses Manrope on warm paper (#f3f4ed) with dark green ink (#172b24) and lime (#ddfa86) for the selected example and closing action. The two-column hero pairs the offer with a working simulation. Service descriptions sit in ruled rows and stack at narrow widths. Simulation output updates immediately and uses a short, interruptible transition for pointer input when reduced motion is off. The earlier studio and the service portal retain their own styling.
