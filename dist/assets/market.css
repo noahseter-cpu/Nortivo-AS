@@ -107,6 +107,11 @@ body.market {
 .market-work-list h3 { margin: 0; font-size: 1rem; }
 .market-work-list h3 a { display: inline-flex; align-items: center; min-height: 32px; }
 .market-work-list p { margin: 0; }
+.market-year-review { margin-top: 48px; padding-bottom: 0; scroll-margin-top: 24px; }
+.market-year-review h2 { font-size: clamp(1.9rem, 4vw, 3rem); }
+.market-year-review article p { margin-block: 8px; }
+.market-year-review a { display: inline-flex; align-items: center; min-height: 44px; }
+.year-review-links { display: flex; flex-wrap: wrap; gap: 0 18px; }
 
 .market[data-page="contact"] .contact-section { background: var(--paper); }
 .market .contact-grid { gap: 24px clamp(24px, 5vw, 72px); }
