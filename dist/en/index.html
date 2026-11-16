@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="nb_NO" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f8f5f1">
+  <meta name="theme-color" content="#fcfcfa">
 
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
@@ -28,6 +28,7 @@
   <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
   <header class="site-header market-header">
   <div class="nav-shell">
+    <span class="edition-location" data-i18n="market.deskLocation">Lillestrøm, Norway</span>
     <a class="brand invest-brand" href="/en/">Nortivo<span aria-hidden="true"></span></a>
     <nav class="desktop-nav" aria-label="Main navigation" data-i18n-aria="nav.label">
       <a href="/en/services/" data-i18n="nav.services">Services</a>
@@ -56,32 +57,41 @@
 </header>
 
   <main id="main">
-    <section class="invest-shell firm-hero" aria-labelledby="firm-heading">
-      <div class="firm-hero-copy">
+    <section class="invest-shell edition-grid" aria-labelledby="firm-heading">
+      <div class="edition-lead">
         <h1 id="firm-heading" data-i18n="invest.heading">Investment guides and trading bots</h1>
         <p data-i18n="invest.intro">Nortivo creates investment guides and builds tools to test and automate trading rules for stocks and crypto.</p>
-        <div class="firm-actions">
-          <a class="invest-button" href="/en/contact/" data-i18n="invest.contact">Discuss a project</a>
-          <a href="/en/services/" data-i18n="market.homeServices">Explore services</a>
-        </div>
+        <a class="invest-button" href="/en/contact/" data-i18n="invest.contact">Discuss a project</a>
       </div>
-      <nav class="firm-index" aria-labelledby="offer-heading">
-        <h2 id="offer-heading" data-i18n="market.serviceIndex">How can we help?</h2>
+      <section class="edition-feature" aria-labelledby="edition-feature-title">
+        <figure class="rule-chart edition-chart">
+    <svg viewBox="0 0 390 110" aria-hidden="true" focusable="false" width="390" height="110">
+      <line class="rule-axis" x1="41" y1="16" x2="382" y2="16"></line>
+      <line class="rule-threshold" x1="41" y1="64" x2="382" y2="64"></line>
+      <line class="rule-axis" x1="41" y1="96" x2="382" y2="96"></line>
+      <text x="0" y="20">106</text><text x="0" y="68">100</text><text x="0" y="100">96</text>
+      <polyline points="43,32 109,48 175,80 241,24 307,64 373,96"></polyline>
+      <circle class="rule-point" cx="43" cy="32" r="4"></circle>
+      <circle class="rule-point" cx="109" cy="48" r="4"></circle>
+      <circle class="rule-point" cx="175" cy="80" r="4"></circle>
+      <circle class="rule-point" cx="241" cy="24" r="4"></circle>
+      <circle class="rule-point" cx="307" cy="64" r="4"></circle>
+      <circle class="rule-point" cx="373" cy="96" r="4"></circle>
+    </svg>
+    <figcaption data-i18n="invest.chart">Fictional price series. The dashed line marks the threshold of 100.</figcaption>
+  </figure>
+        <h2 id="edition-feature-title" data-i18n="market.featureTitle">When does a rule become an order?</h2>
+        <p data-i18n="market.featureIntro">See how six fictional prices are evaluated against a single buy threshold.</p>
+        <a class="edition-link" href="/en/products/#simulation" data-i18n="market.labAction">Open the simulation</a>
+      </section>
+      <nav class="edition-services" aria-labelledby="offer-heading">
+        <h2 id="offer-heading" data-i18n="market.serviceIndex">Services</h2>
         <ul id="offer">
           <li><a href="/en/services/#guide"><strong data-i18n="market.guideService">Investment guides</strong><span data-i18n="market.guideIndex">Funds, stocks, fees and risk</span></a></li>
           <li><a href="/en/services/#bot"><strong data-i18n="market.botService">Trading bot development</strong><span data-i18n="market.botIndex">Strategy rules, historical tests and logs</span></a></li>
           <li><a href="/en/services/#crypto"><strong data-i18n="market.cryptoService">Crypto automation</strong><span data-i18n="market.cryptoIndex">Order handling, risk limits and emergency stops</span></a></li>
         </ul>
       </nav>
-    </section>
-    <section class="firm-lab-feature" aria-labelledby="featured-lab">
-      <div class="invest-shell firm-lab-inner">
-        <h2 id="featured-lab" data-i18n="market.labTitle">See a trading rule in action</h2>
-        <div>
-          <p data-i18n="market.labText">Choose a fictional price to see when the rule would trigger a simulated order. Compare each price in the same example.</p>
-          <a class="invest-button" href="/en/products/#simulation" data-i18n="market.labAction">Open the simulation</a>
-        </div>
-      </div>
     </section>
     <section class="firm-process" aria-labelledby="process-heading">
       <div class="invest-shell firm-process-grid">

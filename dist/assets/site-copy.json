@@ -363,7 +363,7 @@
     "market.guideService": "Investeringsguider",
     "market.botService": "Utvikling av handelsboter",
     "market.cryptoService": "Kryptoautomasjon",
-    "market.serviceIndex": "Hva kan vi hjelpe deg med?",
+    "market.serviceIndex": "Tjenester",
     "market.guideIndex": "Fond, aksjer, gebyrer og risiko",
     "market.botIndex": "Strategiregler, historiske tester og logger",
     "market.cryptoIndex": "Ordreflyt, risikogrenser og nødstopp",
@@ -383,7 +383,10 @@
     "reviews.contactHeading": "Send tilbakemelding til Nortivo",
     "reviews.contactIntro": "Fortell hvilken tjeneste du brukte, hva som fungerte og hva vi kan forbedre. Meldingen går privat til Nortivo.",
     "reviews.contactHint": "Hvis du ønsker at vi skal kunne sitere omtalen, skriv det i meldingen og oppgi hvilket navn vi kan bruke.",
-    "invest.chart": "Fiktiv kursserie. Den stiplede linjen viser grensen på 100."
+    "invest.chart": "Fiktiv kursserie. Den stiplede linjen viser grensen på 100.",
+    "market.deskLocation": "Lillestrøm, Norge",
+    "market.featureTitle": "Når blir en regel til en ordre?",
+    "market.featureIntro": "Se hvordan seks fiktive kurser testes mot én kjøpsgrense."
   },
   "en": {
     "nav.home": "Home",
@@ -749,7 +752,7 @@
     "market.guideService": "Investment guides",
     "market.botService": "Trading bot development",
     "market.cryptoService": "Crypto automation",
-    "market.serviceIndex": "How can we help?",
+    "market.serviceIndex": "Services",
     "market.guideIndex": "Funds, stocks, fees and risk",
     "market.botIndex": "Strategy rules, historical tests and logs",
     "market.cryptoIndex": "Order handling, risk limits and emergency stops",
@@ -769,6 +772,9 @@
     "reviews.contactHeading": "Send feedback to Nortivo",
     "reviews.contactIntro": "Tell us which service you used, what worked and what we could improve. Your message goes privately to Nortivo.",
     "reviews.contactHint": "If you would like us to be able to quote your review, say so in your message and tell us which name we may use.",
-    "invest.chart": "Fictional price series. The dashed line marks the threshold of 100."
+    "invest.chart": "Fictional price series. The dashed line marks the threshold of 100.",
+    "market.deskLocation": "Lillestrøm, Norway",
+    "market.featureTitle": "When does a rule become an order?",
+    "market.featureIntro": "See how six fictional prices are evaluated against a single buy threshold."
   }
 }

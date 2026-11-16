@@ -323,4 +323,4 @@ Admin uses open project rows separated by the existing portal line. Desktop rows
 
 ## Investment website
 
-The public site uses Manrope, warm paper (#f8f5f1), plum ink (#301e28) and berry links (#8a3045). The first screen pairs the offer with a service index. The service page keeps its section links in a side column on wide screens. The Tools page plots a fictional price series and highlights the point being evaluated. The simulation output updates immediately and respects reduced motion. Contact, customer reviews and support use the same palette.
+The public site uses Gloock for the centered masthead and editorial headlines, with Manrope for body text and controls. Paper (#fcfcfa), ink (#182426) and deep teal (#215867) carry through the site. Three ruled columns introduce the firm, feature a fictional rule test and index services. On narrow screens the columns stack in reading order. The Tools page uses the same fictional price series and highlights the point being evaluated. The simulation output updates immediately and respects reduced motion.
