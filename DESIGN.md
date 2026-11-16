@@ -323,6 +323,4 @@ Admin uses open project rows separated by the existing portal line. Desktop rows
 
 ## Investment website
 
-The current public site uses Manrope with ink navy (#111d31), cool paper (#f6f8fb), muted slate (#46556b) and blue links (#20487a). The first screen names the services alongside an editorial image. A ruled service overview leads to individual service details. A separate ordered list explains how an enquiry becomes a project and links to the trading simulation on the Tools page. Support and contact use the same palette, with validation and order states described in text. The simulator keeps its immediate output and respects reduced motion.
-
-The homepage image is generated architecture and does not represent a Nortivo office. Built-in ImageGen produced the source from an editorial prompt for a low-angle close-up of Nordic facades in brushed aluminium and dark ink-blue glass, under overcast daylight, with a triangular patch of pale sky and no signs, people, charts or logos. The site serves `dist/assets/nortivo-facade.jpg` and a smaller responsive copy.
+The public site uses Manrope, warm paper (#f8f5f1), plum ink (#301e28) and berry links (#8a3045). The first screen pairs the offer with a service index. The service page keeps its section links in a side column on wide screens. The Tools page plots a fictional price series and highlights the point being evaluated. The simulation output updates immediately and respects reduced motion. Contact, customer reviews and support use the same palette.

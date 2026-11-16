@@ -12,4 +12,7 @@
 <url><loc>https://nortivo.no/en/services/</loc></url>
 <url><loc>https://nortivo.no/nb/contact/</loc></url>
 <url><loc>https://nortivo.no/en/contact/</loc></url>
-<url><loc>https://nortivo.no/nb/restaurant/</loc></url><url><loc>https://nortivo.no/en/restaurant/</loc></url></urlset>
+<url><loc>https://nortivo.no/nb/restaurant/</loc></url><url><loc>https://nortivo.no/en/restaurant/</loc></url>
+  <url><loc>https://nortivo.no/nb/reviews/</loc></url>
+  <url><loc>https://nortivo.no/en/reviews/</loc></url>
+</urlset>

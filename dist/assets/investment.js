@@ -4,6 +4,7 @@
   const price = document.querySelector('#demo-price');
   const outcome = document.querySelector('#demo-outcome');
   const buttons = choices.querySelectorAll('[data-demo-price]');
+  const chartPoints = document.querySelectorAll('[data-chart-price]');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let feedback;
 
@@ -14,6 +15,9 @@
     const value = Number(button.dataset.demoPrice);
     const createsOrder = value <= 100;
     buttons.forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
+    chartPoints.forEach(point => {
+      point.dataset.selected = String(Number(point.dataset.chartPrice) === value);
+    });
     price.textContent = String(value);
     outcome.dataset.order = String(createsOrder);
     outcome.dataset.i18n = createsOrder ? 'invest.buy' : 'invest.wait';

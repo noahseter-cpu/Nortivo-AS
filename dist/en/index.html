@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="nb_NO" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f8fb">
+  <meta name="theme-color" content="#f8f5f1">
 
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
@@ -22,8 +22,7 @@
   <script defer src="/assets/site.js"></script>
 <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
-<meta property="og:image" content="https://nortivo.no/assets/nortivo-facade.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 <body class="invest market" data-page="home">
   <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
@@ -57,48 +56,38 @@
 </header>
 
   <main id="main">
-    <section class="firm-hero" aria-labelledby="firm-heading">
+    <section class="invest-shell firm-hero" aria-labelledby="firm-heading">
       <div class="firm-hero-copy">
         <h1 id="firm-heading" data-i18n="invest.heading">Investment guides and trading bots</h1>
-        <p data-i18n="invest.intro">Nortivo creates investment guides and develops software for rules-based trading in stocks and crypto.</p>
+        <p data-i18n="invest.intro">Nortivo creates investment guides and builds tools to test and automate trading rules for stocks and crypto.</p>
         <div class="firm-actions">
           <a class="invest-button" href="/en/contact/" data-i18n="invest.contact">Discuss a project</a>
           <a href="/en/services/" data-i18n="market.homeServices">Explore services</a>
         </div>
       </div>
-      <img class="firm-hero-photo" src="/assets/nortivo-facade.jpg"
-        srcset="/assets/nortivo-facade-small.jpg 768w, /assets/nortivo-facade.jpg 1536w"
-        sizes="(max-width: 740px) 100vw, 46vw" width="1536" height="1024" alt="" fetchpriority="high">
+      <nav class="firm-index" aria-labelledby="offer-heading">
+        <h2 id="offer-heading" data-i18n="market.serviceIndex">How can we help?</h2>
+        <ul id="offer">
+          <li><a href="/en/services/#guide"><strong data-i18n="market.guideService">Investment guides</strong><span data-i18n="market.guideIndex">Funds, stocks, fees and risk</span></a></li>
+          <li><a href="/en/services/#bot"><strong data-i18n="market.botService">Trading bot development</strong><span data-i18n="market.botIndex">Strategy rules, historical tests and logs</span></a></li>
+          <li><a href="/en/services/#crypto"><strong data-i18n="market.cryptoService">Crypto automation</strong><span data-i18n="market.cryptoIndex">Order handling, risk limits and emergency stops</span></a></li>
+        </ul>
+      </nav>
     </section>
-
-    <section class="invest-shell firm-offer" id="offer" aria-labelledby="offer-heading">
-      <h2 id="offer-heading" data-i18n="invest.offer">Services</h2>
-      <ul class="firm-services">
-        <li>
-          <h3 data-i18n="market.guideService">Investment guides</h3>
-          <p data-i18n="invest.guideText">Guides to funds, stocks, risk and fees, tailored to your topic and level.</p>
-          <a href="/en/services/#guide" data-i18n="market.guideMore">About investment guides</a>
-        </li>
-        <li>
-          <h3 data-i18n="market.botService">Trading bot development</h3>
-          <p data-i18n="invest.botText">Custom trading bots built around agreed rules, with historical testing and a decision log.</p>
-          <a href="/en/services/#bot" data-i18n="market.botMore">About trading bot development</a>
-        </li>
-        <li>
-          <h3 data-i18n="market.cryptoService">Crypto automation</h3>
-          <p data-i18n="invest.cryptoText">Software for automated crypto trading, covering order handling, risk limits and emergency stops.</p>
-          <a href="/en/services/#crypto" data-i18n="market.cryptoMore">About crypto automation</a>
-        </li>
-      </ul>
-      <p class="firm-scope" data-i18n="market.homeScope">Investment guides provide general education.</p>
+    <section class="firm-lab-feature" aria-labelledby="featured-lab">
+      <div class="invest-shell firm-lab-inner">
+        <h2 id="featured-lab" data-i18n="market.labTitle">See a trading rule in action</h2>
+        <div>
+          <p data-i18n="market.labText">Choose a fictional price to see when the rule would trigger a simulated order. Compare each price in the same example.</p>
+          <a class="invest-button" href="/en/products/#simulation" data-i18n="market.labAction">Open the simulation</a>
+        </div>
+      </div>
     </section>
-
     <section class="firm-process" aria-labelledby="process-heading">
       <div class="invest-shell firm-process-grid">
         <div>
           <h2 id="process-heading" data-i18n="market.deliveryTitle">How a project works</h2>
           <p data-i18n="market.deliveryLead">Tell us what you want to learn, which rules you want to automate or what is missing from your current setup.</p>
-          <a class="firm-process-link" href="/en/products/#simulation" data-i18n="market.simulationLink">See how a trading rule is tested</a>
         </div>
         <ol>
           <li><h3 data-i18n="market.deliveryScope">Define the scope</h3><p data-i18n="market.deliveryScopeText">We agree on what the guide should cover or what the software needs to do.</p></li>
@@ -107,7 +96,6 @@
         </ol>
       </div>
     </section>
-
     <section class="invest-shell firm-contact" aria-labelledby="closing-heading">
       <div><h2 id="closing-heading" data-i18n="market.homeCtaTitle">Have a project in mind?</h2><p data-i18n="market.homeCtaText">Send Nortivo a brief description. We’ll follow up by email.</p></div>
       <a class="invest-button" href="/en/contact/" data-i18n="invest.contact">Discuss a project</a>
@@ -119,6 +107,7 @@
     <nav class="footer-links" aria-label="Footer navigation" data-i18n-aria="nav.footer">
       <a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
       <a href="/en/support/" data-i18n="nav.support">Support</a>
+      <a href="/en/reviews/" data-i18n="market.reviews">Customer reviews</a>
       <a href="/en/privacy/" data-i18n="market.privacy">Privacy</a>
       <a href="/en/studio/" data-i18n="invest.archive">Nortivo archive</a>
       <a href="/en/admin/" data-i18n="studio.admin">Admin</a>

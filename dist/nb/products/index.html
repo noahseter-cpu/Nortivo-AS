@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="en_GB" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f6f8fb">
+<meta name="theme-color" content="#f8f5f1">
 
 
 
@@ -67,13 +67,33 @@
 <section class="invest-shell market-tool-hero"><div class="market-title"><h1 data-i18n="market.toolsTitle">Handelssimulering</h1><p data-i18n="market.toolsIntro">Velg en fiktiv kurs og se hvordan regelen bestemmer om en simulert ordre skal opprettes.</p><a class="invest-button" href="/nb/contact/?project=bot" data-i18n="market.practice">Diskuter en bot</a></div><section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
         <div class="invest-lab-header">
           <h2 id="lab-heading" data-i18n="invest.lab">Test en handelsregel</h2>
-          <p data-i18n="invest.sample">Simulering med fiktive priser</p>
+          <p data-i18n="invest.sample">Eksempel med fiktive priser og ordre</p>
         </div>
-        <p class="invest-rule" data-i18n="invest.rule">Regel: Lag en simulert kjøpsordre ved kurs 100 eller lavere.</p>
-        <div class="invest-scenarios" role="group" aria-label="Velg et kurseksempel" data-i18n-aria="invest.scenario" hidden>
-          <button type="button" data-demo-price="104" aria-pressed="true">104</button>
-          <button type="button" data-demo-price="98" aria-pressed="false">98</button>
-        </div>
+        <p class="invest-rule" data-i18n="invest.rule">I denne testen opprettes en simulert kjøpsordre når kursen er 100 eller lavere.</p>
+  <figure class="rule-chart">
+    <svg viewBox="0 0 390 110" aria-hidden="true" focusable="false" width="390" height="110">
+      <line class="rule-axis" x1="41" y1="16" x2="382" y2="16"></line>
+      <line class="rule-threshold" x1="41" y1="64" x2="382" y2="64"></line>
+      <line class="rule-axis" x1="41" y1="96" x2="382" y2="96"></line>
+      <text x="0" y="20">106</text><text x="0" y="68">100</text><text x="0" y="100">96</text>
+      <polyline points="43,32 109,48 175,80 241,24 307,64 373,96"></polyline>
+      <circle class="rule-point" cx="43" cy="32" r="4" data-chart-price="104" data-selected="true"></circle>
+      <circle class="rule-point" cx="109" cy="48" r="4" data-chart-price="102"></circle>
+      <circle class="rule-point" cx="175" cy="80" r="4" data-chart-price="98"></circle>
+      <circle class="rule-point" cx="241" cy="24" r="4" data-chart-price="105"></circle>
+      <circle class="rule-point" cx="307" cy="64" r="4" data-chart-price="100"></circle>
+      <circle class="rule-point" cx="373" cy="96" r="4" data-chart-price="96"></circle>
+    </svg>
+    <figcaption data-i18n="invest.chart">Fiktiv kursserie. Den stiplede linjen viser grensen på 100.</figcaption>
+  </figure>
+  <div class="invest-scenarios" role="group" aria-label="Velg et kurseksempel" data-i18n-aria="invest.scenario" hidden>
+    <button type="button" data-demo-price="104" aria-pressed="true">104</button>
+    <button type="button" data-demo-price="102" aria-pressed="false">102</button>
+    <button type="button" data-demo-price="98" aria-pressed="false">98</button>
+    <button type="button" data-demo-price="105" aria-pressed="false">105</button>
+    <button type="button" data-demo-price="100" aria-pressed="false">100</button>
+    <button type="button" data-demo-price="96" aria-pressed="false">96</button>
+  </div>
         <dl class="invest-result" aria-live="polite" aria-atomic="true">
           <div><dt data-i18n="invest.price">Eksempelpris</dt><dd id="demo-price">104</dd></div>
           <div><dt data-i18n="invest.outcome">Resultat</dt><dd id="demo-outcome" data-i18n="invest.wait">Ingen ordre</dd></div>
@@ -87,6 +107,7 @@
     <nav class="footer-links" aria-label="Bunnmeny" data-i18n-aria="nav.footer">
       <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
       <a href="/nb/support/" data-i18n="nav.support">Support</a>
+      <a href="/nb/reviews/" data-i18n="market.reviews">Kundeomtaler</a>
       <a href="/nb/privacy/" data-i18n="market.privacy">Personvern</a>
       <a href="/nb/studio/" data-i18n="invest.archive">Tidligere Nortivo</a>
       <a href="/nb/admin/" data-i18n="studio.admin">Admin</a>

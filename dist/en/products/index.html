@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="nb_NO" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f6f8fb">
+<meta name="theme-color" content="#f8f5f1">
 
 
 
@@ -67,13 +67,33 @@
 <section class="invest-shell market-tool-hero"><div class="market-title"><h1 data-i18n="market.toolsTitle">Trading simulation</h1><p data-i18n="market.toolsIntro">Choose a fictional price and see how the rule decides whether to create a simulated order.</p><a class="invest-button" href="/en/contact/?project=bot" data-i18n="market.practice">Discuss a bot</a></div><section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
         <div class="invest-lab-header">
           <h2 id="lab-heading" data-i18n="invest.lab">Test a trading rule</h2>
-          <p data-i18n="invest.sample">Simulation with fictional prices</p>
+          <p data-i18n="invest.sample">Example with fictional prices and orders</p>
         </div>
-        <p class="invest-rule" data-i18n="invest.rule">Rule: Create a simulated buy order at a price of 100 or lower.</p>
-        <div class="invest-scenarios" role="group" aria-label="Choose an example price" data-i18n-aria="invest.scenario" hidden>
-          <button type="button" data-demo-price="104" aria-pressed="true">104</button>
-          <button type="button" data-demo-price="98" aria-pressed="false">98</button>
-        </div>
+        <p class="invest-rule" data-i18n="invest.rule">This test creates a simulated buy order when the price is 100 or lower.</p>
+  <figure class="rule-chart">
+    <svg viewBox="0 0 390 110" aria-hidden="true" focusable="false" width="390" height="110">
+      <line class="rule-axis" x1="41" y1="16" x2="382" y2="16"></line>
+      <line class="rule-threshold" x1="41" y1="64" x2="382" y2="64"></line>
+      <line class="rule-axis" x1="41" y1="96" x2="382" y2="96"></line>
+      <text x="0" y="20">106</text><text x="0" y="68">100</text><text x="0" y="100">96</text>
+      <polyline points="43,32 109,48 175,80 241,24 307,64 373,96"></polyline>
+      <circle class="rule-point" cx="43" cy="32" r="4" data-chart-price="104" data-selected="true"></circle>
+      <circle class="rule-point" cx="109" cy="48" r="4" data-chart-price="102"></circle>
+      <circle class="rule-point" cx="175" cy="80" r="4" data-chart-price="98"></circle>
+      <circle class="rule-point" cx="241" cy="24" r="4" data-chart-price="105"></circle>
+      <circle class="rule-point" cx="307" cy="64" r="4" data-chart-price="100"></circle>
+      <circle class="rule-point" cx="373" cy="96" r="4" data-chart-price="96"></circle>
+    </svg>
+    <figcaption data-i18n="invest.chart">Fictional price series. The dashed line marks the threshold of 100.</figcaption>
+  </figure>
+  <div class="invest-scenarios" role="group" aria-label="Choose an example price" data-i18n-aria="invest.scenario" hidden>
+    <button type="button" data-demo-price="104" aria-pressed="true">104</button>
+    <button type="button" data-demo-price="102" aria-pressed="false">102</button>
+    <button type="button" data-demo-price="98" aria-pressed="false">98</button>
+    <button type="button" data-demo-price="105" aria-pressed="false">105</button>
+    <button type="button" data-demo-price="100" aria-pressed="false">100</button>
+    <button type="button" data-demo-price="96" aria-pressed="false">96</button>
+  </div>
         <dl class="invest-result" aria-live="polite" aria-atomic="true">
           <div><dt data-i18n="invest.price">Example price</dt><dd id="demo-price">104</dd></div>
           <div><dt data-i18n="invest.outcome">Result</dt><dd id="demo-outcome" data-i18n="invest.wait">No order</dd></div>
@@ -87,6 +107,7 @@
     <nav class="footer-links" aria-label="Footer navigation" data-i18n-aria="nav.footer">
       <a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
       <a href="/en/support/" data-i18n="nav.support">Support</a>
+      <a href="/en/reviews/" data-i18n="market.reviews">Customer reviews</a>
       <a href="/en/privacy/" data-i18n="market.privacy">Privacy</a>
       <a href="/en/studio/" data-i18n="invest.archive">Nortivo archive</a>
       <a href="/en/admin/" data-i18n="studio.admin">Admin</a>
