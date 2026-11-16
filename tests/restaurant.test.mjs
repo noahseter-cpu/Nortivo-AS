@@ -32,7 +32,11 @@ test('restaurant is explicitly fictional and contains no reservation network or 
 test('homepage stays brief and all new pages have one main heading', () => {
   const home=read('dist/index.html');
   assert.doesNotMatch(home,/<form|class="career|id="contact"/);
-  assert.match(read('dist/nb/index.html'),/data-i18n="invest.heading"/);
+  for(const lang of ['nb','en']) {
+    const localized = read(`dist/${lang}/index.html`);
+    assert.equal((localized.match(/<h1\b/g)||[]).length, 1);
+    assert.match(localized,/data-i18n="replay.headlineStart"/);
+  }
   for(const route of ['about','services','contact','restaurant']) assert.equal((read(`dist/${route}/index.html`).match(/<h1\b/g)||[]).length,1);
 });
 test('studio archive shows both real projects and honest private-test/demo context', () => {

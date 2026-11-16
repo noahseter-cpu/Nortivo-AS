@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="nb_NO" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fcfcfa">
+  <meta name="theme-color" content="#f6f4f0">
 
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
@@ -23,8 +23,10 @@
 <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
 <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="/assets/decision-replay.css">
+  <script defer src="/assets/decision-replay.js"></script>
 </head>
-<body class="invest market" data-page="home">
+<body class="invest market replay-home" data-page="home">
   <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
   <header class="site-header market-header">
   <div class="nav-shell">
@@ -56,62 +58,61 @@
   </nav>
 </header>
 
-  <main id="main">
-    <section class="invest-shell edition-grid" aria-labelledby="firm-heading">
-      <div class="edition-lead">
-        <h1 id="firm-heading" data-i18n="invest.heading">Investment guides and trading bots</h1>
-        <p data-i18n="invest.intro">Nortivo creates investment guides and builds tools to test and automate trading rules for stocks and crypto.</p>
-        <div class="firm-intro-actions">
-          <a class="invest-button" href="/en/contact/" data-i18n="invest.contact">Discuss a project</a>
-          <a class="edition-link" href="/en/about/#work" data-i18n="work.link">See what we’ve built</a>
+  <main class="replay-shell" id="main">
+    <section class="replay-intro" aria-labelledby="main-heading">
+      <h1 id="main-heading"><span data-i18n="replay.headlineStart">Every order</span> <span data-i18n="replay.headlineEnd">needs a reason.</span></h1>
+      <div>
+        <p data-i18n="replay.intro">Custom trading bots, crypto automation and investment guides from Nortivo.</p>
+        <div class="replay-intro-links">
+          <a href="/en/contact/" data-i18n="invest.contact">Discuss a project</a>
+          <a href="/en/about/#work" data-i18n="work.link">See what we’ve built</a>
         </div>
       </div>
-      <section class="edition-feature" aria-labelledby="edition-feature-title">
-        <figure class="rule-chart edition-chart">
-    <svg viewBox="0 0 390 110" aria-hidden="true" focusable="false" width="390" height="110">
-      <line class="rule-axis" x1="41" y1="16" x2="382" y2="16"></line>
-      <line class="rule-threshold" x1="41" y1="64" x2="382" y2="64"></line>
-      <line class="rule-axis" x1="41" y1="96" x2="382" y2="96"></line>
-      <text x="0" y="20">106</text><text x="0" y="68">100</text><text x="0" y="100">96</text>
-      <polyline points="43,32 109,48 175,80 241,24 307,64 373,96"></polyline>
-      <circle class="rule-point" cx="43" cy="32" r="4"></circle>
-      <circle class="rule-point" cx="109" cy="48" r="4"></circle>
-      <circle class="rule-point" cx="175" cy="80" r="4"></circle>
-      <circle class="rule-point" cx="241" cy="24" r="4"></circle>
-      <circle class="rule-point" cx="307" cy="64" r="4"></circle>
-      <circle class="rule-point" cx="373" cy="96" r="4"></circle>
-    </svg>
-    <figcaption data-i18n="invest.chart">Fictional price series. The dashed line marks the threshold of 100.</figcaption>
-  </figure>
-        <h2 id="edition-feature-title" data-i18n="market.featureTitle">When does a rule become an order?</h2>
-        <p data-i18n="market.featureIntro">See how six fictional prices are evaluated against a single buy threshold.</p>
-        <a class="edition-link" href="/en/products/#simulation" data-i18n="market.labAction">Open the simulation</a>
+    </section>
+    <section class="replay-scene" id="replay" aria-labelledby="replay-title" data-checkpoint="3">
+      <div class="replay-studio">
+        <img class="replay-artwork" src="/assets/decision-replay-ribbon.jpg" alt="" width="1962" height="801" fetchpriority="high">
+        <span class="replay-scrim" aria-hidden="true"></span>
+        <div class="replay-studio-copy">
+          <h2 id="replay-title" data-i18n="replay.title">Replay a decision</h2>
+          <p data-i18n="replay.description">Buy at 100 or below. Stop when there are already three open positions.</p>
+        </div>
+      </div>
+      <div class="replay-command" hidden>
+        <div class="replay-samples" role="group" aria-label="Fictional scenarios" data-i18n-aria="replay.scenarios">
+          <button type="button" data-case="allowed" aria-pressed="true" data-i18n="replay.allowed">Order allowed</button>
+          <button type="button" data-case="price" aria-pressed="false" data-i18n="replay.priceHigh">Price too high</button>
+          <button type="button" data-case="limit" aria-pressed="false" data-i18n="replay.limitReached">Position limit reached</button>
+        </div>
+        <button type="button" class="replay-replay" data-i18n="replay.play">Replay path</button>
+      </div>
+      <section class="replay-trace" aria-labelledby="replay-trace-title">
+        <h3 id="replay-trace-title" data-i18n="replay.checks">Decision checks</h3>
+        <div class="replay-trace-body">
+          <div class="replay-trace-track" aria-hidden="true"><div class="replay-track-fill"></div><div class="replay-track-pulse"></div></div>
+          <ol class="replay-steps">
+            <li data-state="pass"><span class="replay-node" aria-hidden="true"></span><strong data-i18n="replay.price">Price</strong><span id="replay-price">98</span></li>
+            <li data-state="pass"><span class="replay-node" aria-hidden="true"></span><strong data-i18n="replay.rule">Rule</strong><span id="replay-rule">98 &le; 100</span></li>
+            <li data-state="pass"><span class="replay-node" aria-hidden="true"></span><strong data-i18n="replay.positionLimit">Limit</strong><span id="replay-guard" data-i18n="replay.oneOpen">1 of 3 open</span></li>
+            <li data-state="order"><span class="replay-node" aria-hidden="true"></span><strong data-i18n="replay.decision">Decision</strong><span id="replay-verdict" data-i18n="replay.allowed">Order allowed</span></li>
+          </ol>
+        </div>
       </section>
-      <nav class="edition-services" aria-labelledby="offer-heading">
-        <h2 id="offer-heading" data-i18n="market.serviceIndex">Services</h2>
-        <ul id="offer">
-          <li><a href="/en/services/#guide"><strong data-i18n="market.guideService">Investment guides</strong><span data-i18n="market.guideIndex">Funds, stocks, fees and risk</span></a></li>
-          <li><a href="/en/services/#bot"><strong data-i18n="market.botService">Trading bot development</strong><span data-i18n="market.botIndex">Strategy rules, historical tests and logs</span></a></li>
-          <li><a href="/en/services/#crypto"><strong data-i18n="market.cryptoService">Crypto automation</strong><span data-i18n="market.cryptoIndex">Order handling, risk limits and emergency stops</span></a></li>
-        </ul>
-      </nav>
-    </section>
-    <section class="firm-process" aria-labelledby="process-heading">
-      <div class="invest-shell firm-process-grid">
-        <div>
-          <h2 id="process-heading" data-i18n="market.deliveryTitle">How a project works</h2>
-          <p data-i18n="market.deliveryLead">Tell us what you want to learn, which rules you want to automate or what is missing from your current setup.</p>
-        </div>
-        <ol>
-          <li><h3 data-i18n="market.deliveryScope">Define the scope</h3><p data-i18n="market.deliveryScopeText">We agree on what the guide should cover or what the software needs to do.</p></li>
-          <li><h3 data-i18n="market.deliveryBuild">Build and test</h3><p data-i18n="market.deliveryBuildText">For software projects, we agree on the scenarios to test, such as rejected orders or exchange connection failures.</p></li>
-          <li><h3 data-i18n="market.deliveryReview">Review the delivery</h3><p data-i18n="market.deliveryReviewText">We review the material or walk through how to read the software and its test results.</p></li>
-        </ol>
+      <div class="replay-result">
+        <strong role="status" aria-atomic="true" id="replay-result" data-i18n="replay.result.allowed">Simulated order allowed. Both checks passed.</strong>
+        <span data-i18n="replay.note">This example simulates an order using fictional prices and positions.</span>
       </div>
     </section>
-    <section class="invest-shell firm-contact" aria-labelledby="closing-heading">
-      <div><h2 id="closing-heading" data-i18n="market.homeCtaTitle">Have a project in mind?</h2><p data-i18n="market.homeCtaText">Send Nortivo a brief description. We’ll follow up by email.</p></div>
-      <a class="invest-button" href="/en/contact/" data-i18n="invest.contact">Discuss a project</a>
+    <section class="replay-services" id="offer" aria-labelledby="services-title">
+      <div>
+        <h2 id="services-title" data-i18n="replay.services">What we build</h2>
+        <a class="replay-tools-link" href="/en/products/#simulation" data-i18n="replay.toolsLink">Try the fee simulator</a>
+      </div>
+      <ul>
+        <li><a href="/en/services/#bot"><strong data-i18n="market.botService">Trading bot development</strong><span data-i18n="replay.bot">Build and test your strategy rules.</span></a></li>
+        <li><a href="/en/services/#crypto"><strong data-i18n="market.cryptoService">Crypto automation</strong><span data-i18n="replay.crypto">Design order handling and safeguards.</span></a></li>
+        <li><a href="/en/services/#guide"><strong data-i18n="market.guideService">Investment guides</strong><span data-i18n="replay.guide">Understand funds, fees and risk.</span></a></li>
+      </ul>
     </section>
   </main>
   <footer class="site-footer market-footer">

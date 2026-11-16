@@ -323,4 +323,6 @@ Admin uses open project rows separated by the existing portal line. Desktop rows
 
 ## Investment website
 
-The public site uses Gloock for the centered masthead and editorial headlines, with Manrope for body text and controls. Paper (#fcfcfa), ink (#182426) and deep teal (#215867) carry through the site. Three ruled columns introduce the firm, feature a fictional rule test and index services. On narrow screens the columns stack in reading order. The Tools page uses the same fictional price series and highlights the point being evaluated. The simulation output updates immediately and respects reduced motion.
+Interior pages use Gloock for the centered masthead and editorial headlines, with Manrope for body text and controls. The Tools page highlights the selected point on its fictional price series and calculates the outcome after fees.
+
+The Decision Replay homepage uses Syne headlines and Manrope body text on warm paper (#f6f4f0), with a violet demo and peach decision markers. The ribbon artwork in `dist/assets/decision-replay-ribbon.jpg` comes directly from the approved Decision Replay concept. The selected scenario updates immediately. The optional replay animates the path to the decision and respects reduced motion.
