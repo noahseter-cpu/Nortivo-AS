@@ -321,6 +321,8 @@ Admin uses open project rows separated by the existing portal line. Desktop rows
 - Don't add glass blur, floating-card shadows or substitute logo geometry to this system.
 - Don't use color alone for status, field errors or the selected language.
 
-## Investment homepage
+## Investment website
 
-The investment homepage uses Manrope on warm paper (#f3f4ed) with dark green ink (#172b24) and lime (#ddfa86) for the selected example and closing action. The two-column hero pairs the offer with a working simulation. Service descriptions sit in ruled rows and stack at narrow widths. Simulation output updates immediately and uses a short, interruptible transition for pointer input when reduced motion is off. The earlier studio and the service portal retain their own styling.
+The current public site uses Manrope with ink navy (#111d31), cool paper (#f6f8fb), muted slate (#46556b) and blue links (#20487a). The first screen names the services alongside an editorial image. A ruled service overview leads to individual service details. A separate ordered list explains how an enquiry becomes a project and links to the trading simulation on the Tools page. Support and contact use the same palette, with validation and order states described in text. The simulator keeps its immediate output and respects reduced motion.
+
+The homepage image is generated architecture and does not represent a Nortivo office. Built-in ImageGen produced the source from an editorial prompt for a low-angle close-up of Nordic facades in brushed aluminium and dark ink-blue glass, under overcast daylight, with a triangular patch of pale sky and no signs, people, charts or logos. The site serves `dist/assets/nortivo-facade.jpg` and a smaller responsive copy.

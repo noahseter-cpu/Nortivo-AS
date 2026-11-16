@@ -1,31 +1,31 @@
 <!doctype html>
 <html lang="nb">
 <head>
-    <title>Nortivo — Investeringsguider og handelsautomasjon</title>
-    <meta name="description" content="Investeringsguider, spesialbygde handelsboter og simulering av kryptoautomasjon." />
+    <title>Nortivo — Investeringsguider og handelsboter</title>
+    <meta name="description" content="Nortivo lager investeringsguider og utvikler handelsboter og programvare for kryptoautomasjon." />
     <link rel="canonical" href="https://nortivo.no/nb/" />
     <link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/" />
     <link rel="alternate" hreflang="en" href="https://nortivo.no/en/" />
     <link rel="alternate" hreflang="x-default" href="https://nortivo.no/" />
-    <meta property="og:title" content="Nortivo — Investeringsguider og handelsautomasjon" />
-    <meta property="og:description" content="Investeringsguider, spesialbygde handelsboter og simulering av kryptoautomasjon." />
+    <meta property="og:title" content="Nortivo — Investeringsguider og handelsboter" />
+    <meta property="og:description" content="Nortivo lager investeringsguider og utvikler handelsboter og programvare for kryptoautomasjon." />
     <meta property="og:url" content="https://nortivo.no/nb/" />
     <meta property="og:locale" content="nb_NO" />
     <meta property="og:locale:alternate" content="en_GB" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f3f4ed">
+  <meta name="theme-color" content="#f6f8fb">
 
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
   <link rel="stylesheet" href="/assets/site.css">
-  <link rel="stylesheet" href="/assets/investment.css">
   <script defer src="/assets/site.js"></script>
-  <script defer src="/assets/investment.js"></script>
 <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
+<meta property="og:image" content="https://nortivo.no/assets/nortivo-facade.jpg">
+<meta name="twitter:card" content="summary_large_image">
 </head>
-<body class="invest invest market" data-page="home">
+<body class="invest market" data-page="home">
   <a class="skip-link" href="#main" data-i18n="nav.skip">Hopp til innhold</a>
   <header class="site-header market-header">
   <div class="nav-shell">
@@ -57,57 +57,60 @@
 </header>
 
   <main id="main">
-    <div class="invest-shell invest-hero">
-      <div class="invest-intro">
-        <h1 data-i18n="invest.heading">Lær om investering. Bygg verktøyene.</h1>
-        <p data-i18n="invest.intro">Nortivo lager investeringsguider og utvikler handelsboter på oppdrag. Fra å forstå kostnader og risiko til å teste en automatisk handelsregel.</p>
-        <div class="invest-actions">
-          <a class="invest-button" href="/nb/contact/" data-i18n="invest.contact">Fortell om prosjektet</a>
-          <a href="/nb/products/#simulation" data-i18n="invest.demo">Prøv en regel</a>
+    <section class="firm-hero" aria-labelledby="firm-heading">
+      <div class="firm-hero-copy">
+        <h1 id="firm-heading" data-i18n="invest.heading">Investeringsguider og handelsboter</h1>
+        <p data-i18n="invest.intro">Nortivo lager investeringsguider og utvikler programvare for regelstyrt handel i aksjer og krypto.</p>
+        <div class="firm-actions">
+          <a class="invest-button" href="/nb/contact/" data-i18n="invest.contact">Diskuter et prosjekt</a>
+          <a href="/nb/services/" data-i18n="market.homeServices">Se tjenestene</a>
         </div>
       </div>
-      <section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
-        <div class="invest-lab-header">
-          <h2 id="lab-heading" data-i18n="invest.lab">Test en handelsregel</h2>
-          <p data-i18n="invest.sample">Simulering med fiktive priser</p>
-        </div>
-        <p class="invest-rule" data-i18n="invest.rule">Regel: Lag en simulert kjøpsordre ved kurs 100 eller lavere.</p>
-        <div class="invest-scenarios" role="group" aria-label="Velg et kurseksempel" data-i18n-aria="invest.scenario" hidden>
-          <button type="button" data-demo-price="104" aria-pressed="true">104</button>
-          <button type="button" data-demo-price="98" aria-pressed="false">98</button>
-        </div>
-        <dl class="invest-result" aria-live="polite" aria-atomic="true">
-          <div><dt data-i18n="invest.price">Eksempelpris</dt><dd id="demo-price">104</dd></div>
-          <div><dt data-i18n="invest.outcome">Resultat</dt><dd id="demo-outcome" data-i18n="invest.wait">Ingen ordre</dd></div>
-        </dl>
-        <noscript><p data-i18n="invest.noscript">Slå på JavaScript for å bytte eksempelpris.</p></noscript>
-      </section>
-    </div>
-    <section class="invest-shell invest-services" id="offer" aria-labelledby="offer-heading">
-      <h2 id="offer-heading" data-i18n="invest.offer">Dette kan du få hjelp med</h2>
-      <ul>
+      <img class="firm-hero-photo" src="/assets/nortivo-facade.jpg"
+        srcset="/assets/nortivo-facade-small.jpg 768w, /assets/nortivo-facade.jpg 1536w"
+        sizes="(max-width: 740px) 100vw, 46vw" width="1536" height="1024" alt="" fetchpriority="high">
+    </section>
+
+    <section class="invest-shell firm-offer" id="offer" aria-labelledby="offer-heading">
+      <h2 id="offer-heading" data-i18n="invest.offer">Tjenester</h2>
+      <ul class="firm-services">
         <li>
-          <h3 data-i18n="invest.guide">Investeringsguider</h3>
-          <p data-i18n="invest.guideText">Lær hvordan fond, aksjer, risiko og gebyrer henger sammen. Vi kan lage undervisningsmateriell og regneeksempler for temaet du vil forstå.</p>
-          <a href="/nb/services/#guide" data-i18n="market.guideLink">Investeringsguider</a>
+          <h3 data-i18n="market.guideService">Investeringsguider</h3>
+          <p data-i18n="invest.guideText">Guider om fond, aksjer, risiko og gebyrer, tilpasset temaet og nivået ditt.</p>
+          <a href="/nb/services/#guide" data-i18n="market.guideMore">Om investeringsguider</a>
         </li>
         <li>
-          <h3 data-i18n="invest.bot">Skreddersydde investeringsboter</h3>
-          <p data-i18n="invest.botText">Vi gjør reglene du beskriver om til kode. Test dem mot historiske data, med antakelser om gebyrer og en logg som forklarer hver beslutning.</p>
-          <a href="/nb/services/#bot" data-i18n="market.botLink">Handelsboter</a>
+          <h3 data-i18n="market.botService">Utvikling av handelsboter</h3>
+          <p data-i18n="invest.botText">Utvikling av handelsboter etter avtalte regler, med historisk testing og en logg over beslutningene.</p>
+          <a href="/nb/services/#bot" data-i18n="market.botMore">Om utvikling av handelsboter</a>
         </li>
         <li>
-          <h3 data-i18n="invest.crypto">Automatisert kryptohandel</h3>
-          <p data-i18n="invest.cryptoText">Utvikling av programvare for ordreflyt, risikogrenser og nødstopp. Vi kan teste oppsettet i et øvingsmiljø med simulerte ordre.</p>
-          <a href="/nb/services/#crypto" data-i18n="market.cryptoLink">Kryptoautomasjon</a>
+          <h3 data-i18n="market.cryptoService">Kryptoautomasjon</h3>
+          <p data-i18n="invest.cryptoText">Programvare for automatisert kryptohandel, med ordreflyt, risikogrenser og nødstopp.</p>
+          <a href="/nb/services/#crypto" data-i18n="market.cryptoMore">Om kryptoautomasjon</a>
         </li>
       </ul>
+      <p class="firm-scope" data-i18n="market.homeScope">Investeringsguidene gir generell opplæring.</p>
     </section>
-    <section class="invest-closing" aria-labelledby="closing-heading">
-      <div class="invest-shell invest-closing-inner">
-        <div><h2 id="closing-heading" data-i18n="invest.closing">Hva vil du lære eller bygge?</h2><p data-i18n="invest.closingText">Fortell kort hva du trenger hjelp med. Vi avklarer omfang, testoppsett og neste steg sammen.</p></div>
-        <a class="invest-button" href="/nb/contact/" data-i18n="invest.contact">Fortell om prosjektet</a>
+
+    <section class="firm-process" aria-labelledby="process-heading">
+      <div class="invest-shell firm-process-grid">
+        <div>
+          <h2 id="process-heading" data-i18n="market.deliveryTitle">Slik foregår et oppdrag</h2>
+          <p data-i18n="market.deliveryLead">Fortell hva du vil lære, hvilke regler du vil automatisere eller hva som mangler i oppsettet du har i dag.</p>
+          <a class="firm-process-link" href="/nb/products/#simulation" data-i18n="market.simulationLink">Se hvordan en handelsregel testes</a>
+        </div>
+        <ol>
+          <li><h3 data-i18n="market.deliveryScope">Avklare omfanget</h3><p data-i18n="market.deliveryScopeText">Vi blir enige om innholdet i guiden eller hva programvaren skal gjøre.</p></li>
+          <li><h3 data-i18n="market.deliveryBuild">Utarbeide og teste</h3><p data-i18n="market.deliveryBuildText">For programvare avtaler vi hvilke situasjoner som skal testes, for eksempel avviste ordre eller brudd i børsforbindelsen.</p></li>
+          <li><h3 data-i18n="market.deliveryReview">Gå gjennom leveransen</h3><p data-i18n="market.deliveryReviewText">Vi går gjennom innholdet eller viser hvordan programvaren og testresultatene kan leses.</p></li>
+        </ol>
       </div>
+    </section>
+
+    <section class="invest-shell firm-contact" aria-labelledby="closing-heading">
+      <div><h2 id="closing-heading" data-i18n="market.homeCtaTitle">Har du et prosjekt i tankene?</h2><p data-i18n="market.homeCtaText">Send en kort beskrivelse til Nortivo. Vi følger opp på e-post.</p></div>
+      <a class="invest-button" href="/nb/contact/" data-i18n="invest.contact">Diskuter et prosjekt</a>
     </section>
   </main>
   <footer class="site-footer market-footer">
