@@ -71,6 +71,13 @@ body.market {
 .market-founder a, .market-company a { font-weight: 700; }
 .market-founder .history-list { margin-top: 24px; }
 .market-founder .history-list li { margin-block: 8px; }
+.market-work { scroll-margin-top: 84px; }
+.market-work-list { list-style: none; margin: 8px 0 0; padding: 0; }
+.market-work-list li { padding-block: 12px; border-bottom: 1px solid var(--line); }
+.market-work-list li:last-child { border-bottom: 0; }
+.market-work-list h3 { margin: 0; font-size: 1rem; }
+.market-work-list h3 a { display: inline-flex; align-items: center; min-height: 32px; }
+.market-work-list p { margin: 0; }
 
 .market[data-page="contact"] .contact-section { background: var(--paper); }
 .market .contact-grid { gap: 24px clamp(24px, 5vw, 72px); }
@@ -247,6 +254,7 @@ body.market { --editorial: "Nortivo Editorial", Georgia, serif; }
 }
 .edition-lead p { color: var(--muted); margin: 18px 0 20px; max-width: 43ch; }
 .edition-lead .invest-button { background: var(--blue); }
+.firm-intro-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
 .edition-feature .edition-chart {
   margin: 0 0 19px;
   padding: 20px 16px 14px;
