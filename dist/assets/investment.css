@@ -68,6 +68,17 @@ html:has(body.invest) { scrollbar-color: #738784 var(--invest-paper, #fcfcfa); }
 .invest-result dt { color: #cce0e1; font-size: .82rem; }
 .invest-result dd { margin: 4px 0 0; font-weight: 700; font-variant-numeric: tabular-nums; }
 .invest-result [data-order="true"] { color: var(--invest-accent); }
+.invest-result .invest-net {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid #426265;
+  padding-top: 12px;
+}
+.invest-result .invest-net dd { flex: none; margin: 0; font-size: 1.35rem; }
+.invest-assumptions { margin: 8px 0 0; color: #cce0e1; font-size: .82rem; }
 @media (hover: hover) {
   .invest-button:hover { background: #26484b; }
   .invest-scenarios button:not([aria-pressed="true"]):hover { background: #244346; }

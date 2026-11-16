@@ -3,9 +3,13 @@
   const result = document.querySelector('.invest-result');
   const price = document.querySelector('#demo-price');
   const outcome = document.querySelector('#demo-outcome');
+  const net = document.querySelector('#demo-net');
   const buttons = choices.querySelectorAll('[data-demo-price]');
   const chartPoints = document.querySelectorAll('[data-chart-price]');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const numberFormat = new Intl.NumberFormat(document.documentElement.lang, { signDisplay: 'exceptZero' });
+  const exitPrice = 101;
+  const totalFees = 2;
   let feedback;
 
   choices.addEventListener('click', event => {
@@ -22,6 +26,7 @@
     outcome.dataset.order = String(createsOrder);
     outcome.dataset.i18n = createsOrder ? 'invest.buy' : 'invest.wait';
     outcome.textContent = window.Nortivo.translate(outcome.dataset.i18n);
+    net.textContent = numberFormat.format(createsOrder ? exitPrice - value - totalFees : 0);
 
     feedback?.cancel();
     if (event.detail && !reducedMotion.matches && result.animate) {

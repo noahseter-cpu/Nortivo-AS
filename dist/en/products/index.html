@@ -65,7 +65,7 @@
   </nav>
 </header>
 <main id="main">
-<section class="invest-shell market-tool-hero"><div class="market-title"><h1 data-i18n="market.toolsTitle">Trading simulation</h1><p data-i18n="market.toolsIntro">Choose a fictional price and see how the rule decides whether to create a simulated order.</p><a class="invest-button" href="/en/contact/?project=bot" data-i18n="market.practice">Discuss a bot</a></div><section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
+<section class="invest-shell market-tool-hero"><div class="market-title"><h1 data-i18n="market.toolsTitle">Trading simulation</h1><p data-i18n="market.toolsIntro">Choose a fictional price to see if the rule triggers an order and what the trade earns or loses after fees.</p><a class="invest-button" href="/en/contact/?project=bot" data-i18n="market.practice">Discuss a bot</a></div><section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
         <div class="invest-lab-header">
           <h2 id="lab-heading" data-i18n="invest.lab">Test a trading rule</h2>
           <p data-i18n="invest.sample">Example with fictional prices and orders</p>
@@ -97,8 +97,10 @@
   </div>
         <dl class="invest-result" aria-live="polite" aria-atomic="true">
           <div><dt data-i18n="invest.price">Example price</dt><dd id="demo-price">104</dd></div>
-          <div><dt data-i18n="invest.outcome">Result</dt><dd id="demo-outcome" data-i18n="invest.wait">No order</dd></div>
+          <div><dt data-i18n="invest.outcome">Order</dt><dd id="demo-outcome" data-i18n="invest.wait">No order</dd></div>
+          <div class="invest-net"><dt data-i18n="invest.net">Profit or loss after fees</dt><dd id="demo-net">0</dd></div>
         </dl>
+        <p class="invest-assumptions" data-i18n="invest.assumptions">Each simulated trade buys one unit, sells it at 101 and pays 2 in total fees. Each price is a separate example.</p>
         <noscript><p data-i18n="invest.noscript">Enable JavaScript to switch example prices.</p></noscript>
       </section></section><section class="invest-shell market-tool-notes"><h2 data-i18n="market.method">From rule to test</h2><p data-i18n="market.methodLead">A bot needs clear rules about when it trades, how much it can trade, and when it should stop.</p><div><article><h3 data-i18n="market.limitTitle">Define the limits</h3><p data-i18n="market.limitText">Decide how large a position can be, and what the bot should do if a price is missing or an order is rejected.</p></article><article><h3 data-i18n="market.testTitle">Test with realistic assumptions</h3><p data-i18n="market.testText">Historical tests and simulations can show how rules respond to different prices and costs. Future results can differ.</p></article></div></section>
 </main>

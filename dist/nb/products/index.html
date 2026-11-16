@@ -65,7 +65,7 @@
   </nav>
 </header>
 <main id="main">
-<section class="invest-shell market-tool-hero"><div class="market-title"><h1 data-i18n="market.toolsTitle">Handelssimulering</h1><p data-i18n="market.toolsIntro">Velg en fiktiv kurs og se hvordan regelen bestemmer om en simulert ordre skal opprettes.</p><a class="invest-button" href="/nb/contact/?project=bot" data-i18n="market.practice">Diskuter en bot</a></div><section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
+<section class="invest-shell market-tool-hero"><div class="market-title"><h1 data-i18n="market.toolsTitle">Handelssimulering</h1><p data-i18n="market.toolsIntro">Velg en fiktiv kurs for å se om regelen utløser en ordre og hva handelen gir i gevinst eller tap etter gebyrer.</p><a class="invest-button" href="/nb/contact/?project=bot" data-i18n="market.practice">Diskuter en bot</a></div><section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
         <div class="invest-lab-header">
           <h2 id="lab-heading" data-i18n="invest.lab">Test en handelsregel</h2>
           <p data-i18n="invest.sample">Eksempel med fiktive priser og ordre</p>
@@ -97,8 +97,10 @@
   </div>
         <dl class="invest-result" aria-live="polite" aria-atomic="true">
           <div><dt data-i18n="invest.price">Eksempelpris</dt><dd id="demo-price">104</dd></div>
-          <div><dt data-i18n="invest.outcome">Resultat</dt><dd id="demo-outcome" data-i18n="invest.wait">Ingen ordre</dd></div>
+          <div><dt data-i18n="invest.outcome">Ordre</dt><dd id="demo-outcome" data-i18n="invest.wait">Ingen ordre</dd></div>
+          <div class="invest-net"><dt data-i18n="invest.net">Gevinst eller tap etter gebyrer</dt><dd id="demo-net">0</dd></div>
         </dl>
+        <p class="invest-assumptions" data-i18n="invest.assumptions">Hver simulert handel kjøper én enhet, selger den til kurs 101 og betaler 2 i samlede gebyrer. Hver kurs er et eget eksempel.</p>
         <noscript><p data-i18n="invest.noscript">Slå på JavaScript for å bytte eksempelpris.</p></noscript>
       </section></section><section class="invest-shell market-tool-notes"><h2 data-i18n="market.method">Fra regel til test</h2><p data-i18n="market.methodLead">En bot trenger tydelige regler for når den handler, hvor mye den kan handle, og når den skal stoppe.</p><div><article><h3 data-i18n="market.limitTitle">Avklar grensene</h3><p data-i18n="market.limitText">Velg hvor stor en posisjon kan bli, og hva boten skal gjøre hvis en pris mangler eller en ordre blir avvist.</p></article><article><h3 data-i18n="market.testTitle">Test med realistiske antakelser</h3><p data-i18n="market.testText">Historiske tester og simuleringer kan vise hvordan reglene reagerer på ulike priser og kostnader. Fremtidige resultater kan avvike.</p></article></div></section>
 </main>
