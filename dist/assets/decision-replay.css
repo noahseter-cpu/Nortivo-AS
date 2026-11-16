@@ -25,6 +25,18 @@ body.replay-home {
 .replay-scene[data-checkpoint="1"] .replay-track-fill { transform: scaleX(.3333333); }
 .replay-scene[data-checkpoint="2"] .replay-track-fill { transform: scaleX(.6666667); }
 .replay-tools-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; color: var(--blue); font-weight: 700; }
+.replay-report {
+  display: grid;
+  grid-template-columns: minmax(0, .82fr) minmax(0, 1.6fr);
+  gap: 12px clamp(22px, 4vw, 60px);
+  padding-block: clamp(26px, 4vw, 52px) 24px;
+  border-bottom: 1px solid var(--line);
+}
+.replay-report h2 { font: 800 clamp(1.45rem, 2.35vw, 2.15rem)/1.08 Syne, sans-serif; }
+.replay-report p { color: var(--muted); max-width: 62ch; }
+@media (max-width: 580px) {
+  .replay-report { grid-template-columns: minmax(0, 1fr); }
+}
 @media (min-width: 881px) {
   .replay-home .market-header .nav-shell { grid-template-columns: auto minmax(0, 1fr) auto; }
   .replay-home .market-header .brand { grid-column: 1; justify-self: start; font-size: 1.65rem; }

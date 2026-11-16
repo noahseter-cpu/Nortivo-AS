@@ -92,6 +92,41 @@
         <p class="invest-assumptions" data-i18n="invest.assumptions">Each simulated trade buys one unit, sells it at 101 and pays 2 in total fees. Each price is a separate example.</p>
         <noscript><p data-i18n="invest.noscript">Enable JavaScript to switch example prices.</p></noscript>
       </section></section><section class="invest-shell market-tool-notes"><h2 data-i18n="market.method">From rule to test</h2><p data-i18n="market.methodLead">A bot needs clear rules about when it trades, how much it can trade, and when it should stop.</p><div><article><h3 data-i18n="market.limitTitle">Define the limits</h3><p data-i18n="market.limitText">Decide how large a position can be, and what the bot should do if a price is missing or an order is rejected.</p></article><article><h3 data-i18n="market.testTitle">Test with realistic assumptions</h3><p data-i18n="market.testText">Historical tests and simulations can show how rules respond to different prices and costs. Future results can differ.</p></article></div></section>
+  <section class="invest-shell market-backtest" id="backtest" aria-labelledby="backtest-title">
+    <h2 id="backtest-title" data-i18n="backtest.title">2026 SPY backtest</h2>
+    <p class="backtest-period" data-i18n="backtest.period">Historical simulation · January 2 to November 13, 2026 · 219 sessions</p>
+    <p data-i18n="backtest.intro">We tested a rule for buying SPY after its price fell below its recent average. The run that sets the order size before the next session’s open returned +2.37% over the period.</p>
+    <table class="backtest-results">
+      <caption data-i18n="backtest.comparison">Results by assumed fill time</caption>
+      <thead>
+        <tr>
+          <th scope="col" data-i18n="backtest.metric">Metric</th>
+          <th scope="col" data-i18n="backtest.nextOpen">Next session’s open</th>
+          <th scope="col" data-i18n="backtest.sameClose">Same session’s close</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row" data-i18n="backtest.return">Total return</th><td data-i18n="backtest.openReturn">+2.37%</td><td data-i18n="backtest.closeReturn">+7.45%</td></tr>
+        <tr><th scope="row" data-i18n="backtest.daily">Average per session</th><td data-i18n="backtest.openDaily">+0.0114%</td><td data-i18n="backtest.closeDaily">+0.0337%</td></tr>
+        <tr><th scope="row" data-i18n="backtest.drawdown">Maximum drawdown</th><td data-i18n="backtest.openDrawdown">−3.88%</td><td data-i18n="backtest.closeDrawdown">−3.56%</td></tr>
+        <tr><th scope="row" data-i18n="backtest.trades">Closed trades</th><td>7</td><td>9</td></tr>
+        <tr><th scope="row" data-i18n="backtest.balance">Ending value (USD)</th><td data-i18n="backtest.openBalance">$102,368.52</td><td data-i18n="backtest.closeBalance">$107,447.40</td></tr>
+      </tbody>
+    </table>
+    <div class="backtest-method">
+      <div>
+        <h3 data-i18n="backtest.timingTitle">Why fill timing matters</h3>
+        <p data-i18n="backtest.timing">The original report uses the final closing price to make the decision and assumes the order fills at that close. That gives the simulation a price it could only know after the market closed. In the next-open run, signals and order sizes are set after the close. Orders fill at the next open if there is enough cash.</p>
+      </div>
+      <div>
+        <h3 data-i18n="backtest.rulesTitle">Rules and costs</h3>
+        <p data-i18n="backtest.rules">The rule buys when SPY closes more than two standard deviations below its 20-session moving average. It exits on a return to that average or when the closing price crosses the trailing stop.</p>
+        <p data-i18n="backtest.sizing">Position sizing uses a 2% risk budget and a stop distance of 2.5 times the 20-session average true range. The simulation uses no leverage.</p>
+        <p data-i18n="backtest.costs">Both runs start with USD 100,000 in simulated capital. Each order includes a USD 1 commission and 0.01% slippage. Ending values include open positions. Dividends and interest are excluded.</p>
+      </div>
+    </div>
+    <p class="backtest-period" data-i18n="backtest.note">These are simulated results from historical SPY prices. Actual trading results can differ.</p>
+  </section>
 </main>
 <footer class="site-footer market-footer">
   <div class="footer-shell">

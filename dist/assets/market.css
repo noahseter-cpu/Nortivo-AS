@@ -67,6 +67,35 @@ body.market {
 .market-tool-notes > div { margin-top: 26px; }
 .market-tool-notes article, .market-company section { border-top: 1px solid var(--line); padding-top: 22px; }
 .market-tool-notes article p, .market-company p, .market-founder p { color: var(--muted); max-width: 57ch; }
+.market-backtest {
+  border-top: 1px solid var(--line);
+  padding-block: clamp(32px, 6vw, 74px);
+  scroll-margin-top: 24px;
+}
+.market-backtest h2 {
+  font: 400 clamp(1.9rem, 4vw, 3rem)/1.12 var(--editorial), serif;
+  letter-spacing: -.02em;
+}
+.market-backtest p { color: var(--muted); margin-top: 12px; max-width: 68ch; }
+.market-backtest .backtest-period { font-size: .875rem; }
+.backtest-results { width: 100%; border-collapse: collapse; margin-block: 26px; }
+.backtest-results caption { text-align: start; font-weight: 700; padding-bottom: 8px; }
+.backtest-results :is(th, td) {
+  border-block-end: 1px solid var(--line);
+  padding: 10px clamp(4px, 2vw, 18px);
+  text-align: start;
+  vertical-align: top;
+}
+.backtest-results th:first-child { padding-inline-start: 0; }
+.backtest-results thead th { border-block-start: 1px solid var(--line); }
+.backtest-results :is(th, td):nth-child(2) { background: var(--surface-raised); }
+.backtest-results td { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.backtest-method { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 36px; margin-bottom: 22px; }
+.backtest-method h3 { font-size: 1.12rem; }
+@media (max-width: 600px) {
+  .backtest-results { font-size: .8125rem; }
+  .backtest-method { grid-template-columns: minmax(0, 1fr); }
+}
 .market-founder { border-top: 1px solid var(--line); margin-top: 48px; padding-block: 34px 68px; }
 .market-founder a, .market-company a { font-weight: 700; }
 .market-founder .history-list { margin-top: 24px; }

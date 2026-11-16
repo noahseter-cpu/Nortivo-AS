@@ -103,6 +103,41 @@
         <p class="invest-assumptions" data-i18n="invest.assumptions">Hver simulert handel kjøper én enhet, selger den til kurs 101 og betaler 2 i samlede gebyrer. Hver kurs er et eget eksempel.</p>
         <noscript><p data-i18n="invest.noscript">Slå på JavaScript for å bytte eksempelpris.</p></noscript>
       </section></section><section class="invest-shell market-tool-notes"><h2 data-i18n="market.method">Fra regel til test</h2><p data-i18n="market.methodLead">En bot trenger tydelige regler for når den handler, hvor mye den kan handle, og når den skal stoppe.</p><div><article><h3 data-i18n="market.limitTitle">Avklar grensene</h3><p data-i18n="market.limitText">Velg hvor stor en posisjon kan bli, og hva boten skal gjøre hvis en pris mangler eller en ordre blir avvist.</p></article><article><h3 data-i18n="market.testTitle">Test med realistiske antakelser</h3><p data-i18n="market.testText">Historiske tester og simuleringer kan vise hvordan reglene reagerer på ulike priser og kostnader. Fremtidige resultater kan avvike.</p></article></div></section>
+  <section class="invest-shell market-backtest" id="backtest" aria-labelledby="backtest-title">
+    <h2 id="backtest-title" data-i18n="backtest.title">SPY-testen for 2026</h2>
+    <p class="backtest-period" data-i18n="backtest.period">Historisk simulering · 2. januar til 13. november 2026 · 219 handelsdager</p>
+    <p data-i18n="backtest.intro">Vi testet en regel for å kjøpe SPY etter at kursen falt under sitt 20-dagers gjennomsnitt. Variasjonen som bestemmer ordrestørrelsen før neste børsåpning, ga 2,37 % simulert avkastning i perioden.</p>
+    <table class="backtest-results">
+      <caption data-i18n="backtest.comparison">Simulerte resultater etter tidspunkt for ordreutførelse</caption>
+      <thead>
+        <tr>
+          <th scope="col" data-i18n="backtest.metric">Måltall</th>
+          <th scope="col" data-i18n="backtest.nextOpen">Neste åpning</th>
+          <th scope="col" data-i18n="backtest.sameClose">Samme sluttkurs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row" data-i18n="backtest.return">Samlet avkastning</th><td data-i18n="backtest.openReturn">+2,37 %</td><td data-i18n="backtest.closeReturn">+7,45 %</td></tr>
+        <tr><th scope="row" data-i18n="backtest.daily">Snitt per handelsdag</th><td data-i18n="backtest.openDaily">+0,0114 %</td><td data-i18n="backtest.closeDaily">+0,0337 %</td></tr>
+        <tr><th scope="row" data-i18n="backtest.drawdown">Største fall fra topp</th><td data-i18n="backtest.openDrawdown">−3,88 %</td><td data-i18n="backtest.closeDrawdown">−3,56 %</td></tr>
+        <tr><th scope="row" data-i18n="backtest.trades">Avsluttede handler</th><td>7</td><td>9</td></tr>
+        <tr><th scope="row" data-i18n="backtest.balance">Sluttverdi (USD)</th><td data-i18n="backtest.openBalance">102 368,52</td><td data-i18n="backtest.closeBalance">107 447,40</td></tr>
+      </tbody>
+    </table>
+    <div class="backtest-method">
+      <div>
+        <h3 data-i18n="backtest.timingTitle">Hvorfor tidspunktet betyr noe</h3>
+        <p data-i18n="backtest.timing">Den opprinnelige rapporten bruker dagens sluttkurs for å ta beslutningen og antar at ordren utføres til samme kurs. Den kursen er først kjent etter stengetid. I testen med ordre ved neste åpning beregnes signaler og ordrestørrelser etter stengetid. Ordren utføres ved neste åpning hvis kontantbeholdningen dekker kjøpet.</p>
+      </div>
+      <div>
+        <h3 data-i18n="backtest.rulesTitle">Regler og kostnader</h3>
+        <p data-i18n="backtest.rules">Regelen kjøper når SPY stenger mer enn to standardavvik under sitt glidende snitt over 20 handelsdager. Den selger når sluttkursen når snittet igjen eller faller gjennom den justerbare stopplinjen.</p>
+        <p data-i18n="backtest.sizing">Posisjonsstørrelsen beregnes med et risikobudsjett på 2 % og en stoppavstand på 2,5 ganger gjennomsnittlig prisintervall med kursgap (ATR) over 20 handelsdager. Simuleringen bruker ingen belåning.</p>
+        <p data-i18n="backtest.costs">Begge oppsettene starter med 100 000 USD i simulert kapital. Hver ordre inkluderer 1 USD i kurtasje og 0,01 % kursavvik ved utførelse. Sluttverdiene inkluderer åpne posisjoner. Utbytte og renter er utelatt.</p>
+      </div>
+    </div>
+    <p class="backtest-period" data-i18n="backtest.note">Dette er simulerte resultater basert på historiske SPY-kurser. Faktiske handelsresultater kan avvike.</p>
+  </section>
 </main>
 <footer class="site-footer market-footer">
   <div class="footer-shell">
