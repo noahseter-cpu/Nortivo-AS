@@ -1,14 +1,117 @@
-.report-header { display:flex; justify-content:space-between; align-items:center; min-height:64px; border-bottom:1px solid var(--line); }
-.report-header a { color:var(--blue); font-weight:700; padding-block:12px; }
-.report { padding-bottom:48px; }
-.report :is(h1,h2) { font-family:var(--editorial),serif; font-weight:400; }
-.report .market-title h1 { max-width:24ch; }
-.report .market-title p + p { margin-top:8px; }
-.report .report-status { font-size:1rem; }
-.report-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr)); gap:0 24px; margin:16px 0 18px; }
-.report-metrics > div { display:flex; flex-direction:column; gap:7px; justify-content:space-between; border-top:1px solid var(--line); padding-block:16px; }
-.report-metrics dt, .report-basis { color:var(--muted); }
-.report-metrics dd { margin:0; font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:700; font-variant-numeric:tabular-nums; }
-.report-monthly { margin-top:42px; }
-.report-monthly .backtest-results { margin-top:14px; }
-@media (max-width:480px) { .report-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 14px; } .report-monthly .backtest-results :is(th,td) { padding-inline:4px; } }
+/* Read surface: the report shares the public palette without a second theme. */
+.nt-site.report-publication { background: var(--ink); color: var(--paper); }
+.report-publication .invest-shell { width: min(1440px, calc(100% - 112px)); margin-inline: auto; }
+.report-publication .report-header { min-height: 90px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--line); }
+.report-publication .report-header a { display: inline-flex; min-height: 44px; align-items: center; padding-block: 10px; color: var(--paper); font-weight: 700; }
+.report-publication .report-home { font-size: 1.65rem; letter-spacing: -.035em; text-decoration: none; }
+.report-publication .report-header nav { display: flex; gap: 28px; }
+.report-publication .report { padding-bottom: 0; }
+.report-publication .report .market-title { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); gap: clamp(32px, 5vw, 80px); align-items: end; padding-block: clamp(48px, 6vw, 88px) 36px; background: transparent; color: var(--paper); }
+.nt-site.report-publication .report .market-title h1 { max-width: 18ch; font: 700 clamp(2.6rem, 5.5vw, 4.9rem)/1.06 Manrope, sans-serif; text-transform: uppercase; letter-spacing: -.035em; color: var(--paper); overflow-wrap: anywhere; hyphens: manual; }
+.report-publication .report .market-title .report-period { margin-top: 25px; color: var(--paper); font-size: 1rem; font-variant-numeric: tabular-nums; }
+.report-publication .report .market-title .report-lead { margin-top: 18px; color: var(--muted); font-size: 1.0625rem; line-height: 1.75; max-width: 55ch; }
+.report-publication .report .market-title .invest-button { margin-top: 26px; border-radius: 0; background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.report-publication .flight-report-highlight { display: grid; gap: 14px; container-type: inline-size; padding: 24px 0; background: transparent; border-top: 1px solid var(--blue); border-bottom: 1px solid var(--line); color: var(--paper); }
+.report-publication .flight-report-highlight > span { font-size: 1rem; }
+.nt-site.report-publication .flight-report-highlight strong { font: 400 clamp(1.6rem, 7.6cqi, 3rem)/1.25 'IBM Plex Mono', monospace; color: var(--paper); letter-spacing: -.025em; white-space: normal; overflow-wrap: anywhere; }
+.report-publication .report-money-part { display: inline-block; white-space: nowrap; font: inherit; letter-spacing: inherit; }
+.report-publication .report .flight-report-highlight p { color: var(--muted); font-size: 1rem; line-height: 1.65; }
+.report-publication .v2-dedicated-report-note { max-width: 75ch; font-size: 1rem; color: var(--muted); line-height: 1.7; margin: 0 0 30px; }
+.report-publication .report-toc { display: flex; flex-wrap: wrap; align-items: center; gap: 0 26px; margin: 0; padding-block: 12px; border-block: 1px solid var(--line); }
+.report-publication .report-toc span { color: var(--muted); margin-inline-end: auto; font-size: 1rem; }
+.report-publication .report-toc a { display: inline-flex; align-items: center; min-height: 44px; color: var(--paper); font-size: 1rem; font-weight: 700; }
+.report-publication .report-chapter { margin: 0; padding-block: clamp(40px, 5.5vw, 76px); border-bottom: 1px solid var(--line); }
+.report-publication .report-chapter-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 24px clamp(32px, 5vw, 80px); margin-bottom: 28px; }
+.nt-site.report-publication .report h2 { font: 700 clamp(2rem, 3.4vw, 3.4rem)/1.1 Manrope, sans-serif; text-transform: uppercase; letter-spacing: -.03em; max-width: 22ch; overflow-wrap: anywhere; }
+.report-publication .report h3 { font: 700 1.125rem/1.4 Manrope, sans-serif; letter-spacing: -.015em; }
+.report-publication .report-chapter-head p, .report-publication .report-prose p, .report-publication .report-basis, .report-publication .report-source-note { font-size: 1rem; line-height: 1.75; color: var(--muted); }
+.report-publication .report-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; margin: 0; }
+.report-publication .report-metrics > div { display: flex; flex-direction: column; justify-content: space-between; gap: 14px; padding-block: 24px; border-top: 1px solid var(--line); }
+.report-publication .report-metrics dt { max-width: 32ch; color: var(--muted); font-size: 1rem; line-height: 1.55; }
+.nt-site.report-publication .report-metrics dd { margin: 0; font: 400 clamp(1.2rem, 2vw, 1.8rem)/1.3 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; color: var(--paper); letter-spacing: -.025em; }
+.report-publication .report-metrics .report-negative dd { color: var(--v2-red); }
+.report-publication .report-session-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 8px; }
+.report-publication .report-basis { margin-top: 18px; max-width: 75ch; }
+.report-publication .report-basis a, .report-publication .report-source-note a { color: var(--paper); }
+.report-publication .report-curve { margin: 0; padding: clamp(12px, 2vw, 28px); background: var(--paper); color: var(--ink); color-scheme: light; }
+.report-publication .report-curve figcaption { margin-bottom: 12px; font-size: 1rem; font-weight: 700; color: var(--ink); }
+.report-publication .report-plot { position: relative; }
+.report-publication .report-plot img { display: block; width: 100%; height: auto; }
+.report-publication .report-cursor { position: absolute; top: 7%; bottom: 12.6%; left: var(--plot-x); width: 1px; background: var(--ink); pointer-events: none; }
+.report-publication .report-cursor span { position: absolute; top: var(--plot-y); left: -4px; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); outline: 2px solid var(--paper); }
+.report-publication .report-explorer { padding: 20px 8px 2px; }
+.report-publication .report-explorer-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }
+.nt-site.report-publication .report-curve .report-explorer :is(label, output, p) { font-size: 1rem; color: var(--ink); }
+.report-publication .report-explorer output { font-variant-numeric: tabular-nums; }
+.report-publication .report-explorer input { width: 100%; min-height: 44px; accent-color: var(--ink); }
+.report-publication .report-explorer input:focus-visible { outline-color: var(--ink); background: transparent; }
+.report-publication .report-explorer p { line-height: 1.6; margin-top: 4px; }
+.report-publication .report-source-note { margin-top: 20px; max-width: 75ch; }
+.report-publication .report-data-view { margin-top: 28px; border-block: 1px solid var(--line); }
+.report-publication .report-data-view summary { cursor: pointer; min-height: 64px; padding: 18px 0; font-size: 1rem; font-weight: 700; color: var(--paper); }
+.report-publication .report-data-view[open] summary { border-bottom: 1px solid var(--line); }
+.report-publication .report-table-scroll { max-width: 100%; overflow-x: auto; scrollbar-color: var(--blue) var(--surface); }
+.report-publication .report-data-scroll { max-height: 28rem; overflow-y: auto; }
+.report-publication .report table { width: 100%; border-collapse: collapse; font-size: 1rem; line-height: 1.55; }
+.report-publication .report table caption { text-align: left; padding-block: 16px; color: var(--muted); font-size: 1rem; line-height: 1.65; max-width: 75ch; }
+.report-publication .report table :is(th, td) { padding: 17px 16px; border-bottom: 1px solid var(--line); color: var(--paper); background: transparent; text-align: right; vertical-align: baseline; }
+.report-publication .report table :is(th, td):first-child { padding-inline-start: 0; text-align: left; }
+.report-publication .report table :is(th, td):last-child { padding-inline-end: 0; }
+.report-publication .report table thead th { color: var(--muted); font-weight: 400; }
+.report-publication .report table tbody th { font-weight: 400; white-space: nowrap; }
+.report-publication .report table tbody td { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.report-publication .report table .report-loss td:nth-last-child(-n+2) { color: var(--v2-red); }
+.report-publication .report table .report-profit td:nth-last-child(-n+2) { color: var(--v2-green); }
+.report-publication .report table tfoot :is(th, td) { border-bottom: 0; font-weight: 700; }
+.report-publication .report-prose { max-width: 75ch; }
+.report-publication .report-prose h3 { margin-bottom: 12px; }
+.report-publication .report-prose + .report-prose { margin-top: 32px; }
+.report-publication .report-risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 80px); }
+.report-publication .report-risk-grid > div { border-top: 1px solid var(--line); padding-top: 24px; }
+.report-publication .report-method-list { margin: 0; }
+.report-publication .report-method-list > div { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 24px clamp(32px, 5vw, 80px); padding-block: 25px; border-top: 1px solid var(--line); }
+.report-publication .report-method-list dt { color: var(--paper); font-weight: 700; font-size: 1rem; }
+.report-publication .report-method-list dd { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.75; max-width: 65ch; }
+.report-publication .report-costs { margin-top: 24px; max-width: 850px; }
+.report-publication .report-costs table tbody th { white-space: normal; }
+.report-publication .report-costs + .report-prose { margin-top: 40px; }
+.report-publication .report-source-links { display: flex; flex-wrap: wrap; gap: 0 28px; margin-top: 16px; }
+.report-publication .report-source-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--paper); }
+.report-publication .report-close { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 32px; padding-block: 32px 44px; font-size: 1rem; }
+.report-publication .report-close a { display: inline-flex; min-height: 44px; align-items: center; color: var(--paper); }
+.report-publication .report-close span { color: var(--muted); }
+.report-publication :is(#report-summary, #report-equity, #report-monthly, #report-risk, #report-method) { scroll-margin-top: 28px; }
+@media (max-width: 1100px) {
+  .report-publication .invest-shell { width: calc(100% - 64px); }
+  .report-publication .report .market-title { grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr); }
+  .report-publication .report-session-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .report-publication .report-header { min-height: 76px; }
+  .report-publication .report-header nav { gap: 20px; }
+  .report-publication .report .market-title { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 40px; }
+  .nt-site.report-publication .report .market-title h1 { font-size: clamp(2rem, 8.7vw, 2.5rem); max-width: 18ch; }
+  .report-publication .flight-report-highlight { max-width: 530px; width: 100%; }
+  .report-publication .report-chapter-head, .report-publication .report-risk-grid, .report-publication .report-method-list > div { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .report-publication .report-toc { gap: 0 22px; }
+  .report-publication .report-toc span { width: 100%; }
+  .report-publication .report-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+  .report-publication .report-metrics:not(.report-session-metrics) > div:last-child { grid-column: 1 / -1; }
+  .report-publication .report-metrics dd { font-size: clamp(1.1rem, 3.6vw, 1.65rem); }
+  .report-publication .report-explorer { padding-inline: 0; }
+}
+@media (max-width: 480px) {
+  .report-publication .invest-shell { width: calc(100% - 40px); }
+  .report-publication .report-header nav { gap: 16px; }
+  .report-publication .report-header .report-back-link { display: none; }
+  .report-publication .report .market-title .report-lead { font-size: 1rem; }
+  .report-publication .report-metrics { grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: 0 18px; }
+  .report-publication .report table :is(th, td) { padding: 14px 12px; }
+  .report-publication .report-monthly table { min-width: 510px; }
+  .report-publication .report-curve { margin-inline: -8px; padding-inline: 8px; }
+  .report-publication .report-plot { overflow-x: auto; }
+  .report-publication .report-plot img { min-width: 580px; }
+  .report-publication .report-cursor { display: none; }
+  .report-publication .report-curve .report-explorer { padding-inline: 8px; }
+  .report-publication .report-data-view table { min-width: 350px; }
+}

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { validateReport, formatMetric, renderReportValues } from '../scripts/report-presentation.mjs';
+import { validateReport, formatMetric, renderReportValues, monthlyEquityChanges } from '../scripts/report-presentation.mjs';
 
 const dist = new URL('../dist/', import.meta.url);
 const summary = JSON.parse(await readFile(new URL('report-2026/summary.json', dist), 'utf8'));
@@ -30,10 +30,20 @@ test('homepage previews and dedicated report use the same localized reported val
     const home = await readFile(new URL(`${locale}/index.html`, dist), 'utf8');
     const report = await readFile(new URL(`${locale}/report-2026/index.html`, dist), 'utf8');
     const expected = formatMetric(summary, 'profit', locale);
-    assert.equal((home.match(/data-report-metric="profit"/g) || []).length, 2);
+    assert.equal((home.match(/data-report-metric="profit"/g) || []).length, 1);
     for (const html of [home, report]) {
       assert.ok(html.includes(expected));
       assert.equal(renderReportValues(html, summary, rows, locale), html);
     }
   }
+});
+
+test('monthly equity context includes every source month, preserves losing months and reconciles exactly in øre', () => {
+  const months = monthlyEquityChanges(summary, rows);
+  assert.equal(months.length, 11);
+  assert.equal(months.reduce((sum, month) => sum + month.changeOre, 0), summary.profitOre);
+  assert.equal(months.reduce((sum, month) => sum + month.sessions, 0), summary.sessions);
+  assert.deepEqual(months.filter(month => month.changeOre < 0).map(month => month.month), ['2026-02', '2026-10']);
+  assert.equal(months.find(month => month.month === '2026-05').changeOre, 1529137);
+  assert.equal(months.find(month => month.month === '2026-07').changeOre, 2890959);
 });

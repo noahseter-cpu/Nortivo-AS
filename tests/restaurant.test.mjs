@@ -78,13 +78,14 @@ test('public studio styling remains separate from the private workspace and rest
 
 test('home and support share complete localized desktop and mobile navigation', () => {
   for(const lang of ['nb','en']){
-    const expected=['/'+lang+'/#research',...['services','report-2026','about','support','contact'].map(route=>'/'+lang+'/'+route+'/')];
+    const expected=[...['research','systems','education'].map(id=>'/'+lang+'/#'+id),...['about','report-2026'].map(route=>'/'+lang+'/'+route+'/')];
     for(const route of ['','support/']){
       const html=read('dist/'+lang+'/'+route+'index.html');
       for(const selector of ['class="desktop-nav"','id="mobile-nav"']){
         const nav=[...html.matchAll(/<nav\b[^>]*>[\s\S]*?<\/nav>/g)].find(match=>match[0].includes(selector))?.[0];
         assert.ok(nav,lang+route+' '+selector);
-        assert.deepEqual([...nav.matchAll(/href="([^"]+)"/g)].map(match=>match[1]),expected);
+        const destinations=selector==='id="mobile-nav"' ? [...expected,...['contact','support'].map(route=>'/'+lang+'/'+route+'/')] : expected;
+        assert.deepEqual([...nav.matchAll(/href="([^"]+)"/g)].map(match=>match[1]),destinations);
       }
       assert.match(html,/aria-controls="mobile-nav" aria-expanded="false"/);
       assert.ok(html.includes('href="/'+lang+'/products/"'));

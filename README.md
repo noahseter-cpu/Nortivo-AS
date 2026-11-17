@@ -36,6 +36,8 @@ Before production acceptance, test real ticket creation, confirmation delivery, 
 
 ## Design and evidence
 
+Latest refinement: [Research, made tangible](docs/MASTER_REFINEMENT_2026_11_17.md). The report-led opening uses three headline metrics, then adds monthly closing-equity context rather than repeating the same summary. The company story follows evidence, systems, research methods, existing learning resources and contact. Shared typography is Manrope with IBM Plex Mono quantities. The expanded report provides risk/method/cost definitions and a native 222-row data view. Existing URLs and the Netlify support/authentication architecture are preserved.
+
 Current public presentation: [17 November investment technology refinement](docs/ENGINEERED_STUDIO_2026_11_17.md). The homepage introduces research, trading systems and education; the existing 2026 reported historical results appear in both the hero and a dedicated editorial section. Arc and Lune retain their existing routes as secondary projects. Both languages share the report summary and original equity series. V2 local verification includes 81 passing automated tests, responsive browser checks, chart input, language switching, keyboard/reduced-motion behavior, production CSP and local form retry/save handling. Local mobile Lighthouse scored 99 performance and 100 accessibility, best practices and SEO. These local results do not establish real email delivery or authenticated production operations.
 
 Earlier implementation checkpoints below describe their respective releases, rather than the current homepage hierarchy.

@@ -1,6 +1,23 @@
 (async () => {
   const input = document.querySelector('#report-session');
   if (!input) return;
+  // Keep the reported amount intact when enlarged text wraps at the currency.
+  const headline = document.querySelector('.flight-report-highlight strong[data-report-metric="profit"]');
+  const headlineText = headline?.textContent;
+  if (headlineText) {
+    const prefix = headlineText.match(/^NOK[\s\u00a0\u202f]+/);
+    const suffix = headlineText.match(/^(.*?[\s\u00a0\u202f]+)NOK$/);
+    const splitAt = prefix ? prefix[0].length : suffix?.[1].length;
+    if (splitAt) {
+      const parts = [headlineText.slice(0, splitAt), headlineText.slice(splitAt)].map(text => {
+        const part = document.createElement('span');
+        part.className = 'report-money-part';
+        part.textContent = text;
+        return part;
+      });
+      headline.replaceChildren(parts[0], document.createElement('wbr'), parts[1]);
+    }
+  }
   const controls = input.closest('.report-explorer');
   const output = controls.querySelector('output');
   const plot = document.querySelector('.report-plot');
@@ -40,7 +57,7 @@
   input.value = input.max;
   input.addEventListener('input', () => show(input.valueAsNumber));
   plot.addEventListener('click', event => {
-    const frame = plot.getBoundingClientRect();
+    const frame = plot.querySelector('img').getBoundingClientRect();
     const position = (event.clientX - frame.left) / frame.width;
     const ratio = Math.max(0, Math.min(1, (position - bounds.left) / (bounds.right - bounds.left)));
     input.value = String(Math.round(ratio * (rows.length - 1)));

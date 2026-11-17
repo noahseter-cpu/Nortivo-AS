@@ -19,7 +19,7 @@ Nortivo presents investment technology, financial research and education, provid
 
 ## Positioning
 
-Nortivo is an investment technology and financial research brand founded by Noah J.C. Sæter in Lillestrøm, Norway. The site presents algorithmic trading software, stock and crypto market analysis, quantitative methods, automation, historical performance analysis and investment education. The existing 2026 report is presented as reported historical results with its original definitions and no guarantee of future returns. The site does not assert regulated investment-adviser, broker or asset-manager authorization. Interactive trading demonstrations remain explicitly simulated. Arc, Lune, software engineering and design work remain available through their existing routes and the secondary project links. Contact, support and private administration retain their existing backend contracts.
+The owner positions Nortivo as an investment company focused on financial research and trading technology, founded by Noah J.C. Sæter in Lillestrøm, Norway. The site presents algorithmic trading software, stock and crypto market analysis, quantitative methods, automation, historical performance analysis and practical investment education. The existing 2026 report is presented as reported historical results with its original definitions and no guarantee of future returns. The site does not assert regulated investment-adviser, broker or asset-manager authorization. Interactive trading demonstrations remain explicitly simulated. Arc, Lune, software engineering and design work remain available through their existing routes and the secondary project links. Contact, support and private administration retain their existing backend contracts.
 
 ## Capabilities and Constraints
 

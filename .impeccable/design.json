@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-17T19:35:53.823Z",
+  "generatedAt": "2026-11-17T20:19:16.638Z",
   "title": "Design System: Nortivo",
   "extensions": {
     "colorMeta": {
@@ -245,12 +245,12 @@
     },
     "typographyMeta": {
       "display": {
-        "displayName": "Industrial display",
-        "purpose": "Large public hero headings."
+        "displayName": "Architectural display",
+        "purpose": "Manrope Bold public hero hierarchy."
       },
       "headline": {
-        "displayName": "Public section heading",
-        "purpose": "Uppercase public presentation sections."
+        "displayName": "Editorial heading",
+        "purpose": "Manrope Bold public chapters; publication headings use their scoped ramp."
       },
       "interior-display": {
         "displayName": "Interior masthead",
@@ -281,87 +281,52 @@
     "motion": [
       {
         "name": "ease-out",
-        "value": "cubic-bezier(.23,1,.32,1)",
-        "purpose": "Control feedback and marketing entry."
+        "value": "cubic-bezier(.22,1,.36,1)",
+        "purpose": "Master action and entrance easing."
       },
       {
-        "name": "ease-in-out",
-        "value": "cubic-bezier(.77,0,.175,1)",
-        "purpose": "Existing moving-state transitions."
+        "name": "action-feedback",
+        "value": "240ms",
+        "purpose": "Stationary inner wipe, label -1px and arrow +3px on fine-pointer hover."
       },
       {
-        "name": "button-press",
-        "value": "120ms",
-        "purpose": "Fine-pointer press feedback."
+        "name": "inner-press",
+        "value": "140ms",
+        "purpose": "Inner face scales to .98; hit target stays stationary."
       },
       {
-        "name": "action-color",
-        "value": "180ms",
-        "purpose": "Button and homepage-header surface feedback."
+        "name": "master-entrance",
+        "value": "700ms",
+        "purpose": "Coordinated already-visible introduction, report cover and source-curve clipping."
       },
       {
-        "name": "preview-hover",
-        "value": "260ms",
-        "purpose": "Fine-pointer project image scale."
+        "name": "master-reveal",
+        "value": "520ms",
+        "purpose": "Selected editorial groups enter once with restrained opacity/translation/clip."
       },
       {
-        "name": "hero-heading",
-        "value": "850ms",
-        "purpose": "Visible desktop heading entry."
+        "name": "menu",
+        "value": "220ms",
+        "purpose": "Interruptible modal menu; immediate keyboard/reduced state with focus, inertness and scroll restoration."
       },
       {
-        "name": "hero-image",
-        "value": "1800ms",
-        "purpose": "One desktop image settlement."
+        "name": "form-state",
+        "value": "160ms",
+        "purpose": "Field borders and form action feedback."
       },
       {
         "name": "reduced-motion",
         "value": "animation:none;transition:none;scroll-behavior:auto",
-        "purpose": "Immediate non-moving fallback in the extension."
+        "purpose": "Static content and controls; saveData skips enhanced entrances and explicitly disables inherited footer/structural animation."
       },
       {
-        "name": "scroll-linked-introduction",
-        "value": "view(); entry 0% entry 90%",
-        "purpose": "Visible heading moves up 12px from .7 opacity."
-      },
-      {
-        "name": "scroll-linked-project",
-        "value": "view(); entry 0% entry 100%",
-        "purpose": "Project image reveals a five-percent bottom clip and moves up 12px."
-      },
-      {
-        "name": "scroll-linked-footer",
-        "value": "view(); entry 0% entry 100%",
-        "purpose": "Wordmark moves up 14px from .7 opacity."
-      },
-      {
-        "name": "v2-duration",
-        "value": "220ms",
-        "purpose": "Action label, arrow and underline state feedback."
-      },
-      {
-        "name": "v2-fill",
-        "value": "320ms",
-        "purpose": "Cinematic action fill and border color."
-      },
-      {
-        "name": "v2-magnetic",
-        "value": "translate clamped to ±2px per axis",
-        "purpose": "Mouse-only inner-face feedback on selected major actions. Disabled for touch, keyboard and reduced motion."
-      },
-      {
-        "name": "v2-line-reveal",
-        "value": "850ms",
-        "purpose": "One-time clip reveal of the source-equity line; numeric values do not animate."
-      },
-      {
-        "name": "v2-page-in",
-        "value": "180ms ease-out",
+        "name": "page-in",
+        "value": "180ms",
         "purpose": "Native incoming-page opacity transition where supported."
       },
       {
-        "name": "v2-page-out",
-        "value": "100ms ease-out",
+        "name": "page-out",
+        "value": "100ms",
         "purpose": "Native outgoing-page opacity transition where supported."
       }
     ],
@@ -375,10 +340,6 @@
         "value": "880px"
       },
       {
-        "name": "desktop-motion",
-        "value": "900px"
-      },
-      {
         "name": "compact-desktop",
         "value": "1100px"
       },
@@ -389,6 +350,18 @@
       {
         "name": "investment-stack",
         "value": "900px"
+      },
+      {
+        "name": "narrow-action-stack",
+        "value": "360px"
+      },
+      {
+        "name": "report-stack",
+        "value": "760px"
+      },
+      {
+        "name": "report-scroll",
+        "value": "480px"
       }
     ]
   },
@@ -397,17 +370,17 @@
       "name": "Primary public action",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Native action with clipped label, stroked arrow, restrained fill, keyboard focus and reduced-motion treatment.",
-      "html": "<a class=\"ds-action\" href=\"#research\"><span class=\"ds-action-face\"><span class=\"ds-action-clip\"><span class=\"ds-action-label\">EXPLORE RESEARCH</span></span><svg class=\"ds-action-arrow\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></span></a>",
-      "css": ".ds-action{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 23px;font:700 .78rem Manrope,sans-serif;letter-spacing:.07em;text-decoration:none;border-radius:0;border:1px solid #d7dbe1;transition:color 220ms ease,background-color 320ms ease,border-color 220ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-action::before{content:\"\";position:absolute;inset:0;z-index:-1;background:#c4d3e6;transform:scaleX(0);transform-origin:left;transition:transform 320ms cubic-bezier(.23,1,.32,1)}.ds-action-face{display:inline-flex;align-items:center;gap:16px}.ds-action-clip{display:inline-block;overflow:hidden}.ds-action-label{display:inline-block;transition:transform 220ms cubic-bezier(.23,1,.32,1)}.ds-action-arrow{width:18px;height:18px;flex:0 0 18px;transition:transform 220ms cubic-bezier(.23,1,.32,1)}.ds-action:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}.ds-action:focus-visible :is(.ds-action-label,.ds-action-arrow){transform:none;transition:none}@media(hover:hover) and (pointer:fine){.ds-action:hover::before{transform:scaleX(1)}.ds-action:hover{color:#101114;background:#c4d3e6}.ds-action:hover .ds-action-label{transform:translateY(-1px)}.ds-action:hover .ds-action-arrow{transform:translateX(4px)}}@media(prefers-reduced-motion:reduce){.ds-action,.ds-action::before,.ds-action-label,.ds-action-arrow{transition:none;transform:none}}.ds-action{background:#f1f2f4;color:#050505}"
+      "description": "Stationary public action with inner wipe and restrained fine-pointer feedback; keyboard/reduced motion stays direct.",
+      "html": "<a class=\"ds-action ds-solid\" href=\"#report\"><span class=\"ds-face\"><span class=\"ds-clip\"><span class=\"ds-label\">VIEW TRADING REPORT</span></span><svg class=\"ds-arrow\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></span></a>",
+      "css": ".ds-action{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 19px;border:1px solid #858b96;border-radius:0;background:transparent;color:#f2f1ed;font:700 .78rem/1.5 Manrope,sans-serif;letter-spacing:.015em;text-decoration:none}.ds-face{display:inline-flex;align-items:center;gap:14px;transition:transform 140ms cubic-bezier(.22,1,.36,1);pointer-events:none}.ds-clip{overflow:hidden}.ds-label{display:inline-block;transition:transform 240ms cubic-bezier(.22,1,.36,1)}.ds-arrow{width:18px;height:18px;flex:0 0 18px;transition:transform 240ms cubic-bezier(.22,1,.36,1)}.ds-action:before{content:\"\";position:absolute;inset:0;z-index:-1;background:#242a33;transform:scaleX(0);transform-origin:left;transition:transform 240ms cubic-bezier(.22,1,.36,1)}.ds-action:focus-visible{outline:2px solid #c6cad1;outline-offset:5px}.ds-action:focus-visible .ds-face,.ds-action:focus-visible .ds-label,.ds-action:focus-visible .ds-arrow{transform:none;transition:none}.ds-action:active .ds-face{transform:scale(.98)}@media(hover:hover) and (pointer:fine){.ds-action:hover:before{transform:scaleX(1)}.ds-action:hover .ds-label{transform:translateY(-1px)}.ds-action:hover .ds-arrow{transform:translateX(3px)}}@media(prefers-reduced-motion:reduce){.ds-action:before{opacity:0;transition:none}.ds-face,.ds-label,.ds-arrow{transform:none!important;transition:none!important}}.ds-solid{background:#f2f1ed;color:#08090b}.ds-solid:before{background:#c6cad1}.ds-solid:focus-visible{outline-color:#f2f1ed}"
     },
     {
       "name": "Secondary public action",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Native action with clipped label, stroked arrow, restrained fill, keyboard focus and reduced-motion treatment.",
-      "html": "<a class=\"ds-action\" href=\"#research\"><span class=\"ds-action-face\"><span class=\"ds-action-clip\"><span class=\"ds-action-label\">VIEW TRADING REPORT</span></span><svg class=\"ds-action-arrow\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></span></a>",
-      "css": ".ds-action{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 23px;font:700 .78rem Manrope,sans-serif;letter-spacing:.07em;text-decoration:none;border-radius:0;border:1px solid #d7dbe1;transition:color 220ms ease,background-color 320ms ease,border-color 220ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-action::before{content:\"\";position:absolute;inset:0;z-index:-1;background:#c4d3e6;transform:scaleX(0);transform-origin:left;transition:transform 320ms cubic-bezier(.23,1,.32,1)}.ds-action-face{display:inline-flex;align-items:center;gap:16px}.ds-action-clip{display:inline-block;overflow:hidden}.ds-action-label{display:inline-block;transition:transform 220ms cubic-bezier(.23,1,.32,1)}.ds-action-arrow{width:18px;height:18px;flex:0 0 18px;transition:transform 220ms cubic-bezier(.23,1,.32,1)}.ds-action:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}.ds-action:focus-visible :is(.ds-action-label,.ds-action-arrow){transform:none;transition:none}@media(hover:hover) and (pointer:fine){.ds-action:hover::before{transform:scaleX(1)}.ds-action:hover{color:#101114;background:#c4d3e6}.ds-action:hover .ds-action-label{transform:translateY(-1px)}.ds-action:hover .ds-action-arrow{transform:translateX(4px)}}@media(prefers-reduced-motion:reduce){.ds-action,.ds-action::before,.ds-action-label,.ds-action-arrow{transition:none;transform:none}}.ds-action{background:transparent;color:#ffffff}"
+      "description": "Stationary public action with inner wipe and restrained fine-pointer feedback; keyboard/reduced motion stays direct.",
+      "html": "<a class=\"ds-action\" href=\"#report\"><span class=\"ds-face\"><span class=\"ds-clip\"><span class=\"ds-label\">EXPLORE OUR RESEARCH</span></span><svg class=\"ds-arrow\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></span></a>",
+      "css": ".ds-action{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 19px;border:1px solid #858b96;border-radius:0;background:transparent;color:#f2f1ed;font:700 .78rem/1.5 Manrope,sans-serif;letter-spacing:.015em;text-decoration:none}.ds-face{display:inline-flex;align-items:center;gap:14px;transition:transform 140ms cubic-bezier(.22,1,.36,1);pointer-events:none}.ds-clip{overflow:hidden}.ds-label{display:inline-block;transition:transform 240ms cubic-bezier(.22,1,.36,1)}.ds-arrow{width:18px;height:18px;flex:0 0 18px;transition:transform 240ms cubic-bezier(.22,1,.36,1)}.ds-action:before{content:\"\";position:absolute;inset:0;z-index:-1;background:#242a33;transform:scaleX(0);transform-origin:left;transition:transform 240ms cubic-bezier(.22,1,.36,1)}.ds-action:focus-visible{outline:2px solid #c6cad1;outline-offset:5px}.ds-action:focus-visible .ds-face,.ds-action:focus-visible .ds-label,.ds-action:focus-visible .ds-arrow{transform:none;transition:none}.ds-action:active .ds-face{transform:scale(.98)}@media(hover:hover) and (pointer:fine){.ds-action:hover:before{transform:scaleX(1)}.ds-action:hover .ds-label{transform:translateY(-1px)}.ds-action:hover .ds-arrow{transform:translateX(3px)}}@media(prefers-reduced-motion:reduce){.ds-action:before{opacity:0;transition:none}.ds-face,.ds-label,.ds-arrow{transform:none!important;transition:none!important}}"
     },
     {
       "name": "Text field",
@@ -415,15 +388,15 @@
       "refersTo": "input-field",
       "description": "Labelled dark field with visible boundary.",
       "html": "<label class=\"ds-label\" for=\"ds-name\">Name</label><input class=\"ds-field\" id=\"ds-name\" autocomplete=\"name\">",
-      "css": ".ds-label{display:block;margin-bottom:8px;color:#e1e6ef;font:700 .86rem Manrope,sans-serif}.ds-field{font:400 16px Manrope,sans-serif;background:#101114;color:#f1f2f4;border:1px solid #747b87;border-radius:3px;padding:12px 14px;min-height:48px;caret-color:#fff}.ds-field:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}.ds-field::placeholder{color:#a5acb7;opacity:1}"
+      "css": ".ds-label{display:block;margin-bottom:8px;color:#e1e6ef;font:700 .86rem Manrope,sans-serif}.ds-field{font:400 16px Manrope,sans-serif;background:#111318;color:#f2f1ed;border:1px solid #747b87;border-radius:3px;padding:12px 14px;min-height:48px;caret-color:#fff}.ds-field:focus-visible{outline:2px solid #c6cad1;outline-offset:5px}.ds-field::placeholder{color:#a5acb7;opacity:1}"
     },
     {
       "name": "Public navigation",
       "kind": "nav",
       "refersTo": "site-navigation",
       "description": "Compact uppercase links with a visible hover and focus treatment.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Main navigation\"><a href=\"#work\">WORK</a><a href=\"#services\">SERVICES</a><a href=\"#about\">ABOUT</a><a href=\"#support\">SUPPORT</a><a href=\"#contact\">CONTACT</a></nav>",
-      "css": ".ds-nav{display:flex;flex-wrap:wrap;gap:26px;background:#050505}.ds-nav a{font:700 .77rem Manrope,sans-serif;letter-spacing:.06em;min-height:44px;display:inline-flex;align-items:center;color:#d8dbe0;text-decoration:none}.ds-nav a:hover{color:#fff;text-decoration:underline;text-underline-offset:8px}.ds-nav a:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}"
+      "html": "<nav class=\"ds-nav\" aria-label=\"Nortivo\"><a href=\"#research\">Research</a><a href=\"#systems\">Systems</a><a href=\"#guides\">Guides</a><a href=\"#company\">About</a><a class=\"ds-report\" href=\"#report\">Trading report</a></nav>",
+      "css": ".ds-nav{display:flex;flex-wrap:wrap;gap:18px;background:#08090b;padding:18px;color:#f2f1ed;font:700 .78rem/1.5 Manrope,sans-serif;letter-spacing:.01em}.ds-nav a{display:inline-flex;align-items:center;min-height:44px;color:inherit;text-decoration:none}.ds-nav a:hover{text-decoration:underline;text-underline-offset:6px}.ds-nav a:focus-visible{outline:2px solid #c6cad1;outline-offset:5px}.ds-report{border:1px solid #737a86;padding:0 16px}"
     },
     {
       "name": "Support workspace",
@@ -431,7 +404,7 @@
       "refersTo": "support-workspace",
       "description": "Bounded practical workspace with a thin border.",
       "html": "<section class=\"ds-workspace\"><h2>Create a support ticket</h2><p>All fields are required.</p></section>",
-      "css": ".ds-workspace{background:#101114;color:#f1f2f4;border:1px solid #424853;border-radius:5px;padding:30px;font:400 16px/1.65 Manrope,sans-serif}.ds-workspace h2{font-weight:700;letter-spacing:-.035em;margin:0 0 16px}.ds-workspace p{color:#b3b7bf;margin:0}"
+      "css": ".ds-workspace{background:#111318;color:#f2f1ed;border:1px solid #424853;border-radius:5px;padding:30px;font:400 16px/1.65 Manrope,sans-serif}.ds-workspace h2{font-weight:700;letter-spacing:-.035em;margin:0 0 16px}.ds-workspace p{color:#b5b8c0;margin:0}"
     },
     {
       "name": "Support tab",
@@ -439,38 +412,38 @@
       "refersTo": "support-tab-selected",
       "description": "Explicit selected tab treatment with light fill and dark text.",
       "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"Support options\"><button role=\"tab\" aria-selected=\"true\">New ticket</button><button role=\"tab\" aria-selected=\"false\">Find ticket</button></div>",
-      "css": ".ds-tabs{display:flex;gap:8px;font-family:Manrope,sans-serif}.ds-tabs button{min-height:46px;padding:10px 18px;border:1px solid #505660;background:#181a1f;color:#d4dfed;font:700 .85rem Manrope,sans-serif;cursor:pointer}.ds-tabs button[aria-selected=true]{background:#d4dfed;color:#101114;border-color:#d4dfed}.ds-tabs button:hover{border-color:#d4dfed}.ds-tabs button:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}"
+      "css": ".ds-tabs{display:flex;gap:8px;font-family:Manrope,sans-serif}.ds-tabs button{min-height:46px;padding:10px 18px;border:1px solid #505660;background:#181b21;color:#c6cad1;font:700 .85rem Manrope,sans-serif;cursor:pointer}.ds-tabs button[aria-selected=true]{background:#c6cad1;color:#111318;border-color:#c6cad1}.ds-tabs button:hover{border-color:#c6cad1}.ds-tabs button:focus-visible{outline:2px solid #c6cad1;outline-offset:5px}"
     },
     {
       "name": "Service detail action",
       "kind": "button",
       "description": "Unfilled text action in a service row.",
       "html": "<a class=\"ds-service-action\" href=\"#contact\">Discuss a website</a>",
-      "css": ".ds-service-action{display:inline-flex;align-items:center;gap:16px;min-height:44px;padding:8px 0;background:transparent;color:#d4dfed;border:0;border-bottom:1px solid #747b87;text-decoration:none;font:700 .9rem Manrope,sans-serif}.ds-service-action:hover{border-color:#d4dfed}.ds-service-action:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}"
+      "css": ".ds-service-action{display:inline-flex;align-items:center;gap:16px;min-height:44px;padding:8px 0;background:transparent;color:#c6cad1;border:0;border-bottom:1px solid #747b87;text-decoration:none;font:700 .9rem Manrope,sans-serif}.ds-service-action:hover{border-color:#c6cad1}.ds-service-action:focus-visible{outline:2px solid #c6cad1;outline-offset:5px}"
     },
     {
       "name": "Reported summary",
       "kind": "custom",
       "description": "Exact existing summary values in IBM Plex Mono with explicit historical context.",
-      "html": "<section class=\"ds-report\"><h3>2026 / PERFORMANCE REPORT</h3><p>Reported trading profit</p><strong>NOK 145,538.19</strong><dl><div><dt>Return on opening equity</dt><dd>+58.22%</dd></div><div><dt>Maximum drawdown</dt><dd>−26.65%</dd></div></dl><small>Reported historical results. Future returns may differ.</small></section>",
-      "css": ".ds-report{padding:24px;background:#101114;color:#f1f2f4;border:1px solid #585e68;font:400 .85rem/1.65 Manrope,sans-serif}.ds-report h3{font:700 .82rem/1.5 Manrope,sans-serif;letter-spacing:.04em;margin:0 0 24px}.ds-report p{color:#c7cdd7;margin:0}.ds-report strong{display:block;font:400 1.8rem/1.25 \"IBM Plex Mono\",monospace;font-variant-numeric:tabular-nums;margin:6px 0 22px}.ds-report dl{display:grid;grid-template-columns:1fr 1fr;gap:18px}.ds-report dt{color:#b7bfcb;font-size:.73rem}.ds-report dd{font-family:\"IBM Plex Mono\",monospace;margin:4px 0}.ds-report dl>div:first-child dd{color:#b8d5c1}.ds-report dl>div:last-child dd{color:#edb1b8}.ds-report small{color:#b2bac7;font-size:.75rem}"
+      "html": "<section class=\"ds-summary\"><h2>2026 / TRADING REPORT</h2><p>January 2 – November 17, 2026</p><dl><div><dt>Trading profit after costs</dt><dd>NOK 145,538.19</dd></div><div><dt>Return on opening equity</dt><dd>+58.22%</dd></div><div><dt>Maximum drawdown</dt><dd class=\"ds-loss\">−26.65%</dd></div></dl><p>Reported historical results. Future returns may differ.</p></section>",
+      "css": ".ds-summary{background:#111318;border:1px solid #737a86;padding:24px;color:#f2f1ed;font:400 1rem/1.7 Manrope,sans-serif}.ds-summary h2{font:700 .85rem/1.5 Manrope,sans-serif;margin:0}.ds-summary p,.ds-summary dt{color:#b5b8c0;font-size:.82rem}.ds-summary dl{margin:24px 0}.ds-summary dl>div{border-top:1px solid #30343c;padding:16px 0}.ds-summary dd{margin:6px 0 0;font:400 1.5rem/1.35 \"IBM Plex Mono\",monospace;font-variant-numeric:tabular-nums}.ds-summary .ds-loss{color:#dc8c91}"
     }
   ],
   "narrative": {
     "northStar": "The Future, Engineered.",
-    "overview": "Nortivo's current local implementation uses an architectural black environment, condensed display lettering and silver controls. The incremental investment-technology extension retains this world while giving financial research, trading systems and the existing report a stronger presence. Manrope, restrained dividers and explicit feedback keep product, contact and support areas readable.\n\nThe system was extracted from the implemented website on 17 November 2026. The base extension is dist/assets/nortivo-engineered.css. The incremental financial presentation and interaction layer is dist/assets/investment-v2.css, with its behaviour in investment-v2.js. Earlier stylesheets remain inside the named nt-legacy cascade layer, preserving their layout and interaction foundations beneath the current visual rules. This document supersedes the older navy, blue-action and warm editorial public palettes.",
+    "overview": "Nortivo's current local implementation retains the architectural black environment, titanium imagery and silver controls. The master refinement gives the investment-company narrative and historical report a shared opening composition. Manrope now carries the complete public display and interface hierarchy; IBM Plex Mono separates financial quantities from their explanations.\n\nThe system was extracted from the implemented website on 17 November 2026. The base extension is dist/assets/nortivo-engineered.css. The incremental financial presentation and interaction layer is dist/assets/investment-v2.css, with its behaviour in investment-v2.js. Earlier stylesheets remain inside the named nt-legacy cascade layer, preserving their layout and interaction foundations beneath the current visual rules. The master refinement updates that layer and adds the publication-specific dist/report-2026/report.css. This document supersedes earlier public palettes and condensed display rules; their assets remain in repository history.",
     "keyCharacteristics": [
       "Obsidian and charcoal surfaces with occasional soft-white sections.",
-      "Self-hosted Barlow Condensed display text, Manrope interface text and IBM Plex Mono financial figures.",
-      "Asymmetric compositions, large real project previews and ruled service rows.",
+      "Self-hosted Manrope display and interface text, with IBM Plex Mono financial figures.",
+      "Asymmetric publication compositions, shared evidence and ruled editorial chapters.",
       "Flat operational workspaces, persistent field labels and readable status text.",
-      "Optional motion around marketing imagery, report charts and explicit control feedback.",
+      "Optional coordinated entrances, source-chart reveals and stationary control feedback.",
       "Equivalent Norwegian Bokmål and English routes."
     ],
     "rules": [],
     "dos": [
       "Do use the current black, charcoal, silver and soft-white palette on Nortivo company surfaces.",
-      "Do reserve condensed uppercase display type for the public presentation hierarchy.",
+      "Do use the current Manrope display ramp and preserve the titanium architectural imagery.",
       "Do use Manrope for practical interfaces, labels, form content and data explanations.",
       "Do use IBM Plex Mono for financial figures and preserve exact report definitions.",
       "Do preserve bilingual navigation, visible focus, label associations and written states.",
