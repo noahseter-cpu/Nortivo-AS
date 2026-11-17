@@ -122,13 +122,3 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&autoAdvanc
 window.addEventListener('pagehide',()=>{if(!session||!state||!['starting','running'].includes(state.engine.status))return;autoAdvance=false;fetch('/.netlify/functions/terminal?action=command',{method:'POST',credentials:'same-origin',keepalive:true,headers:{'Content-Type':'application/json','X-CSRF-Token':session.csrfToken},body:JSON.stringify({requestId:crypto.randomUUID(),command:{type:'engine_pause'}})}).catch(()=>{});});
 async function start(){try{let fresh=false;try{session=await api('session');}catch(error){if(error.status!==401)throw error;session=await api('guest',{method:'POST',body:{}});fresh=true;}state=session.state;if(!/^\/(en|nb)\//.test(location.pathname))lang=state.settings.language||lang;else if(state.settings.language!==lang){await command({type:'settings_update',settings:{language:lang}},{repaint:false});}if(['starting','running'].includes(state.engine.status)){await command({type:'engine_pause'},{repaint:false});toast(L('Replay paused on reconnect. Start explicitly to continue.','Avspillingen er pauset etter ny tilkobling. Start uttrykkelig for å fortsette.'));}render();fetch('/report-2026/summary.json').then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{report=data;if(!modal.open)render();}).catch(()=>{});if(fresh)toast(L('Guest ready · virtual USD 100,000 · 1-day session · 7-day retention.','Gjest klar · virtuelle USD 100 000 · økt i 1 døgn · lagring i 7 dager.'));}catch(error){app.innerHTML=`<main class="boot"><a class="brand" href="/${lang}/">NORTIVO</a><h1 class="boot-heading">${L('The workspace could not connect','Arbeidsområdet kunne ikke koble til')}</h1><p>${esc(errorText(error))}</p>${btn(L('Try again','Prøv igjen'),'retry-start','refresh','primary')} <a href="/${lang}/">${L('Return to the website','Tilbake til nettstedet')}</a></main>`;}}
 start();
-
-
-
-
-
-
-
-
-
-
