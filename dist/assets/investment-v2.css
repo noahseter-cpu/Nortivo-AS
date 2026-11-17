@@ -361,3 +361,31 @@ html[data-input="keyboard"] .v2-action-face, html[data-input="keyboard"] .v2-act
   .nt-site .v2-action-face, .nt-site .v2-action-label, .nt-site .v2-action-arrow, .nt-site .v2-guide-arrow { transform: none !important; transition: none !important; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+.nt-platform-showcase { padding-block: 85px 82px; background: var(--surface); border-block: 1px solid var(--line); }
+.nt-platform-heading { display: grid; grid-template-columns: minmax(0,7fr) minmax(0,5fr); align-items: end; gap: 60px; }
+.nt-platform-heading .master-chapter { font-size: .78rem; color: #c3c7ce; margin-bottom: 25px; }
+.nt-platform-heading h2 { max-width: 20ch; }
+.nt-platform-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px 26px; margin-top: 30px; }
+.nt-platform-mode { font-size: .85rem; color: #b3d3bc; }
+.nt-platform-frame { margin: 36px 0 0; }
+.nt-platform-frame > button { display: block; position: relative; width: 100%; padding: 0; border: 1px solid #4b565e; border-radius: 3px; background: #060a0d; cursor: zoom-in; text-align: left; color: var(--paper); }
+.nt-platform-frame img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: contain; }
+.nt-platform-enlarge { display: block; border-top: 1px solid #39424b; padding: 14px 20px; font: 400 .82rem Manrope,sans-serif; background: #14191d; }
+.nt-platform-frame figcaption { margin-top: 13px; font-size: .8rem; color: var(--muted); }
+.nt-platform-features { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 35px; margin-top: 40px; }
+.nt-platform-features > div { border-top: 1px solid #505963; padding-top: 22px; }
+.nt-platform-features h3 { font-size: 1.1rem; margin-bottom: 12px; }
+.nt-platform-features p { color: var(--muted); font-size: 1rem; line-height: 1.8; }
+.v2-positive { color: var(--v2-green); }
+.platform-metric-basis { display: block; margin-top: 7px; color: var(--muted); font-size: max(12px,.75rem); line-height: 1.65; }
+.nt-platform-dialog { width: min(1800px,96vw); max-height: 94dvh; padding: 24px; border: 1px solid #747b87; background: #101318; color: #f2f1ed; }
+.nt-platform-dialog::backdrop { background: #000d; }
+.nt-platform-dialog-head { display: flex; justify-content: space-between; align-items: center; gap: 25px; }
+.nt-platform-dialog-head h2 { font: 700 1.2rem/1.4 Manrope,sans-serif; }
+.nt-platform-dialog-head button { min-height: 44px; padding: 10px 18px; border: 1px solid #7a838e; background: #1b232b; color: #f2f1ed; cursor: pointer; }
+.nt-platform-dialog > p { font-size: .9rem; line-height: 1.7; margin: 12px 0 20px; color: #b5b8c0; }
+.nt-platform-dialog-media { overflow: auto; max-height: calc(94dvh - 150px); }
+.nt-platform-dialog-media img { display: block; width: max(100%,1200px); max-width: none; height: auto; }
+@media(max-width:1100px) { .nt-header .desktop-nav { gap: 12px; } .nt-header .nav-shell { gap: 24px; } .nt-platform-heading { gap: 35px; } }
+@media(max-width:900px) { .nt-platform-heading { grid-template-columns: minmax(0,1fr); gap: 24px; } .nt-platform-features { gap: 24px; } }
+@media(max-width:600px) { .nt-platform-showcase { padding-block: 60px; } .nt-platform-actions { align-items: start; gap: 14px 22px; } .nt-platform-actions .nt-platform-mode { width: 100%; } .nt-platform-features { grid-template-columns: minmax(0,1fr); gap: 25px; } .nt-platform-dialog { padding: 18px; } .nt-platform-dialog-head { align-items: start; gap: 15px; } .nt-platform-dialog-head h2 { font-size: 1rem; } }

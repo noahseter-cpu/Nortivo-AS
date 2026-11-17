@@ -113,7 +113,7 @@
       const percent = value => `${value < 0 ? '−' : '+'}${new Intl.NumberFormat(language(), {
         minimumFractionDigits: 2, maximumFractionDigits: 2,
       }).format(Math.abs(value))}${language() === 'nb' ? ' ' : ''}%`;
-      const values = { profit: formatMoney(summary.profitOre / 100), return: percent(summary.returnOnOpeningEquityPercent), drawdown: percent(summary.maxDrawdownPercent), sessions: number(summary.sessions), trades: number(summary.trades) };
+      const values = { profit: formatMoney(summary.profitOre / 100), return: percent(summary.returnOnOpeningEquityPercent), drawdown: percent(summary.maxDrawdownPercent), deployedDaily: percent(summary.averageDeployedDailyPercent), sessions: number(summary.sessions), trades: number(summary.trades) };
       for (const element of document.querySelectorAll('[data-report-metric]')) if (values[element.dataset.reportMetric]) element.textContent = values[element.dataset.reportMetric];
       const monthFormat = new Intl.DateTimeFormat(language(), { month: 'short', timeZone: 'UTC' });
       for (const month of document.querySelectorAll('[data-month-period]')) {
@@ -160,4 +160,13 @@
     }
   }
   initializeCharts();
+})();
+(() => {
+ const preview=document.querySelector('#platform-preview');
+ const trigger=document.querySelector('[data-platform-preview]');
+ if(!preview||!trigger)return;
+ let previousOverflow='';
+ trigger.addEventListener('click',()=>{previousOverflow=document.documentElement.style.overflow;document.documentElement.style.overflow='hidden';preview.showModal();});
+ preview.querySelector('[data-platform-close]').addEventListener('click',()=>preview.close());
+ preview.addEventListener('close',()=>{document.documentElement.style.overflow=previousOverflow;trigger.focus();});
 })();

@@ -154,7 +154,7 @@ test('edge has no shared caching, preserves other queries, and operates only on 
   assert.equal(result.headers.get('Vary'), 'Cookie');
   assert.equal(redirect(new Request('https://nortivo.no/support/', { method: 'POST' })), undefined);
   for (const route of ['/nb/', '/en/products/', '/assets/site.js', '/.netlify/functions/tickets', '/missing/', '/products']) assert.equal(redirect(new Request(`https://nortivo.no${route}`)), undefined);
-  assert.deepEqual(config.path, pages.map(page => page === 'home' ? '/' : `/${page}/`));
+  assert.deepEqual(config.path, [...pages.map(page => page === 'home' ? '/' : `/${page}/`), '/terminal/']);
   assert.equal(config.cache, undefined);
   assert.equal(config.method, undefined, 'Do not emit unsupported HEAD in the Netlify manifest method filter');
 });

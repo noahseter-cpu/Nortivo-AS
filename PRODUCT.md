@@ -11,6 +11,7 @@ web
 - Prospective customers evaluating Nortivo’s market research, algorithmic trading software, automation and investment education.
 - Visitors inspecting reported historical results, strategy methods and clearly labeled trading demonstrations.
 - Customers who need to create or follow a support ticket.
+- Visitors and account holders testing a rule-based strategy in the isolated Nortivo Trading Platform paper workspace.
 - Nortivo’s administrator, who uses private side projects/tools and reviews, answers and closes support tickets.
 
 ## Product Purpose
@@ -32,6 +33,8 @@ The owner positions Nortivo as an investment company focused on financial resear
 - The private course runs under `/admin/projects/vibb/` with authentication on every asset and tutor request. It remains distinct from the separately hosted Vibb site. The optional tutor requires a server-only provider key; unconfigured requests report 503.
 - Its private [Vibb app and code workspace](docs/PRIVATE_VIBB_APP.md) pairs a compiled practice copy with the protected source catalog and can open beside the course. Code is read-only; practice records use separate browser storage. This learning surface retains Vibb's own warm identity.
 - The public Git repository may contain only the encrypted private-content package. Plaintext local inputs and the content key remain ignored; see [PRIVATE_WORKSPACE.md](docs/PRIVATE_WORKSPACE.md).
+- `/en/terminal/` and `/nb/terminal/` are a distinct operational application with server-owned paper balances, exact USD-cent accounting, session authorization and private persistence. Its fixed fictional replay, virtual USD 100,000 opening balance and in-tab engine are disclosed. The public NOK report remains separate.
+- The complete local terminal uses Node 24 SQLite. Hosted activation requires the additive `supabase/terminal.sql` migration and separate terminal security configuration; a static preview does not activate it. Provider research requires explicit credentials and display permission. Real-money brokerage execution is disabled unconditionally. See [TERMINAL_SERVER.md](docs/TERMINAL_SERVER.md) and [TERMINAL_ENGINE.md](docs/TERMINAL_ENGINE.md).
 
 ## Brand Commitments
 

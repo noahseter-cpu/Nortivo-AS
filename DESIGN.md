@@ -19,6 +19,16 @@ colors:
   financial-negative: "#dc8c91"
   action-hover: "#c6cad1"
   field-focus: "#c6cad1"
+  terminal-bg: "#080c0e"
+  terminal-panel: "#101719"
+  terminal-raised: "#19221f"
+  terminal-line: "#34413d"
+  terminal-text: "#f0f4f2"
+  terminal-muted: "#a7b5b3"
+  terminal-green: "#5cf395"
+  terminal-green-soft: "#a2efb6"
+  terminal-negative: "#ff787e"
+  terminal-caution: "#e8c76a"
 typography:
   display:
     fontFamily: "Manrope, sans-serif"
@@ -64,11 +74,29 @@ typography:
     fontSize: ".78rem"
     fontWeight: 700
     letterSpacing: ".015em"
+  terminal-body:
+    fontFamily: "Manrope, sans-serif"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.45
+  terminal-metadata:
+    fontFamily: "Manrope, sans-serif"
+    fontSize: "11px"
+    fontWeight: 400
+    lineHeight: 1.45
+  terminal-mono:
+    fontFamily: "'IBM Plex Mono', monospace"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.45
 rounded:
   square: "0"
   action: "2px"
   field: "3px"
   workspace: "5px"
+  terminal-control: "6px"
+  terminal-panel: "10px"
+  terminal-pill: "20px"
 spacing:
   compact: "12px"
   text: "16px"
@@ -112,6 +140,15 @@ components:
   action-hover:
     backgroundColor: "{colors.action-hover}"
     textColor: "{colors.surface}"
+  terminal-primary-control:
+    backgroundColor: "{colors.terminal-green}"
+    textColor: "{colors.terminal-bg}"
+    rounded: "{rounded.terminal-control}"
+    padding: "5px 10px"
+  terminal-panel:
+    backgroundColor: "{colors.terminal-panel}"
+    textColor: "{colors.terminal-text}"
+    rounded: "{rounded.terminal-panel}"
 ---
 
 # Design System: Nortivo
@@ -269,13 +306,23 @@ Decision Replay, the rule simulator and the backtest retain their calculations, 
 
 The homepage now renders the reported 2026 account history as an SVG generated from all 222 source equity points. A summary JSON holds exact NOK integer minor units and the reporting definitions. Build-time validation reconciles profit, closing equity, period, sessions, return on opening equity and maximum drawdown before presentation. This validates agreement among supplied records, without asserting an external audit.
 
-The compact hero shows only profit after costs, return on opening equity and maximum drawdown alongside the 222-point source curve. Pointer tracking and a labelled keyboard range inspect actual source rows, using UTC dates and localized NOK values. Exact values never count up. The following evidence chapter derives eleven monthly closing-equity changes from the same source using integer minor units, including both losing months. Those changes are explicitly distinct from the supplied monthly trading P&L; the full report retains the supplied P&L and explains its two offsetting one-øre differences.
+The compact hero shows profit after costs, return on opening equity and average session return on deployed capital alongside the 222-point source curve. The visible average basis and full risk/methodology link remain next to these values; maximum drawdown and losing periods remain in the full report. Pointer tracking and a labelled keyboard range inspect actual source rows, using UTC dates and localized NOK values. Exact values never count up. The following evidence chapter derives eleven monthly closing-equity changes from the same source using integer minor units, including both losing months. Those changes are explicitly distinct from the supplied monthly trading P&L; the full report retains the supplied P&L and explains its two offsetting one-øre differences.
 
 The dedicated report is a complete publication with table of contents, account/deployed-capital definitions, historical risk, attributed costs, original PDF and source links, keyboard chart exploration and a native expandable 222-row table. On narrow screens the plot and data tables use labelled horizontal scroll regions instead of shrinking labels. The chart, report metrics and historical context remain visible when enhanced loading or motion is unavailable. The report remains described as reported historical results, with future returns allowed to differ.
 
 V2 navigation can use native cross-document view transitions where supported. The outgoing and incoming opacity transitions take 100ms and 180ms. Reduced motion removes them. Navigation and product interactions retain their ordinary fallbacks.
 
 The private Vibb project remains governed by its authenticated route and separate visual system.
+
+### Terminal operations (scoped)
+
+The `/terminal/` workbench is a separate operational surface, not a public-marketing variant. Its approved green-charcoal world is pinned by `Nortivo_Approved_Trading_Interface.png`; the public black, silver and titanium system above remains unchanged. Use terminal tokens only in this surface and keep the financial-report presentation distinct from the live paper-account workspace.
+
+Terminal body text is 13px, with 11–12px metadata and compact controls; tabular values use IBM Plex Mono. Desktop uses the implemented dense 142px side rail, KPI strip, three-column work grid, and four-panel lower grid. At 1080px the right column joins the main grid and the lower panels become two columns; at 760px navigation changes to content tabs, nonessential overview columns are hidden, and the working view becomes a single column. Touch-reachable mobile controls are at least 44px even though desktop controls intentionally remain compact.
+
+The chart is the dominant work surface: 300px/220px minimum at the base layout, 285px at the intermediate breakpoint, and 300px/270px minimum on mobile. Its disclosed responsive candle density is 34, 56, 64 or 78 bars according to available chart width; preserve the labelled table alternative instead of making text illegibly small. Green carries positive, selected and permitted states; red carries loss/error and amber carries unavailable or limited states, each with written context.
+
+Terminal control feedback uses 160ms color/border transitions. Dialogs and toast feedback use the implemented 180ms opacity/transform treatment; frequent navigation and financial figures do not animate. Reduced motion removes terminal transitions and transforms. The paper account is virtual USD and its server ledger is separate from the fetched NOK 2026 reported-history summary; never merge, convert, or initialize one from the other.
 
 ## Do's and Don'ts
 
