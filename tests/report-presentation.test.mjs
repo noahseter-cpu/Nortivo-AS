@@ -1,0 +1,39 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { validateReport, formatMetric, renderReportValues } from '../scripts/report-presentation.mjs';
+
+const dist = new URL('../dist/', import.meta.url);
+const summary = JSON.parse(await readFile(new URL('report-2026/summary.json', dist), 'utf8'));
+const rows = JSON.parse(await readFile(new URL('report-2026/equity-series.json', dist), 'utf8'));
+
+test('reported 2026 summary reconciles to the retained historical series', () => {
+  assert.doesNotThrow(() => validateReport(summary, rows));
+  assert.equal(summary.profitOre, 14553819);
+  assert.equal(summary.sessions, 222);
+  assert.equal(summary.trades, 1152);
+  assert.equal(summary.returnOnOpeningEquityPercent, 58.22);
+  assert.equal(summary.maxDrawdownPercent, -26.65);
+});
+
+test('changed report data fails publication when dates, equity or risk no longer reconcile', () => {
+  for (const altered of [
+    { ...summary, profitOre: 14553820 },
+    { ...summary, end: '2026-11-18' },
+    { ...summary, sessions: 221 },
+    { ...summary, maxDrawdownPercent: -2.5 },
+  ]) assert.throws(() => validateReport(altered, rows));
+});
+
+test('homepage previews and dedicated report use the same localized reported values', async () => {
+  for (const locale of ['en', 'nb']) {
+    const home = await readFile(new URL(`${locale}/index.html`, dist), 'utf8');
+    const report = await readFile(new URL(`${locale}/report-2026/index.html`, dist), 'utf8');
+    const expected = formatMetric(summary, 'profit', locale);
+    assert.equal((home.match(/data-report-metric="profit"/g) || []).length, 2);
+    for (const html of [home, report]) {
+      assert.ok(html.includes(expected));
+      assert.equal(renderReportValues(html, summary, rows, locale), html);
+    }
+  }
+});

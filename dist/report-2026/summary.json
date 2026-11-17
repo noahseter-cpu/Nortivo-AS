@@ -1,0 +1,16 @@
+{
+  "basis": "Reported historical results from the existing Nortivo 2026 report",
+  "currency": "NOK",
+  "start": "2026-01-02",
+  "end": "2026-11-17",
+  "openingEquityOre": 25000000,
+  "closingEquityOre": 39553819,
+  "profitOre": 14553819,
+  "returnOnOpeningEquityPercent": 58.22,
+  "maxDrawdownPercent": -26.65,
+  "averageDeployedDailyPercent": 2.4,
+  "averageAccountDailyPercent": 0.2256,
+  "sessions": 222,
+  "trades": 1152,
+  "sourcePdf": "/report-2026/annual-report-2026-ytd.pdf"
+}

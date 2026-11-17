@@ -1,6 +1,7 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { loadReport, renderReportValues, syncDedicatedReports } from './report-presentation.mjs';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const pages = ['home', 'products', 'support', 'admin', 'privacy', 'about', 'services', 'contact', 'restaurant', 'studio', 'arc', 'studio/services', 'reviews'];
@@ -152,6 +153,7 @@ export function renderLocale(source, dictionary, locale, page, origin = 'https:/
 }
 
 export async function buildLocales({ distDir = path.join(projectRoot, 'dist'), origin = 'https://nortivo.no' } = {}) {
+  const report = await loadReport(distDir);
   const siteCopy = JSON.parse(await readFile(path.join(distDir, 'assets/site-copy.json'), 'utf8'));
   const portalCopy = JSON.parse(await readFile(path.join(distDir, 'assets/portal-copy.json'), 'utf8'));
   const dictionaries = Object.fromEntries(locales.map(locale => [locale, { ...siteCopy[locale], ...portalCopy[locale] }]));
@@ -160,12 +162,17 @@ export async function buildLocales({ distDir = path.join(projectRoot, 'dist'), o
   for (const page of pages) {
     const relative = page === 'home' ? 'index.html' : `${page}/index.html`;
     const source = await readFile(path.join(distDir, relative), 'utf8');
-    for (const locale of locales) outputs.push({ path: path.join(distDir, locale, relative), html: renderLocale(source, dictionaries[locale], locale, page, origin) });
+    for (const locale of locales) {
+      let html = renderLocale(source, dictionaries[locale], locale, page, origin);
+      if (report) html = renderReportValues(html, report.summary, report.rows, locale);
+      outputs.push({ path: path.join(distDir, locale, relative), html });
+    }
   }
   for (const output of outputs) {
     await mkdir(path.dirname(output.path), { recursive: true });
     await writeFile(output.path, output.html, 'utf8');
   }
+  if (report) await syncDedicatedReports(distDir, report);
   return outputs.map(output => output.path);
 }
 

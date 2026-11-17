@@ -8,17 +8,18 @@ web
 
 ## Users
 
-- Prospective customers evaluating Nortivo’s web, app and digital design work.
+- Prospective customers evaluating Nortivo’s market research, algorithmic trading software, automation and investment education.
+- Visitors inspecting reported historical results, strategy methods and clearly labeled trading demonstrations.
 - Customers who need to create or follow a support ticket.
 - Nortivo’s administrator, who uses private side projects/tools and reviews, answers and closes support tickets.
 
 ## Product Purpose
 
-Nortivo presents the company’s digital product work, provides a direct support workflow and gives its owner an authenticated workspace. Success means visitors quickly understand what Nortivo builds and inspect real work, customers can create and follow tickets, and the administrator can open private tools or answer support.
+Nortivo presents investment technology, financial research and education, provides a direct support workflow and gives its owner an authenticated workspace. Success means visitors immediately understand the company’s services, inspect the existing report with its historical definitions, explore testable tools and methods, and make a relevant enquiry. Customers can create and follow tickets; the administrator can open private tools or answer support. Existing software and design projects remain accessible as secondary work.
 
 ## Positioning
 
-Nortivo is an independent Norwegian technology studio founded by Noah J.C. Sæter. The current local redesign presents website design and development, applications and software, intelligent systems and automation, and trading technology and educational tools. Arc is a product under development in private testing. Lune is an interactive fictional restaurant demonstration. Trading simulations and historical backtests retain their stated assumptions and illustrative status. Enquiries and customer support use the existing secure contact and ticket system. The redesign is being validated locally on a separate branch before publication.
+Nortivo is an investment technology and financial research brand founded by Noah J.C. Sæter in Lillestrøm, Norway. The site presents algorithmic trading software, stock and crypto market analysis, quantitative methods, automation, historical performance analysis and investment education. The existing 2026 report is presented as reported historical results with its original definitions and no guarantee of future returns. The site does not assert regulated investment-adviser, broker or asset-manager authorization. Interactive trading demonstrations remain explicitly simulated. Arc, Lune, software engineering and design work remain available through their existing routes and the secondary project links. Contact, support and private administration retain their existing backend contracts.
 
 ## Capabilities and Constraints
 
@@ -43,7 +44,8 @@ Nortivo is an independent Norwegian technology studio founded by Noah J.C. Sæte
 ## Evidence on Hand
 
 - Support and administration flows are implemented in this repository. The current redesign has local automated coverage; real email delivery and authenticated production flows still need deployment verification.
-- No testimonials, customer logos, case studies or performance claims are supplied; the site must not fabricate them.
+- The existing 2026 report, PDF and 222-session equity series supply the reported historical results shown on the site. The canonical summary reconciles opening and closing equity, profit, return and maximum drawdown; it does not establish independent audit or broker verification. Preserve metric definitions and the distinction between these results and simulations.
+- No customer testimonials, customer logos or additional performance evidence are supplied; the site must not fabricate them.
 
 ## Product Principles
 

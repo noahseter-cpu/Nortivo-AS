@@ -45,3 +45,37 @@ The checks do not verify real provider delivery, database writes, authenticated 
 DESIGN.md now records the implemented obsidian/silver public identity, Barlow Condensed/Manrope hierarchy, component treatments and actual motion. Its extensions are recorded in .impeccable/design.json. The previous public palette remains retrievable in Git history at 41aaaee and earlier commits. Historical release records and scoped restaurant/private-tool design documents remain in place.
 
 The fresh finish review is a separate check. This record does not assign itself a review disposition or imply that a reviewer approved uninspected integration behaviour.
+
+## Incremental V2 investment-technology extension
+
+The later user brief headed “NORTIVO V2 — INVESTMENT TECHNOLOGY & PREMIUM MOTION REFINEMENT” explicitly retains the existing cinematic identity. The extension strengthens investment research, algorithmic trading, market analysis and educational methods while keeping the titanium imagery, black/silver palette, condensed display type and existing routes.
+
+The homepage opens with the prescribed investment-technology identity line, a more specific trading headline and the existing reported-performance preview. A larger report section follows. Research disciplines, Decision Replay, educational offerings, trading tools, company information and contact form the remaining narrative. Arc and Lune remain available through secondary project links. The hero eyebrow is explicitly prescribed for that location and does not establish a default for other sections.
+
+### Report presentation and source boundary
+
+The compact preview, editorial showcase and dedicated report read the shared dist/report-2026/summary.json. Financial amounts are held as exact integer NOK øre. The shared presentation uses reported trading profit of NOK 145,538.19, reported return on opening equity of +58.22%, 222 sessions, 1,152 reported trades and maximum drawdown of −26.65%, covering 2 January through 17 November 2026.
+
+The equity chart is generated from all 222 existing account-equity rows. The report-presentation build module validates currency, exact profit reconciliation, period endpoints, session count, closing equity, return and drawdown before rendering the localized presentation. Agreement among supplied records does not establish an external audit. The original PDF and equity series remain unchanged.
+
+Pointer movement or the labelled keyboard range control selects a source row. Its date and NOK equity appear in an output and aria-valuetext. The SVG and summary values are present in the built HTML, so a failed interactive fetch leaves the report readable. The chart's optional one-time clip reveal lasts 850ms. It does not change the financial values or invent intermediate account history.
+
+Reported results remain identified as historical results. The account-equity return and the existing average return on deployed capital retain their respective definitions. Nothing in this extension asserts regulated financial authorization, guarantees returns or labels a disconnected data source as live.
+
+### Interaction and type extension
+
+The new style and behaviour files are dist/assets/investment-v2.css and investment-v2.js. They use native CSS, Web Animations and existing shared easing, with no additional competing animation runtime.
+
+Action fills and borders use 220ms/320ms transitions. The clipped label moves up one pixel and its stroked arrow moves right four pixels on eligible hover. Text links and active navigation have a sweeping underline. Selected major desktop actions move their inner face by at most two pixels per axis for a mouse pointer. The anchor's hit target stays fixed. Pointer leave, blur, keyboard input and reduced-motion/pointer preference changes clear the movement. Touch devices and reduced-motion users receive the stable control.
+
+Native page transitions use 100ms outgoing and 180ms incoming opacity where supported. Existing navigation remains the fallback. Reduced motion removes these transitions. Fields retain their explicit labels and gain short border/background focus feedback.
+
+IBM Plex Mono Regular is added for financial figures, dates and technical readouts. It is self-hosted with its SIL Open Font License. Barlow Condensed and Manrope retain their existing roles.
+
+### V2 validation
+
+The V2 implementation run reports 81 passing automated tests. The 56 route/language/viewport baseline checks are supplemented by seven focused viewport checks and the recorded feature checks in .impeccable/review/v2/feature-checks.json. The focused run covers shared summary agreement, keyboard chart selection, language changes, Decision Replay, magnetic feedback, keyboard and reduced-motion behaviour, the content security policy and contact validation with an intercepted saved-ticket response. It reports no issues.
+
+The V2 desktop/mobile captures are in .impeccable/review/v2, including home-en-1440.png, home-en-390.png, hero-1440.png and hero-390.png. The later local mobile Lighthouse run records Performance 99, Accessibility 100, Best Practices 100 and SEO 100 in .impeccable/review/v2/lighthouse.json. Those figures describe that local audit and supersede the earlier base-run score as the current V2 evidence.
+
+Real email delivery, provider/database writes, authenticated production administration and physical-device behaviour remain outside this pass. This record describes a finished local extension and does not claim a new production release.

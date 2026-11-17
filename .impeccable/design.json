@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-17T19:04:14.865Z",
+  "generatedAt": "2026-11-17T19:35:53.823Z",
   "title": "Design System: Nortivo",
   "extensions": {
     "colorMeta": {
@@ -185,6 +185,62 @@
           "oklch(83.57% 0.08 15)",
           "oklch(95.00% 0.08 15)"
         ]
+      },
+      "financial-positive": {
+        "role": "semantic",
+        "displayName": "Reported positive",
+        "tonalRamp": [
+          "oklch(15% .025 150)",
+          "oklch(26% .025 150)",
+          "oklch(38% .025 150)",
+          "oklch(49% .025 150)",
+          "oklch(61% .025 150)",
+          "oklch(72% .025 150)",
+          "oklch(84% .025 150)",
+          "oklch(95% .025 150)"
+        ]
+      },
+      "financial-negative": {
+        "role": "semantic",
+        "displayName": "Reported negative",
+        "tonalRamp": [
+          "oklch(15% .04 15)",
+          "oklch(26% .04 15)",
+          "oklch(38% .04 15)",
+          "oklch(49% .04 15)",
+          "oklch(61% .04 15)",
+          "oklch(72% .04 15)",
+          "oklch(84% .04 15)",
+          "oklch(95% .04 15)"
+        ]
+      },
+      "action-hover": {
+        "role": "primary",
+        "displayName": "Action hover",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "field-focus": {
+        "role": "primary",
+        "displayName": "Field focus",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
       }
     },
     "typographyMeta": {
@@ -215,6 +271,10 @@
       "action": {
         "displayName": "Action label",
         "purpose": "Public call-to-action controls."
+      },
+      "financial": {
+        "displayName": "Financial figures",
+        "purpose": "IBM Plex Mono tabular report values, dates and chart readouts."
       }
     },
     "shadows": [],
@@ -273,6 +333,36 @@
         "name": "scroll-linked-footer",
         "value": "view(); entry 0% entry 100%",
         "purpose": "Wordmark moves up 14px from .7 opacity."
+      },
+      {
+        "name": "v2-duration",
+        "value": "220ms",
+        "purpose": "Action label, arrow and underline state feedback."
+      },
+      {
+        "name": "v2-fill",
+        "value": "320ms",
+        "purpose": "Cinematic action fill and border color."
+      },
+      {
+        "name": "v2-magnetic",
+        "value": "translate clamped to ±2px per axis",
+        "purpose": "Mouse-only inner-face feedback on selected major actions. Disabled for touch, keyboard and reduced motion."
+      },
+      {
+        "name": "v2-line-reveal",
+        "value": "850ms",
+        "purpose": "One-time clip reveal of the source-equity line; numeric values do not animate."
+      },
+      {
+        "name": "v2-page-in",
+        "value": "180ms ease-out",
+        "purpose": "Native incoming-page opacity transition where supported."
+      },
+      {
+        "name": "v2-page-out",
+        "value": "100ms ease-out",
+        "purpose": "Native outgoing-page opacity transition where supported."
       }
     ],
     "breakpoints": [
@@ -291,6 +381,14 @@
       {
         "name": "compact-desktop",
         "value": "1100px"
+      },
+      {
+        "name": "investment-columns",
+        "value": "1150px"
+      },
+      {
+        "name": "investment-stack",
+        "value": "900px"
       }
     ]
   },
@@ -299,17 +397,17 @@
       "name": "Primary public action",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Solid public action with square corners.",
-      "html": "<button class=\"ds-primary\">EXPLORE NORTIVO</button>",
-      "css": ".ds-primary{font:700 .78rem Manrope,sans-serif;letter-spacing:.07em;min-height:52px;padding:14px 23px;background:var(--paper,#f1f2f4);color:var(--ink,#050505);border:1px solid #f1f2f4;border-radius:0;cursor:pointer;transition:background 180ms ease,color 180ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-primary:hover{background:#fff}.ds-primary:active{transform:scale(.98)}.ds-primary:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}.ds-primary:active{transform:none}}"
+      "description": "Native action with clipped label, stroked arrow, restrained fill, keyboard focus and reduced-motion treatment.",
+      "html": "<a class=\"ds-action\" href=\"#research\"><span class=\"ds-action-face\"><span class=\"ds-action-clip\"><span class=\"ds-action-label\">EXPLORE RESEARCH</span></span><svg class=\"ds-action-arrow\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></span></a>",
+      "css": ".ds-action{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 23px;font:700 .78rem Manrope,sans-serif;letter-spacing:.07em;text-decoration:none;border-radius:0;border:1px solid #d7dbe1;transition:color 220ms ease,background-color 320ms ease,border-color 220ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-action::before{content:\"\";position:absolute;inset:0;z-index:-1;background:#c4d3e6;transform:scaleX(0);transform-origin:left;transition:transform 320ms cubic-bezier(.23,1,.32,1)}.ds-action-face{display:inline-flex;align-items:center;gap:16px}.ds-action-clip{display:inline-block;overflow:hidden}.ds-action-label{display:inline-block;transition:transform 220ms cubic-bezier(.23,1,.32,1)}.ds-action-arrow{width:18px;height:18px;flex:0 0 18px;transition:transform 220ms cubic-bezier(.23,1,.32,1)}.ds-action:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}.ds-action:focus-visible :is(.ds-action-label,.ds-action-arrow){transform:none;transition:none}@media(hover:hover) and (pointer:fine){.ds-action:hover::before{transform:scaleX(1)}.ds-action:hover{color:#101114;background:#c4d3e6}.ds-action:hover .ds-action-label{transform:translateY(-1px)}.ds-action:hover .ds-action-arrow{transform:translateX(4px)}}@media(prefers-reduced-motion:reduce){.ds-action,.ds-action::before,.ds-action-label,.ds-action-arrow{transition:none;transform:none}}.ds-action{background:#f1f2f4;color:#050505}"
     },
     {
       "name": "Secondary public action",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Outlined action on a dark surface.",
-      "html": "<button class=\"ds-secondary\">START A PROJECT</button>",
-      "css": ".ds-secondary{font:700 .78rem Manrope,sans-serif;letter-spacing:.07em;min-height:52px;padding:14px 23px;background:transparent;color:#fff;border:1px solid #d7dbe1;border-radius:0;cursor:pointer;transition:background 180ms ease,color 180ms ease}.ds-secondary:hover{background:#fff;color:#050505}.ds-secondary:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}"
+      "description": "Native action with clipped label, stroked arrow, restrained fill, keyboard focus and reduced-motion treatment.",
+      "html": "<a class=\"ds-action\" href=\"#research\"><span class=\"ds-action-face\"><span class=\"ds-action-clip\"><span class=\"ds-action-label\">VIEW TRADING REPORT</span></span><svg class=\"ds-action-arrow\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></span></a>",
+      "css": ".ds-action{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 23px;font:700 .78rem Manrope,sans-serif;letter-spacing:.07em;text-decoration:none;border-radius:0;border:1px solid #d7dbe1;transition:color 220ms ease,background-color 320ms ease,border-color 220ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-action::before{content:\"\";position:absolute;inset:0;z-index:-1;background:#c4d3e6;transform:scaleX(0);transform-origin:left;transition:transform 320ms cubic-bezier(.23,1,.32,1)}.ds-action-face{display:inline-flex;align-items:center;gap:16px}.ds-action-clip{display:inline-block;overflow:hidden}.ds-action-label{display:inline-block;transition:transform 220ms cubic-bezier(.23,1,.32,1)}.ds-action-arrow{width:18px;height:18px;flex:0 0 18px;transition:transform 220ms cubic-bezier(.23,1,.32,1)}.ds-action:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}.ds-action:focus-visible :is(.ds-action-label,.ds-action-arrow){transform:none;transition:none}@media(hover:hover) and (pointer:fine){.ds-action:hover::before{transform:scaleX(1)}.ds-action:hover{color:#101114;background:#c4d3e6}.ds-action:hover .ds-action-label{transform:translateY(-1px)}.ds-action:hover .ds-action-arrow{transform:translateX(4px)}}@media(prefers-reduced-motion:reduce){.ds-action,.ds-action::before,.ds-action-label,.ds-action-arrow{transition:none;transform:none}}.ds-action{background:transparent;color:#ffffff}"
     },
     {
       "name": "Text field",
@@ -349,17 +447,24 @@
       "description": "Unfilled text action in a service row.",
       "html": "<a class=\"ds-service-action\" href=\"#contact\">Discuss a website</a>",
       "css": ".ds-service-action{display:inline-flex;align-items:center;gap:16px;min-height:44px;padding:8px 0;background:transparent;color:#d4dfed;border:0;border-bottom:1px solid #747b87;text-decoration:none;font:700 .9rem Manrope,sans-serif}.ds-service-action:hover{border-color:#d4dfed}.ds-service-action:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}"
+    },
+    {
+      "name": "Reported summary",
+      "kind": "custom",
+      "description": "Exact existing summary values in IBM Plex Mono with explicit historical context.",
+      "html": "<section class=\"ds-report\"><h3>2026 / PERFORMANCE REPORT</h3><p>Reported trading profit</p><strong>NOK 145,538.19</strong><dl><div><dt>Return on opening equity</dt><dd>+58.22%</dd></div><div><dt>Maximum drawdown</dt><dd>−26.65%</dd></div></dl><small>Reported historical results. Future returns may differ.</small></section>",
+      "css": ".ds-report{padding:24px;background:#101114;color:#f1f2f4;border:1px solid #585e68;font:400 .85rem/1.65 Manrope,sans-serif}.ds-report h3{font:700 .82rem/1.5 Manrope,sans-serif;letter-spacing:.04em;margin:0 0 24px}.ds-report p{color:#c7cdd7;margin:0}.ds-report strong{display:block;font:400 1.8rem/1.25 \"IBM Plex Mono\",monospace;font-variant-numeric:tabular-nums;margin:6px 0 22px}.ds-report dl{display:grid;grid-template-columns:1fr 1fr;gap:18px}.ds-report dt{color:#b7bfcb;font-size:.73rem}.ds-report dd{font-family:\"IBM Plex Mono\",monospace;margin:4px 0}.ds-report dl>div:first-child dd{color:#b8d5c1}.ds-report dl>div:last-child dd{color:#edb1b8}.ds-report small{color:#b2bac7;font-size:.75rem}"
     }
   ],
   "narrative": {
     "northStar": "The Future, Engineered.",
-    "overview": "Nortivo's current local implementation uses an architectural black environment, condensed display lettering and silver controls. Original imagery gives the public studio presentation scale. Manrope, restrained dividers and explicit feedback keep product, contact and support areas readable.\n\nThe system was extracted from the implemented website on 17 November 2026. The authoritative extension is dist/assets/nortivo-engineered.css. Earlier stylesheets remain inside the named nt-legacy cascade layer, preserving their layout and interaction foundations beneath the current visual rules. This document supersedes the older navy, blue-action and warm editorial public palettes.",
+    "overview": "Nortivo's current local implementation uses an architectural black environment, condensed display lettering and silver controls. The incremental investment-technology extension retains this world while giving financial research, trading systems and the existing report a stronger presence. Manrope, restrained dividers and explicit feedback keep product, contact and support areas readable.\n\nThe system was extracted from the implemented website on 17 November 2026. The base extension is dist/assets/nortivo-engineered.css. The incremental financial presentation and interaction layer is dist/assets/investment-v2.css, with its behaviour in investment-v2.js. Earlier stylesheets remain inside the named nt-legacy cascade layer, preserving their layout and interaction foundations beneath the current visual rules. This document supersedes the older navy, blue-action and warm editorial public palettes.",
     "keyCharacteristics": [
       "Obsidian and charcoal surfaces with occasional soft-white sections.",
-      "Self-hosted Barlow Condensed display text and Manrope interface text.",
+      "Self-hosted Barlow Condensed display text, Manrope interface text and IBM Plex Mono financial figures.",
       "Asymmetric compositions, large real project previews and ruled service rows.",
       "Flat operational workspaces, persistent field labels and readable status text.",
-      "Optional motion around marketing imagery and explicit control feedback.",
+      "Optional motion around marketing imagery, report charts and explicit control feedback.",
       "Equivalent Norwegian Bokmål and English routes."
     ],
     "rules": [],
@@ -367,6 +472,7 @@
       "Do use the current black, charcoal, silver and soft-white palette on Nortivo company surfaces.",
       "Do reserve condensed uppercase display type for the public presentation hierarchy.",
       "Do use Manrope for practical interfaces, labels, form content and data explanations.",
+      "Do use IBM Plex Mono for financial figures and preserve exact report definitions.",
       "Do preserve bilingual navigation, visible focus, label associations and written states.",
       "Do preserve supplied product assets, actual screenshots and clear demonstration status.",
       "Do preserve existing functional contracts while extending their visual treatment.",
@@ -378,6 +484,8 @@
       "Don't conceal required content behind animation completion.",
       "Don't add scroll hijacking, excessive glow, rainbow gradients or unnecessary 3D dependencies.",
       "Don't use color as the only indicator of a state or financial result.",
+      "Don't turn the prescribed hero eyebrow into a default for unrelated sections.",
+      "Don't present reported historical results or simulated examples as audited, live or guaranteed outcomes.",
       "Don't apply public cinematic motion to authentication or support tasks."
     ]
   }

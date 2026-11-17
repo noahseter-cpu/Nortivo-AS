@@ -13,3 +13,7 @@ The website includes Manrope and Syne font files downloaded from Google Fonts on
 - License: SIL Open Font License 1.1, as published with each family by Google Fonts.
 
 The files are served locally from `dist/assets/fonts` so the page does not rely on a third-party font request at runtime.
+
+## IBM Plex Mono
+
+The incremental V2 extension adds IBM Plex Mono Regular for financial amounts, report statistics, dates and chart readouts. The self-hosted file is dist/assets/fonts/ibm-plex-mono-regular.ttf. The shipped licence is dist/assets/fonts/IBMPlexMono-OFL.txt, carrying the IBM copyright and Reserved Font Name “Plex”. It is licensed under SIL Open Font License 1.1. The interface does not request the font from a third-party server at runtime. [IBM Plex project](https://github.com/IBM/plex), [Google Fonts source](https://github.com/google/fonts/tree/main/ofl/ibmplexmono)

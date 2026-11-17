@@ -19,8 +19,9 @@ Open `http://127.0.0.1:4399/nb/` or `/en/`. The local server deliberately return
 - English source pages: `dist/index.html` and `dist/{products,services,about,contact,restaurant,support,admin,privacy}/index.html`.
 - Shared copy: `dist/assets/site-copy.json`. Runtime copy is embedded in `site.js`; the contract test checks they remain identical.
 - Support/admin copy: `dist/assets/portal-copy.json`; page scripts embed the relevant dictionaries.
-- Shared design: `dist/assets/site.css`; operational surfaces: `portal-v2.css`.
-- Run the locale build after source/copy changes. It writes eighteen static pages under `/nb/` and `/en/`, including translated metadata and alternate-language links.
+- Shared foundation: `dist/assets/site.css`; cinematic public design: `nortivo-engineered.css`; incremental investment presentation and interactions: `investment-v2.css` and `investment-v2.js`. Operational surfaces retain `portal-v2.css`.
+- Report summary: `dist/report-2026/summary.json`. The builder validates it against the retained equity series and renders the marked values on the homepage and dedicated report through `scripts/report-presentation.mjs`.
+- Run the locale build after source/copy changes. It writes twenty-six static pages under `/nb/` and `/en/`, including translated metadata and alternate-language links, and synchronizes the separately authored report pages.
 - Existing non-prefixed routes are preserved. On Netlify, the edge function chooses an explicit language, saved cookie, Norway signal, then English. Explicit prefixed routes are never redirected by geolocation.
 
 ## Deployment boundary
@@ -34,6 +35,10 @@ Keep the existing environment values described in `SETUP.md` on Netlify only. Ne
 Before production acceptance, test real ticket creation, confirmation delivery, email verification, authenticated lookup, admin login/reply/status/logout, cookies, redirects and response headers in an approved deployment. No real customer ticket was used in local testing. See `docs/SUPPORT_SECURITY.md` for rate-limiter and delivery limitations.
 
 ## Design and evidence
+
+Current public presentation: [17 November investment technology refinement](docs/ENGINEERED_STUDIO_2026_11_17.md). The homepage introduces research, trading systems and education; the existing 2026 reported historical results appear in both the hero and a dedicated editorial section. Arc and Lune retain their existing routes as secondary projects. Both languages share the report summary and original equity series. V2 local verification includes 81 passing automated tests, responsive browser checks, chart input, language switching, keyboard/reduced-motion behavior, production CSP and local form retry/save handling. Local mobile Lighthouse scored 99 performance and 100 accessibility, best practices and SEO. These local results do not establish real email delivery or authenticated production operations.
+
+Earlier implementation checkpoints below describe their respective releases, rather than the current homepage hierarchy.
 
 Latest local extension: [private Vibb app and code](docs/PRIVATE_VIBB_APP.md), with [scoped Vibb design guidance](docs/private-vibb/DESIGN.md). The real React practice app sits beside its read-only source or opens inside the course. Independent review returned SHIP and 76/76 local tests pass. Publication is authorized but pending at this checkpoint; the earlier release evidence below remains separate.
 
