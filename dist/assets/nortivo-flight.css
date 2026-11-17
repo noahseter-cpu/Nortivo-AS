@@ -1,3 +1,4 @@
+@layer nt-legacy {
 body.flight-home, body.flight-report {
   --invest-paper: #f4efe7;
   --invest-ink: #161817;
@@ -269,4 +270,6 @@ body.flight-home, body.flight-report {
   .flight-arc .language-switch { gap:3px; }
   .flight-arc .language-switch button { padding-inline:2px; }
   .flight-arc .menu-toggle { padding-inline:8px; }
+}
+
 }

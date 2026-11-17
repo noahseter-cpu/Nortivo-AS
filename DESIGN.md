@@ -1,328 +1,267 @@
 ---
 name: Nortivo
-description: "A cinematic navy presentation with clear blue actions and practical product interfaces."
+description: "An obsidian technology-studio identity with industrial display typography and practical software interfaces."
 colors:
-  ink: "#07131f"
-  surface: "#101e2e"
-  paper: "#f3f7fb"
-  muted: "#b8c7d8"
-  line: "#2a4056"
-  blue: "#0962d8"
-  link-blue: "#79bdff"
-  focus-blue: "#98ceff"
-  white: "#fff"
-  portal-line: "#263b52"
-  portal-field: "#091624"
-  portal-accent: "#80baff"
-  portal-error: "#ffb4b4"
-  portal-success: "#8ce0bd"
+  ink: "#050505"
+  surface: "#101114"
+  surface-raised: "#181a1f"
+  chart-surface: "#141820"
+  paper: "#f1f2f4"
+  white: "#ffffff"
+  muted: "#b3b7bf"
+  line: "#35383e"
+  control-line: "#747b87"
+  accent: "#d4dfed"
+  button-paper: "#e8edf5"
+  field-label: "#e1e6ef"
+  field-error: "#ffb5bf"
 typography:
   display:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "clamp(2.1rem, 4vw, 3.45rem)"
-    fontWeight: 700
-    lineHeight: 1.15
+    fontFamily: "'Barlow Condensed', sans-serif"
+    fontSize: "clamp(5rem, 10vw, 11rem)"
+    fontWeight: 600
+    lineHeight: .91
     letterSpacing: "-.025em"
   headline:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "clamp(1.8rem, 3vw, 2.65rem)"
-    fontWeight: 700
-    lineHeight: 1.15
+    fontFamily: "'Barlow Condensed', sans-serif"
+    fontSize: "clamp(2.7rem, 5.8vw, 6.4rem)"
+    fontWeight: 600
+    lineHeight: .99
+    letterSpacing: "-.02em"
+  interior-display:
+    fontFamily: "'Barlow Condensed', sans-serif"
+    fontSize: "clamp(3.2rem, 6.2vw, 7rem)"
+    fontWeight: 600
+    lineHeight: .98
     letterSpacing: "-.025em"
   title:
     fontFamily: "Manrope, sans-serif"
     fontSize: "1.35rem"
     fontWeight: 700
     lineHeight: 1.15
-    letterSpacing: "-.025em"
+    letterSpacing: "-.035em"
   body:
     fontFamily: "Manrope, sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.65
-  label:
+  navigation:
     fontFamily: "Manrope, sans-serif"
-    fontSize: ".86rem"
+    fontSize: ".77rem"
     fontWeight: 700
-    lineHeight: 1.65
-  portal-display:
+    letterSpacing: ".06em"
+  action:
     fontFamily: "Manrope, sans-serif"
-    fontSize: "clamp(2rem, 3.4vw, 2.75rem)"
+    fontSize: ".78rem"
     fontWeight: 700
-    lineHeight: 1.16
-    letterSpacing: "-.035em"
-  studio-display:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "clamp(2.65rem, 4.6vw, 4.6rem)"
-    fontWeight: 700
-    lineHeight: 1.08
-    letterSpacing: "-.035em"
+    letterSpacing: ".07em"
 rounded:
-  compact: "6px"
-  control: "7px"
-  portal-control: "8px"
-  image: "10px"
-  workspace: "12px"
+  square: "0"
+  action: "2px"
+  field: "3px"
+  workspace: "5px"
 spacing:
-  field-gap: "8px"
   compact: "12px"
   text: "16px"
-  form-gap: "20px"
-  control-inline: "24px"
-  workspace-padding: "30px"
-  section-gap: "36px"
-  section-mobile: "52px"
-  section-tablet: "64px"
-  section-desktop: "88px"
+  inset: "18px"
+  gutter-mobile: "20px"
+  row: "24px"
+  group: "28px"
+  section: "46px"
 components:
   button-primary:
-    backgroundColor: "{colors.blue}"
-    textColor: "{colors.white}"
-    rounded: "{rounded.control}"
-    padding: "13px 24px"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.square}"
+    padding: "14px 23px"
+    height: "52px"
   button-secondary:
     backgroundColor: "transparent"
     textColor: "{colors.white}"
-    rounded: "{rounded.control}"
-    padding: "13px 24px"
-  text-link:
-    textColor: "{colors.link-blue}"
+    rounded: "{rounded.square}"
+    padding: "14px 23px"
+    height: "52px"
+  form-button:
+    backgroundColor: "{colors.button-paper}"
+    textColor: "{colors.surface}"
+    rounded: "{rounded.action}"
   input-field:
-    backgroundColor: "{colors.ink}"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.paper}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.field}"
     padding: "12px 14px"
   site-navigation:
     backgroundColor: "{colors.ink}"
-    textColor: "{colors.muted}"
-  language-switch:
-    backgroundColor: "transparent"
-    textColor: "{colors.muted}"
-    padding: "0 7px"
-  status-development:
-    textColor: "#cfdaea"
-    rounded: "{rounded.compact}"
-    padding: "6px 10px"
-  portal-card:
+    textColor: "{colors.paper}"
+  support-workspace:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.paper}"
     rounded: "{rounded.workspace}"
-    padding: "30px"
-  support-tabs:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.muted}"
-    rounded: "{rounded.portal-control}"
-    padding: "12px"
-  ticket-status:
-    backgroundColor: "#142d46"
-    textColor: "#a6d0ff"
-    rounded: "{rounded.compact}"
-    padding: "3px 8px"
+  support-tab-selected:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.surface}"
 ---
 
 # Design System: Nortivo
 
-The private [Vibb app and code workspace](docs/private-vibb/DESIGN.md) extends the existing warm Vibb learning surface. Its paper, green, ink and source-reader colors are scoped to the authenticated learning tool; they are not Nortivo public tokens. The [implementation and verification record](docs/PRIVATE_VIBB_APP.md) records the local SHIP verdict and publication boundary. This ordinary extension preserves the public frontmatter and `.impeccable/design.json`.
-
-The [27 October studio and private-workspace refinement](docs/STUDIO_PRIVATE_WORKSPACE_2026_10_27.md) supersedes the earlier homepage composition, home type and entrance-motion descriptions below. The homepage now introduces the company, presents unequal Lune and Arc previews, then open service rows and contact. Shared public shells extend to 1320px, with a larger wordmark and a blue contact link; restaurant and admin retain their own skins. The source is `dist/assets/studio-refresh.css`; `admin-workspace.css` adds private project rows beside the existing support workflow. These are directly authorized extensions of the incumbent navy/Manrope system. Independent review returned **SHIP**. This refinement is locally verified and awaits separate approval for Nortivo production publication.
-
-The separate Lune restaurant demonstration is documented in [its scoped design system](docs/restaurant/DESIGN.md), with [durable component and motion extensions](docs/restaurant-design.json). Its tokens do not change the Nortivo system below.
-
-The [homepage showcase refinement](docs/HOME_SHOWCASE.md) extends this system with a visible, clickable Lune preview immediately after the hero, a prominent Arc section using the real app screenshot, and compact website/app service summaries. The preview reuses Lune's existing scoped colors and food asset; the surrounding sections retain Nortivo's typography, navy surfaces, blue actions and responsive stacking. This ordinary extension preserves the incumbent token files and adds no motion system.
-
-The subsequent [product-led refinement](docs/ENTERPRISE_REFINEMENT.md) supersedes that homepage ordering and the affected surface descriptions below: Arc now comes first, with a clearly labelled fictional budget explanation that is not an app screen and neither stores nor sends data; the real, captioned app screenshots appear larger on Products. About leads with inspectable work before the supplied biography, Contact explains the enquiry process, and shared navigation and responsive text improve contact access and readability in nb/en. This ordinary, code-led refinement retains the navy identity, Manrope, existing tokens and motion; it does not regenerate the token files or `.impeccable/design.json` or repair unrelated historical documentation. Independent review returned **SHIP**; publication was verified as recorded in the linked brief.
-
-The [26 October homepage refinement](docs/HOME_OCTOBER_REFINEMENT.md) now supersedes the earlier homepage ordering, decorative hero, fictional budget example and home-specific type, layout and entrance-motion descriptions. The opening pairs a two-line Manrope heading with an actual, dated Arc test screenshot, a primary product action and nearby private-test status. The second heading line has a scoped pale-blue tint; the desktop screenshot switches to a captioned portrait excerpt on phones. Three open feature links lead to the existing product areas, followed by a compact fictional Lune preview and website/app service enquiries. `dist/assets/home.css` contains these homepage-only details; the global tokens, `.impeccable/design.json`, navy identity and shared controls remain intact. The screenshot alone reuses the existing 600ms visible settlement, with an immediate reduced-motion fallback. Independent review of all five final viewport captures and implementation source returned **SHIP**, with no corrections requested. Publication was verified; the linked brief records the release evidence and limitations. Earlier global documentation drift is reported there without a broader refresh.
-
-## Refinement — 22 September 2026
-
-This update supersedes the older descriptions of the founder strip, support columns, mobile header and motion below. The user requested cleaner text/layout, Animate-based motion, their supplied professional biography, a refreshed tab icon and production publication. The existing navy art direction is retained.
-
-- Removed the duplicate home feature-link row and founder strip. Arc details remain on Products; the founder's biography is grouped under About.
-- Added the user-supplied Nortivo, Coor Norge, Framtia Barnehage and Drømtorp entries in both languages. Source: profile text supplied directly by the user on 2026-09-22; no private LinkedIn analytics included.
-- Mobile header is one compact row with explicit language/menu controls. Pointer menu transitions use interruptible WAAPI, 180ms, opacity/translateY and the existing ease-out token; keyboard operations remain immediate.
-- The marketing hero has one non-blocking 600ms settlement, 60ms stagger and a 1000ms decorative image settlement. Content begins visibly at opacity .8; no scroll hiding or recurring movement. Reduced motion disables positional animation.
-- Support uses one centered 760px workspace and removes the repeated three-step explainer. Form IDs, functionality and backend contracts are unchanged.
-- The navy/white/blue N favicon uses a versioned URL to refresh browser caches. Netlify's own badge setting was switched off for all visitors; no CSS hiding workaround or paid upgrade.
-- Checked local desktop 1440px, mobile 390px, narrow English 320px, menu/Escape and translated biography; no horizontal overflow in the measured views. Real-device motion feel and assistive-technology testing remain untested.
-
 ## Overview
 
-**Creative North Star: "The Midnight Product Stage"**
+**Creative North Star: "The Future, Engineered."**
 
-Nortivo uses a cinematic navy environment to give its products a clear setting. Compact Manrope headings, pale text and direct blue actions keep the interface readable around the image. The reusable character is calm and precise: substantial imagery where it explains the brand, followed by clear product information and practical controls.
+Nortivo's current local implementation uses an architectural black environment, condensed display lettering and silver controls. Original imagery gives the public studio presentation scale. Manrope, restrained dividers and explicit feedback keep product, contact and support areas readable.
 
-Public pages have generous section spacing and visible product evidence. Support and administration use the same palette and type family with tighter workspaces, stronger field boundaries and plain state feedback. Neither surface relies on entrance animation to reveal content.
-
-This is a record of the implemented local website, extracted from `dist/assets/site.css`, `dist/assets/portal-v2.css`, source HTML and `site.js` on 21 September 2026. The descriptive north star summarizes that implementation; it is not a newly approved concept name. The user explicitly instructed direct implementation after rejecting the earlier previews. The build is code-led, not an image-approved screen reproduction, and has not been publicly deployed. See [the direction contract](docs/design-2026-09-21/DIRECTION_STATUS.md) for the decision record and [verification](docs/design-2026-09-21/VERIFICATION.md) for tested scope.
+The system was extracted from the implemented website on 17 November 2026. The authoritative extension is dist/assets/nortivo-engineered.css. Earlier stylesheets remain inside the named nt-legacy cascade layer, preserving their layout and interaction foundations beneath the current visual rules. This document supersedes the older navy, blue-action and warm editorial public palettes.
 
 **Key Characteristics:**
 
-- Midnight navy surfaces, pale text and clear blue actions.
-- One locally served Manrope family, with regular body text and bold hierarchy.
-- Broad image presentation paired with real, labelled Arc screenshots.
-- Flat content sections and bounded support workspaces.
-- Immediate navigation and short, optional control feedback.
-- Norwegian Bokmål and English receive the same visual hierarchy.
+- Obsidian and charcoal surfaces with occasional soft-white sections.
+- Self-hosted Barlow Condensed display text and Manrope interface text.
+- Asymmetric compositions, large real project previews and ruled service rows.
+- Flat operational workspaces, persistent field labels and readable status text.
+- Optional motion around marketing imagery and explicit control feedback.
+- Equivalent Norwegian Bokmål and English routes.
+
+The company name, founder attribution, Arc wordmark, real empty-test screenshots, fictional Lune status, private workspace boundaries and existing support contracts carry forward. Lune retains its own [restaurant design](docs/restaurant/DESIGN.md). The authenticated Vibb learning tool retains its [scoped design](docs/private-vibb/DESIGN.md).
+
+The current build runs locally. Its [implementation record](docs/ENGINEERED_STUDIO_2026_11_17.md) carries validation and publication limits. Earlier design and release decisions remain in repository history and the linked release documents.
 
 ## Colors
 
-The palette moves from near-black navy through blue-grey structure to bright, readable action and focus colors. The frontmatter contains the normative values; the names below describe their use.
+The frontmatter records the reused public palette. Secondary colors separate content and controls without competing with imagery.
 
 ### Primary
 
-- **Action Blue** (`blue`): solid primary buttons on public and operational pages.
-- **Link Blue** (`link-blue`): text actions and supporting line icons.
-- **Focus Blue** (`focus-blue`): the visible keyboard outline across shared components.
-- **Portal Blue** (`portal-accent`): ticket identifiers, support step numbers, carets and focused portal fields.
+- **Silver accent** identifies links, focus, selected support tabs and selected simulation prices.
+- **Soft white** supplies primary text on dark surfaces and the solid public action fill.
+- **Button paper** supplies the shared form action fill.
 
 ### Neutral
 
-- **Midnight Ink** (`ink`): the page, header and public field background.
-- **Navy Surface** (`surface`): mobile navigation and support/admin workspace panels.
-- **Frost Paper** (`paper`): primary text; **White** (`white`) gives actions and current navigation their stronger emphasis.
-- **Blue-grey Text** (`muted`): descriptions, helper copy and secondary navigation.
-- **Structural Line** (`line`): public dividers and quiet control boundaries.
-- **Portal Line** (`portal-line`): operational panel and row boundaries.
-- **Inset Field** (`portal-field`): portal inputs against their panel.
+- **Obsidian** is the page and header surface.
+- **Charcoal** separates workspaces and large secondary sections.
+- **Elevated charcoal** provides restrained panel and selected-state contrast.
+- **Chart charcoal** separates the technical price diagram.
+- **Silver text** carries supporting paragraphs and helper text.
+- **Structural line** separates sections, navigation and rows.
+- **Control line** gives fields a visible boundary.
+- **Field label** remains legible above inputs.
+- **Field error** accompanies written validation feedback.
 
-### Semantic states
+The white service and closing sections reverse the foreground relationship. The historical report chart keeps its existing light plot background and dark labels.
 
-- **Portal Error** (`portal-error`) and **Portal Success** (`portal-success`) accompany explicit feedback text.
-- The development label uses an amber dot with written test status. Ticket chips use written Open, Answered or Closed states with their own blue, green or neutral treatment.
-- Public contact feedback has dedicated error and success surfaces; these are not promotional accents.
-
-**The Explicit State Rule.** Color accompanies text or a visible selected state; it never supplies the only explanation of status or failure.
+Color accompanies explicit labels, selected attributes and written messages. It does not supply the only explanation of status or failure.
 
 ## Typography
 
-**Display Font:** Manrope, with sans-serif fallback.
-**Body Font:** Manrope, with sans-serif fallback.
+**Display Font:** Barlow Condensed SemiBold, with sans-serif fallback.
 
-Regular (400) and bold (700) are served locally from `dist/assets/fonts` with `font-display: swap`. Syne files remain in the repository but are not loaded by the current site. Font sources and licensing are recorded in [THIRD_PARTY_FONTS.md](docs/THIRD_PARTY_FONTS.md).
+**Body and Interface Font:** Manrope Regular and Bold, with sans-serif fallback.
 
-The single family keeps marketing and support visibly related. Headings are compact and balanced; descriptions use comfortable line spacing instead of oversized display typography.
+Both families are served locally with font-display swap. Sources and licence notes are in [THIRD_PARTY_FONTS.md](docs/THIRD_PARTY_FONTS.md).
 
 ### Hierarchy
 
-- **Display:** the incumbent public page heading role in the frontmatter, retained outside the studio homepage.
-- **Studio display:** the scoped company-introduction role in the frontmatter. It steps to 3.6rem at 1100px, 3.8rem at 900px after stacking, and 2.65rem at 620px with 1.12 line-height and -.03em tracking. Its second line uses a scoped pale-blue tint (`#a9ccf0`).
-- **Headline:** section headings. Arc introductions and product-page headings have their own smaller contextual clamps in the stylesheet.
-- **Title:** the shared subheading role. Service headings use 1.5rem on desktop and 1.3rem on narrow screens.
-- **Body:** regular text with a default measure of 65ch. Descriptions and metadata commonly step down below the base size.
-- **Label:** bold public form labels. Portal labels use .83rem; support explanatory text retains its own line-height.
-- **Portal display:** operational page headings. Login uses 2rem; the authenticated dashboard uses a smaller contextual clamp.
-- **Numeric detail:** ticket identifiers, support step numbers and summary values use tabular numerals.
+- **Display** supplies the large two-line homepage heading. Its contextual clamps become clamp(5rem,11vw,8rem) at 1100px, clamp(4.6rem,13vw,7.5rem) at 880px, and clamp(4.2rem,17vw,6rem) at 600px.
+- **Headline** supplies uppercase public section headings. At 600px the homepage section clamp becomes clamp(2.7rem,10vw,3.8rem).
+- **Interior display** supplies the supported service, company and utility mastheads. Working tools retain a practical Manrope hierarchy.
+- **Title** supplies content headings and operational sections.
+- **Body** supplies prose with the inherited 65ch maximum. Particular introductions use a shorter measure and larger contextual type.
+- **Navigation** and **action** use bold, letterspaced labels. Uppercase treatment belongs to these controls rather than to body copy.
+- Numerical information retains tabular numerals where the existing tool and report components define them.
 
-The studio introduction uses 17px body text at 1.8 line-height, reducing to 16px on phones. Studio section headings use `clamp(1.9rem,3vw,2.7rem)`; work titles are 24px (23px on phones), service-row titles 23px (22px on phones). Project descriptions use 14px at 1.7 line-height. The shared public wordmark is 25px, reducing to 23px at 620px; navigation is 14px. These contextual roles do not replace the smaller operational hierarchy.
-
-**The Single Family Rule.** Use the existing Manrope regular and bold files for the website; do not reintroduce Syne from the archived design.
+The footer wordmark uses Barlow Condensed at clamp(4rem,18vw,18rem), becoming 22vw on narrow screens. It is a home link. Preserve the complete supplied Arc wordmark and the actual screenshot's own interface typography.
 
 ## Layout
 
-The current public studio stylesheet overrides shared content, header and footer widths with `min(1320px,calc(100% - 64px))`; at 620px it uses 18px gutters. This applies to public pages loading `studio-refresh.css`, including support's shared header/footer, while restaurant and admin retain their separate skins. The desktop header remains at least 88px tall and becomes 76px at 620px.
+The desktop public content container reaches 1440px with 56px side gutters. The header and footer wordmark reach 1560px with 48px gutters. At 1100px the primary content gutters become 32px. At 600px they become 20px, while the header uses 18px.
 
-The homepage introduction uses a 1.25:.75 split and 80px gap, stacking at 900px. Work previews use an unequal 1.15:.85 split with 28px gap, stacking at 620px. Preview height steps from 340px through 300px at 1100px to 270px at 900px; mobile food imagery has a 1.48 aspect ratio, and the Arc matte has a 1.4 aspect ratio with a 250px minimum height. The screenshot retains automatic height and its original aspect ratio inside the matte (`#dce5ed`). Services use open rows and a .8:1.2 introductory/content split with a 90px gap, stacking at 900px. These values describe the homepage expression, not required compositions for future pages.
+The desktop header has a 90px minimum height. At 880px it becomes 76px and exchanges desktop links for a menu button. On the homepage the header is fixed over the hero. An IntersectionObserver changes its surface to nearly opaque obsidian once the hero leaves the header region. In-page sections account for it with a 90px scroll margin.
 
-The following paragraphs record the older base stylesheet, whose widths/header descriptions are superseded where the current studio extension applies. Other page-specific grids remain in place.
+Layouts follow the content. The introduction uses a 1.45-to-1 split. Service rows align a heading, description and directional icon. Project previews alternate image and copy with a 1.7-to-1 relationship on desktop. The five-stage process uses five columns, then three at 880px, then a vertical sequence at 600px.
 
-Public content uses a centered container with a maximum width of 1200px and 32px side gutters. The header is part of normal document flow, with an 88px desktop minimum height. Sections use 88px vertical padding, reducing to 64px at the tablet layout and 52px at the phone layout.
-
-The public responsive thresholds are 1080px, 880px, 560px and 359px. At 880px, the content container caps at 680px with 20px gutters, desktop navigation gives way to the menu, and Arc, about and contact layouts become one column. At 560px, gutters are 18px; language controls occupy a separate line in the 102px header, service and form grids stack, and product features become a vertical sequence. Below 360px, gutters reduce to 14px. The hero artwork has a separate 700px source-image switch.
-
-Support and admin use a 1160px maximum shell with 32px desktop gutters. The support introduction and workspace form a two-column composition; the workspace itself is a bounded panel. At 900px, spacing tightens and shell gutters become 20px. At 720px, support and admin list/detail become single columns and the supplemental support steps disappear. At 480px, shell gutters become 16px, fields and actions stack, and panel padding tightens to 22px by 18px.
-
-Form grids preserve label-to-field spacing and allow long messages, translations and ticket identifiers to wrap. Mobile product screenshots use the real portrait asset inside a bounded preview with a caption; they are not invented device mockups. Preserve the reading order and meaningful headings when adding content in either language.
+The extension uses breakpoints at 1100px, 880px and 600px. Functional surfaces retain their additional responsive rules inside the legacy layer. Form fields, tables and tool controls preserve semantic source order.
 
 ## Elevation & Depth
 
-The interface is flat. Navy tonal changes, thin borders and whitespace distinguish sections, controls and workspaces; current stylesheets define no box-shadow vocabulary. Photographic depth belongs to the original hero artwork. A local dark overlay and text shadows protect its reading area.
+Depth comes from the original metallic hero image, tonal surfaces, thin boundaries and negative space. The extension establishes no shadow vocabulary. Local overlays protect text against imagery.
 
-### Text-shadow vocabulary
+Operational panels use a visible border and restrained corners. The design does not require decorative glass, glows or floating shadows.
 
-- **Hero heading:** `0 3px 14px #02080e`.
-- **Hero supporting copy:** `0 2px 7px #02080e`.
-
-**The Flat Workspace Rule.** Separate support and administration layers with the existing surface and border treatments; do not add floating-card shadows or glass blur.
+The generated hero is a pre-rendered image delivered as a 143,331-byte JPEG. There is no real-time 3D scene or added 3D runtime.
 
 ## Shapes
 
-Controls have small, deliberate corners: compact status/menu elements, public controls and portal controls use their respective frontmatter radii. Product images are slightly softer; support and login workspaces use the largest recurring radius. Ordinary content sections stay open, with straight horizontal dividers.
+Marketing actions use square corners. Shared form actions use the small action radius, fields use the field radius, and support/admin panels use the workspace radius.
 
-The visible header brand is the uppercase NORTIVO wordmark in Manrope. The unused legacy brand-mark rule is not a component to reintroduce. Arc uses the supplied complete SVG wordmark with its separate “by Nortivo” line; do not reconstruct it from a letter or a substitute font.
+Open sections and lists rely on straight rules. Product status labels retain written test/development information. The original Arc wordmark and Lune identity remain scoped to their products.
 
 ## Components
 
-### Buttons
+### Buttons and text actions
 
-Direct, solid and easy to identify. Public primary buttons use Action Blue, white bold text, a 50px minimum height and the public control radius. Secondary buttons retain a transparent surface and a visible border. Hover changes the primary fill to `#1268db`, or the secondary surface to `#142a40`, on hover-capable fine pointers only.
+Public actions have a 52px minimum height, compact uppercase labels and visible boundaries. The solid public variant uses soft white with obsidian text. The closing section reverses this relationship.
 
-Portal actions use 46px minimum height, 12px by 19px padding and the portal control radius; their primary hover fill is `#0755bd`. Disabled controls retain their label and use a waiting cursor with reduced opacity. Keyboard focus uses the shared visible outline.
+Fine-pointer hover changes the public button fill to white. Press feedback scales it to .98 over 120ms with the shared ease-out curve. Transitions name background, color and transform. Reduced motion removes transitions and movement.
 
-Public action color feedback takes 160ms. Pointer activation scales shared buttons to .98 over 120ms using the extracted ease-out curve. The portal hover rule uses 140ms background feedback. Reduced motion removes transitions and press transforms.
+Text actions have a 44px minimum height and a bottom rule. Service-detail actions use an unfilled underline with 8px vertical padding. Directional icons use a consistent stroked SVG.
 
-### Text links
+### Inputs and feedback
 
-Blue, bold text with an optional inline arrow; no filled container. The arrow is 19px and moves right by 3px over 160ms on a fine-pointer hover. Hover also makes the label white. Keep its visible keyboard outline; reduced motion removes the translation.
+Fields use charcoal, light text, a visible control line and a small radius. Labels remain above their inputs. The shared focus treatment is a two-pixel silver outline with five-pixel offset.
 
-### Fields and feedback
-
-Public inputs use the ink background, 48px minimum height, 12px by 14px padding and a `#56718c` boundary. Textareas start at 150px. Labels remain above the field, and field errors accompany `aria-invalid`.
-
-Portal fields use the inset field background, 46px minimum height, 12px by 13px padding and a `#526c88` boundary. Focus changes the boundary and adds a 2px Portal Blue outline with 2px offset. Portal textareas start at 152px. Feedback uses live status regions and explicit text; a positive state reflects the saved result. These fields do not use floating labels or placeholder-only identification.
+Contact and support preserve existing validation, honeypot, disabled/loading state, draft retention and saved-result feedback. Field errors have written messages and a dedicated light error color.
 
 ### Navigation and language
 
-The current public header adds a solid blue, 7px-radius contact link with 11px by 17px padding. The desktop links use 27px gaps, tightening at 1100px. The restaurant and admin headers are outside this extension.
+The shared public navigation links Work, Services, About, Support and Contact. Work targets the homepage project section. Trading tools remain directly reachable from the footer and project area.
 
-The text wordmark anchors a compact header. Desktop links use .87rem bold text, with muted default and white current/hover states. The mobile menu is an in-flow panel with a visible toggle, `aria-expanded` and an immediate open/close state. Escape closes it and restores toggle focus.
+The language control displays NO and EN with the current choice underlined and exposed through aria-pressed. The existing language script updates text and local links.
 
-Language buttons use `aria-pressed`, a visible underline on the chosen language and immediate text replacement. They do not animate layout or wait for an effect to finish. Keep both language names visible and preserve the selected-language styling.
-
-### Development and ticket status
-
-The Arc development label is a compact bordered rectangle with a small amber dot and a full text statement. It is informational, not a button. Its final phone font size is .75rem.
-
-Operational status chips use the same compact radius and a 27px minimum height. Open is blue, Answered is green and Closed is neutral. They have no decorative dot. Tabular ticket numbers stay separate from the status label.
+The mobile menu preserves aria-expanded, source-order navigation and Escape/focus recovery. Pointer toggles retain the existing interruptible 180ms opacity/translation feedback. Keyboard changes remain immediate.
 
 ### Support workspace and tabs
 
-A single navy panel with a thin portal border and workspace radius contains the support form. Its body has 30px desktop padding. The tab strip has 12px padding, an 8px gap and a divider; the selected tab uses `#1a2f46` with a `#3c5977` boundary.
+Support uses a charcoal bounded workspace. Selected tabs use silver with dark text. Inactive tabs use the elevated surface and light labels. Existing tab roles, linked panels and keyboard selection remain the behavioural contract.
 
-Tabs use actual tab roles, linked panels and keyboard selection. Switching is immediate; the discarded 260ms panel entrance is not part of this implementation. The login panel reuses the same material at a maximum width of 460px. The admin workspace preserves the list/detail split until the responsive stack.
+Administration uses the practical interface hierarchy and preserved authentication controls. Public hero choreography does not run inside its operational workspace.
 
-### Product evidence and disclosure
+### Project previews
 
-Keep the original Arc wordmark and actual empty-test screenshots, their aspect ratios, and a nearby caption describing the image. Native `details`/`summary` disclosures provide the product FAQ, with a simple bottom divider and visible keyboard focus. Hero artwork is decorative; product screenshots have meaningful alternate text.
+Arc uses the actual private-test screenshot inside a dark matte with its development/private-test status. Lune uses the existing illustration with an explicit fictional demonstration description.
 
-The current homepage uses the existing Lune food image and dated Arc screenshot in 12px-radius previews. Image feedback is a scale of 1.018 over 180ms with the existing ease-out curve, activated only on fine-pointer hover. Reduced motion removes the transform and transition. The former home entrance settlement is absent from this composition.
+Fine-pointer hover scales preview imagery to 1.018 over 260ms. Service arrows translate by three pixels. Reduced motion removes both effects.
 
-### Private projects and workspace choices
+### Marketing motion
 
-Admin uses open project rows separated by the existing portal line. Desktop rows align a 52px mark, flexible description and action with 24px gaps and 28px vertical padding. At 700px the mark becomes 40px, gaps become 14px, and the action moves below the description. Workspace choices are ordinary buttons with `aria-pressed`; the active choice has a Portal Blue underline. Switching is immediate, focus remains clearly outlined and the support workflow retains its own controls.
+The desktop heading enters over 850ms from an already-visible .6 opacity, a 16px translation and a small clipping inset. The hero image settles from a 1.035 scale over 1800ms. These sequences apply only at 900px and above with motion enabled.
+
+Where CSS view timelines are supported, the introduction heading moves up 12px from .7 opacity, project imagery reveals a five-percent bottom clip while moving up 12px, and the footer wordmark moves up 14px from .7 opacity. Nested frames rotate from -12 to 12 degrees through their visible range. Process divider colors progress from the structural line to silver on entry. Unsupported browsers keep the static composition.
+
+The extension's reduced-motion rule disables animations, transitions and smooth scrolling. Required content stays available independently of motion.
+
+### Trading examples and reports
+
+Decision Replay, the rule simulator and the backtest retain their calculations, data sources and written context. The simulator's selected price uses silver with dark text. The report retains the source PDF and light chart treatment.
+
+The private Vibb project remains governed by its authenticated route and separate visual system.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- Do use the implemented navy palette and Manrope hierarchy across public, support and administration pages.
-- Do keep primary actions visibly blue and keyboard focus clearly outlined.
-- Do retain equal information hierarchy and usable wrapping in Norwegian Bokmål and English.
-- Do preserve the complete Arc wordmark, actual screenshot captions and readable founder credit.
-- Do use flat dividers for content and bounded panels for forms and operational work.
-- Do keep navigation immediate and honor reduced motion for control feedback.
-- Do keep source and licence records with shipped artwork, screenshots and fonts.
+- Do use the current black, charcoal, silver and soft-white palette on Nortivo company surfaces.
+- Do reserve condensed uppercase display type for the public presentation hierarchy.
+- Do use Manrope for practical interfaces, labels, form content and data explanations.
+- Do preserve bilingual navigation, visible focus, label associations and written states.
+- Do preserve supplied product assets, actual screenshots and clear demonstration status.
+- Do preserve existing functional contracts while extending their visual treatment.
+- Do keep generated-image provenance and font licence records with the project.
 
 ### Don'ts:
 
-- Don't reintroduce the discarded mint-and-Syne system or treat rejected previews as approved targets.
-- Don't fabricate app screens, customer evidence, download availability or product integrations.
-- Don't hide initial content behind entrance animations, parallax or scroll control.
-- Don't add glass blur, floating-card shadows or substitute logo geometry to this system.
-- Don't use color alone for status, field errors or the selected language.
-
-## Investment website
-
-Interior pages use Gloock for the centered masthead and editorial headlines, with Manrope for body text and controls. The Tools page highlights the selected point on its fictional price series and calculates the outcome after fees.
-
-The Decision Replay homepage uses Syne headlines and Manrope body text on warm paper (#f6f4f0), with a violet demo and peach decision markers. The ribbon artwork in `dist/assets/decision-replay-ribbon.jpg` comes directly from the approved Decision Replay concept. The selected scenario updates immediately. The optional replay animates the path to the decision and respects reduced motion.
+- Don't present earlier navy, blue-action or warm editorial tokens as the current public system.
+- Don't invent company achievements, customer evidence, product availability or connected services.
+- Don't conceal required content behind animation completion.
+- Don't add scroll hijacking, excessive glow, rainbow gradients or unnecessary 3D dependencies.
+- Don't use color as the only indicator of a state or financial result.
+- Don't apply public cinematic motion to authentication or support tasks.

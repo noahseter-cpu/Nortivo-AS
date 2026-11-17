@@ -1,3 +1,4 @@
+@layer nt-legacy {
 body.invest {
   color-scheme: light;
   --invest-ink: #182426;
@@ -93,4 +94,6 @@ html:has(body.invest) { scrollbar-color: #738784 var(--invest-paper, #fcfcfa); }
 @media (max-width: 500px) {
   .invest-shell { width: calc(100% - 36px); }
   .invest-languages button { min-width: 36px; }
+}
+
 }

@@ -1,3 +1,4 @@
+@layer nt-legacy {
 @font-face{font-family:Manrope;src:url('/assets/fonts/manrope-regular.ttf') format('truetype');font-weight:400;font-display:swap}
 @font-face{font-family:Manrope;src:url('/assets/fonts/manrope-bold.ttf') format('truetype');font-weight:700;font-display:swap}
 :root{color-scheme:dark;--ink:#07131f;--surface:#101e2e;--surface-raised:#15273a;--paper:#f3f7fb;--muted:#b8c7d8;--line:#2a4056;--blue:#0962d8;--blue-bright:#1686ff;--ease-out:cubic-bezier(.23,1,.32,1);--ease-in-out:cubic-bezier(.77,0,.175,1)}
@@ -299,3 +300,5 @@ body[data-page=home] .hero-demo-link{display:inline-flex;margin:0 0 0 24px;min-h
 @media(max-width:560px){body[data-page=home] .hero-demo-link{display:flex;width:max-content;margin:12px 0 0}}
 @media(max-width:359px){.header-tools{gap:5px}.menu-toggle{padding-inline:7px}.brand{font-size:.94rem}.language-switch button{font-size:.8125rem}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.button:active,.text-link:hover svg{transform:none!important}}
+
+}

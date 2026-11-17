@@ -1,3 +1,4 @@
+@layer nt-legacy {
 .editorial-home .editorial-stage-grid {
   min-height: min(735px, 91svh);
   grid-template-columns: minmax(0,1fr) auto;
@@ -125,3 +126,5 @@
 }
 .home-replay[data-enhanced]:not([open]) { margin: 0; border: 0; }
 .home-replay[data-enhanced]:not([open]) > summary { display: none; }
+
+}

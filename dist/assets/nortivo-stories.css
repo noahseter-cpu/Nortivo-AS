@@ -1,3 +1,4 @@
+@layer nt-legacy {
 /* Photography carries the first screen. The story controls sit on the subject instead of in a box. */
 .editorial-home {
 
@@ -275,4 +276,6 @@ body.editorial-report-page { --invest-paper: #f7efe6; --invest-accent: #ead4bd; 
   .editorial-home .market-header .invest-languages button { min-width: 31px; }
   .editorial-menu-trigger { padding-inline: 10px; }
   .editorial-home .chapter-button { padding: 8px; }
+}
+
 }

@@ -1,3 +1,4 @@
+@layer nt-legacy {
 /* Homepage composition; shared product and support surfaces retain site.css. */
 .home-product-band{background:var(--ink);border:0}
 .home-launch{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:center;gap:56px;padding-block:80px 56px}
@@ -50,3 +51,5 @@
 @media(max-width:560px){.home-launch{padding-top:36px;gap:30px}.home-launch-copy h1{font-size:clamp(2.35rem,8.5vw,3rem);line-height:1.12}.home-launch-intro{font-size:1rem;margin-top:22px}.home-launch-actions{gap:10px 22px}.home-launch-status{font-size:.8125rem}.home-arc-screen picture{max-height:420px}.home-arc-screen picture img{margin:0;width:100%;height:auto}.home-arc-screen figcaption{gap:16px;font-size:.75rem;align-items:flex-start}.home-arc-screen figcaption img{width:68px}.arc-overview{grid-template-columns:1fr;gap:0}.arc-overview-link,.arc-overview-link:first-child{padding:22px 38px 22px 0;border-bottom:1px solid var(--line)}.arc-overview-link svg,.arc-overview-link:first-child svg{display:block;top:25px}.arc-overview-link h2{font-size:1.15rem}.arc-overview-link p{font-size:.9375rem;margin-top:8px}.arc-overview-note{margin-top:22px}.home-capabilities{padding-bottom:36px}.lune-preview{grid-template-columns:1fr 1fr}.lune-preview-copy{padding:22px 18px;min-height:275px}.lune-preview-brand{font-size:2rem;margin-bottom:26px}.lune-preview-title{font-size:clamp(1.3rem,5vw,1.7rem);letter-spacing:-.025em}.lune-preview-open{font-size:.75rem;line-height:1.6;margin-top:24px}.lune-preview>img{height:100%;min-height:275px;aspect-ratio:auto}.home-work-heading h2,.home-services-intro h2{font-size:2rem}.home-work{padding-block:40px}.home-services{padding-block:40px 48px}}
 @media(min-width:561px) and (max-width:720px){.arc-overview{grid-template-columns:1fr;gap:0}.arc-overview-link,.arc-overview-link:first-child{padding:22px 38px 22px 0;border-bottom:1px solid var(--line)}.arc-overview-link h2{font-size:1.15rem}.arc-overview-link p{font-size:.9375rem;margin-top:8px}.arc-overview-link svg,.arc-overview-link:first-child svg{display:block;top:25px}}
 @media(prefers-reduced-motion:reduce){.home-arc-screen{animation:none}}
+
+}

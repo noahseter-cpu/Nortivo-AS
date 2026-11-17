@@ -1,3 +1,4 @@
+@layer nt-legacy {
 @font-face {
   font-family: Syne;
   src: url("/assets/fonts/syne-extrabold.ttf") format("truetype");
@@ -181,4 +182,6 @@ body.replay-home {
   .replay-steps span:last-child { font-size:.7rem; }
   .replay-result { padding:10px 17px; }
   .replay-services { grid-template-columns:1fr; gap:13px; padding:25px 0; }
+}
+
 }

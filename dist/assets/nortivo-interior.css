@@ -1,3 +1,4 @@
+@layer nt-legacy {
 body.market.interior-page {
   --interior-canvas: #f6eee3;
   --interior-paper: #fff9f1;
@@ -229,4 +230,6 @@ body.market.interior-page {
 @media (max-width: 350px) {
   .interior-page .market-header .invest-languages button { min-width: 30px; }
   .interior-page .market-header .nav-shell { gap: 8px; }
+}
+
 }

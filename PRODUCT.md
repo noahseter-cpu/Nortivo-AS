@@ -18,7 +18,7 @@ Nortivo presents the company’s digital product work, provides a direct support
 
 ## Positioning
 
-Nortivo’s homepage presents investment education, custom trading software and crypto automation development. The browser demo uses fictional prices to explain how a rule produces a simulated order. Enquiries use the existing contact and support system. The earlier digital studio homepage lives at `/studio/` in both languages and links to Arc and Lune.
+Nortivo is an independent Norwegian technology studio founded by Noah J.C. Sæter. The current local redesign presents website design and development, applications and software, intelligent systems and automation, and trading technology and educational tools. Arc is a product under development in private testing. Lune is an interactive fictional restaurant demonstration. Trading simulations and historical backtests retain their stated assumptions and illustrative status. Enquiries and customer support use the existing secure contact and ticket system. The redesign is being validated locally on a separate branch before publication.
 
 ## Capabilities and Constraints
 

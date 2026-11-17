@@ -1,3 +1,4 @@
+@layer nt-legacy {
 body.market {
   --invest-paper: #f4f0e7;
   --invest-ink: #20251f;
@@ -223,3 +224,5 @@ body.market {
 .editorial-header-contact { min-height: 44px; display: inline-flex; align-items: center; color: #fff6e6; font-weight: 700; font-size: .82rem; text-underline-offset: .22em; }
 @media (max-width: 1080px) { .editorial-header-contact { display: none; } }
 @media (min-width: 761px) { .editorial-report-page .report-metrics { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+
+}

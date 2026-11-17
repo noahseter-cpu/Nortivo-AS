@@ -1,3 +1,4 @@
+@layer nt-legacy {
 body.market {
   --ink: var(--invest-ink);
   --paper: var(--invest-paper);
@@ -357,4 +358,6 @@ body.market { --editorial: "Nortivo Editorial", Georgia, serif; }
   .edition-grid > * { padding-inline: 0; }
   .edition-grid > * + * { border-inline-start: 0; border-top: 1px solid var(--line); margin-top: 26px; padding-top: 24px; }
   .firm-process ol { gap: 18px; }
+}
+
 }

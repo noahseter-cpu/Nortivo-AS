@@ -1,3 +1,4 @@
+@layer nt-legacy {
 @font-face { font-family: "Manrope"; src: url("/assets/fonts/manrope-regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Manrope"; src: url("/assets/fonts/manrope-bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
 @font-face { font-family: "Syne"; src: url("/assets/fonts/syne-semibold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
@@ -93,4 +94,6 @@ footer { display: flex; width: min(1180px, calc(100% - 48px)); align-items: cent
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .enter { transform: none; }
+}
+
 }

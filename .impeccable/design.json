@@ -1,0 +1,384 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-17T19:04:14.865Z",
+  "title": "Design System: Nortivo",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Obsidian",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Charcoal",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "surface-raised": {
+        "role": "neutral",
+        "displayName": "Elevated charcoal",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "chart-surface": {
+        "role": "neutral",
+        "displayName": "Chart charcoal",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Soft white",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Silver text",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Structural line",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "control-line": {
+        "role": "neutral",
+        "displayName": "Control line",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Silver accent",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "button-paper": {
+        "role": "neutral",
+        "displayName": "Button paper",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "field-label": {
+        "role": "neutral",
+        "displayName": "Field label",
+        "tonalRamp": [
+          "oklch(15.00% 0.008 255)",
+          "oklch(26.43% 0.008 255)",
+          "oklch(37.86% 0.008 255)",
+          "oklch(49.29% 0.008 255)",
+          "oklch(60.71% 0.008 255)",
+          "oklch(72.14% 0.008 255)",
+          "oklch(83.57% 0.008 255)",
+          "oklch(95.00% 0.008 255)"
+        ]
+      },
+      "field-error": {
+        "role": "neutral",
+        "displayName": "Field error",
+        "tonalRamp": [
+          "oklch(15.00% 0.08 15)",
+          "oklch(26.43% 0.08 15)",
+          "oklch(37.86% 0.08 15)",
+          "oklch(49.29% 0.08 15)",
+          "oklch(60.71% 0.08 15)",
+          "oklch(72.14% 0.08 15)",
+          "oklch(83.57% 0.08 15)",
+          "oklch(95.00% 0.08 15)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Industrial display",
+        "purpose": "Large public hero headings."
+      },
+      "headline": {
+        "displayName": "Public section heading",
+        "purpose": "Uppercase public presentation sections."
+      },
+      "interior-display": {
+        "displayName": "Interior masthead",
+        "purpose": "Company and service introductions."
+      },
+      "title": {
+        "displayName": "Interface title",
+        "purpose": "Practical content and working surfaces."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Readable content, controls and descriptions."
+      },
+      "navigation": {
+        "displayName": "Navigation",
+        "purpose": "Compact uppercase site links."
+      },
+      "action": {
+        "displayName": "Action label",
+        "purpose": "Public call-to-action controls."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.23,1,.32,1)",
+        "purpose": "Control feedback and marketing entry."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(.77,0,.175,1)",
+        "purpose": "Existing moving-state transitions."
+      },
+      {
+        "name": "button-press",
+        "value": "120ms",
+        "purpose": "Fine-pointer press feedback."
+      },
+      {
+        "name": "action-color",
+        "value": "180ms",
+        "purpose": "Button and homepage-header surface feedback."
+      },
+      {
+        "name": "preview-hover",
+        "value": "260ms",
+        "purpose": "Fine-pointer project image scale."
+      },
+      {
+        "name": "hero-heading",
+        "value": "850ms",
+        "purpose": "Visible desktop heading entry."
+      },
+      {
+        "name": "hero-image",
+        "value": "1800ms",
+        "purpose": "One desktop image settlement."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation:none;transition:none;scroll-behavior:auto",
+        "purpose": "Immediate non-moving fallback in the extension."
+      },
+      {
+        "name": "scroll-linked-introduction",
+        "value": "view(); entry 0% entry 90%",
+        "purpose": "Visible heading moves up 12px from .7 opacity."
+      },
+      {
+        "name": "scroll-linked-project",
+        "value": "view(); entry 0% entry 100%",
+        "purpose": "Project image reveals a five-percent bottom clip and moves up 12px."
+      },
+      {
+        "name": "scroll-linked-footer",
+        "value": "view(); entry 0% entry 100%",
+        "purpose": "Wordmark moves up 14px from .7 opacity."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "600px"
+      },
+      {
+        "name": "navigation",
+        "value": "880px"
+      },
+      {
+        "name": "desktop-motion",
+        "value": "900px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary public action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid public action with square corners.",
+      "html": "<button class=\"ds-primary\">EXPLORE NORTIVO</button>",
+      "css": ".ds-primary{font:700 .78rem Manrope,sans-serif;letter-spacing:.07em;min-height:52px;padding:14px 23px;background:var(--paper,#f1f2f4);color:var(--ink,#050505);border:1px solid #f1f2f4;border-radius:0;cursor:pointer;transition:background 180ms ease,color 180ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-primary:hover{background:#fff}.ds-primary:active{transform:scale(.98)}.ds-primary:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}.ds-primary:active{transform:none}}"
+    },
+    {
+      "name": "Secondary public action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined action on a dark surface.",
+      "html": "<button class=\"ds-secondary\">START A PROJECT</button>",
+      "css": ".ds-secondary{font:700 .78rem Manrope,sans-serif;letter-spacing:.07em;min-height:52px;padding:14px 23px;background:transparent;color:#fff;border:1px solid #d7dbe1;border-radius:0;cursor:pointer;transition:background 180ms ease,color 180ms ease}.ds-secondary:hover{background:#fff;color:#050505}.ds-secondary:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Labelled dark field with visible boundary.",
+      "html": "<label class=\"ds-label\" for=\"ds-name\">Name</label><input class=\"ds-field\" id=\"ds-name\" autocomplete=\"name\">",
+      "css": ".ds-label{display:block;margin-bottom:8px;color:#e1e6ef;font:700 .86rem Manrope,sans-serif}.ds-field{font:400 16px Manrope,sans-serif;background:#101114;color:#f1f2f4;border:1px solid #747b87;border-radius:3px;padding:12px 14px;min-height:48px;caret-color:#fff}.ds-field:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}.ds-field::placeholder{color:#a5acb7;opacity:1}"
+    },
+    {
+      "name": "Public navigation",
+      "kind": "nav",
+      "refersTo": "site-navigation",
+      "description": "Compact uppercase links with a visible hover and focus treatment.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main navigation\"><a href=\"#work\">WORK</a><a href=\"#services\">SERVICES</a><a href=\"#about\">ABOUT</a><a href=\"#support\">SUPPORT</a><a href=\"#contact\">CONTACT</a></nav>",
+      "css": ".ds-nav{display:flex;flex-wrap:wrap;gap:26px;background:#050505}.ds-nav a{font:700 .77rem Manrope,sans-serif;letter-spacing:.06em;min-height:44px;display:inline-flex;align-items:center;color:#d8dbe0;text-decoration:none}.ds-nav a:hover{color:#fff;text-decoration:underline;text-underline-offset:8px}.ds-nav a:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}"
+    },
+    {
+      "name": "Support workspace",
+      "kind": "card",
+      "refersTo": "support-workspace",
+      "description": "Bounded practical workspace with a thin border.",
+      "html": "<section class=\"ds-workspace\"><h2>Create a support ticket</h2><p>All fields are required.</p></section>",
+      "css": ".ds-workspace{background:#101114;color:#f1f2f4;border:1px solid #424853;border-radius:5px;padding:30px;font:400 16px/1.65 Manrope,sans-serif}.ds-workspace h2{font-weight:700;letter-spacing:-.035em;margin:0 0 16px}.ds-workspace p{color:#b3b7bf;margin:0}"
+    },
+    {
+      "name": "Support tab",
+      "kind": "custom",
+      "refersTo": "support-tab-selected",
+      "description": "Explicit selected tab treatment with light fill and dark text.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"Support options\"><button role=\"tab\" aria-selected=\"true\">New ticket</button><button role=\"tab\" aria-selected=\"false\">Find ticket</button></div>",
+      "css": ".ds-tabs{display:flex;gap:8px;font-family:Manrope,sans-serif}.ds-tabs button{min-height:46px;padding:10px 18px;border:1px solid #505660;background:#181a1f;color:#d4dfed;font:700 .85rem Manrope,sans-serif;cursor:pointer}.ds-tabs button[aria-selected=true]{background:#d4dfed;color:#101114;border-color:#d4dfed}.ds-tabs button:hover{border-color:#d4dfed}.ds-tabs button:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}"
+    },
+    {
+      "name": "Service detail action",
+      "kind": "button",
+      "description": "Unfilled text action in a service row.",
+      "html": "<a class=\"ds-service-action\" href=\"#contact\">Discuss a website</a>",
+      "css": ".ds-service-action{display:inline-flex;align-items:center;gap:16px;min-height:44px;padding:8px 0;background:transparent;color:#d4dfed;border:0;border-bottom:1px solid #747b87;text-decoration:none;font:700 .9rem Manrope,sans-serif}.ds-service-action:hover{border-color:#d4dfed}.ds-service-action:focus-visible{outline:2px solid #d4dfed;outline-offset:5px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Future, Engineered.",
+    "overview": "Nortivo's current local implementation uses an architectural black environment, condensed display lettering and silver controls. Original imagery gives the public studio presentation scale. Manrope, restrained dividers and explicit feedback keep product, contact and support areas readable.\n\nThe system was extracted from the implemented website on 17 November 2026. The authoritative extension is dist/assets/nortivo-engineered.css. Earlier stylesheets remain inside the named nt-legacy cascade layer, preserving their layout and interaction foundations beneath the current visual rules. This document supersedes the older navy, blue-action and warm editorial public palettes.",
+    "keyCharacteristics": [
+      "Obsidian and charcoal surfaces with occasional soft-white sections.",
+      "Self-hosted Barlow Condensed display text and Manrope interface text.",
+      "Asymmetric compositions, large real project previews and ruled service rows.",
+      "Flat operational workspaces, persistent field labels and readable status text.",
+      "Optional motion around marketing imagery and explicit control feedback.",
+      "Equivalent Norwegian Bokmål and English routes."
+    ],
+    "rules": [],
+    "dos": [
+      "Do use the current black, charcoal, silver and soft-white palette on Nortivo company surfaces.",
+      "Do reserve condensed uppercase display type for the public presentation hierarchy.",
+      "Do use Manrope for practical interfaces, labels, form content and data explanations.",
+      "Do preserve bilingual navigation, visible focus, label associations and written states.",
+      "Do preserve supplied product assets, actual screenshots and clear demonstration status.",
+      "Do preserve existing functional contracts while extending their visual treatment.",
+      "Do keep generated-image provenance and font licence records with the project."
+    ],
+    "donts": [
+      "Don't present earlier navy, blue-action or warm editorial tokens as the current public system.",
+      "Don't invent company achievements, customer evidence, product availability or connected services.",
+      "Don't conceal required content behind animation completion.",
+      "Don't add scroll hijacking, excessive glow, rainbow gradients or unnecessary 3D dependencies.",
+      "Don't use color as the only indicator of a state or financial result.",
+      "Don't apply public cinematic motion to authentication or support tasks."
+    ]
+  }
+}

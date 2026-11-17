@@ -1,6 +1,10 @@
 # Third-party fonts
 
-Lune restaurant display text uses Gloock Regular (Duarte Pinto / Gloock Project Authors), sourced from Google Fonts on 2026-09-22. Official project: https://github.com/duartp/gloock . Unmodified TTF from https://fonts.gstatic.com/s/gloock/v8/Iurb6YFw84WUY4N5jw.ttf ; SIL OFL 1.1 is shipped in dist/assets/fonts/Gloock-OFL.txt. This font is local-only at runtime and scoped to Lune; corporate typography is unchanged.
+The 17 November 2026 Nortivo studio implementation adds Barlow Condensed SemiBold for public display text. The unmodified font is sourced from the Google Fonts Barlow Condensed directory and served locally as dist/assets/fonts/barlow-condensed-semibold.ttf. The accompanying SIL Open Font License 1.1 is shipped in dist/assets/fonts/BarlowCondensed-OFL.txt. [Google Fonts source](https://github.com/google/fonts/tree/main/ofl/barlowcondensed)
+
+Manrope remains the body and interface family. Existing Gloock and Syne files remain available for their scoped or historical surfaces. The Barlow addition supersedes the former corporate display-family description without changing those families' source records.
+
+Lune restaurant display text uses Gloock Regular (Duarte Pinto / Gloock Project Authors), sourced from Google Fonts on 2026-09-22. Official project: https://github.com/duartp/gloock . Unmodified TTF from https://fonts.gstatic.com/s/gloock/v8/Iurb6YFw84WUY4N5jw.ttf ; SIL OFL 1.1 is shipped in dist/assets/fonts/Gloock-OFL.txt. This font is served locally at runtime and scoped to Lune.
 
 The website includes Manrope and Syne font files downloaded from Google Fonts on 2026-09-17.
 

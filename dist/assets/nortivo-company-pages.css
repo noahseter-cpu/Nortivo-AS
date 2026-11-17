@@ -1,3 +1,4 @@
+@layer nt-legacy {
 body.market.interior-page.company-pages {
   --interior-canvas: #f4efe7;
   --interior-paper: #fcf8ef;
@@ -254,4 +255,6 @@ body[data-page="contact"].company-pages .company-contact {
   .company-project-link h3 { padding-top: 8px; }
   .company-work-links { row-gap: 14px; }
   .company-contact .contact-intro { padding-inline: 18px; }
+}
+
 }

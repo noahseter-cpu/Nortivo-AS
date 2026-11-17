@@ -35,7 +35,8 @@ test('homepage separates its editorial introduction, decision demo and detailed 
   for(const lang of ['nb','en']) {
     const localized = read(`dist/${lang}/index.html`);
     assert.equal((localized.match(/<h1\b/g)||[]).length, 1);
-    assert.match(localized,/<h1\b[^>]*data-i18n="editorial.heading"/);
+    assert.match(localized,/<h1\b[^>]*id="hero-title"/);
+    assert.match(localized,/data-i18n="nt.hero1"/);
     assert.match(localized,/<section\b[^>]*id="replay"[^>]*aria-labelledby="replay-title"/);
     for (const scenario of ['allowed', 'price', 'limit']) {
       assert.match(localized, new RegExp(`<button\\b[^>]*data-case="${scenario}"[^>]*aria-pressed="(?:true|false)"`));
@@ -75,28 +76,22 @@ test('public studio styling remains separate from the private workspace and rest
   assert.match(read('dist/assets/studio-refresh.css'),/prefers-reduced-motion:reduce/);
 });
 
-test('home dialog and support desktop/mobile navigation retain all localized site destinations', () => {
-  for (const lang of ['nb','en']) {
-    const expected = ['services', 'products', 'about', 'support', 'contact'].map(route => `/${lang}/${route}/`);
-    const home = read(`dist/${lang}/index.html`);
-    const support = read(`dist/${lang}/support/index.html`);
-    const dialog = home.match(/<dialog\b[^>]*id="editorial-menu"[\s\S]*?<\/dialog>/)?.[0];
-    assert.ok(dialog, `${lang}: home menu dialog`);
-    const menu = dialog.match(/<nav\b[\s\S]*?<\/nav>/)?.[0];
-    const desktop = support.match(/<nav\b[^>]*class="desktop-nav"[\s\S]*?<\/nav>/)?.[0];
-    const mobile = support.match(/<nav\b[^>]*id="mobile-nav"[\s\S]*?<\/nav>/)?.[0];
-    for (const [name, markup] of [['home dialog', menu], ['support desktop', desktop], ['support mobile', mobile]]) {
-      assert.ok(markup, `${lang}: ${name} navigation`);
-      const destinations = [...markup.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => match[1]);
-      assert.deepEqual(destinations, expected, `${lang}: ${name} destinations`);
+test('home and support share complete localized desktop and mobile navigation', () => {
+  for(const lang of ['nb','en']){
+    const expected=['/'+lang+'/#work',...['services','about','support','contact'].map(route=>'/'+lang+'/'+route+'/')];
+    for(const route of ['','support/']){
+      const html=read('dist/'+lang+'/'+route+'index.html');
+      for(const selector of ['class="desktop-nav"','id="mobile-nav"']){
+        const nav=[...html.matchAll(/<nav\b[^>]*>[\s\S]*?<\/nav>/g)].find(match=>match[0].includes(selector))?.[0];
+        assert.ok(nav,lang+route+' '+selector);
+        assert.deepEqual([...nav.matchAll(/href="([^"]+)"/g)].map(match=>match[1]),expected);
+      }
+      assert.match(html,/aria-controls="mobile-nav" aria-expanded="false"/);
+      assert.ok(html.includes('href="/'+lang+'/products/"'));
+      assert.match(html,new RegExp('<a[^>]*href="/'+lang+'/"[^>]*aria-label="Nortivo"'));
     }
-    assert.match(home, /aria-haspopup="dialog" aria-controls="editorial-menu"/);
-    assert.match(support, /aria-controls="mobile-nav" aria-expanded="false"/);
-    for (const html of [home, support]) assert.match(html, new RegExp(`class="brand[^\"]*" href="/${lang}/"`));
-    assert.match(read(`dist/${lang}/studio/index.html`),new RegExp(`href="/${lang}/arc/#app-view"`));
   }
 });
-
 test('refined restaurant preserves truthful imagery and native keyboard time choices', () => {
   const html=read('dist/restaurant/index.html');
   assert.match(html,/lune-interior\.webp/);

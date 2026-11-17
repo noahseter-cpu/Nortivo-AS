@@ -1,3 +1,4 @@
+@layer nt-legacy {
 .admin-page .dashboard-head { gap: 24px; }
 .admin-page .dashboard-head .panel-intro { margin-top: 12px; margin-bottom: 0; }
 .workspace-choices { display: flex; flex-wrap: wrap; gap: 4px 22px; border-bottom: 1px solid var(--portal-line); margin: 32px 0 0; }
@@ -22,4 +23,6 @@
   .private-project-mark { width: 40px; height: 40px; font-size: 1.2rem; border-radius: 8px; }
   .private-project-row .button { grid-column: 2; justify-self: start; white-space: normal; }
   .workspace-choices { margin-top: 22px; }
+}
+
 }

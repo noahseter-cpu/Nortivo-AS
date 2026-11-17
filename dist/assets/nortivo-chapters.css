@@ -1,3 +1,4 @@
+@layer nt-legacy {
 .chapter-photo { opacity: 0; pointer-events: none; }
 .chapter-photo[data-active="true"] { opacity: 1; }
 .chapter-photo-replay { object-position: 68% 55%; filter: saturate(.67) brightness(.60) sepia(.14); }
@@ -96,3 +97,5 @@
 .report-explorer-head output { font-variant-numeric: tabular-nums; }
 .report-explorer input { width: 100%; min-height: 36px; accent-color: #364c3b; cursor: pointer; }
 .report-explorer p { color: var(--muted); margin: 0; font-size: .82rem; }
+
+}

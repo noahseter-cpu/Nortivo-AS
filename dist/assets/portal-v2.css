@@ -1,3 +1,4 @@
+@layer nt-legacy {
 .portal-page { --portal-bg: #07131f; --portal-panel: #101e2e; --portal-line: #263b52; --portal-muted: #b8c7d8; --portal-text: #f3f7fb; --portal-blue: #80baff; --portal-error: #ffb4b4; --portal-success: #8ce0bd; min-height: 100svh; display: flex; flex-direction: column; background: var(--portal-bg); color: var(--portal-text); font-family: "Manrope", sans-serif; }
 .portal-page [hidden] { display: none !important; }
 .portal-page .site-footer { margin-top: auto; }
@@ -139,4 +140,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .portal-page .button, .portal-page .tab, .portal-page .ticket-item { transition: none; transform: none; }
+}
+
 }
