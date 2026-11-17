@@ -2,6 +2,7 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadReport, renderReportValues, syncDedicatedReports } from './report-presentation.mjs';
+import { buildTerminalLocales } from './build-terminal-locales.mjs';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const pages = ['home', 'products', 'support', 'admin', 'privacy', 'about', 'services', 'contact', 'restaurant', 'studio', 'arc', 'studio/services', 'reviews'];
@@ -67,7 +68,7 @@ function localizeHref(href, locale) {
   const match = href.match(/^([^?#]*)([?#][\s\S]*)?$/);
   const pathname = match[1];
   const normalized = pathname === '/' ? '/' : `${pathname.replace(/\/$/, '')}/`;
-  if (normalized !== '/report-2026/' && !pages.some(page => pagePath(page) === normalized)) return href;
+  if (!['/report-2026/', '/terminal/'].includes(normalized) && !pages.some(page => pagePath(page) === normalized)) return href;
   return `/${locale}${normalized}${match[2] || ''}`;
 }
 
@@ -173,6 +174,7 @@ export async function buildLocales({ distDir = path.join(projectRoot, 'dist'), o
     await writeFile(output.path, output.html, 'utf8');
   }
   if (report) await syncDedicatedReports(distDir, report);
+  await buildTerminalLocales(distDir);
   return outputs.map(output => output.path);
 }
 

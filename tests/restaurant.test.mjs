@@ -78,7 +78,7 @@ test('public studio styling remains separate from the private workspace and rest
 
 test('home and support share complete localized desktop and mobile navigation', () => {
   for(const lang of ['nb','en']){
-    const expected=[...['research','systems','education'].map(id=>'/'+lang+'/#'+id),...['about','report-2026'].map(route=>'/'+lang+'/'+route+'/')];
+    const expected=['/'+lang+'/terminal/',...['research','systems','education'].map(id=>'/'+lang+'/#'+id),...['about','report-2026'].map(route=>'/'+lang+'/'+route+'/')];
     for(const route of ['','support/']){
       const html=read('dist/'+lang+'/'+route+'index.html');
       for(const selector of ['class="desktop-nav"','id="mobile-nav"']){

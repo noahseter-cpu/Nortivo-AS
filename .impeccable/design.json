@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-17T20:19:16.638Z",
+  "generatedAt": "2026-11-17T21:00:00.000Z",
   "title": "Design System: Nortivo",
   "extensions": {
     "colorMeta": {
@@ -241,7 +241,17 @@
           "oklch(83.57% 0.008 255)",
           "oklch(95.00% 0.008 255)"
         ]
-      }
+      },
+      "terminal-bg": {"role":"neutral","displayName":"Terminal charcoal","canonical":"#080c0e","tonalRamp":["#080c0e","#101719","#19221f","#293235","#34413d","#577566","#a7b5b3","#f0f4f2"]},
+      "terminal-panel": {"role":"neutral","displayName":"Terminal panel","canonical":"#101719","tonalRamp":["#080c0e","#101719","#19221f","#23312c","#34413d","#577566","#a7b5b3","#f0f4f2"]},
+      "terminal-raised": {"role":"neutral","displayName":"Terminal raised surface","canonical":"#19221f","tonalRamp":["#080c0e","#101719","#19221f","#23312c","#34413d","#577566","#a7b5b3","#f0f4f2"]},
+      "terminal-line": {"role":"neutral","displayName":"Terminal rule","canonical":"#34413d","tonalRamp":["#080c0e","#101719","#19221f","#23312c","#34413d","#577566","#a7b5b3","#f0f4f2"]},
+      "terminal-text": {"role":"neutral","displayName":"Terminal text","canonical":"#f0f4f2","tonalRamp":["#080c0e","#101719","#19221f","#23312c","#34413d","#577566","#a7b5b3","#f0f4f2"]},
+      "terminal-muted": {"role":"neutral","displayName":"Terminal metadata","canonical":"#a7b5b3","tonalRamp":["#080c0e","#101719","#19221f","#23312c","#34413d","#577566","#a7b5b3","#f0f4f2"]},
+      "terminal-green": {"role":"primary","displayName":"Permitted green","canonical":"#5cf395","tonalRamp":["#102b1c","#153b27","#205333","#287044","#459d65","#5cf395","#a2efb6","#e8fff0"]},
+      "terminal-green-soft": {"role":"primary","displayName":"Focus green","canonical":"#a2efb6","tonalRamp":["#102b1c","#153b27","#205333","#287044","#459d65","#5cf395","#a2efb6","#e8fff0"]},
+      "terminal-negative": {"role":"tertiary","displayName":"Loss red","canonical":"#ff787e","tonalRamp":["#301c20","#6b343d","#9c4b54","#c95f66","#ff787e","#ffafb5","#ffd7da","#fff0f1"]},
+      "terminal-caution": {"role":"tertiary","displayName":"Limited amber","canonical":"#e8c76a","tonalRamp":["#292416","#554b2a","#806f3e","#aa944f","#e8c76a","#f0d987","#f7e9b8","#fff9e5"]}
     },
     "typographyMeta": {
       "display": {
@@ -275,7 +285,10 @@
       "financial": {
         "displayName": "Financial figures",
         "purpose": "IBM Plex Mono tabular report values, dates and chart readouts."
-      }
+      },
+      "terminal-body": {"displayName":"Terminal body","purpose":"13px compact operational reading."},
+      "terminal-metadata": {"displayName":"Terminal metadata","purpose":"11–12px labels, status and support copy."},
+      "terminal-mono": {"displayName":"Terminal figures","purpose":"IBM Plex Mono tabular prices, account values and ledger details."}
     },
     "shadows": [],
     "motion": [
@@ -329,6 +342,8 @@
         "value": "100ms",
         "purpose": "Native outgoing-page opacity transition where supported."
       }
+      ,{"name":"terminal-control-feedback","value":"160ms ease","purpose":"Terminal background, border and color feedback."}
+      ,{"name":"terminal-dialog-feedback","value":"180ms cubic-bezier(.23,1,.32,1)","purpose":"Terminal dialog and toast opacity/transform feedback; reduced motion removes it."}
     ],
     "breakpoints": [
       {
@@ -363,6 +378,8 @@
         "name": "report-scroll",
         "value": "480px"
       }
+      ,{"name":"terminal-main-grid","value":"1080px","purpose":"Right column joins the main work area; bottom panels become two columns."}
+      ,{"name":"terminal-mobile","value":"760px","purpose":"Mobile tabs and single-column operating view with 44px touch controls."}
     ]
   },
   "components": [
@@ -427,6 +444,22 @@
       "description": "Exact existing summary values in IBM Plex Mono with explicit historical context.",
       "html": "<section class=\"ds-summary\"><h2>2026 / TRADING REPORT</h2><p>January 2 – November 17, 2026</p><dl><div><dt>Trading profit after costs</dt><dd>NOK 145,538.19</dd></div><div><dt>Return on opening equity</dt><dd>+58.22%</dd></div><div><dt>Maximum drawdown</dt><dd class=\"ds-loss\">−26.65%</dd></div></dl><p>Reported historical results. Future returns may differ.</p></section>",
       "css": ".ds-summary{background:#111318;border:1px solid #737a86;padding:24px;color:#f2f1ed;font:400 1rem/1.7 Manrope,sans-serif}.ds-summary h2{font:700 .85rem/1.5 Manrope,sans-serif;margin:0}.ds-summary p,.ds-summary dt{color:#b5b8c0;font-size:.82rem}.ds-summary dl{margin:24px 0}.ds-summary dl>div{border-top:1px solid #30343c;padding:16px 0}.ds-summary dd{margin:6px 0 0;font:400 1.5rem/1.35 \"IBM Plex Mono\",monospace;font-variant-numeric:tabular-nums}.ds-summary .ds-loss{color:#dc8c91}"
+    },
+    {
+      "name": "Terminal paper-order control",
+      "kind": "button",
+      "refersTo": "terminal-primary-control",
+      "description": "Scoped compact desktop control; mobile preserves a 44px touch target.",
+      "html": "<button class=\"ds-terminal-control\">REVIEW PAPER ORDER</button>",
+      "css": ".ds-terminal-control{min-height:30px;padding:5px 10px;border:1px solid #459d65;border-radius:6px;background:#153b27;color:#e8fff0;font:400 13px/1.45 Manrope,sans-serif;transition:background-color 160ms ease,border-color 160ms ease,color 160ms ease}.ds-terminal-control:hover{background:#205333}.ds-terminal-control:focus-visible{outline:2px solid #a2efb6;outline-offset:3px}.ds-terminal-control:active{background:#274337}@media(max-width:760px){.ds-terminal-control{min-height:44px}}@media(prefers-reduced-motion:reduce){.ds-terminal-control{transition:none}}"
+    },
+    {
+      "name": "Terminal operational panel",
+      "kind": "card",
+      "refersTo": "terminal-panel",
+      "description": "Scoped dense panel for chart, ledger and risk modules; public card language does not apply.",
+      "html": "<section class=\"ds-terminal-panel\"><h2>PAPER ACCOUNT</h2><p>Virtual USD ledger; reported NOK history remains separate.</p></section>",
+      "css": ".ds-terminal-panel{min-width:0;overflow:hidden;border:1px solid #34413d;border-radius:10px;background:linear-gradient(125deg,#18231e75,#101719 55%,#0d1315);box-shadow:inset 0 1px #d7eee609,0 7px 18px #00000020;color:#f0f4f2;padding:11px;font:400 13px/1.45 Manrope,sans-serif}.ds-terminal-panel h2{margin:0 0 6px;font-size:15px;letter-spacing:-.025em}.ds-terminal-panel p{margin:0;color:#a7b5b3;font-size:11px;line-height:1.45}"
     }
   ],
   "narrative": {

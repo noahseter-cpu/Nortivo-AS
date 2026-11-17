@@ -14,6 +14,8 @@ node scripts/serve.mjs
 
 Open `http://127.0.0.1:4399/nb/` or `/en/`. The local server deliberately returns 503 for server functions: it does not read production secrets, create tickets or send email. Form drafts remain in the open page after errors or language changes, not after reload/navigation.
 
+For the complete trading platform, use **Node 24 or newer** and run `node scripts/serve-terminal.mjs --port 4420`. Open `http://127.0.0.1:4420/en/terminal/` or `/nb/terminal/`. This separate local server implements the paper engine and private SQLite persistence while leaving support/email and external providers disconnected. It does not read production secrets. See [terminal setup](docs/TERMINAL_SERVER.md), [engine and accounting](docs/TERMINAL_ENGINE.md), and [shared contract](docs/TRADING_PLATFORM_CONTRACT.md). Hosted activation requires the documented migration and security configuration; the terminal is not activated by uploading static files alone.
+
 ## Editing
 
 - English source pages: `dist/index.html` and `dist/{products,services,about,contact,restaurant,support,admin,privacy}/index.html`.
@@ -22,6 +24,7 @@ Open `http://127.0.0.1:4399/nb/` or `/en/`. The local server deliberately return
 - Shared foundation: `dist/assets/site.css`; cinematic public design: `nortivo-engineered.css`; incremental investment presentation and interactions: `investment-v2.css` and `investment-v2.js`. Operational surfaces retain `portal-v2.css`.
 - Report summary: `dist/report-2026/summary.json`. The builder validates it against the retained equity series and renders the marked values on the homepage and dedicated report through `scripts/report-presentation.mjs`.
 - Run the locale build after source/copy changes. It writes twenty-six static pages under `/nb/` and `/en/`, including translated metadata and alternate-language links, and synchronizes the separately authored report pages.
+- Terminal source: `dist/terminal/`, with its own compact bilingual application shell, chart and licensed icon assets. The same locale build also creates `/en/terminal/` and `/nb/terminal/` entry pages. Terminal logic is served from `netlify/terminal/` through the separate `terminal.mjs` function; support/admin authentication remains unchanged.
 - Existing non-prefixed routes are preserved. On Netlify, the edge function chooses an explicit language, saved cookie, Norway signal, then English. Explicit prefixed routes are never redirected by geolocation.
 
 ## Deployment boundary

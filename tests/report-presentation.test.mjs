@@ -47,3 +47,16 @@ test('monthly equity context includes every source month, preserves losing month
   assert.equal(months.find(month => month.month === '2026-05').changeOre, 1529137);
   assert.equal(months.find(month => month.month === '2026-07').changeOre, 2890959);
 });
+
+test('homepage session average retains its deployed-capital basis while the report keeps drawdown', async () => {
+  for (const locale of ['en', 'nb']) {
+    const home = await readFile(new URL(`${locale}/index.html`, dist), 'utf8');
+    const report = await readFile(new URL(`${locale}/report-2026/index.html`, dist), 'utf8');
+    assert.ok(home.includes(`data-report-metric="deployedDaily">${formatMetric(summary, 'deployedDaily', locale)}`));
+    assert.ok(home.includes('data-i18n="platform.averageBasis"'));
+    assert.ok(home.includes('data-i18n="platform.fullReport"'));
+    assert.ok(report.includes(`data-report-metric="drawdown">${formatMetric(summary, 'drawdown', locale)}`));
+    assert.equal(summary.averageDeployedDailyPercent, 2.4);
+    assert.equal(summary.averageAccountDailyPercent, 0.2256);
+  }
+});

@@ -7,3 +7,5 @@
 netlify/private/projects.mjs
 netlify/private/vibb-runtime.mjs
 .env.private-workspace.local
+# Local terminal identities, hashed sessions, private ledger and generated security key.
+.local/
