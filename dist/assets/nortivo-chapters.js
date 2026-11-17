@@ -11,7 +11,6 @@
   const heading = copy.querySelector('h1');
   const lead = copy.querySelector('p');
   const action = copy.querySelector('a');
-  const disclosure = copy.querySelector('.chapter-disclosure');
   const announcement = stage.querySelector('.chapter-announcement');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const easing = getComputedStyle(document.documentElement).getPropertyValue('--ease-out').trim();
@@ -36,7 +35,6 @@
       element.textContent = window.Nortivo.translate(key);
     }
     action.href = scene.url || '/' + locale + '/report-2026/';
-    disclosure.hidden = current !== 'report';
     const localizedChart = '/report-2026/equity-' + locale + '.png';
     panel.hidden = current === 'report';
     ledger.hidden = current !== 'report';

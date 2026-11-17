@@ -502,7 +502,6 @@
     "chapter.reportHeadline": "Handelsrapport for 2026.",
     "chapter.reportLead": "145 538 kr i rapportert netto handelsresultat fra 2. januar til 17. november 2026.",
     "chapter.reportAction": "Åpne rapporten",
-    "chapter.reportNote": "Det er ikke uavhengig bekreftet at handlene ble utført live.",
     "chapter.chartLabel": "Handelsdag",
     "chapter.chartHint": "Dra eller bruk piltastene for å se rapportert kontoverdi ved stenging.",
     "editorialMenu.title": "Utforsk Nortivo",
@@ -534,7 +533,7 @@
     "flight.report": "Handelsrapport for 2026",
     "flight.services": "Fra idé til et system du kan teste",
     "flight.servicesText": "Utforsk hvordan vi jobber med handelsregler, automatisering og investeringsopplæring.",
-    "flight.reportSource": "Historiske resultater fra rapporten. Live handel er ikke uavhengig bekreftet.",
+    "flight.reportSource": "Historiske resultater fra rapporten.",
     "flight.arcTitle": "Penger, mat og skritt i én app.",
     "flight.arcIntro": "Slik ser vår private testversjon ut. Skjermbildet viser appen uten personopplysninger."
   },
@@ -1041,7 +1040,6 @@
     "chapter.reportHeadline": "2026 trading report.",
     "chapter.reportLead": "NOK 145,538 reported net trading profit, January 2 through November 17, 2026.",
     "chapter.reportAction": "Open the report",
-    "chapter.reportNote": "Live trading has not been independently verified.",
     "chapter.chartLabel": "Trading session",
     "chapter.chartHint": "Drag or use the arrow keys to inspect each reported closing value.",
     "editorialMenu.title": "Explore Nortivo",
@@ -1073,7 +1071,7 @@
     "flight.report": "2026 trading report",
     "flight.services": "From idea to a system you can test",
     "flight.servicesText": "Explore how we work with trading rules, automation and investment education.",
-    "flight.reportSource": "Historical results from the report. Live trading has not been independently verified.",
+    "flight.reportSource": "Historical results from the report.",
     "flight.arcTitle": "Money, meals and steps in one app.",
     "flight.arcIntro": "A look at our private beta. The screenshot shows the app without personal data."
   }
