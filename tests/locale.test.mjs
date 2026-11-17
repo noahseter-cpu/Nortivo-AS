@@ -63,6 +63,30 @@ test('locale build rewrites only legacy public links and keeps shared assets', (
   for (const preserved of ['href="#local"', 'href="/en/products/"', 'href="https://elsewhere.invalid/products/"', 'src="/assets/image.webp"', 'src="/assets/site.js"', 'href="/assets/site.css"']) assert.ok(rendered.includes(preserved));
 });
 
+test('report links are localized while preserving query, fragment and standalone report assets', () => {
+  const links = `<a href="/report-2026/?source=home&amp;view=equity#report-equity">Report</a><a href="/report-2026/annual-report-2026-ytd.pdf">PDF</a><a href="/report-2026/equity-en.png">Chart</a><a href="/en/report-2026/">Explicit English report</a>`;
+  for (const locale of ['nb', 'en']) {
+    const rendered = renderLocale(fixtureHtml.replace('</body>', links + '</body>'), copy, locale, 'home');
+    assert.ok(rendered.includes(`href="/${locale}/report-2026/?source=home&amp;view=equity#report-equity"`));
+    for (const preserved of ['/report-2026/annual-report-2026-ytd.pdf', '/report-2026/equity-en.png', '/en/report-2026/']) {
+      assert.ok(rendered.includes(`href="${preserved}"`));
+    }
+  }
+});
+
+test('locale generation preserves separately authored localized trading reports', async t => {
+  const { dist } = await fixture(t);
+  for (const locale of ['nb', 'en']) {
+    const directory = path.join(dist, locale, 'report-2026');
+    await mkdir(directory, { recursive: true });
+    await writeFile(path.join(directory, 'index.html'), `<h1>Separate ${locale} report</h1>`);
+  }
+  await buildLocales({ distDir: dist });
+  for (const locale of ['nb', 'en']) {
+    assert.equal(await readFile(path.join(dist, locale, 'report-2026/index.html'), 'utf8'), `<h1>Separate ${locale} report</h1>`);
+  }
+});
+
 test('localized metadata has canonical, hreflang and correct noindex rules', () => {
   for (const page of pages) {
     const rendered = renderLocale(fixtureHtml, copy, 'nb', page);

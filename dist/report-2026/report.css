@@ -1,0 +1,14 @@
+.report-header { display:flex; justify-content:space-between; align-items:center; min-height:64px; border-bottom:1px solid var(--line); }
+.report-header a { color:var(--blue); font-weight:700; padding-block:12px; }
+.report { padding-bottom:48px; }
+.report :is(h1,h2) { font-family:var(--editorial),serif; font-weight:400; }
+.report .market-title h1 { max-width:24ch; }
+.report .market-title p + p { margin-top:8px; }
+.report .report-status { font-size:1rem; }
+.report-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr)); gap:0 24px; margin:16px 0 18px; }
+.report-metrics > div { display:flex; flex-direction:column; gap:7px; justify-content:space-between; border-top:1px solid var(--line); padding-block:16px; }
+.report-metrics dt, .report-basis { color:var(--muted); }
+.report-metrics dd { margin:0; font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:700; font-variant-numeric:tabular-nums; }
+.report-monthly { margin-top:42px; }
+.report-monthly .backtest-results { margin-top:14px; }
+@media (max-width:480px) { .report-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 14px; } .report-monthly .backtest-results :is(th,td) { padding-inline:4px; } }

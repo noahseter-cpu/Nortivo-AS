@@ -28,8 +28,11 @@
 </script>
   <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
+<link rel="stylesheet" href="/assets/nortivo-editorial.css">
+<link rel="stylesheet" href="/assets/nortivo-interior.css">
+<link rel="stylesheet" href="/assets/nortivo-utility-pages.css">
 </head>
-  <body class="portal-page invest market" data-page="support">
+  <body class="portal-page invest market interior-page utility-page" data-page="support">
     <a class="skip-link" href="#main" data-i18n="support.skip">Hopp til innhold</a>
     <header class="site-header market-header">
   <div class="nav-shell">
@@ -39,7 +42,7 @@
       <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
       <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
       <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
-      <a href="/nb/support/" data-i18n="nav.support">Support</a>
+      <a href="/nb/support/" aria-current="page" data-i18n="nav.support">Support</a>
       <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
     </nav>
     <div class="header-tools">
@@ -56,18 +59,19 @@
     <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
     <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
     <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
-    <a href="/nb/support/" data-i18n="nav.support">Support</a>
+    <a href="/nb/support/" aria-current="page" data-i18n="nav.support">Support</a>
     <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
   </nav>
 </header>
-    <main class="portal-shell support-layout" id="main">
+    <main id="main" class="support-center">
       <div class="support-intro">
-        <h1 data-i18n="support.heading">Hva kan vi hjelpe deg med?</h1>
-<p class="portal-lead" data-i18n="support.lead">Få hjelp med et Nortivo-produkt eller et prosjekt. Fortell oss hva du trenger, så svarer vi på e-post.</p>
-        
-        <p class="support-note" data-i18n="support.privacy">Ikke ta med passord, betalingsopplysninger eller andre sensitive opplysninger.</p>
+        <div class="wrap">
+          <h1 data-i18n="support.heading">Hva kan vi hjelpe deg med?</h1>
+          <p class="portal-lead" data-i18n="support.lead">Få hjelp med et Nortivo-produkt eller et prosjekt. Fortell oss hva du trenger, så svarer vi på e-post.</p>
+        </div>
       </div>
-      <section class="portal-card support-workspace" aria-label="Nortivo supportportal" data-i18n-aria="support.portal">
+      <div class="wrap support-center-grid">
+        <section class="portal-card support-workspace" aria-label="Nortivo supportportal" data-i18n-aria="support.portal">
         <div class="tabs" role="tablist" aria-label="Supportalternativer" data-i18n-aria="support.options">
 <button class="tab active" id="new-tab" type="button" role="tab" aria-controls="new-panel" aria-selected="true" tabindex="0" data-i18n="support.newTab">Ny sak</button>
 <button class="tab" id="lookup-tab" type="button" role="tab" aria-controls="lookup-panel" aria-selected="false" tabindex="-1" data-i18n="support.lookupTab">Finn sak</button>
@@ -76,6 +80,7 @@
           <div class="panel" id="new-panel" role="tabpanel" aria-labelledby="new-tab" tabindex="0">
             <h2 data-i18n="support.createHeading">Opprett en supportsak</h2>
 <p class="panel-intro" data-i18n="support.required">Alle feltene må fylles ut.</p>
+            <p class="support-note" data-i18n="support.privacy">Ikke ta med passord, betalingsopplysninger eller andre sensitive opplysninger.</p>
             <form id="ticket-form" method="post" novalidate>
 <div class="form-grid">
               <div class="field">
@@ -170,9 +175,18 @@
           </div>
         </div>
       </section>
-      <noscript>
+        <aside class="support-guide">
+          <ol class="support-steps">
+            <li><p class="support-step-title" data-i18n="support.step1Title">Send inn saken</p><p data-i18n="support.step1">Ta med produktnavnet og hva du trenger hjelp med.</p></li>
+            <li><p class="support-step-title" data-i18n="support.step2Title">Ta vare på saksnummeret</p><p data-i18n="support.step2">Du får det her med en gang saken er lagret.</p></li>
+            <li><p class="support-step-title" data-i18n="support.step3Title">Følg samtalen</p><p data-i18n="support.step3">Få svar på e-post, eller åpne saken sikkert her.</p></li>
+          </ol>
+          <a class="utility-link" href="/nb/privacy/" data-i18n="market.privacy">Personvern</a>
+        </aside>
+        <noscript>
 <p class="no-script">This support form needs JavaScript. / Skjemaet krever JavaScript.</p>
 </noscript>
+      </div>
     </main>
     <footer class="site-footer market-footer">
   <div class="footer-shell">

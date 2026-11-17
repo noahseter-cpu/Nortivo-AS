@@ -19,8 +19,11 @@
 </script>
 <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
+<link rel="stylesheet" href="/assets/nortivo-editorial.css">
+<link rel="stylesheet" href="/assets/nortivo-interior.css">
+<link rel="stylesheet" href="/assets/nortivo-utility-pages.css">
 </head>
-<body class="invest market" data-page="privacy">
+<body class="invest market interior-page utility-page" data-page="privacy">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
 <header class="site-header market-header">
   <div class="nav-shell">
@@ -51,17 +54,36 @@
     <a href="/contact/" data-i18n="nav.contact">Get in touch</a>
   </nav>
 </header>
-<main class="section wrap legal-page" id="main">
-<h1 data-i18n="privacy.title" >Information in contact and support.</h1>
-<p data-i18n="privacy.intro" >A short explanation of what the website’s forms do.</p>
-<h2 data-i18n="privacy.data.title" >What you send</h2>
-<p data-i18n="privacy.data.text" >Forms send your name, email, subject and message to Nortivo’s ticket system. Your email is used for confirmation, access to the ticket and replies. Do not include passwords, payment card information or other sensitive details.</p>
-<h2 data-i18n="privacy.providers.title" >Services used</h2>
-<p data-i18n="privacy.providers.text" >Netlify serves the website and server functions. Supabase stores tickets and replies. Resend sends email. This website has no added analytics or marketing tracking.</p>
-<h2 data-i18n="privacy.language.title" >Language and access</h2>
-<p data-i18n="privacy.language.text" >Your selected language is saved in this browser. On your first visit, Netlify’s approximate country information may select Norwegian in Norway; otherwise English. We do not use GPS. Temporary cookies verify access to a support ticket or the admin area.</p>
-<p data-i18n="privacy.limit" class="notice">Your records in the Arc app are separate from this website’s support data.</p>
-<p data-i18n="privacy.question" >Have a question about your enquiry or your information? Create a support ticket.</p>
+<main id="main" class="privacy-doc">
+  <header class="privacy-banner">
+    <div class="wrap">
+      <p class="privacy-label" data-i18n="market.privacy">Privacy</p>
+      <h1 data-i18n="privacy.title" >Information in contact and support.</h1>
+      <p data-i18n="privacy.intro" >A short explanation of what the website’s forms do.</p>
+    </div>
+  </header>
+  <div class="wrap privacy-grid">
+    <nav class="privacy-contents" aria-label="On this page" data-i18n-aria="homeIndex.contents">
+      <a href="#privacy-data" data-i18n="privacy.data.title">What you send</a>
+      <a href="#privacy-providers" data-i18n="privacy.providers.title">Services used</a>
+      <a href="#privacy-language" data-i18n="privacy.language.title">Language and access</a>
+    </nav>
+    <div class="privacy-body">
+      <section class="privacy-section" id="privacy-data" aria-labelledby="privacy-data-title">
+        <h2 id="privacy-data-title" data-i18n="privacy.data.title">What you send</h2>
+        <p data-i18n="privacy.data.text" >Forms send your name, email, subject and message to Nortivo’s ticket system. Your email is used for confirmation, access to the ticket and replies. Do not include passwords, payment card information or other sensitive details.</p>
+      </section>
+      <section class="privacy-section" id="privacy-providers" aria-labelledby="privacy-providers-title">
+        <h2 id="privacy-providers-title" data-i18n="privacy.providers.title">Services used</h2>
+        <p data-i18n="privacy.providers.text" >Netlify serves the website and server functions. Supabase stores tickets and replies. Resend sends email. This website has no added analytics or marketing tracking.</p>
+      </section>
+      <section class="privacy-section" id="privacy-language" aria-labelledby="privacy-language-title">
+        <h2 id="privacy-language-title" data-i18n="privacy.language.title">Language and access</h2>
+        <p data-i18n="privacy.language.text" >Your selected language is saved in this browser. On your first visit, Netlify’s approximate country information may select Norwegian in Norway; otherwise English. We do not use GPS. Temporary cookies verify access to a support ticket or the admin area.</p>
+      </section>
+      <p data-i18n="privacy.limit" class="notice">The trading simulation uses fictional prices. Your examples are neither stored nor sent to Nortivo.</p>
+      <aside class="privacy-help">
+        <p data-i18n="privacy.question" >Have a question about your enquiry or your information? Create a support ticket.</p>
 <p class="spaced-action">
 <a href="/support/" class="button" >
 <span data-i18n="help.action" >Open support</span>
@@ -70,6 +92,9 @@
 </svg>
 </a>
 </p>
+      </aside>
+    </div>
+  </div>
 </main>
 <footer class="site-footer market-footer">
   <div class="footer-shell">

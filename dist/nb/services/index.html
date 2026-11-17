@@ -31,15 +31,18 @@
 
 <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
+<link rel="stylesheet" href="/assets/nortivo-editorial.css">
+<link rel="stylesheet" href="/assets/nortivo-interior.css">
+<link rel="stylesheet" href="/assets/nortivo-systems-pages.css">
 </head>
-<body class="invest market" data-page="services">
+<body class="invest market interior-page systems-page" data-page="services">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Hopp til innhold</a>
 <header class="site-header market-header">
   <div class="nav-shell">
     <span class="edition-location" data-i18n="market.deskLocation">Lillestrøm, Norge</span>
     <a class="brand invest-brand" href="/nb/">Nortivo<span aria-hidden="true"></span></a>
     <nav class="desktop-nav" aria-label="Hovedmeny" data-i18n-aria="nav.label">
-      <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
+      <a href="/nb/services/" aria-current="page" data-i18n="nav.services">Tjenester</a>
       <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
       <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
       <a href="/nb/support/" data-i18n="nav.support">Support</a>
@@ -56,7 +59,7 @@
     </div>
   </div>
   <nav id="mobile-nav" class="mobile-nav" hidden aria-label="Hovedmeny" data-i18n-aria="nav.label">
-    <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
+    <a href="/nb/services/" aria-current="page" data-i18n="nav.services">Tjenester</a>
     <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
     <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
     <a href="/nb/support/" data-i18n="nav.support">Support</a>
@@ -64,8 +67,40 @@
   </nav>
 </header>
 <main id="main">
-<section class="invest-shell market-title"><h1 data-i18n="market.servicesTitle">Tjenester for investering og handel</h1><p data-i18n="market.servicesLead">Vi lager guider og utvikler handelsprogramvare på oppdrag. Se hva hver tjeneste dekker før du tar kontakt.</p></section>
-<div class="invest-shell market-service-stack"><nav class="market-jump" aria-label="Tjenester" data-i18n-aria="invest.services"><a href="#guide" data-i18n="market.guideLink">Investeringsguider</a><a href="#bot" data-i18n="market.botLink">Handelsboter</a><a href="#crypto" data-i18n="market.cryptoLink">Kryptoautomasjon</a></nav><div class="market-service-list"><section class="market-service" id="guide"><h2 data-i18n="invest.guide">Investeringsguider</h2><div><p data-i18n="market.guideDetail">En guide kan forklare forskjellen på aksjer og fond, hvordan gebyrer regnes ut og hva historiske svingninger viser. Innholdet tilpasses temaet og nivået ditt.</p><a class="invest-button" href="/nb/contact/?project=guide" data-i18n="invest.guideAction">Spør om en guide</a></div></section><section class="market-service" id="bot"><h2 data-i18n="invest.bot">Skreddersydde investeringsboter</h2><div><p data-i18n="market.botDetail">Vi spesifiserer signaler, posisjonsgrenser og når boten skal stoppe. En historisk test kan vise hvilke ordre reglene ville ha gitt med de antakelsene dere velger.</p><a class="invest-button" href="/nb/contact/?project=bot" data-i18n="invest.botAction">Diskuter en bot</a></div></section><section class="market-service" id="crypto"><h2 data-i18n="invest.crypto">Automatisert kryptohandel</h2><div><p data-i18n="market.cryptoDetail">Vi kan utvikle og teste ordreflyt, loggføring og nødstopp i et øvingsmiljø. En test kan også dekke avviste ordre og brudd i forbindelsen til en børs.</p><a class="invest-button" href="/nb/contact/?project=crypto" data-i18n="invest.cryptoAction">Diskuter kryptoautomasjon</a></div></section></div></div>
+  <section class="systems-service-hero" aria-labelledby="services-heading">
+    <div class="invest-shell systems-service-hero-grid">
+      <div class="systems-service-intro">
+        <h1 id="services-heading" data-i18n="market.servicesTitle">Tjenester for investering og handel</h1>
+        <p data-i18n="market.servicesLead">Vi lager guider og utvikler handelsprogramvare på oppdrag. Se hva hver tjeneste dekker før du tar kontakt.</p>
+        <nav class="systems-service-directory" aria-label="Tjenester" data-i18n-aria="invest.services"><a href="#bot" data-i18n="market.botLink">Handelsboter</a><a href="#crypto" data-i18n="market.cryptoLink">Kryptoautomasjon</a><a href="#guide" data-i18n="market.guideLink">Investeringsguider</a></nav>
+      </div>
+      <picture class="systems-service-photo">
+        <source media="(max-width: 760px)" srcset="/assets/nortivo-facade-small.jpg">
+        <img src="/assets/nortivo-facade.jpg" alt="" />
+      </picture>
+    </div>
+  </section>
+  <div class="invest-shell systems-service-items">
+      <section id="bot" class="systems-service" aria-labelledby="bot-heading">
+        <h2 id="bot-heading" data-i18n="invest.bot">Skreddersydde investeringsboter</h2>
+        <div><p data-i18n="market.botDetail">Vi spesifiserer signaler, posisjonsgrenser og når boten skal stoppe. En historisk test kan vise hvilke ordre reglene ville ha gitt med de antakelsene dere velger.</p><a class="invest-button" href="/nb/contact/?project=bot" data-i18n="invest.botAction">Diskuter en bot</a></div>
+      </section>
+      <section id="crypto" class="systems-service" aria-labelledby="crypto-heading">
+        <h2 id="crypto-heading" data-i18n="invest.crypto">Automatisert kryptohandel</h2>
+        <div><p data-i18n="market.cryptoDetail">Vi kan utvikle og teste ordreflyt, loggføring og nødstopp i et øvingsmiljø. En test kan også dekke avviste ordre og brudd i forbindelsen til en børs.</p><a class="invest-button" href="/nb/contact/?project=crypto" data-i18n="invest.cryptoAction">Diskuter kryptoautomasjon</a></div>
+      </section>
+      <section id="guide" class="systems-service" aria-labelledby="guide-heading">
+        <h2 id="guide-heading" data-i18n="invest.guide">Investeringsguider</h2>
+        <div><p data-i18n="market.guideDetail">En guide kan forklare forskjellen på aksjer og fond, hvordan gebyrer regnes ut og hva historiske svingninger viser. Innholdet tilpasses temaet og nivået ditt.</p><a class="invest-button" href="/nb/contact/?project=guide" data-i18n="invest.guideAction">Spør om en guide</a></div>
+      </section>
+  </div>
+  <section class="systems-service-demo">
+    <div class="invest-shell">
+      <h2 data-i18n="market.method">Fra regel til test</h2>
+      <div><p data-i18n="market.toolsIntro">Velg en fiktiv kurs for å se om regelen utløser en ordre og hva handelen gir i gevinst eller tap etter gebyrer.</p>
+      <a class="invest-button" href="/nb/products/#simulation" data-i18n="invest.lab">Test en handelsregel</a></div>
+    </div>
+  </section>
 </main>
 <footer class="site-footer market-footer">
   <div class="footer-shell">

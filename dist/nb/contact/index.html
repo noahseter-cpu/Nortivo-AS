@@ -31,8 +31,11 @@
 <script defer src="/assets/contact.js"></script>
 <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
+<link rel="stylesheet" href="/assets/nortivo-editorial.css">
+<link rel="stylesheet" href="/assets/nortivo-interior.css">
+<link rel="stylesheet" href="/assets/nortivo-company-pages.css">
 </head>
-<body class="invest market" data-page="contact">
+<body class="invest market interior-page company-pages" data-page="contact">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Hopp til innhold</a>
 <header class="site-header market-header">
   <div class="nav-shell">
@@ -43,7 +46,7 @@
       <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
       <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
       <a href="/nb/support/" data-i18n="nav.support">Support</a>
-      <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
+      <a href="/nb/contact/" aria-current="page" data-i18n="nav.contact">Ta kontakt</a>
     </nav>
     <div class="header-tools">
       <div class="invest-languages" role="group" aria-label="Språk" data-i18n-aria="footer.language">
@@ -60,14 +63,16 @@
     <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
     <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
     <a href="/nb/support/" data-i18n="nav.support">Support</a>
-    <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
+    <a href="/nb/contact/" aria-current="page" data-i18n="nav.contact">Ta kontakt</a>
   </nav>
 </header>
-<main id="main"><section id="contact" class="section contact-section" aria-labelledby="contact-title">
-<div class="wrap contact-grid">
+<main id="main">
+<section id="contact" class="section contact-section company-contact" aria-labelledby="contact-title">
+<div class="wrap company-contact-inner">
 <div class="contact-intro">
 <h1 data-i18n="contact.title" id="contact-title">Fortell om prosjektet ditt</h1>
 <p data-i18n="contact.text" >Trenger du en investeringsguide, en handelsbot eller et oppsett for kryptoautomasjon? Beskriv hva du vil lære eller bygge.</p>
+<div class="company-contact-image" aria-hidden="true"></div>
 </div>
 <form id="contact-form" class="form-grid" method="post" novalidate>
 <noscript>
@@ -122,7 +127,9 @@
 </div>
 <div id="contact-feedback" class="form-feedback" role="status" aria-live="polite" tabindex="-1"></div>
 </form>
-<div class="contact-secondary">
+</div>
+</section>
+<div class="wrap contact-secondary company-contact-help">
 <div class="contact-next"><h2 data-i18n="contact.nextTitle">Hva skjer videre?</h2><p data-i18n="contact.nextText">Du får en bekreftelse med referansenummer. Vi følger opp på e-post for å avklare behov, omfang og mulige neste steg. Å sende en forespørsel er ikke en bestilling.</p></div>
 <aside class="help-inline">
 <h2 data-i18n="help.title" >Trenger du hjelp med et produkt?</h2>
@@ -135,8 +142,7 @@
 </a>
 </aside>
 </div>
-</div>
-</section></main>
+</main>
 <footer class="site-footer market-footer">
   <div class="footer-shell">
     <div><a class="brand invest-brand" href="/nb/">Nortivo<span aria-hidden="true"></span></a><p data-i18n="market.footer">Investeringsguider og handelsprogramvare</p></div>

@@ -30,8 +30,11 @@
 </script>
 <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
+<link rel="stylesheet" href="/assets/nortivo-editorial.css">
+<link rel="stylesheet" href="/assets/nortivo-interior.css">
+<link rel="stylesheet" href="/assets/nortivo-utility-pages.css">
 </head>
-<body class="invest market" data-page="privacy">
+<body class="invest market interior-page utility-page" data-page="privacy">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Hopp til innhold</a>
 <header class="site-header market-header">
   <div class="nav-shell">
@@ -62,17 +65,36 @@
     <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
   </nav>
 </header>
-<main class="section wrap legal-page" id="main">
-<h1 data-i18n="privacy.title" >Opplysninger i kontakt og support.</h1>
-<p data-i18n="privacy.intro" >Dette er en kort forklaring av hva nettsidens skjemaer gjør.</p>
-<h2 data-i18n="privacy.data.title" >Det du sender inn</h2>
-<p data-i18n="privacy.data.text" >Skjemaene sender navn, e-post, emne og melding til Nortivos saksbehandling. E-postadressen brukes til bekreftelse, tilgang til saken og svar. Ikke legg inn passord, betalingskort eller andre sensitive opplysninger.</p>
-<h2 data-i18n="privacy.providers.title" >Tjenestene som brukes</h2>
-<p data-i18n="privacy.providers.text" >Netlify leverer nettsiden og serverfunksjonene. Supabase lagrer saker og svar. Resend sender e-post. Ingen analyse- eller markedsføringssporing er lagt til i dette nettstedet.</p>
-<h2 data-i18n="privacy.language.title" >Språk og tilgang</h2>
-<p data-i18n="privacy.language.text" >Et valgt språk lagres i denne nettleseren. Ved første besøk kan Netlifys omtrentlige landinformasjon velge norsk i Norge; ellers engelsk. Vi bruker ikke GPS. Midlertidige informasjonskapsler bekrefter tilgang til en supportsak eller adminområdet.</p>
-<p data-i18n="privacy.limit" class="notice">Handelssimuleringen bruker fiktive priser. Eksemplene lagres ikke og sendes ikke til Nortivo.</p>
-<p data-i18n="privacy.question" >Har du spørsmål om en henvendelse eller opplysningene dine? Opprett en supportsak.</p>
+<main id="main" class="privacy-doc">
+  <header class="privacy-banner">
+    <div class="wrap">
+      <p class="privacy-label" data-i18n="market.privacy">Personvern</p>
+      <h1 data-i18n="privacy.title" >Opplysninger i kontakt og support.</h1>
+      <p data-i18n="privacy.intro" >Dette er en kort forklaring av hva nettsidens skjemaer gjør.</p>
+    </div>
+  </header>
+  <div class="wrap privacy-grid">
+    <nav class="privacy-contents" aria-label="På denne siden" data-i18n-aria="homeIndex.contents">
+      <a href="#privacy-data" data-i18n="privacy.data.title">Det du sender inn</a>
+      <a href="#privacy-providers" data-i18n="privacy.providers.title">Tjenestene som brukes</a>
+      <a href="#privacy-language" data-i18n="privacy.language.title">Språk og tilgang</a>
+    </nav>
+    <div class="privacy-body">
+      <section class="privacy-section" id="privacy-data" aria-labelledby="privacy-data-title">
+        <h2 id="privacy-data-title" data-i18n="privacy.data.title">Det du sender inn</h2>
+        <p data-i18n="privacy.data.text" >Skjemaene sender navn, e-post, emne og melding til Nortivos saksbehandling. E-postadressen brukes til bekreftelse, tilgang til saken og svar. Ikke legg inn passord, betalingskort eller andre sensitive opplysninger.</p>
+      </section>
+      <section class="privacy-section" id="privacy-providers" aria-labelledby="privacy-providers-title">
+        <h2 id="privacy-providers-title" data-i18n="privacy.providers.title">Tjenestene som brukes</h2>
+        <p data-i18n="privacy.providers.text" >Netlify leverer nettsiden og serverfunksjonene. Supabase lagrer saker og svar. Resend sender e-post. Ingen analyse- eller markedsføringssporing er lagt til i dette nettstedet.</p>
+      </section>
+      <section class="privacy-section" id="privacy-language" aria-labelledby="privacy-language-title">
+        <h2 id="privacy-language-title" data-i18n="privacy.language.title">Språk og tilgang</h2>
+        <p data-i18n="privacy.language.text" >Et valgt språk lagres i denne nettleseren. Ved første besøk kan Netlifys omtrentlige landinformasjon velge norsk i Norge; ellers engelsk. Vi bruker ikke GPS. Midlertidige informasjonskapsler bekrefter tilgang til en supportsak eller adminområdet.</p>
+      </section>
+      <p data-i18n="privacy.limit" class="notice">Handelssimuleringen bruker fiktive priser. Eksemplene lagres ikke og sendes ikke til Nortivo.</p>
+      <aside class="privacy-help">
+        <p data-i18n="privacy.question" >Har du spørsmål om en henvendelse eller opplysningene dine? Opprett en supportsak.</p>
 <p class="spaced-action">
 <a href="/nb/support/" class="button" >
 <span data-i18n="help.action" >Åpne support</span>
@@ -81,6 +103,9 @@
 </svg>
 </a>
 </p>
+      </aside>
+    </div>
+  </div>
 </main>
 <footer class="site-footer market-footer">
   <div class="footer-shell">

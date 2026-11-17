@@ -66,7 +66,7 @@ function localizeHref(href, locale) {
   const match = href.match(/^([^?#]*)([?#][\s\S]*)?$/);
   const pathname = match[1];
   const normalized = pathname === '/' ? '/' : `${pathname.replace(/\/$/, '')}/`;
-  if (!pages.some(page => pagePath(page) === normalized)) return href;
+  if (normalized !== '/report-2026/' && !pages.some(page => pagePath(page) === normalized)) return href;
   return `/${locale}${normalized}${match[2] || ''}`;
 }
 

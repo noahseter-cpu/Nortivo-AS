@@ -29,13 +29,19 @@ test('restaurant is explicitly fictional and contains no reservation network or 
   assert.doesNotMatch(html,/<input[^>]+type="(?:email|tel|password)"/);
   assert.doesNotMatch(read('dist/assets/restaurant.js'),/fetch\(|XMLHttpRequest|localStorage|sessionStorage/);
 });
-test('homepage stays brief and all new pages have one main heading', () => {
+test('homepage separates its editorial introduction, decision demo and detailed pages', () => {
   const home=read('dist/index.html');
   assert.doesNotMatch(home,/<form|class="career|id="contact"/);
   for(const lang of ['nb','en']) {
     const localized = read(`dist/${lang}/index.html`);
     assert.equal((localized.match(/<h1\b/g)||[]).length, 1);
-    assert.match(localized,/data-i18n="replay.headlineStart"/);
+    assert.match(localized,/<h1\b[^>]*data-i18n="editorial.heading"/);
+    assert.match(localized,/<section\b[^>]*id="replay"[^>]*aria-labelledby="replay-title"/);
+    for (const scenario of ['allowed', 'price', 'limit']) {
+      assert.match(localized, new RegExp(`<button\\b[^>]*data-case="${scenario}"[^>]*aria-pressed="(?:true|false)"`));
+    }
+    assert.match(localized,/id="replay-result"/);
+    assert.match(localized,/src="\/assets\/decision-replay\.js"/);
   }
   for(const route of ['about','services','contact','restaurant']) assert.equal((read(`dist/${route}/index.html`).match(/<h1\b/g)||[]).length,1);
 });
@@ -69,12 +75,25 @@ test('public studio styling remains separate from the private workspace and rest
   assert.match(read('dist/assets/studio-refresh.css'),/prefers-reduced-motion:reduce/);
 });
 
-test('support retains the same complete desktop and mobile header as the investment site in both languages', () => {
+test('home dialog and support desktop/mobile navigation retain all localized site destinations', () => {
   for (const lang of ['nb','en']) {
-    const header = html => html.match(/<header class="site-header market-header">[\s\S]*?<\/header>/)[0];
-    assert.equal(header(read(`dist/${lang}/support/index.html`)), header(read(`dist/${lang}/index.html`)));
-    const home = read(`dist/${lang}/studio/index.html`);
-    assert.match(home,new RegExp(`href="/${lang}/arc/#app-view"`));
+    const expected = ['services', 'products', 'about', 'support', 'contact'].map(route => `/${lang}/${route}/`);
+    const home = read(`dist/${lang}/index.html`);
+    const support = read(`dist/${lang}/support/index.html`);
+    const dialog = home.match(/<dialog\b[^>]*id="editorial-menu"[\s\S]*?<\/dialog>/)?.[0];
+    assert.ok(dialog, `${lang}: home menu dialog`);
+    const menu = dialog.match(/<nav\b[\s\S]*?<\/nav>/)?.[0];
+    const desktop = support.match(/<nav\b[^>]*class="desktop-nav"[\s\S]*?<\/nav>/)?.[0];
+    const mobile = support.match(/<nav\b[^>]*id="mobile-nav"[\s\S]*?<\/nav>/)?.[0];
+    for (const [name, markup] of [['home dialog', menu], ['support desktop', desktop], ['support mobile', mobile]]) {
+      assert.ok(markup, `${lang}: ${name} navigation`);
+      const destinations = [...markup.matchAll(/<a\b[^>]*href="([^"]+)"/g)].map(match => match[1]);
+      assert.deepEqual(destinations, expected, `${lang}: ${name} destinations`);
+    }
+    assert.match(home, /aria-haspopup="dialog" aria-controls="editorial-menu"/);
+    assert.match(support, /aria-controls="mobile-nav" aria-expanded="false"/);
+    for (const html of [home, support]) assert.match(html, new RegExp(`class="brand[^\"]*" href="/${lang}/"`));
+    assert.match(read(`dist/${lang}/studio/index.html`),new RegExp(`href="/${lang}/arc/#app-view"`));
   }
 });
 

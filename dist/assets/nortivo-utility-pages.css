@@ -1,0 +1,414 @@
+body.market.interior-page.utility-page {
+  --interior-header: #161817;
+  --interior-light: #fff7ec;
+  --interior-canvas: #f4efe7;
+  --interior-paper: #fffbf4;
+  --interior-ink: #161817;
+  --interior-muted: #5c5149;
+  --interior-line: #d4c7b8;
+  --interior-accent: #87391f;
+  --utility-dark: #222523;
+  --utility-sans: Manrope, sans-serif;
+  --utility-space: clamp(22px, 4vw, 58px);
+}
+
+.utility-page .utility-link {
+  color: var(--interior-accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Keep the support workflow above the instructions on compact screens. */
+.utility-page .support-intro {
+  overflow: hidden;
+  isolation: isolate;
+  position: relative;
+  padding: clamp(34px, 6vw, 82px) 0 clamp(33px, 5vw, 72px);
+  background: var(--utility-dark);
+  color: var(--interior-light);
+}
+
+.utility-page .support-intro::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  background: linear-gradient(90deg, #222523 33%, #222523e8 53%, #22252355 100%), url("/assets/nortivo-facade-small.jpg") right 54% / cover no-repeat;
+}
+
+.utility-page .support-intro h1,
+.utility-page .privacy-banner h1 {
+  max-width: 20ch;
+  font: 700 clamp(2.3rem, 5.3vw, 5.45rem)/1.025 var(--utility-sans);
+  hyphens: none;
+  letter-spacing: -.055em;
+  text-wrap: balance;
+}
+
+.utility-page .support-intro .portal-lead {
+  color: #e5d8c9;
+  max-width: 49ch;
+}
+
+.utility-page .support-center-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(225px, .62fr);
+  align-items: start;
+  gap: var(--utility-space);
+  padding-block: var(--utility-space) clamp(46px, 7vw, 96px);
+}
+
+.utility-page.portal-page {
+  --portal-blue: #87391f;
+}
+
+.utility-page .support-center .support-workspace {
+  border-radius: 0;
+  border-color: var(--interior-line);
+}
+
+.utility-page .support-center .support-workspace .tabs {
+  gap: 3px;
+  padding: 0;
+  background: #eae1d5;
+  border-color: var(--interior-line);
+}
+
+.utility-page .support-center .support-workspace .tab {
+  min-height: 55px;
+  padding: 10px;
+  position: relative;
+  color: var(--interior-ink);
+  border: 0;
+}
+
+.utility-page .support-center .support-workspace .tab[aria-selected="true"] {
+  background: var(--interior-paper);
+  color: var(--interior-accent);
+}
+
+.utility-page .support-workspace .tab::after {
+  content: "";
+  position: absolute;
+  inset: auto 12px 0;
+  height: 2px;
+  background: var(--interior-accent);
+  transform: scaleX(0);
+}
+
+.utility-page .support-workspace .tab[aria-selected="true"]::after {
+  transform: scaleX(1);
+}
+
+.utility-page .support-workspace .tab:focus-visible {
+  outline-offset: -4px;
+}
+
+.utility-page .support-workspace .portal-card-body {
+  padding: clamp(17px, 3.4vw, 43px);
+}
+
+.utility-page .support-workspace .panel > h2 {
+  font: 700 clamp(1.3rem, 2vw, 1.72rem)/1.18 var(--utility-sans);
+  letter-spacing: -.03em;
+  margin-bottom: 10px;
+}
+
+.utility-page .support-workspace :is(input, textarea) {
+  border-radius: 3px;
+}
+
+.utility-page .support-workspace .button {
+  border-radius: 3px;
+  min-height: 48px;
+}
+
+.utility-page .support-guide {
+  padding: 0;
+  border-top: 2px solid var(--interior-accent);
+}
+
+.utility-page .support-steps {
+  display: block;
+  list-style: decimal;
+  max-width: 43ch;
+  margin: 0;
+  padding: 0 0 0 25px;
+}
+
+.utility-page .support-steps li {
+  padding: 17px 0 17px 7px;
+  border-top: 0;
+  border-bottom: 1px solid var(--interior-line);
+}
+
+.utility-page .support-steps li::before {
+  content: none;
+}
+
+.utility-page .support-steps li::marker {
+  color: var(--interior-accent);
+  font-weight: 700;
+}
+
+.utility-page .support-steps p {
+  color: var(--interior-muted);
+  margin: 0;
+  font-size: .9rem;
+  line-height: 1.6;
+}
+
+.utility-page .support-steps .support-step-title {
+  color: var(--interior-ink);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.utility-page .support-workspace .support-note {
+  color: var(--interior-muted);
+  margin: 0 0 18px;
+  font-size: .85rem;
+}
+
+.utility-page .support-guide .utility-link {
+  display: inline-block;
+  margin-top: 13px;
+  font-size: .85rem;
+}
+
+/* Use the invitation as the page's active surface while reviews are empty. */
+.utility-page .reviews-masthead {
+  --reviews-tone: #75351f;
+  background: var(--interior-canvas);
+  overflow: clip;
+}
+
+.utility-page .reviews-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.43fr) minmax(0, 1fr);
+}
+
+.utility-page .reviews-intro {
+  align-content: center;
+  padding: clamp(44px, 8vw, 115px) clamp(20px, 5vw, 74px) clamp(44px, 8vw, 115px) 0;
+}
+
+.utility-page .reviews-intro h1 {
+  font: 400 clamp(2.55rem, 6.15vw, 6.4rem)/1 var(--editorial);
+  letter-spacing: -.036em;
+  overflow-wrap: anywhere;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.utility-page .reviews-intro p {
+  margin: clamp(13px, 2vw, 23px) 0 0;
+  color: var(--interior-muted);
+  max-width: 40ch;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+}
+
+.utility-page .reviews-overview .reviews-feedback {
+  position: relative;
+  align-content: center;
+  color: var(--interior-light);
+  background: var(--reviews-tone);
+  border: 0;
+  padding: clamp(32px, 6vw, 88px) 0 clamp(32px, 6vw, 88px) clamp(24px, 4.3vw, 66px);
+}
+
+.utility-page .reviews-feedback::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 100%;
+  width: 100vw;
+  background: var(--reviews-tone);
+  pointer-events: none;
+}
+
+.utility-page .reviews-feedback h2 {
+  margin: 0;
+  font: 700 clamp(1.25rem, 2vw, 1.72rem)/1.2 var(--utility-sans);
+  letter-spacing: -.03em;
+}
+
+.utility-page .reviews-feedback p {
+  margin: 13px 0 22px;
+  color: #f6e7da;
+  max-width: 43ch;
+  line-height: 1.68;
+}
+
+.utility-page .reviews-feedback .invest-button {
+  background: var(--interior-light);
+  color: #5d2817;
+  min-height: 49px;
+  border-radius: 3px;
+}
+
+.utility-page .reviews-feedback .invest-button:focus-visible {
+  outline-color: var(--interior-light);
+}
+
+.utility-page .reviews-record {
+  padding-block: var(--utility-space) clamp(52px, 9vw, 125px);
+}
+
+.utility-page .reviews-published {
+  display: grid;
+  grid-template-columns: minmax(9rem, .43fr) minmax(0, 1fr);
+  gap: 16px 28px;
+  align-items: baseline;
+  padding-block: 20px;
+  border-block: 1px solid var(--interior-line);
+}
+
+.utility-page .reviews-published h2 {
+  margin: 0;
+  font: 700 clamp(1.05rem, 1.65vw, 1.37rem)/1.25 var(--utility-sans);
+  letter-spacing: -.025em;
+}
+
+.utility-page .reviews-published p {
+  margin: 0;
+  color: var(--interior-muted);
+}
+
+/* Short paths into the policy, with room for comfortable reading. */
+.utility-page .privacy-banner {
+  background: #e9dfd0;
+  padding: clamp(32px, 5.8vw, 79px) 0;
+  border-bottom: 1px solid var(--interior-line);
+}
+
+.utility-page .privacy-banner h1 {
+  color: var(--interior-ink);
+  margin: .22em 0 .23em;
+  width: max-content;
+  max-width: min(100%, 21ch);
+  font-size: clamp(2.3rem, 5.15vw, 4.65rem);
+  overflow-wrap: anywhere;
+}
+
+.utility-page .privacy-banner p {
+  margin: 0;
+  color: var(--interior-muted);
+}
+
+.utility-page .privacy-banner .privacy-label {
+  color: var(--interior-accent);
+  font-weight: 700;
+}
+
+.utility-page .privacy-grid {
+  display: grid;
+  grid-template-columns: minmax(150px, .38fr) minmax(0, 1fr);
+  gap: 0 var(--utility-space);
+  padding-block: var(--utility-space) clamp(42px, 7vw, 88px);
+}
+
+.utility-page .privacy-contents {
+  align-self: start;
+  position: sticky;
+  top: 28px;
+  display: grid;
+  border-top: 2px solid var(--interior-accent);
+}
+
+.utility-page .privacy-contents a {
+  color: var(--interior-ink);
+  padding: 12px 3px;
+  border-bottom: 1px solid var(--interior-line);
+  font-weight: 700;
+  text-decoration: none;
+  text-underline-offset: 4px;
+}
+
+.utility-page .privacy-section {
+  padding: 22px 0 24px;
+  border-bottom: 1px solid var(--interior-line);
+}
+
+.utility-page .privacy-section:first-child {
+  padding-top: 0;
+}
+
+.utility-page .privacy-section:target h2 {
+  color: var(--interior-accent);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.utility-page .privacy-section h2 {
+  margin: 0 0 9px;
+  font: 700 clamp(1.25rem, 2vw, 1.65rem)/1.25 var(--utility-sans);
+  letter-spacing: -.03em;
+}
+
+.utility-page .privacy-body :is(.privacy-section p, .privacy-help p) {
+  max-width: 66ch;
+  margin: 0;
+  line-height: 1.75;
+  color: var(--interior-muted);
+}
+
+.utility-page .privacy-body .notice {
+  max-width: 66ch;
+  border-radius: 0;
+  padding: 12px 16px;
+  margin: 24px 0 0;
+  border-left: 2px solid var(--interior-accent);
+  background: #eadfd2;
+}
+
+.utility-page .privacy-help {
+  padding-top: 30px;
+}
+
+.utility-page .privacy-body .privacy-help .spaced-action {
+  margin-top: 12px;
+}
+
+.utility-page .privacy-help .button {
+  border-radius: 3px;
+}
+
+@media (hover: hover) {
+  .utility-page .support-workspace .tab:not([aria-selected="true"]):hover { background: #f3ebe0; }
+  .utility-page .reviews-feedback .invest-button:hover { background: #ead4c2; color: #5d2817; }
+  .utility-page .privacy-contents a:hover { color: var(--interior-accent); text-decoration: underline; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .utility-page .support-workspace .tab:not(:focus-visible)::after { transition: transform 140ms var(--ease-out); }
+  .utility-page .reviews-feedback .invest-button:active { transform: scale(.98); }
+}
+@media (max-width: 735px) {
+  .utility-page .support-center-grid, .utility-page .reviews-overview, .utility-page .privacy-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .utility-page .support-intro::before {
+    background-image: linear-gradient(90deg, #222523 7%, #222523c9 66%, #22252391 100%), url("/assets/nortivo-facade-small.jpg");
+  }
+  .utility-page .reviews-feedback::after { display: none; }
+  .utility-page .reviews-intro { padding: 46px 0 32px; }
+  .utility-page .reviews-overview .reviews-feedback {
+    padding: 24px clamp(16px, 4.5vw, 28px);
+  }
+  .utility-page .privacy-contents {
+    position: static;
+    margin: 0 0 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 18px;
+    border-bottom: 1px solid var(--interior-line);
+  }
+  .utility-page .privacy-contents a {
+    border-bottom: 0;
+    padding-block: 10px;
+    font-size: .9rem;
+  }
+}
+@media (max-width: 420px) {
+  .utility-page .reviews-published { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+}

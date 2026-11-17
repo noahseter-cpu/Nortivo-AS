@@ -32,8 +32,11 @@
 <script defer src="/assets/investment.js"></script>
 <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
+<link rel="stylesheet" href="/assets/nortivo-editorial.css">
+<link rel="stylesheet" href="/assets/nortivo-interior.css">
+<link rel="stylesheet" href="/assets/nortivo-systems-pages.css">
 </head>
-<body class="invest market" data-page="products">
+<body class="invest market interior-page systems-page" data-page="products">
 <a class="skip-link" href="#main" data-i18n="nav.skip">Hopp til innhold</a>
 <header class="site-header market-header">
   <div class="nav-shell">
@@ -41,7 +44,7 @@
     <a class="brand invest-brand" href="/nb/">Nortivo<span aria-hidden="true"></span></a>
     <nav class="desktop-nav" aria-label="Hovedmeny" data-i18n-aria="nav.label">
       <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
-      <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
+      <a href="/nb/products/" aria-current="page" data-i18n="market.tools">Verktøy</a>
       <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
       <a href="/nb/support/" data-i18n="nav.support">Support</a>
       <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
@@ -58,20 +61,25 @@
   </div>
   <nav id="mobile-nav" class="mobile-nav" hidden aria-label="Hovedmeny" data-i18n-aria="nav.label">
     <a href="/nb/services/" data-i18n="nav.services">Tjenester</a>
-    <a href="/nb/products/" data-i18n="market.tools">Verktøy</a>
+    <a href="/nb/products/" aria-current="page" data-i18n="market.tools">Verktøy</a>
     <a href="/nb/about/" data-i18n="market.about">Om Nortivo</a>
     <a href="/nb/support/" data-i18n="nav.support">Support</a>
     <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
   </nav>
 </header>
 <main id="main">
-<section class="invest-shell market-tool-hero"><div class="market-title"><h1 data-i18n="market.toolsTitle">Handelssimulering</h1><p data-i18n="market.toolsIntro">Velg en fiktiv kurs for å se om regelen utløser en ordre og hva handelen gir i gevinst eller tap etter gebyrer.</p><a class="invest-button" href="/nb/contact/?project=bot" data-i18n="market.practice">Diskuter en bot</a></div><section class="invest-lab" id="simulation" aria-labelledby="lab-heading">
-        <div class="invest-lab-header">
+  <section class="invest-shell systems-product-intro" aria-labelledby="products-heading">
+    <h1 id="products-heading" data-i18n="market.toolsTitle">Handelssimulering</h1>
+    <div><p data-i18n="market.toolsIntro">Velg en fiktiv kurs for å se om regelen utløser en ordre og hva handelen gir i gevinst eller tap etter gebyrer.</p> <a class="text-link" href="#backtest" data-i18n="backtest.title">SPY-testen for 2026</a></div>
+  </section>
+  <section class="invest-lab systems-lab" id="simulation" aria-labelledby="lab-heading">
+    <div class="invest-shell systems-lab-inner">
+      <div class="invest-lab-header">
           <h2 id="lab-heading" data-i18n="invest.lab">Test en handelsregel</h2>
           <p data-i18n="invest.sample">Eksempel med fiktive priser og ordre</p>
         </div>
-        <p class="invest-rule" data-i18n="invest.rule">I denne testen opprettes en simulert kjøpsordre når kursen er 100 eller lavere.</p>
-  <figure class="rule-chart">
+      <div class="systems-lab-workspace">
+        <figure class="rule-chart">
     <svg viewBox="0 0 390 110" aria-hidden="true" focusable="false" width="390" height="110">
       <line class="rule-axis" x1="41" y1="16" x2="382" y2="16"></line>
       <line class="rule-threshold" x1="41" y1="64" x2="382" y2="64"></line>
@@ -87,7 +95,9 @@
     </svg>
     <figcaption data-i18n="invest.chart">Fiktiv kursserie. Den stiplede linjen viser grensen på 100.</figcaption>
   </figure>
-  <div class="invest-scenarios" role="group" aria-label="Velg et kurseksempel" data-i18n-aria="invest.scenario" hidden>
+        <div class="systems-lab-controls">
+          <p class="invest-rule" data-i18n="invest.rule">I denne testen opprettes en simulert kjøpsordre når kursen er 100 eller lavere.</p>
+          <div class="invest-scenarios" role="group" aria-label="Velg et kurseksempel" data-i18n-aria="invest.scenario" hidden>
     <button type="button" data-demo-price="104" aria-pressed="true">104</button>
     <button type="button" data-demo-price="102" aria-pressed="false">102</button>
     <button type="button" data-demo-price="98" aria-pressed="false">98</button>
@@ -95,19 +105,21 @@
     <button type="button" data-demo-price="100" aria-pressed="false">100</button>
     <button type="button" data-demo-price="96" aria-pressed="false">96</button>
   </div>
-        <dl class="invest-result" aria-live="polite" aria-atomic="true">
+          <dl class="invest-result" aria-live="polite" aria-atomic="true">
           <div><dt data-i18n="invest.price">Eksempelpris</dt><dd id="demo-price">104</dd></div>
           <div><dt data-i18n="invest.outcome">Ordre</dt><dd id="demo-outcome" data-i18n="invest.wait">Ingen ordre</dd></div>
           <div class="invest-net"><dt data-i18n="invest.net">Gevinst eller tap etter gebyrer</dt><dd id="demo-net">0</dd></div>
         </dl>
-        <p class="invest-assumptions" data-i18n="invest.assumptions">Hver simulert handel kjøper én enhet, selger den til kurs 101 og betaler 2 i samlede gebyrer. Hver kurs er et eget eksempel.</p>
-        <noscript><p data-i18n="invest.noscript">Slå på JavaScript for å bytte eksempelpris.</p></noscript>
-      </section></section><section class="invest-shell market-tool-notes"><h2 data-i18n="market.method">Fra regel til test</h2><p data-i18n="market.methodLead">En bot trenger tydelige regler for når den handler, hvor mye den kan handle, og når den skal stoppe.</p><div><article><h3 data-i18n="market.limitTitle">Avklar grensene</h3><p data-i18n="market.limitText">Velg hvor stor en posisjon kan bli, og hva boten skal gjøre hvis en pris mangler eller en ordre blir avvist.</p></article><article><h3 data-i18n="market.testTitle">Test med realistiske antakelser</h3><p data-i18n="market.testText">Historiske tester og simuleringer kan vise hvordan reglene reagerer på ulike priser og kostnader. Fremtidige resultater kan avvike.</p></article></div></section>
-  <section class="invest-shell market-backtest" id="backtest" aria-labelledby="backtest-title">
-    <h2 id="backtest-title" data-i18n="backtest.title">SPY-testen for 2026</h2>
-    <p class="backtest-period" data-i18n="backtest.period">Historisk simulering · 2. januar til 13. november 2026 · 219 handelsdager</p>
-    <p data-i18n="backtest.intro">Vi testet en regel for å kjøpe SPY etter at kursen falt under sitt 20-dagers gjennomsnitt. Variasjonen som bestemmer ordrestørrelsen før neste børsåpning, ga 2,37 % simulert avkastning i perioden.</p>
-    <table class="backtest-results">
+          <noscript><p data-i18n="invest.noscript">Slå på JavaScript for å bytte eksempelpris.</p></noscript>
+        </div>
+      </div>
+      <p class="invest-assumptions" data-i18n="invest.assumptions">Hver simulert handel kjøper én enhet, selger den til kurs 101 og betaler 2 i samlede gebyrer. Hver kurs er et eget eksempel.</p>
+    </div>
+  </section>
+  <section class="invest-shell market-backtest systems-backtest" id="backtest" aria-labelledby="backtest-title">
+    <div class="systems-backtest-comparison">
+      <div><h2 id="backtest-title" data-i18n="backtest.title">SPY-testen for 2026</h2><p class="backtest-period" data-i18n="backtest.period">Historisk simulering · 2. januar til 13. november 2026 · 219 handelsdager</p><p data-i18n="backtest.intro">Vi testet en regel for å kjøpe SPY etter at kursen falt under sitt 20-dagers gjennomsnitt. Variasjonen som bestemmer ordrestørrelsen før neste børsåpning, ga 2,37 % simulert avkastning i perioden.</p><p class="backtest-period" data-i18n="backtest.note">Dette er simulerte resultater basert på historiske SPY-kurser. Faktiske handelsresultater kan avvike.</p></div>
+      <table class="backtest-results">
       <caption data-i18n="backtest.comparison">Simulerte resultater etter tidspunkt for ordreutførelse</caption>
       <thead>
         <tr>
@@ -124,6 +136,7 @@
         <tr><th scope="row" data-i18n="backtest.balance">Sluttverdi (USD)</th><td data-i18n="backtest.openBalance">102 368,52</td><td data-i18n="backtest.closeBalance">107 447,40</td></tr>
       </tbody>
     </table>
+    </div>
     <div class="backtest-method">
       <div>
         <h3 data-i18n="backtest.timingTitle">Hvorfor tidspunktet betyr noe</h3>
@@ -136,8 +149,8 @@
         <p data-i18n="backtest.costs">Begge oppsettene starter med 100 000 USD i simulert kapital. Hver ordre inkluderer 1 USD i kurtasje og 0,01 % kursavvik ved utførelse. Sluttverdiene inkluderer åpne posisjoner. Utbytte og renter er utelatt.</p>
       </div>
     </div>
-    <p class="backtest-period" data-i18n="backtest.note">Dette er simulerte resultater basert på historiske SPY-kurser. Faktiske handelsresultater kan avvike.</p>
   </section>
+<section class="invest-shell market-tool-notes systems-method"><h2 data-i18n="market.method">Fra regel til test</h2><p data-i18n="market.methodLead">En bot trenger tydelige regler for når den handler, hvor mye den kan handle, og når den skal stoppe.</p><div><article><h3 data-i18n="market.limitTitle">Avklar grensene</h3><p data-i18n="market.limitText">Velg hvor stor en posisjon kan bli, og hva boten skal gjøre hvis en pris mangler eller en ordre blir avvist.</p></article><article><h3 data-i18n="market.testTitle">Test med realistiske antakelser</h3><p data-i18n="market.testText">Historiske tester og simuleringer kan vise hvordan reglene reagerer på ulike priser og kostnader. Fremtidige resultater kan avvike.</p></article></div><a class="text-link interior-discuss" href="/nb/contact/?project=bot" data-i18n="market.practice">Diskuter en bot</a></section>
 </main>
 <footer class="site-footer market-footer">
   <div class="footer-shell">

@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="en_GB" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f4f0">
+  <meta name="theme-color" content="#1d211d">
 
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
@@ -25,10 +25,17 @@
 <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="/assets/decision-replay.css">
   <script defer src="/assets/decision-replay.js"></script>
+  <link rel="stylesheet" href="/assets/nortivo-editorial.css">
+<link rel="stylesheet" href="/assets/nortivo-chapters.css">
+<script defer src="/assets/nortivo-chapters.js"></script>
+<link rel="stylesheet" href="/assets/nortivo-stories.css">
+<script defer src="/assets/nortivo-menu.js"></script>
+<link rel="stylesheet" href="/assets/nortivo-layout.css">
+<link rel="stylesheet" href="/assets/nortivo-flight.css">
 </head>
-<body class="invest market replay-home" data-page="home">
+<body class="invest market replay-home editorial-home flight-home" data-page="home">
   <a class="skip-link" href="#main" data-i18n="nav.skip">Hopp til innhold</a>
-  <header class="site-header market-header">
+  <header class="site-header market-header editorial-masthead">
   <div class="nav-shell">
     <span class="edition-location" data-i18n="market.deskLocation">Lillestrøm, Norge</span>
     <a class="brand invest-brand" href="/nb/">Nortivo<span aria-hidden="true"></span></a>
@@ -40,6 +47,8 @@
       <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
     </nav>
     <div class="header-tools">
+      <button type="button" class="editorial-menu-trigger" aria-haspopup="dialog" aria-controls="editorial-menu" hidden data-i18n="nav.menu">Meny</button>
+      <a class="editorial-header-contact" href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
       <div class="invest-languages" role="group" aria-label="Språk" data-i18n-aria="footer.language">
         <button type="button" data-language="nb" aria-pressed="true" lang="nb">NO</button>
         <button type="button" data-language="en" aria-pressed="false" lang="en">EN</button>
@@ -57,19 +66,10 @@
     <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
   </nav>
 </header>
+<dialog class="editorial-menu" id="editorial-menu" aria-labelledby="editorial-menu-title"><div class="editorial-menu-inner"><div class="editorial-menu-top"><a href="/nb/" class="editorial-menu-wordmark">Nortivo</a><button type="button" class="editorial-menu-close" autofocus data-i18n="editorialMenu.close">Lukk</button></div><h2 id="editorial-menu-title" class="chapter-announcement" data-i18n="editorialMenu.title">Utforsk Nortivo</h2><div class="editorial-menu-body"><nav aria-label="Hovedmeny" data-i18n-aria="nav.label"><a href="/nb/services/" data-i18n="nav.services">Tjenester</a><a href="/nb/products/" data-i18n="editorialMenu.tools">Handelsverktøy</a><a href="/nb/about/" data-i18n="nav.about">Om Nortivo</a><a href="/nb/support/" data-i18n="nav.support">Support</a><a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a></nav><div class="editorial-menu-teasers"><a class="editorial-menu-teaser" href="/nb/report-2026/"><img src="/report-2026/equity-en.png" alt="" width="280" height="150" loading="lazy"><span data-i18n="chapter.report">Rapport</span></a><a class="editorial-menu-teaser" href="/nb/about/#year-review"><img src="/assets/nortivo-facade-small.jpg" alt="" width="280" height="150" loading="lazy"><span data-i18n="editorial.year">Nortivos år så langt</span></a></div></div></div></dialog>
 
-  <main class="replay-shell" id="main">
-    <section class="replay-intro" aria-labelledby="main-heading">
-      <h1 id="main-heading"><span data-i18n="replay.headlineStart">Hver ordre har</span> <span data-i18n="replay.headlineEnd">en grunn.</span></h1>
-      <div>
-        <p data-i18n="replay.intro">Nortivo lager skreddersydde handelsboter, løsninger for automatisert kryptohandel og investeringsguider.</p>
-        <div class="replay-intro-links">
-          <a href="/nb/contact/" data-i18n="invest.contact">Diskuter et prosjekt</a>
-          <a href="/nb/about/#work" data-i18n="work.link">Se hva vi har laget</a>
-        </div>
-      </div>
-    </section>
-    <section class="replay-scene" id="replay" aria-labelledby="replay-title" data-checkpoint="3">
+  <main id="main">
+<section class="editorial-stage chapter-stage" data-current-chapter="strategy" aria-labelledby="editorial-title"><img class="editorial-backdrop chapter-photo" data-chapter-photo="strategy" data-active="true" src="/assets/decision-replay-ribbon.jpg" alt="" fetchpriority="high"><img class="editorial-backdrop chapter-photo chapter-photo-replay" data-chapter-photo="replay" src="/assets/nortivo-facade.jpg" alt="" decoding="async"><img class="editorial-backdrop chapter-photo chapter-photo-report" data-chapter-photo="report" src="/assets/nortivo-facade.jpg" alt="" decoding="async"><div class="editorial-shell editorial-stage-grid"><div class="editorial-stage-copy" id="editorial-story"><h1 id="editorial-title" data-i18n="editorial.heading">Fra regel til beslutning.</h1><p data-i18n="editorial.lead">Handelsboter, automatisert kryptohandel og investeringsguider. Se hvordan en strategi tar en beslutning før du bygger den.</p><a href="#offer" class="editorial-button" data-i18n="editorial.explore">Se tjenestene våre</a><p class="editorial-source chapter-disclosure" data-i18n="chapter.reportNote" hidden>Det er ikke uavhengig bekreftet at handlene ble utført live.</p></div><div class="flight-instrument"><div class="chapter-index home-chapters"><div class="chapter-controls" role="group" aria-label="Utforsk Nortivo" data-i18n-aria="chapter.choices" hidden><button type="button" class="chapter-button" data-chapter="strategy" aria-pressed="true" aria-controls="editorial-story" data-i18n="homeIndex.strategy">Oversikt</button><button type="button" class="chapter-button" data-chapter="replay" aria-pressed="false" aria-controls="editorial-story" data-i18n="homeIndex.demo">Ordredemo</button><button type="button" class="chapter-button" data-chapter="report" aria-pressed="false" aria-controls="editorial-story" data-i18n="homeIndex.report">Rapport</button></div><p class="chapter-announcement" role="status"></p></div><section class="replay-scene flight-console" id="replay" aria-labelledby="replay-title" data-checkpoint="3">
       <div class="replay-studio">
         <img class="replay-artwork" src="/assets/decision-replay-ribbon.jpg" alt="" width="1962" height="801" fetchpriority="high">
         <span class="replay-scrim" aria-hidden="true"></span>
@@ -102,40 +102,18 @@
         <strong role="status" aria-atomic="true" id="replay-result" data-i18n="replay.result.allowed">Simulert ordre godkjent. Begge kontrollene er bestått.</strong>
         <span data-i18n="replay.note">Eksemplet simulerer en ordre med fiktive kurser og posisjoner.</span>
       </div>
-    </section>
-    <section class="replay-report" aria-labelledby="replay-report-title">
-      <h2 id="replay-report-title" data-i18n="backtest.title">SPY-testen for 2026</h2>
-      <div>
-        <p data-i18n="backtest.homeSummary">SPY-testen vår ga 2,37 % i simulert avkastning fra 2. januar til 13. november 2026. Det største fallet fra en tidligere topp var 3,88 %. I testen beregnes ordrene etter stengetid og utføres ved neste børsåpning.</p>
-        <div class="replay-report-links">
-          <a class="replay-tools-link" href="/nb/products/#backtest" data-i18n="backtest.link">Se resultater og metode</a>
-          <a class="replay-tools-link" href="/nb/about/#year-review" data-i18n="year.title">Nortivos år så langt</a>
-        </div>
-      </div>
-    </section>
-    <section class="replay-services" id="offer" aria-labelledby="services-title">
-      <div>
-        <h2 id="services-title" data-i18n="replay.services">Dette lager vi</h2>
-        <a class="replay-tools-link" href="/nb/products/#simulation" data-i18n="replay.toolsLink">Prøv gebyrsimulatoren</a>
-      </div>
-      <ul>
-        <li><a href="/nb/services/#bot"><strong data-i18n="market.botService">Utvikling av handelsboter</strong><span data-i18n="replay.bot">Bygg og test handelsreglene dine.</span></a></li>
-        <li><a href="/nb/services/#crypto"><strong data-i18n="market.cryptoService">Kryptoautomasjon</strong><span data-i18n="replay.crypto">Sett opp ordreflyt og risikogrenser.</span></a></li>
-        <li><a href="/nb/services/#guide"><strong data-i18n="market.guideService">Investeringsguider</strong><span data-i18n="replay.guide">Forstå fond, gebyrer og risiko.</span></a></li>
-      </ul>
-    </section>
-  </main>
+    </section><section class="flight-ledger" aria-labelledby="flight-ledger-title" hidden><header><h2 id="flight-ledger-title" data-i18n="flight.report">Handelsrapport for 2026</h2><p data-i18n="flight.date">2. januar–17. november 2026</p></header><div class="flight-ledger-metric"><p data-i18n="flight.result">Rapportert handelsresultat</p><strong data-i18n="editorial.result">145 538 kr</strong></div><img src="/report-2026/equity-en.png" width="1160" height="435" alt=""></section></div></div></section>
+<section class="editorial-shell editorial-section editorial-services" id="offer" aria-labelledby="editorial-services-title"><div><h2 id="editorial-services-title" data-i18n="flight.services">Fra idé til et system du kan teste</h2><p class="flight-services-intro" data-i18n="flight.servicesText">Utforsk hvordan vi jobber med handelsregler, automatisering og investeringsopplæring.</p></div><ul><li><a href="/nb/services/#bot"><div><h3 data-i18n="editorial.bot">Handelsboter</h3><p data-i18n="editorial.botText">Gjør strategien om til regler for kjøp, posisjonsstørrelse og salg.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></a></li>
+<li><a href="/nb/services/#crypto"><div><h3 data-i18n="editorial.crypto">Automatisert kryptohandel</h3><p data-i18n="editorial.cryptoText">Planlegg ordrehåndtering, posisjonsgrenser og nødstopp.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></a></li>
+<li><a href="/nb/services/#guide"><div><h3 data-i18n="editorial.guide">Investeringsguider</h3><p data-i18n="editorial.guideText">Forstå fond, aksjer, gebyrer og risiko i et klart språk.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></a></li></ul></section>
+<section class="editorial-shell editorial-section home-resources" id="trading-resources" aria-labelledby="resource-title"><h2 id="resource-title" data-i18n="homeIndex.resourceTitle">Handelsverktøy og resultater</h2><div class="home-resources-grid"><article class="home-resource resource-demo"><a href="#replay"><div class="home-resource-copy"><h3 data-i18n="homeIndex.demoTitle">Følg en ordre</h3><p data-i18n="homeIndex.demoText">Følg kurskontrollen og posisjonsgrensen før en simulert ordre.</p><span class="home-resource-action" data-i18n="homeIndex.demoAction">Prøv demoen</span></div></a></article><article class="home-resource resource-report"><a href="/nb/report-2026/"><div class="home-resource-image"><img src="/report-2026/equity-en.png" alt="" decoding="async" loading="lazy"></div><div class="home-resource-copy"><h3 data-i18n="homeIndex.reportTitle">Handelsrapport for 2026</h3><p data-i18n="homeIndex.reportAmount">145 538 kr i rapportert handelsresultat</p><p class="home-resource-date" data-i18n="homeIndex.reportDate">2. januar–17. november 2026</p><p class="flight-report-source" data-i18n="flight.reportSource">Historiske resultater fra rapporten. Live handel er ikke uavhengig bekreftet.</p><span class="home-resource-action" data-i18n="homeIndex.reportAction">Les rapporten</span></div></a></article></div></section>
+<section class="editorial-shell editorial-section editorial-work" aria-labelledby="editorial-work-title"><div class="editorial-work-head"><h2 id="editorial-work-title" data-i18n="homeIndex.projectTitle">Utvalgte prosjekter</h2><a href="/nb/about/#year-review" class="editorial-text-link" data-i18n="editorial.year">Nortivos år så langt</a></div><div class="editorial-projects"><a class="editorial-project editorial-project-arc" href="/nb/arc/"><div class="editorial-project-media"><img src="/assets/arc-desktop.webp" alt="" decoding="async" width="1440" height="900"></div><div class="editorial-project-copy"><div><h3>Arc by Nortivo</h3><p data-i18n="editorial.arc">Budsjett, matlogging og skrittregistrering i privat test.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></div></a><a class="editorial-project" href="/nb/restaurant/"><div class="editorial-project-media"><img src="/assets/lune-table.webp" alt="" decoding="async" width="1536" height="1024"></div><div class="editorial-project-copy"><div><h3>Lune</h3><p data-i18n="editorial.lune">En fiktiv restaurantnettside med interaktiv meny og demo for bordbestilling.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></div></a></div></section>
+<section class="editorial-contact" aria-labelledby="editorial-contact-title"><div class="editorial-shell editorial-contact-inner"><div><h2 id="editorial-contact-title" data-i18n="editorial.next">Snakk med oss om prosjektet ditt</h2><p data-i18n="editorial.nextLead">Fortell oss hva du vil bygge eller lære mer om.</p></div><a class="editorial-button" href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a></div></section>
+</main>
   <footer class="site-footer market-footer">
   <div class="footer-shell">
     <div><a class="brand invest-brand" href="/nb/">Nortivo<span aria-hidden="true"></span></a><p data-i18n="market.footer">Investeringsguider og handelsprogramvare</p></div>
-    <nav class="footer-links" aria-label="Bunnmeny" data-i18n-aria="nav.footer">
-      <a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a>
-      <a href="/nb/support/" data-i18n="nav.support">Support</a>
-      <a href="/nb/reviews/" data-i18n="market.reviews">Kundeomtaler</a>
-      <a href="/nb/privacy/" data-i18n="market.privacy">Personvern</a>
-      <a href="/nb/studio/" data-i18n="invest.archive">Tidligere Nortivo</a>
-      <a href="/nb/admin/" data-i18n="studio.admin">Admin</a>
-    </nav>
+    <nav class="home-footer-nav" aria-label="Bunnmeny" data-i18n-aria="nav.footer"><div><h2 data-i18n="homeIndex.footerExplore">Utforsk</h2><a href="/nb/services/" data-i18n="nav.services">Tjenester</a><a href="/nb/products/" data-i18n="editorialMenu.tools">Handelsverktøy</a><a href="/nb/report-2026/" data-i18n="homeIndex.reportTitle">Handelsrapport for 2026</a></div><div><h2 data-i18n="homeIndex.footerHelp">Kontakt og support</h2><a href="/nb/contact/" data-i18n="nav.contact">Ta kontakt</a><a href="/nb/support/" data-i18n="nav.support">Support</a><a href="/nb/reviews/" data-i18n="market.reviews">Kundeomtaler</a></div><div><h2 data-i18n="homeIndex.footerCompany">Selskapet</h2><a href="/nb/about/#year-review" data-i18n="editorial.year">Nortivos år så langt</a><a href="/nb/privacy/" data-i18n="market.privacy">Personvern</a><a href="/nb/studio/" data-i18n="invest.archive">Tidligere Nortivo</a><a href="/nb/admin/" data-i18n="studio.admin">Admin</a></div></nav>
   </div>
   <div class="footer-bottom wrap">
     <span data-i18n="founder">Grunnlagt av Noah J.C. Sæter</span>

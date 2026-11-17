@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="nb_NO" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f4f0">
+  <meta name="theme-color" content="#1d211d">
 
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922">
@@ -25,10 +25,17 @@
 <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="/assets/decision-replay.css">
   <script defer src="/assets/decision-replay.js"></script>
+  <link rel="stylesheet" href="/assets/nortivo-editorial.css">
+<link rel="stylesheet" href="/assets/nortivo-chapters.css">
+<script defer src="/assets/nortivo-chapters.js"></script>
+<link rel="stylesheet" href="/assets/nortivo-stories.css">
+<script defer src="/assets/nortivo-menu.js"></script>
+<link rel="stylesheet" href="/assets/nortivo-layout.css">
+<link rel="stylesheet" href="/assets/nortivo-flight.css">
 </head>
-<body class="invest market replay-home" data-page="home">
+<body class="invest market replay-home editorial-home flight-home" data-page="home">
   <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
-  <header class="site-header market-header">
+  <header class="site-header market-header editorial-masthead">
   <div class="nav-shell">
     <span class="edition-location" data-i18n="market.deskLocation">Lillestrøm, Norway</span>
     <a class="brand invest-brand" href="/en/">Nortivo<span aria-hidden="true"></span></a>
@@ -40,6 +47,8 @@
       <a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
     </nav>
     <div class="header-tools">
+      <button type="button" class="editorial-menu-trigger" aria-haspopup="dialog" aria-controls="editorial-menu" hidden data-i18n="nav.menu">Menu</button>
+      <a class="editorial-header-contact" href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
       <div class="invest-languages" role="group" aria-label="Language" data-i18n-aria="footer.language">
         <button type="button" data-language="nb" aria-pressed="false" lang="nb">NO</button>
         <button type="button" data-language="en" aria-pressed="true" lang="en">EN</button>
@@ -57,19 +66,10 @@
     <a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
   </nav>
 </header>
+<dialog class="editorial-menu" id="editorial-menu" aria-labelledby="editorial-menu-title"><div class="editorial-menu-inner"><div class="editorial-menu-top"><a href="/en/" class="editorial-menu-wordmark">Nortivo</a><button type="button" class="editorial-menu-close" autofocus data-i18n="editorialMenu.close">Close</button></div><h2 id="editorial-menu-title" class="chapter-announcement" data-i18n="editorialMenu.title">Explore Nortivo</h2><div class="editorial-menu-body"><nav aria-label="Main navigation" data-i18n-aria="nav.label"><a href="/en/services/" data-i18n="nav.services">Services</a><a href="/en/products/" data-i18n="editorialMenu.tools">Trading tools</a><a href="/en/about/" data-i18n="nav.about">About Nortivo</a><a href="/en/support/" data-i18n="nav.support">Support</a><a href="/en/contact/" data-i18n="nav.contact">Get in touch</a></nav><div class="editorial-menu-teasers"><a class="editorial-menu-teaser" href="/en/report-2026/"><img src="/report-2026/equity-en.png" alt="" width="280" height="150" loading="lazy"><span data-i18n="chapter.report">2026 trading report</span></a><a class="editorial-menu-teaser" href="/en/about/#year-review"><img src="/assets/nortivo-facade-small.jpg" alt="" width="280" height="150" loading="lazy"><span data-i18n="editorial.year">Nortivo’s 2026 year in review</span></a></div></div></div></dialog>
 
-  <main class="replay-shell" id="main">
-    <section class="replay-intro" aria-labelledby="main-heading">
-      <h1 id="main-heading"><span data-i18n="replay.headlineStart">Every order</span> <span data-i18n="replay.headlineEnd">needs a reason.</span></h1>
-      <div>
-        <p data-i18n="replay.intro">Custom trading bots, crypto automation and investment guides from Nortivo.</p>
-        <div class="replay-intro-links">
-          <a href="/en/contact/" data-i18n="invest.contact">Discuss a project</a>
-          <a href="/en/about/#work" data-i18n="work.link">See what we’ve built</a>
-        </div>
-      </div>
-    </section>
-    <section class="replay-scene" id="replay" aria-labelledby="replay-title" data-checkpoint="3">
+  <main id="main">
+<section class="editorial-stage chapter-stage" data-current-chapter="strategy" aria-labelledby="editorial-title"><img class="editorial-backdrop chapter-photo" data-chapter-photo="strategy" data-active="true" src="/assets/decision-replay-ribbon.jpg" alt="" fetchpriority="high"><img class="editorial-backdrop chapter-photo chapter-photo-replay" data-chapter-photo="replay" src="/assets/nortivo-facade.jpg" alt="" decoding="async"><img class="editorial-backdrop chapter-photo chapter-photo-report" data-chapter-photo="report" src="/assets/nortivo-facade.jpg" alt="" decoding="async"><div class="editorial-shell editorial-stage-grid"><div class="editorial-stage-copy" id="editorial-story"><h1 id="editorial-title" data-i18n="editorial.heading">Built around the rule.</h1><p data-i18n="editorial.lead">Custom trading bots, crypto automation and investment guides. See how a strategy makes a decision before you build it.</p><a href="#offer" class="editorial-button" data-i18n="editorial.explore">Explore our services</a><p class="editorial-source chapter-disclosure" data-i18n="chapter.reportNote" hidden>Live trading has not been independently verified.</p></div><div class="flight-instrument"><div class="chapter-index home-chapters"><div class="chapter-controls" role="group" aria-label="Explore Nortivo" data-i18n-aria="chapter.choices" hidden><button type="button" class="chapter-button" data-chapter="strategy" aria-pressed="true" aria-controls="editorial-story" data-i18n="homeIndex.strategy">Overview</button><button type="button" class="chapter-button" data-chapter="replay" aria-pressed="false" aria-controls="editorial-story" data-i18n="homeIndex.demo">Order demo</button><button type="button" class="chapter-button" data-chapter="report" aria-pressed="false" aria-controls="editorial-story" data-i18n="homeIndex.report">Report</button></div><p class="chapter-announcement" role="status"></p></div><section class="replay-scene flight-console" id="replay" aria-labelledby="replay-title" data-checkpoint="3">
       <div class="replay-studio">
         <img class="replay-artwork" src="/assets/decision-replay-ribbon.jpg" alt="" width="1962" height="801" fetchpriority="high">
         <span class="replay-scrim" aria-hidden="true"></span>
@@ -102,40 +102,18 @@
         <strong role="status" aria-atomic="true" id="replay-result" data-i18n="replay.result.allowed">Simulated order allowed. Both checks passed.</strong>
         <span data-i18n="replay.note">This example simulates an order using fictional prices and positions.</span>
       </div>
-    </section>
-    <section class="replay-report" aria-labelledby="replay-report-title">
-      <h2 id="replay-report-title" data-i18n="backtest.title">2026 SPY backtest</h2>
-      <div>
-        <p data-i18n="backtest.homeSummary">Our SPY backtest returned +2.37% from January 2 to November 13, 2026, with a maximum drawdown of −3.88%. The simulation sets orders after the close and fills them at the next session’s open.</p>
-        <div class="replay-report-links">
-          <a class="replay-tools-link" href="/en/products/#backtest" data-i18n="backtest.link">Read the results and methods</a>
-          <a class="replay-tools-link" href="/en/about/#year-review" data-i18n="year.title">2026 year in review</a>
-        </div>
-      </div>
-    </section>
-    <section class="replay-services" id="offer" aria-labelledby="services-title">
-      <div>
-        <h2 id="services-title" data-i18n="replay.services">What we build</h2>
-        <a class="replay-tools-link" href="/en/products/#simulation" data-i18n="replay.toolsLink">Try the fee simulator</a>
-      </div>
-      <ul>
-        <li><a href="/en/services/#bot"><strong data-i18n="market.botService">Trading bot development</strong><span data-i18n="replay.bot">Build and test your strategy rules.</span></a></li>
-        <li><a href="/en/services/#crypto"><strong data-i18n="market.cryptoService">Crypto automation</strong><span data-i18n="replay.crypto">Design order handling and safeguards.</span></a></li>
-        <li><a href="/en/services/#guide"><strong data-i18n="market.guideService">Investment guides</strong><span data-i18n="replay.guide">Understand funds, fees and risk.</span></a></li>
-      </ul>
-    </section>
-  </main>
+    </section><section class="flight-ledger" aria-labelledby="flight-ledger-title" hidden><header><h2 id="flight-ledger-title" data-i18n="flight.report">2026 trading report</h2><p data-i18n="flight.date">January 2–November 17, 2026</p></header><div class="flight-ledger-metric"><p data-i18n="flight.result">Reported trading profit</p><strong data-i18n="editorial.result">NOK 145,538</strong></div><img src="/report-2026/equity-en.png" width="1160" height="435" alt=""></section></div></div></section>
+<section class="editorial-shell editorial-section editorial-services" id="offer" aria-labelledby="editorial-services-title"><div><h2 id="editorial-services-title" data-i18n="flight.services">From idea to a system you can test</h2><p class="flight-services-intro" data-i18n="flight.servicesText">Explore how we work with trading rules, automation and investment education.</p></div><ul><li><a href="/en/services/#bot"><div><h3 data-i18n="editorial.bot">Trading bots</h3><p data-i18n="editorial.botText">Turn your strategy into explicit rules for entering, sizing and exiting positions.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></a></li>
+<li><a href="/en/services/#crypto"><div><h3 data-i18n="editorial.crypto">Crypto automation</h3><p data-i18n="editorial.cryptoText">Design order handling, position limits and emergency stops.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></a></li>
+<li><a href="/en/services/#guide"><div><h3 data-i18n="editorial.guide">Investment guides</h3><p data-i18n="editorial.guideText">Understand funds, stocks, fees and risk in plain language.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></a></li></ul></section>
+<section class="editorial-shell editorial-section home-resources" id="trading-resources" aria-labelledby="resource-title"><h2 id="resource-title" data-i18n="homeIndex.resourceTitle">Trading tools and results</h2><div class="home-resources-grid"><article class="home-resource resource-demo"><a href="#replay"><div class="home-resource-copy"><h3 data-i18n="homeIndex.demoTitle">Decision Replay</h3><p data-i18n="homeIndex.demoText">Follow a price check and position limit before a simulated order.</p><span class="home-resource-action" data-i18n="homeIndex.demoAction">Try the demo</span></div></a></article><article class="home-resource resource-report"><a href="/en/report-2026/"><div class="home-resource-image"><img src="/report-2026/equity-en.png" alt="" decoding="async" loading="lazy"></div><div class="home-resource-copy"><h3 data-i18n="homeIndex.reportTitle">2026 trading report</h3><p data-i18n="homeIndex.reportAmount">NOK 145,538 reported trading profit</p><p class="home-resource-date" data-i18n="homeIndex.reportDate">January 2–November 17, 2026</p><p class="flight-report-source" data-i18n="flight.reportSource">Historical results from the report. Live trading has not been independently verified.</p><span class="home-resource-action" data-i18n="homeIndex.reportAction">Read the report</span></div></a></article></div></section>
+<section class="editorial-shell editorial-section editorial-work" aria-labelledby="editorial-work-title"><div class="editorial-work-head"><h2 id="editorial-work-title" data-i18n="homeIndex.projectTitle">Selected work</h2><a href="/en/about/#year-review" class="editorial-text-link" data-i18n="editorial.year">Nortivo’s 2026 year in review</a></div><div class="editorial-projects"><a class="editorial-project editorial-project-arc" href="/en/arc/"><div class="editorial-project-media"><img src="/assets/arc-desktop.webp" alt="" decoding="async" width="1440" height="900"></div><div class="editorial-project-copy"><div><h3>Arc by Nortivo</h3><p data-i18n="editorial.arc">Budgeting, food logging and step tracking in private testing.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></div></a><a class="editorial-project" href="/en/restaurant/"><div class="editorial-project-media"><img src="/assets/lune-table.webp" alt="" decoding="async" width="1536" height="1024"></div><div class="editorial-project-copy"><div><h3>Lune</h3><p data-i18n="editorial.lune">A fictional restaurant site with an interactive menu and booking demo.</p></div><span aria-hidden="true" class="editorial-arrow">↗</span></div></a></div></section>
+<section class="editorial-contact" aria-labelledby="editorial-contact-title"><div class="editorial-shell editorial-contact-inner"><div><h2 id="editorial-contact-title" data-i18n="editorial.next">Discuss your project</h2><p data-i18n="editorial.nextLead">Tell us what you want to build or understand.</p></div><a class="editorial-button" href="/en/contact/" data-i18n="nav.contact">Get in touch</a></div></section>
+</main>
   <footer class="site-footer market-footer">
   <div class="footer-shell">
     <div><a class="brand invest-brand" href="/en/">Nortivo<span aria-hidden="true"></span></a><p data-i18n="market.footer">Investment guides and trading software</p></div>
-    <nav class="footer-links" aria-label="Footer navigation" data-i18n-aria="nav.footer">
-      <a href="/en/contact/" data-i18n="nav.contact">Get in touch</a>
-      <a href="/en/support/" data-i18n="nav.support">Support</a>
-      <a href="/en/reviews/" data-i18n="market.reviews">Customer reviews</a>
-      <a href="/en/privacy/" data-i18n="market.privacy">Privacy</a>
-      <a href="/en/studio/" data-i18n="invest.archive">Nortivo archive</a>
-      <a href="/en/admin/" data-i18n="studio.admin">Admin</a>
-    </nav>
+    <nav class="home-footer-nav" aria-label="Footer navigation" data-i18n-aria="nav.footer"><div><h2 data-i18n="homeIndex.footerExplore">Explore</h2><a href="/en/services/" data-i18n="nav.services">Services</a><a href="/en/products/" data-i18n="editorialMenu.tools">Trading tools</a><a href="/en/report-2026/" data-i18n="homeIndex.reportTitle">2026 trading report</a></div><div><h2 data-i18n="homeIndex.footerHelp">Contact and support</h2><a href="/en/contact/" data-i18n="nav.contact">Get in touch</a><a href="/en/support/" data-i18n="nav.support">Support</a><a href="/en/reviews/" data-i18n="market.reviews">Customer reviews</a></div><div><h2 data-i18n="homeIndex.footerCompany">Company</h2><a href="/en/about/#year-review" data-i18n="editorial.year">Nortivo’s 2026 year in review</a><a href="/en/privacy/" data-i18n="market.privacy">Privacy</a><a href="/en/studio/" data-i18n="invest.archive">Nortivo archive</a><a href="/en/admin/" data-i18n="studio.admin">Admin</a></div></nav>
   </div>
   <div class="footer-bottom wrap">
     <span data-i18n="founder">Founded by Noah J.C. Sæter</span>
