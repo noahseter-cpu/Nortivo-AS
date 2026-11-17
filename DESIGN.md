@@ -193,7 +193,7 @@ The footer wordmark uses Manrope Bold at clamp(2rem,14.5vw,15rem) with -.04em tr
 
 The desktop public content container reaches 1440px with 56px side gutters. The header and footer wordmark reach 1560px with 48px gutters. At 1100px the primary content gutters become 32px. At 600px they become 20px, while the header uses 18px.
 
-The desktop header has a 90px minimum height. At 880px it becomes 76px and exchanges desktop links for a menu button. On the homepage the header is fixed over the hero. An IntersectionObserver changes its surface to nearly opaque obsidian once the hero leaves the header region. In-page sections account for it with a 90px scroll margin.
+The desktop header has a 90px minimum height. At 880px it becomes 76px and exchanges desktop links for a menu button. On the homepage the header is fixed over the hero and defaults to an opaque near-black surface. Enhancement permits transparency only at the top of the page with the mobile menu closed. More than eight pixels of scrolling immediately restores the fully opaque surface, including deep links and browser-history restoration. Background changes do not fade, preventing content from briefly showing through the navigation. In-page sections account for it with a 90px scroll margin.
 
 The retained cinematic layout vocabulary follows the content. Its original introduction uses a 1.45-to-1 split. Service rows align a heading, description and directional icon. Project previews alternate image and copy with a 1.7-to-1 relationship on desktop. The five-stage process uses five columns, then three at 880px, then a vertical sequence at 600px.
 

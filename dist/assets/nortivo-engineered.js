@@ -1,9 +1,15 @@
 (() => {
   const header = document.querySelector('.nt-header');
   const hero = document.querySelector('.nt-hero');
-  if (!header || !hero || !('IntersectionObserver' in window)) return;
-  const observer = new IntersectionObserver(entries => {
-    header.dataset.solid = String(!entries[0].isIntersecting);
-  }, { rootMargin: '-120px 0px 0px 0px', threshold: 0 });
-  observer.observe(hero);
+  if (!header || !hero) return;
+
+  function syncSurface() {
+    const solid = String(window.scrollY > 8);
+    if (header.dataset.solid !== solid) header.dataset.solid = solid;
+  }
+
+  // Restore the correct surface on deep links and browser-history returns too.
+  syncSurface();
+  window.addEventListener('scroll', syncSurface, { passive: true });
+  window.addEventListener('pageshow', syncSurface);
 })();

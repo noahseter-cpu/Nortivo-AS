@@ -49,7 +49,8 @@ body.nt-site {
 .nt-site:not(.nt-home) .systems-service h2 { font: 700 clamp(1.7rem, 3.5vw, 3rem)/1.12 Manrope, sans-serif; letter-spacing: -.035em; }
 .nt-site:not(.nt-home) .systems-service p { font-size: 1rem; line-height: 1.75; }
 .nt-site .nt-header { background: var(--ink); border-color: var(--line); }
-.nt-home .nt-header { background: transparent; transition: background-color 240ms ease, border-color 240ms ease; }
+.nt-home .nt-header { background: var(--ink); transition: border-color 160ms ease; }
+.nt-home .nt-header[data-solid="false"]:not([data-menu-open="true"]) { background: transparent; }
 .nt-home .nt-header[data-solid="true"], .nt-site .nt-header[data-menu-open="true"] { background: var(--ink); }
 .nt-header .desktop-nav { gap: clamp(18px, 2.1vw, 32px); }
 .nt-header .desktop-nav a { position: relative; letter-spacing: .01em; font-size: .78rem; }
