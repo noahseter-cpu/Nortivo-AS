@@ -2,6 +2,8 @@
 
 The public Nortivo website, separate from the Arc application. Static HTML/CSS/JavaScript, Netlify Functions, Supabase ticket storage and Resend email. No frontend framework or package install is required.
 
+Current release: [Nortivo Trading Platform](docs/TRADING_PLATFORM_RELEASE.md), published on 17 November 2026 with a real homepage showcase and a server-backed bilingual paper workspace. The terminal has separate private Supabase storage; external providers and real-money brokerage remain disabled. The release record distinguishes local, hosted preview and production verification.
+
 ## Local development
 
 Use Node.js 20 or newer:

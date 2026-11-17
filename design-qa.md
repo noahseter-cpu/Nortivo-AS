@@ -39,4 +39,6 @@ Homepage desktop/mobile navigation, localized report cross-link, actual preview 
 
 External quotes/news/calendar require credentials and documented display entitlements. AI summaries and real brokerage are unavailable. Hosted account creation defaults off pending the documented owner-controlled activation/verification boundary. Hosted release checks are recorded separately from this local visual acceptance.
 
+Production follow-through: the actual Netlify preview and production domain passed the hosted isolation, security, concurrent state, next-bar fill, ledger and export checks. The published Norwegian interface was opened in the browser with no console warnings/errors. See `docs/TRADING_PLATFORM_RELEASE.md`; the final production screenshot is `.impeccable/review/terminal/published-terminal-nb.jpg`.
+
 final result: passed
