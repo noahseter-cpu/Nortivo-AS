@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "checkedFiles": 227,
+  "textFilesChecked": 198,
+  "findings": [],
+  "scope": "Publish-tree filenames, directories, links and selected credential markers in text assets. Binary contents, marker-free credentials and hosted policies require separate review."
+}

@@ -261,7 +261,13 @@ test('founder biography uses supplied career facts, links to the supplied profil
     assert.match(siteCopy[lang]['bio.kindergarten.role'], /Framtia Barnehage/);
     assert.match(siteCopy[lang]['bio.school.role'], /Drømtorp/);
   }
-  for (const source of sources.values()) assert.match(source, /favicon\.svg\?v=nortivo-20260922/);
+  const approvedSymbol = readFileSync(path.join(dist, 'assets/brand/nortivo-approved.png'));
+  for (const [file, source] of sources) {
+    const icon = tags(source, 'link').find(tag => tag.attrs.rel === 'icon');
+    assert.equal(icon?.attrs.type, 'image/png', file);
+    assert.match(icon.attrs.href, /^\/(?:favicon|assets\/brand\/nortivo-approved)\.png$/, file);
+    assert.deepEqual(readFileSync(path.join(dist, icon.attrs.href)), approvedSymbol, file);
+  }
   assert.doesNotMatch(home, /class="founder-strip"|class="feature-links"/);
   assert.match(read('assets/site.css'), /prefers-reduced-motion:no-preference/);
 });

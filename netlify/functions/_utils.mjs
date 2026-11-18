@@ -1,9 +1,12 @@
 import crypto from 'node:crypto';
+import { parseBody as parseWorkspaceBody } from '../terminal/security.mjs';
+import { securityHeaders } from '../../services/security-core/src/headers.mjs';
 
 export function json(statusCode, body, extraHeaders = {}) {
   return {
     statusCode,
     headers: {
+      ...securityHeaders({ https: process.env.NETLIFY_DEV !== 'true' }),
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
       'X-Content-Type-Options': 'nosniff',
@@ -15,13 +18,9 @@ export function json(statusCode, body, extraHeaders = {}) {
 }
 
 export function parseBody(event) {
-  try {
-    if (typeof event.body !== 'string' || Buffer.byteLength(event.body) > 20000 || event.isBase64Encoded) throw new Error();
-    const body = JSON.parse(event.body);
-    if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error();
-    return body;
-  }
-  catch { throw new Error('Invalid request.'); }
+  // Existing ticket clients handle malformed and oversized requests as BAD_REQUEST.
+  try { return parseWorkspaceBody(event, 20_000); }
+  catch (error) { if (error.status === 413) error.status = 400; throw error; }
 }
 
 export function clean(value, max = 4000) {
@@ -39,7 +38,10 @@ function requiredEnv(name) {
 }
 
 export async function supabase(path, options = {}) {
-  const base = requiredEnv('SUPABASE_URL').replace(/\/$/, '');
+  const configured = new URL(requiredEnv('SUPABASE_URL'));
+  if (configured.protocol !== 'https:' || configured.username || configured.password || configured.pathname !== '/' || configured.search || configured.hash) throw new Error('Support storage is not configured correctly.');
+  const base = configured.origin;
+  if (typeof path !== 'string' || path.startsWith('/') || path.includes('\\') || path.includes('#') || /^[a-z]+:/i.test(path)) throw new Error('Invalid storage operation.');
   const key = requiredEnv('SUPABASE_SERVICE_ROLE_KEY');
   const authHeaders = key.startsWith('sb_secret_')
     ? { apikey: key }
@@ -50,10 +52,12 @@ export async function supabase(path, options = {}) {
       ...authHeaders,
       'Content-Type': 'application/json',
       ...options.headers,
+      ...authHeaders,
     },
+    redirect: 'error',
+    signal: AbortSignal.timeout(10000),
   });
-  const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+  const data = await boundedJson(response);
   if (!response.ok) {
     console.error('Supabase request failed', response.status);
     throw new Error('The ticket database is temporarily unavailable.');
@@ -68,18 +72,34 @@ export async function sendEmail({ to, subject, html, text }) {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ from, to: [to], subject, html, text }),
+    redirect: 'error',
+    signal: AbortSignal.timeout(10000),
   });
   if (!response.ok) {
     console.error('Email delivery failed', response.status);
     throw new Error('The email could not be sent.');
   }
-  return response.json();
+  return boundedJson(response);
 }
 
-function cookieValue(event, name) {
-  const header = event.headers?.cookie || event.headers?.Cookie || '';
-  const item = header.split(';').map(v => v.trim()).find(v => v.startsWith(`${name}=`));
-  return item ? decodeURIComponent(item.slice(name.length + 1)) : '';
+async function boundedJson(response) {
+  const maxBytes = 2_000_000;
+  if (Number(response.headers?.get?.('content-length')) > maxBytes) throw new Error('The service response exceeded its limit.');
+  let text;
+  if (response.body) {
+    const chunks = []; let bytes = 0;
+    for await (const chunk of response.body) {
+      bytes += chunk.byteLength;
+      if (bytes > maxBytes) { throw new Error('The service response exceeded its limit.'); }
+      chunks.push(chunk);
+    }
+    text = Buffer.concat(chunks).toString('utf8');
+  } else {
+    // Empty real responses, and bounded synthetic response objects in unit tests.
+    text = await response.text();
+    if (Buffer.byteLength(text) > maxBytes) throw new Error('The service response exceeded its limit.');
+  }
+  return text ? JSON.parse(text) : null;
 }
 
 function sign(value) {
@@ -92,23 +112,9 @@ export function createAdminSession() {
 }
 
 export function isAdmin(event) {
-  try {
-    const token = cookieValue(event, 'nortivo_admin');
-    const [payload, signature] = token.split('.');
-    if (!payload || !signature) return false;
-    const expected = sign(payload);
-    const valid = signature.length === expected.length && crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
-    if (!valid) return false;
-    const session = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-    return Number(session.exp) > Date.now();
-  } catch { return false; }
-}
-
-export function passwordMatches(candidate) {
-  const expected = requiredEnv('ADMIN_PASSWORD');
-  const a = Buffer.from(String(candidate || ''));
-  const b = Buffer.from(expected);
-  return a.length === b.length && crypto.timingSafeEqual(a, b);
+  // Retired compatibility API. An old exp-only bearer cookie never authorizes access.
+  // Active endpoints use the asynchronous, database-backed Security Core authorizer.
+  return false;
 }
 
 export function ticketNumber() {

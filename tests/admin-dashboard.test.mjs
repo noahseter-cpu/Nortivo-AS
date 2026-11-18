@@ -1,7 +1,10 @@
 import test, {beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
-import {createHandler} from '../netlify/functions/admin-tickets.mjs';
-import {createAdminSession} from '../netlify/functions/_utils.mjs';
+import {createHandler as createTicketsHandler} from '../netlify/functions/admin-tickets.mjs';
+import {createCoreAdminFixture} from './helpers/core-admin.mjs';
+const fixture = await createCoreAdminFixture();
+test.after(() => fixture.close());
+const createHandler = options => createTicketsHandler({...options, authorizeAdmin: fixture.authorizeAdmin});
 
 // Isolated fixture process only; no real account, database or provider is used.
 process.env.ADMIN_SESSION_SECRET='synthetic-admin-dashboard-session-secret-long-enough';
@@ -11,7 +14,7 @@ delete process.env.DEPLOY_URL;
 delete process.env.NETLIFY_DEV;
 const NOW=Date.parse('2026-11-18T19:00:00Z');
 const body=result=>JSON.parse(result.body);
-const event=(params={},extra={})=>({httpMethod:'GET',rawUrl:'https://nortivo.no/.netlify/functions/admin-tickets',queryStringParameters:params,headers:{origin:'https://nortivo.no',cookie:`nortivo_admin=${createAdminSession()}`},...extra});
+const event=(params={},extra={})=>({httpMethod:'GET',rawUrl:'https://nortivo.no/.netlify/functions/admin-tickets',queryStringParameters:params,headers:{origin:'https://nortivo.no','content-type':'application/json',...fixture.headers()},...extra});
 beforeEach(t=>{t.mock.method(globalThis,'fetch',async()=>{throw Error('External requests are forbidden in admin dashboard fixtures.');});t.mock.method(console,'error',()=>{});});
 
 test('ticket pages retain the tickets shape, use a stable order and consume only one 201-row probe',async()=>{

@@ -13,11 +13,12 @@ async function fixture(t,{admin=false,paid=true}={}){
  await store.product.transact([{ns:'accounts',key:USER,ownerId:USER,expectedVersion:null,value:{emailVerified:true,locale:'nb',billing:paid?{tier:'pro',status:'active',paidUntil:NOW+86400000}:{status:'none',paidUntil:null}}}]);
  const raw=crypto.randomBytes(32).toString('base64url'),hash=sha256(raw);
  await store.createSession({token_hash:hash,user_id:USER,created_at:NOW,expires_at:NOW+86400000});
- await store.product.transact([{ns:'mfa_sessions',key:hash,ownerId:USER,expectedVersion:null,value:{scope:'broker',validUntil:NOW+600000}}]);
+ await store.product.transact([{ns:'mfa',key:USER,ownerId:USER,expectedVersion:null,value:{enabled:true}},{ns:'mfa_sessions',key:hash,ownerId:USER,expectedVersion:null,value:{scope:admin?'security':'broker',verifiedAt:NOW,validUntil:NOW+600000}}]);
  const env={PRODUCT_ENABLED:'true',PRODUCT_TEST_MODE:'true',TERMINAL_ORIGIN:ORIGIN,TERMINAL_SESSION_SECRET:'a-fixture-session-secret-with-thirty-two-characters',PRODUCT_ADMIN_USER_IDS:admin?USER:'',ALPACA_OAUTH_CLIENT_ID:'fixture-client',ALPACA_OAUTH_CLIENT_SECRET:'fixture-server-only',ALPACA_OAUTH_REDIRECT_URI:`${ORIGIN}/.netlify/functions/terminal?action=product-broker-callback`,PRODUCT_ALPACA_PAPER_COMMERCIAL_APPROVAL:'true',PRODUCT_ALPACA_APPROVAL_REFERENCE:'fixture-approved-reference',PRODUCT_BROKER_TOKEN_KEY:Buffer.alloc(32,42).toString('base64')};
  let calls=0;
  const fetcher=async url=>{calls++;return new Response(JSON.stringify(url.includes('/oauth/token')?{access_token:'fixture-broker-token',token_type:'bearer',scope:'trading'}:{id:'account-fixture-01',status:'ACTIVE',account_number:'FAKE000001',currency:'USD'}),{status:200});};
- const handler=createTerminalHandler({store,env,now:()=>NOW,fetcher});
+ let handler=createTerminalHandler({store,env,now:()=>NOW,fetcher});
+ const reload=()=>{handler=createTerminalHandler({store,env,now:()=>NOW,fetcher});};
  async function request(action,body,{headers={},params={}}={}){const query=new URLSearchParams({action,...params});return handler({httpMethod:body===undefined?'GET':'POST',rawUrl:`${ORIGIN}/.netlify/functions/terminal?${query}`,queryStringParameters:Object.fromEntries(query),headers:{origin:ORIGIN,'content-type':'application/json',cookie:`nortivo_terminal=${raw}`,'x-csrf-token':csrfToken(raw,env.TERMINAL_SESSION_SECRET),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})});}
  async function begin({operator=false}={}){
   const result=operator?await request('product-health-probe',{requestId:crypto.randomUUID(),services:['broker_oauth_paper']}):await request('product-broker-connect',{requestId:crypto.randomUUID(),mode:'paper'});
@@ -26,7 +27,7 @@ async function fixture(t,{admin=false,paid=true}={}){
   return {state:new URL(url).searchParams.get('state'),cookie:setCookie.split(';')[0],setCookie};
  }
  const callback=(start,headers={})=>request('product-broker-callback',undefined,{params:{state:start.state,code:'fixture-oauth-code'},headers:{origin:'',referer:'https://app.alpaca.markets/','sec-fetch-site':'cross-site',cookie:start.cookie,...headers}});
- return {store,env,request,begin,callback,hash,get calls(){return calls;}};
+ return {store,env,request,begin,callback,reload,hash,get calls(){return calls;}};
 }
 
 test('main OAuth flow attaches browser-bound Lax cookie and returns clearing 303 without the Strict session cookie',async t=>{
@@ -51,5 +52,20 @@ test('owner bootstrap probe preserves the cookie hook without granting a subscri
 });
 
 test('operator bootstrap callback rechecks server-managed administrator status',async t=>{
- const f=await fixture(t,{admin:true,paid:false}),start=await f.begin({operator:true});f.env.PRODUCT_ADMIN_USER_IDS='';const result=await f.callback(start);assert.ok(result.statusCode>=400);assert.equal(f.calls,0);
+ const f=await fixture(t,{admin:true,paid:false}),start=await f.begin({operator:true});f.env.PRODUCT_ADMIN_USER_IDS='';f.reload();const result=await f.callback(start);assert.ok(result.statusCode>=400);assert.equal(f.calls,0);
+});
+
+
+test('broker return rechecks disabled accounts and current MFA enrollment for both flows', async t => {
+ for (const admin of [false,true]) for (const changed of ['account','mfa']) {
+  await t.test((admin?'operator':'customer')+' '+changed, async subtest => {
+   const f=await fixture(subtest,{admin}), start=await f.begin({operator:admin});
+   const ns=changed==='mfa'?'mfa':'accounts', row=await f.store.product.get(ns,USER);
+   await f.store.product.transact([{ns,key:USER,ownerId:USER,expectedVersion:row.version,
+    value:{...row.value,...(changed==='mfa'?{enabled:false}:{disabled:true})}}]);
+   const result=await f.callback(start);
+   assert.equal(result.statusCode,403);
+   assert.equal(f.calls,0);
+  });
+ }
 });

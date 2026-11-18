@@ -6,10 +6,11 @@
 <meta name="theme-color" content="#08090b">
 <meta name="robots" content="noindex, nofollow" />
     <title>Support Workspace — Nortivo</title>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922" />
+<link rel="icon" type="image/png" href="/favicon.png" />
 <link rel="stylesheet" href="/assets/site.css" />
 <link rel="stylesheet" href="/assets/portal-v2.css" />
 <link rel="stylesheet" href="/assets/admin-workspace.css" />
+<link rel="stylesheet" href="/assets/workflows.css" />
 <script src="/assets/site.js" defer>
 </script>
 <script type="module" src="/assets/admin.js" defer>
@@ -31,10 +32,21 @@
           <p class="portal-lead" data-i18n="admin.lead">Sign in to manage customer support and view service configuration.</p>
           <form id="login-form" method="post" novalidate>
             <div class="field">
-              <label for="password" data-i18n="admin.password">Admin password</label>
+              <label for="admin-email" data-i18n="admin.email">Account email</label>
+              <input id="admin-email" name="email" type="email" autocomplete="username" maxlength="160" aria-describedby="admin-email-error admin-security-help" required />
+              <span class="field-error" id="admin-email-error" hidden></span>
+            </div>
+            <div class="field">
+              <label for="password" data-i18n="admin.password">Account password</label>
               <div class="admin-password"><input id="password" name="password" type="password" autocomplete="current-password" aria-describedby="password-error" required /><button id="password-visibility" type="button" aria-pressed="false" data-i18n="admin.showPassword">Show</button></div>
               <span class="field-error" id="password-error" hidden></span>
             </div>
+            <div class="field">
+              <label for="admin-security-code" data-i18n="admin.securityCode">Authenticator or recovery code</label>
+              <input id="admin-security-code" name="securityCode" type="password" autocomplete="one-time-code" maxlength="64" autocapitalize="none" spellcheck="false" aria-describedby="admin-code-error admin-security-help" required />
+              <span class="field-error" id="admin-code-error" hidden></span>
+            </div>
+            <p id="admin-security-help" class="panel-intro" data-i18n="admin.securityHelp">Use your own Nortivo account with verified email and MFA already enabled in the trading platform’s account security settings. Administrator access must be assigned separately.</p>
             <div class="form-actions"><button class="button" type="submit" data-i18n="admin.signIn">Sign in</button></div>
             <p class="message" id="login-message" role="status" aria-live="polite" aria-atomic="true"></p>
           </form>
@@ -47,6 +59,8 @@
         </header>
         <nav class="workspace-choices" aria-label="Workspace" data-i18n-aria="admin.workspaceChoice">
           <button type="button" id="overview-choice" aria-pressed="true" aria-controls="overview-panel" data-i18n="admin.overview">Overview</button>
+          <button type="button" id="workflow-choice" aria-pressed="false" aria-controls="workflow-panel">Conversations &amp; projects</button>
+          <button type="button" id="korvnt-choice" aria-pressed="false" aria-controls="korvnt-panel">KORVNT enquiries</button>
           <button type="button" id="inbox-choice" aria-pressed="false" aria-controls="inbox-panel" data-i18n="admin.inbox">Inbox</button>
           <button type="button" id="operations-choice" aria-pressed="false" aria-controls="operations-panel" data-i18n="admin.operations">Operations</button>
         </nav>
@@ -81,6 +95,12 @@
             </div>
             <div class="ticket-detail" id="ticket-detail" aria-busy="false"><div class="empty"><p data-i18n="admin.selectTicket">Select a ticket to read and answer it.</p></div></div>
           </section>
+        </section>
+        <section id="workflow-panel" aria-labelledby="workflow-title" hidden>
+          <h2 id="workflow-title" tabindex="-1">Conversations &amp; projects</h2><div id="workflow-app"></div>
+        </section>
+        <section id="korvnt-panel" aria-labelledby="korvnt-title" hidden>
+          <h2 id="korvnt-title" tabindex="-1">KORVNT enquiries</h2><div id="korvnt-app"></div>
         </section>
         <section id="operations-panel" aria-labelledby="operations-title" hidden>
           <div class="admin-section-head"><div><h2 id="operations-title" tabindex="-1" data-i18n="admin.operations">Operations</h2><p data-i18n="admin.operationsIntro">Service configuration and direct access to your operating tools.</p></div></div>

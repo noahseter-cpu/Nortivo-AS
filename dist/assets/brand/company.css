@@ -1,0 +1,20 @@
+/* The approved Nortivo artwork stays separate from the KORVNT emblem. */
+.nt-site .brand:has(.company-symbol),.nt-site .report-home:has(.company-symbol){display:inline-flex;align-items:center;gap:5px}
+.nt-site .brand:has(.company-symbol)::before,.nt-site .brand:has(.company-symbol)::after,.nt-site .invest-brand:has(.company-symbol)>span[aria-hidden]{display:none}
+.company-symbol{width:38px;height:38px;flex:none;object-fit:contain;mix-blend-mode:lighten}
+.nt-site .site-footer .brand .company-symbol,.nt-site .report-home .company-symbol{width:32px;height:32px}
+.nt-site .company-security-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.55fr);gap:clamp(24px,6vw,104px);align-items:start;border-top:1px solid #3c403c;padding-block:clamp(40px,5.8vw,82px)}
+.nt-site .company-security-intro h2{font:600 clamp(1.8rem,3.5vw,3.7rem)/1 "Barlow Condensed",Manrope,sans-serif;text-transform:uppercase;letter-spacing:0;margin:0 0 7px}
+.nt-site .company-security-intro p{max-width:65ch;font:400 1rem/1.58 Manrope,sans-serif;color:#b9bdb7;margin:0}
+.nt-site .company-security-intro .company-status{display:inline-block;font-size:.8rem;color:#ccc6b5}
+.nt-site .company-security-intro a,.nt-site .company-invest-support a{display:inline-flex;align-items:center;min-height:44px;margin-top:6px;text-underline-offset:5px}
+.nt-site .company-devbadge{display:inline-flex;align-items:center;justify-content:flex-start;gap:5px;min-height:44px;margin-left:auto;color:#d4d6cc;font:400 .77rem/1.45 Manrope,sans-serif;letter-spacing:0;text-transform:none;text-decoration:none}
+.company-devbadge img{width:18px;height:21px;margin-right:3px}
+.nt-site .company-devbadge:hover{text-decoration:underline;text-underline-offset:4px}
+.nt-site .footer-bottom:has(.company-devbadge){display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nt-site .report-close .company-symbol{width:24px;height:24px;margin-right:4px;vertical-align:middle}
+.nt-site .report-close .company-devbadge{width:auto}
+.nt-site .company-invest-support{border-block:1px solid #424740;padding-block:24px;margin-bottom:30px}
+.nt-site .company-invest-support h2{margin:0 0 8px;font-size:clamp(1.5rem,2.3vw,2.2rem)}
+@media(min-width:881px) and (max-width:1160px){.nt-site .nt-header .desktop-nav{display:none}.nt-site .nt-header .menu-toggle{display:inline-flex}}
+@media(max-width:700px){.company-symbol{width:32px;height:32px}.nt-site .company-security-intro{grid-template-columns:1fr;gap:14px}.nt-site .footer-bottom:has(.company-devbadge){align-items:flex-start;flex-direction:column;gap:1px}.nt-site .company-devbadge{margin-left:0}.nt-site .nt-header .brand:has(.company-symbol){gap:4px}}

@@ -364,3 +364,15 @@ Preserve all existing workspaces, product switching, account entry, read-only sa
 - Don't turn the prescribed hero eyebrow into a default for unrelated sections.
 - Don't present reported historical results or simulated examples as audited, live or guaranteed outcomes.
 - Don't apply public cinematic motion to authentication or support tasks.
+
+## Selected public surfaces — 19 November 2026
+
+The owner's selected Invest, KORVNT and specification images in `design-references/approved-master-20261118/` govern these surfaces. This is a scoped public-surface update; the compact terminal's existing palette, density, geometry and typography remain protected. The exact supplied ivory circular Nortivo PNG replaces only its parent-brand symbol.
+
+Invest uses Manrope bold sans-serif, a four-line editorial display, neutral black/charcoal/ivory, restrained titanium planes, a substantial unmodified terminal reference and broad service rows. The obsolete serif hero is not part of this selected direction. The request page uses a 66px desktop mast, ivory specification sheet and charcoal brief/support sidebar at approximately 62/38. Practical extra integration/risk fields remain real; desktop pairing and compact row spacing keep the workflow usable. Mobile fields stack.
+
+KORVNT uses its existing emblem/name as the primary identity, with a restrained Nortivo endorsement. Its architectural aperture, ivory CONTROL BY DESIGN., visible development state, ivory five-service index and dark needs section follow the selected composition. The phone crop protects text contrast. The parent Nortivo security pages retain their own introduction and integration content.
+
+Scoped surface ramps and border/field/focus tones are defined in `assets/invest/public.css` and `assets/security-core/styles.css`; their functional focus colors and measured display sizes are intentional additions to the older global ramp. A three-pixel active-step underline on a flat, square step button follows the selected workspace; it is not an accent border on a rounded card. The mechanical detector completed and reported older-ramp advisories, which do not override the selected image authority. No unrelated design-system sidecar repair was performed.
+
+These pages use project-bound background-only raster assets, semantic HTML controls and the existing standard icon system. Motion is restrained, content is visible by default, and no-preference transitions opt out for reduced motion. Source, screenshots, comparison states and remaining physical-device/assistive-technology checks are recorded in `design-qa.md` and `docs/master-upgrade/BROWSER_REVIEW_V2.md`.

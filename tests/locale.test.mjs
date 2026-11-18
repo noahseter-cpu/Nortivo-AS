@@ -6,9 +6,7 @@ import { tmpdir } from 'node:os';
 import { buildLocales, renderLocale, pages } from '../scripts/build-locales.mjs';
 import { previewResponse } from '../scripts/serve.mjs';
 
-// Netlify documents .js edge modules; importing as a data module avoids requiring package.json.
-const edgeSource = await readFile(new URL('../netlify/edge-functions/language.js', import.meta.url), 'utf8');
-const { default: redirect, config } = await import(`data:text/javascript;base64,${Buffer.from(edgeSource).toString('base64')}`);
+import redirect, { config } from '../netlify/edge-functions/language.js';
 
 const copy = {
   title: 'Trygt <innhold> & tekst', placeholder: 'Skriv "her" & mer', label: 'Norsk meny', hint: 'Se mer',
@@ -79,6 +77,24 @@ test('report links are localized while preserving query, fragment and standalone
     for (const preserved of ['/report-2026/annual-report-2026-ytd.pdf', '/report-2026/equity-en.png', '/en/report-2026/']) {
       assert.ok(rendered.includes(`href="${preserved}"`));
     }
+  }
+});
+
+test('company navigation builds branded destinations in the document language before any client script runs', () => {
+  const links = [
+    '<a data-security-link href="/security/#controls">KORVNT at Nortivo</a>',
+    '<a data-brand-destination="security" href="https://korvnt.no/en/#services">KORVNT services</a>',
+    '<a href="/invest/" data-brand-destination="invest">Invest</a>',
+    '<a href="https://invest.nortivo.no/en/support/?source=company&amp;view=help#support" data-brand-destination="invest" data-brand-path="/support/">Support</a>',
+  ].join('');
+  for (const locale of ['en', 'nb']) {
+    const rendered = renderLocale(fixtureHtml.replace('</body>', links + '</body>'), copy, locale, 'home');
+    for (const href of [
+      `/${locale}/security/#controls`,
+      `https://korvnt.no/${locale}/#services`,
+      `https://invest.nortivo.no/${locale}/`,
+      `https://invest.nortivo.no/${locale}/support/?source=company&amp;view=help#support`,
+    ]) assert.ok(rendered.includes(`href="${href}"`), href);
   }
 });
 
@@ -162,7 +178,7 @@ test('edge has no shared caching, preserves other queries, and operates only on 
   assert.equal(result.headers.get('Vary'), 'Cookie');
   assert.equal(redirect(new Request('https://nortivo.no/support/', { method: 'POST' })), undefined);
   for (const route of ['/nb/', '/en/products/', '/assets/site.js', '/.netlify/functions/tickets', '/missing/', '/products']) assert.equal(redirect(new Request(`https://nortivo.no${route}`)), undefined);
-  for (const route of [...pages.map(page => page === 'home' ? '/' : `/${page}/`), '/terminal/', '/pricing/', '/portfolio/', '/en/terminal/', '/nb/pricing/', '/en/portfolio/']) assert.ok(config.path.includes(route));
+  assert.equal(config.path, '/*', 'Host boundaries apply to every path, including unknown security-host paths.');
   assert.equal(config.cache, undefined);
   assert.equal(config.method, undefined, 'Do not emit unsupported HEAD in the Netlify manifest method filter');
 });

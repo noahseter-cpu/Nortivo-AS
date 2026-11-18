@@ -1,6 +1,6 @@
 import { fail } from '../terminal/security.mjs';
 
-export const NAMESPACES = new Set(['accounts','portfolios','receipts','tokens','billing_customers','billing_events','billing_checkout','billing_previews','ai_usage','ai_requests','broker_connections','broker_states','order_intents','broker_events','strategies','jobs','worker_health','mfa','mfa_sessions','audit','mail_outbox','provider_health','provider_meter','provider_cache','worker_leases']);
+export const NAMESPACES = new Set(['accounts','portfolios','receipts','tokens','billing_customers','billing_events','billing_checkout','billing_previews','ai_usage','ai_requests','broker_connections','broker_states','order_intents','broker_events','strategies','jobs','worker_health','mfa','mfa_sessions','audit','mail_outbox','provider_health','provider_meter','provider_cache','worker_leases','workflow_threads','workflow_requests','workflow_index','workflow_receipts','korvnt_threads','korvnt_requests','korvnt_index','korvnt_receipts']);
 export function validateChanges(changes) {
   if (!Array.isArray(changes) || !changes.length || changes.length>32 || Buffer.byteLength(JSON.stringify(changes))>4_000_000) fail('INVALID_RECORD','Invalid transaction size.',400);
   const seen=new Set();

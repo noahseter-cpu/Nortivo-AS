@@ -1,0 +1,32 @@
+{
+  "source": "GitHub public Advisory Database",
+  "queriedAt": "2026-11-18T21:52:32.443Z",
+  "packages": [
+    "otpauth@9.6.0",
+    "stripe@23.1.0",
+    "@noble/hashes@2.4.0"
+  ],
+  "queries": [
+    {
+      "type": "reviewed",
+      "status": 200,
+      "complete": true,
+      "advisories": [],
+      "url": "https://api.github.com/advisories?ecosystem=npm&affects=otpauth%409.6.0%2Cstripe%4023.1.0%2C%40noble%2Fhashes%402.4.0&type=reviewed&is_withdrawn=false&per_page=100"
+    },
+    {
+      "type": "malware",
+      "status": 200,
+      "complete": true,
+      "advisories": [],
+      "url": "https://api.github.com/advisories?ecosystem=npm&affects=otpauth%409.6.0%2Cstripe%4023.1.0%2C%40noble%2Fhashes%402.4.0&type=malware&is_withdrawn=false&per_page=100"
+    },
+    {
+      "type": "unreviewed",
+      "status": 200,
+      "complete": true,
+      "advisories": [],
+      "url": "https://api.github.com/advisories?ecosystem=npm&affects=otpauth%409.6.0%2Cstripe%4023.1.0%2C%40noble%2Fhashes%402.4.0&type=unreviewed&is_withdrawn=false&per_page=100"
+    }
+  ]
+}

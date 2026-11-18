@@ -1,12 +1,14 @@
-import { clean, isAdmin, json, parseBody, supabase } from './_utils.mjs';
+import { clean, json, parseBody, supabase } from './_utils.mjs';
 import { sameOrigin } from './_ticket-security.mjs';
+import { requireAdmin, adminError } from '../security-core/admin.mjs';
 
 const PAGE_LIMIT = 200;
 const MAX_OFFSET = 100000;
 
-export function createHandler({ query = supabase, env = process.env, now = () => Date.now() } = {}) {
+export function createHandler({ query = supabase, env = process.env, now = () => Date.now(), authorizeAdmin = requireAdmin } = {}) {
 return async function handler(event) {
-  if (!isAdmin(event)) return json(401, { error: 'Not signed in.' });
+  try { await authorizeAdmin(event, { routeId: 'admin-tickets', mutation: event.httpMethod === 'PATCH' }); }
+  catch (error) { return adminError(error); }
   if (!sameOrigin(event, { required: event.httpMethod === 'PATCH' })) return json(403, { error: 'Request origin is not allowed.', code: 'FORBIDDEN' });
   try {
     if (event.httpMethod === 'GET') return await getTickets(event, { query, env, now });
@@ -45,7 +47,8 @@ async function getTickets(event, { query, env, now }) {
 }
 
 async function updateTicket(event, query) {
-  const body = parseBody(event);
+  let body;
+  try { body = parseBody(event); } catch (error) { return json(error.status || 400, { error: 'Invalid ticket update.', code: 'BAD_REQUEST' }); }
   const id = clean(body.id, 60);
   const status = clean(body.status, 20);
   if (!id || !['open', 'answered', 'closed'].includes(status)) return json(400, { error: 'Invalid status update.' });

@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-11-18T23:22:02.623Z",
+  "node": "v24.19.0",
+  "testFiles": [
+    "guard.test.mjs",
+    "preview-boundary.test.mjs",
+    "rate-audit.test.mjs",
+    "sessions-policy.test.mjs",
+    "validation-deadlines.test.mjs"
+  ],
+  "tests": {
+    "passed": true,
+    "exitCode": 0,
+    "total": 37,
+    "failures": 0
+  },
+  "offlineCheck": {
+    "passed": true,
+    "exitCode": 0
+  },
+  "manualReviewRecord": "manual-review.json",
+  "preview": {
+    "assetHashes": {
+      "index.html": "d23c890cbbbd42cb35b1a98df42f3b0649c7a213d36ae2744d0c819ec3d914e7",
+      "security.html": "d23c890cbbbd42cb35b1a98df42f3b0649c7a213d36ae2744d0c819ec3d914e7",
+      "report.html": "be17d5e024e153b8ede30954f88b659ab6f5d5d558fc576045165b36f3a578e4",
+      "styles.css": "1221cb39dddea60ab539dde9fc220d9a6ed8347389f833672172d431f1575064",
+      "preview.js": "18c68e74ca221dbbbb3170ab56b0abb02e7a5f4816ccff04b3e0366693e56eeb"
+    },
+    "matchesRecordedReview": false,
+    "httpBrowserValidation": false
+  },
+  "deploymentPerformedByThisScript": false,
+  "limitations": [
+    "Synthetic local tests do not establish protection of existing live endpoints.",
+    "Remote shared-store atomicity, trusted IP provenance, log durability and notification delivery unverified.",
+    "No production backup restore or live penetration test performed."
+  ]
+}

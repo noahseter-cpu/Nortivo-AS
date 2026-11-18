@@ -65,7 +65,7 @@ function harness(fetchImplementation) {
     fetch:fetchImplementation,Nortivo:{register:value=>Object.assign(copy,value),getLanguage:()=> 'en',translate:key=>copy.en?.[key]||key,applyTranslations(){}}});
   context.window=context;
   let source=readFileSync(new URL('../dist/assets/admin.js',import.meta.url),'utf8').replace(/^import .*\r?\n/,'');
-  source=source.slice(0,source.lastIndexOf('  (async () => {'))+`globalThis.adminTest={showLogin,showDashboard,loadTickets,loadOperations,applyTickets,renderDetail,renderList,
+  source=source.slice(0,source.lastIndexOf('  (async () => {'))+`globalThis.adminTest={showLogin,showDashboard,loadTickets,loadOperations,applyTickets,renderDetail,renderList,acceptSession,
     activate:id=>{activeId=id;},addOperation:id=>operations.add(id),draft:id=>drafts.get(id),
     state:()=>({tickets,activeId,operations:[...operations],listPending:!!listRequest,operationsPending:!!operationsRequest,authVersion})};})();`;
   vm.runInContext(source,context,{filename:'admin.js'});
@@ -99,6 +99,7 @@ test('an old operations read cannot clear a new configuration request after reau
 test('successful reply updates its ticket without shrinking the loaded older-page window',async()=>{
   const requests=[];const updated=ticket(205,'answered');
   const h=harness(async(path,options={})=>{requests.push({path,options});return response(options.method==='POST'?{ok:true}:{ticket:updated,replies:[{body:'Synthetic reply',created_at:'2026-11-18T12:00:00Z'}]});});
+  h.actions.acceptSession({ok:true,csrfToken:'a'.repeat(43)});
   const rows=Array.from({length:205},(_,index)=>ticket(index+1));
   h.actions.applyTickets({tickets:rows.slice(0,200),page:{limit:200,offset:0,hasMore:true,nextOffset:200}});
   h.actions.applyTickets({tickets:rows.slice(200),page:{limit:200,offset:200,hasMore:false,nextOffset:null}},true);
@@ -114,6 +115,7 @@ test('successful reply updates its ticket without shrinking the loaded older-pag
 
 test('a stale submitted reply never clears the new session draft or pending action',async()=>{
   const requests=[];const h=harness(()=>{const request=deferred();requests.push(request);return request.promise;});
+  h.actions.acceptSession({ok:true,csrfToken:'a'.repeat(43)});
   const record=ticket(1);h.actions.applyTickets({tickets:[record]});h.actions.showDashboard();h.actions.activate('1');h.actions.renderDetail(record,[]);
   h.el('reply-text').value='Old submitted reply';h.el('reply-text').emit('input');h.el('reply-text').closest('form').emit('submit');
   h.actions.showLogin('sessionExpired',false);h.actions.applyTickets({tickets:[record]});h.actions.showDashboard();h.actions.activate('1');h.actions.renderDetail(record,[]);

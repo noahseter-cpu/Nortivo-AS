@@ -6,7 +6,7 @@ import { validatedJourney } from './plans.mjs';
 import { consumeMfa } from './mfa.mjs';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const emailReady=env=>Boolean(env.RESEND_API_KEY&&(env.AUTH_FROM_EMAIL||env.SUPPORT_FROM_EMAIL));
-export async function ensureAccount(ctx) {let r=await ctx.store.get('accounts',ctx.user.id);if(!r){const value={emailVerified:false,createdAt:ctx.user.created_at,selectedPlan:null,locale:'en',returnPath:'/en/portfolio/',billing:{status:'none',paidUntil:null}};await ctx.store.transact([{ns:'accounts',key:ctx.user.id,ownerId:ctx.user.id,expectedVersion:null,value}]);r=await ctx.store.get('accounts',ctx.user.id);}if(r?.ownerId!==ctx.user.id)fail('RECORD_OWNER','Account ownership could not be verified.',403);return r;}
+export async function ensureAccount(ctx) {let r=await ctx.store.get('accounts',ctx.user.id);if(!r){const value={emailVerified:false,createdAt:ctx.user.created_at,selectedPlan:null,locale:'en',returnPath:'/en/portfolio/',billing:{status:'none',paidUntil:null}};await ctx.store.transact([{ns:'accounts',key:ctx.user.id,ownerId:ctx.user.id,expectedVersion:null,value}]);r=await ctx.store.get('accounts',ctx.user.id);}if(r?.ownerId!==ctx.user.id)fail('RECORD_OWNER','Account ownership could not be verified.',403);if(r.value.disabled || ctx.user.disabled || (ctx.user.expires_at != null && (!Number.isSafeInteger(Number(ctx.user.expires_at)) || Number(ctx.user.expires_at) <= ctx.now)))fail('AUTH_REQUIRED','This account is unavailable.',401);return r;}
 export async function deliver(ctx,to,raw,purpose,locale) {
  const nb=locale==='nb',url=`${ctx.origin}/${nb?'nb':'en'}/portfolio/#${purpose==='verify'?'verify':'reset'}=${encodeURIComponent(raw)}`;
  const subject=purpose==='verify'?(nb?'Bekreft e-postadressen din':'Verify your email address'):(nb?'Tilbakestill passordet ditt':'Reset your password');
@@ -33,8 +33,9 @@ export async function handlePublicAuth(ctx,action,body,issue) {
   const {email,password,name}=credentials(body);await ctx.rate('auth-account-connection',`${email}:${ctx.ip}`,8,900000);const found=await ctx.legacyStore.findUserByEmail(email);
   if(action==='login'){
    if(!await verifyPassword(password,found?.password_hash))fail('LOGIN_FAILED','Email or password was not accepted.',401);
+   const r=await ensureAccount({...ctx,user:found});
    const mfa=await ctx.store.get('mfa',found.id);if(mfa?.value.enabled)await consumeMfa({...ctx,user:found,sessionHash:null},body);
-   const r=await ensureAccount({...ctx,user:found});if(body.tier){const journey=validatedJourney(body);await ctx.store.transact([{ns:'accounts',key:found.id,ownerId:found.id,expectedVersion:r.version,value:{...r.value,...journey}}]);}
+   if(body.tier){const journey=validatedJourney(body);await ctx.store.transact([{ns:'accounts',key:found.id,ownerId:found.id,expectedVersion:r.version,value:{...r.value,...journey}}]);}
    return issue(found);
   }
   if(!emailReady(ctx.env)&&!(ctx.testEmail&&ctx.env.PRODUCT_TEST_MODE==='true'))fail('EMAIL_NOT_CONFIGURED','Account registration will open when verification email is available.',503);

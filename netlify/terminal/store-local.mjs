@@ -61,7 +61,7 @@ export async function createLocalStore(filename) {
     async createSession(session) { db.prepare('INSERT INTO terminal_sessions (token_hash,user_id,created_at,expires_at) VALUES (?,?,?,?)').run(session.token_hash,session.user_id,session.created_at,session.expires_at); },
     async getSession(hash, now) {
       cleanup(now);
-      return db.prepare('SELECT u.*,s.expires_at AS session_expires_at FROM terminal_sessions s JOIN terminal_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>? AND (u.expires_at IS NULL OR u.expires_at>?)').get(hash,now,now) || null;
+      return db.prepare('SELECT u.*,s.created_at AS session_created_at,s.expires_at AS session_expires_at FROM terminal_sessions s JOIN terminal_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>? AND (u.expires_at IS NULL OR u.expires_at>?)').get(hash,now,now) || null;
     },
     async deleteSession(hash) { db.prepare('DELETE FROM terminal_sessions WHERE token_hash=?').run(hash); },
     async getState(userId) {

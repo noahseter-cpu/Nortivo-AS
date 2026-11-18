@@ -1,9 +1,10 @@
 import crypto from 'node:crypto';
-import { fail, sha256, commandDigest, header, equalToken, isLocalRuntime } from '../terminal/security.mjs';
+import { fail, sha256, commandDigest, header, equalToken, isLocalRuntime, isActiveWorkspaceSession, authorizeWorkspaceAdmin } from '../terminal/security.mjs';
 import { change, owned, updateRecord, requestId, readJsonResponse, clean, SYSTEM_OWNER, listAllRecords } from './providers-core.mjs';
 import { liveRelease, requireLiveRelease } from './broker-release.mjs';
 import { brokerVenue } from './providers-data.mjs';
 import { requireEntitlement } from './entitlements.mjs';
+import { requireStepUp } from './mfa.mjs';
 
 export const BROKER_MANAGEMENT_URL = 'https://app.alpaca.markets/';
 export const brokerOAuthCookieName = env => isLocalRuntime(env) ? 'nortivo_broker_oauth_local' : '__Host-nortivo_broker_oauth';
@@ -15,12 +16,16 @@ function oauthNonce(ctx) {
 }
 async function activeOAuthActor(ctx, sessionHash, ownerId, operatorBootstrap = false) {
   if (!/^[a-f0-9]{64}$/.test(sessionHash || '') || !ctx.legacyStore?.getSession) fail('BROKER_OAUTH_SESSION_REQUIRED', 'Sign in again and restart the broker connection.', 403);
-  const actor = await ctx.legacyStore.getSession(sessionHash, ctx.now);
-  if (!actor || actor.kind !== 'user' || actor.id !== ownerId) fail('BROKER_OAUTH_SESSION_REQUIRED', 'The original sign-in expired or was revoked. Sign in and restart the broker connection.', 403);
+  const now = ctx.clock?.() ?? ctx.now;
+  const actor = await ctx.legacyStore.getSession(sessionHash, now);
+  if (!isActiveWorkspaceSession(actor, now) || actor.kind !== 'user' || actor.id !== ownerId) fail('BROKER_OAUTH_SESSION_REQUIRED', 'The original sign-in expired or was revoked. Sign in and restart the broker connection.', 403);
   const account = await owned(ctx.store, 'accounts', ownerId, ownerId);
-  if (operatorBootstrap) {
-    if (!(ctx.env.PRODUCT_ADMIN_USER_IDS || '').split(',').map(id => id.trim()).filter(Boolean).includes(ownerId) || account.value.emailVerified !== true) fail('ADMIN_REQUIRED', 'Owner verification is required for this broker setup check.', 403);
-  } else requireEntitlement(account.value, 'broker.connect', ctx.now);
+  if (account.value.disabled) fail('BROKER_OAUTH_SESSION_REQUIRED', 'This account is unavailable.', 403);
+  if (operatorBootstrap) await authorizeWorkspaceAdmin(actor, ctx.env, ctx.store, sessionHash, now);
+  else {
+    requireEntitlement(account.value, 'broker.connect', now);
+    await requireStepUp({ store: ctx.store, user: actor, sessionHash, now }, 'broker');
+  }
   return actor;
 }
 function brokerReturnPath(ctx, state, status) {

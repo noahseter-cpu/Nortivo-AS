@@ -1,0 +1,6 @@
+/* The supplied artwork is unchanged. Lighten removes only its dark backing on dark surfaces. */
+.nortivo-symbol{display:inline-block;object-fit:contain;flex:0 0 auto;mix-blend-mode:lighten;vertical-align:middle}
+.p-brand .nortivo-symbol{width:30px;height:30px;margin-right:9px}
+.boot .nortivo-symbol{width:36px;height:36px;margin-right:10px}
+.appbar .brand-mark.nortivo-symbol{width:39px;height:36px;object-fit:contain}
+.p-brand:has(.nortivo-symbol),.boot .brand:has(.nortivo-symbol){display:inline-flex;align-items:center}

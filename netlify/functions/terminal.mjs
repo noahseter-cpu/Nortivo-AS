@@ -3,10 +3,11 @@ import { createInitialState, applyCommand, snapshot } from '../terminal/engine.m
 import { createSupabaseStore } from '../terminal/store.mjs';
 import { credentials, hashPassword, verifyPassword } from '../terminal/auth.mjs';
 import { createProviderAdapters, integrationStatus, brokerAdapter } from '../terminal/providers.mjs';
-import { TerminalError, fail, header, sessionSecret, token, sha256, csrfToken, equalToken, cookieToken, cookie, requireSameOrigin, parseBody, clientIdentifier, commandDigest, response, isLocalRuntime, COMMAND_QUOTAS, terminalCapabilities, GUEST_TTL, SESSION_TTL, GUEST_SESSION_TTL } from '../terminal/security.mjs';
+import { TerminalError, fail, header, sessionSecret, token, sha256, csrfToken, equalToken, cookieToken, cookie, requireSameOrigin, parseBody, clientIdentifier, commandDigest, response, isLocalRuntime, COMMAND_QUOTAS, terminalCapabilities, GUEST_TTL, SESSION_TTL, GUEST_SESSION_TTL, workspaceSession, workspaceRateLimiter, authorizeWorkspaceRecord, secureWorkspaceResponse } from '../terminal/security.mjs';
 import { createProductHandler } from '../product/service.mjs';
 import { loadOwnerMarketEnvironment } from '../product/runtime-owner-market.mjs';
 
+const CUSTOMER_WORKFLOWS = new Set(['workflow-session', 'workflow-chat', 'workflow-request']);
 const GET_ACTIONS = new Set(['session','integrations','market','news','calendar','export']);
 const POST_ACTIONS = new Set(['guest','signup','login','logout','command','broker']);
 function csvCell(value) {
@@ -22,16 +23,24 @@ function exportTrades(state) {
   }).join('\r\n') + '\r\n';
 }
 
-export function createTerminalHandler({ store: providedStore, env = process.env, now = () => Date.now(), fetcher = fetch, testEmail, stripe } = {}) {
+export function createTerminalHandler({ store: providedStore, env = process.env, now = () => Date.now(), fetcher = fetch, testEmail, stripe, auditSink } = {}) {
   env = loadOwnerMarketEnvironment(env);
   let store = providedStore;
   const adapters = createProviderAdapters(env,fetcher);
-  const productHandler=env.PRODUCT_ENABLED==='true'?createProductHandler({store:providedStore,env,now,fetcher,testEmail,stripe,legacyHandler:createTerminalHandler({store:providedStore,env:{...env,PRODUCT_ENABLED:'false'},now,fetcher})}):null;
-  return async function terminalHandler(event = {}) {
-    if(productHandler)return productHandler(event);
+  const productHandler=env.PRODUCT_ENABLED==='true'?createProductHandler({store:providedStore,env,now,fetcher,testEmail,stripe,legacyHandler:createTerminalHandler({store:providedStore,env:{...env,PRODUCT_ENABLED:'false'},now,fetcher,auditSink})}):null;
+  let workflowHandler;
+  async function runTerminal(event = {}) {
     try {
-      const method = String(event.httpMethod || event.method || 'GET').toUpperCase();
       const action = event.queryStringParameters?.action || new URL(event.rawUrl).searchParams.get('action') || 'session';
+      if (CUSTOMER_WORKFLOWS.has(action)) {
+        if (!workflowHandler) {
+          const { createWorkflowHandler } = await import('../conversations/handler.mjs');
+          workflowHandler = createWorkflowHandler({ store: providedStore, env, now, fetcher, auditSink });
+        }
+        return await workflowHandler(event);
+      }
+      if (productHandler) return await productHandler(event);
+      const method = String(event.httpMethod || event.method || 'GET').toUpperCase();
       if (!GET_ACTIONS.has(action) && !POST_ACTIONS.has(action)) fail('NOT_FOUND','Trading workspace action not found.',404);
       const expected = GET_ACTIONS.has(action) ? 'GET' : 'POST';
       if (method !== expected) return response(405,{error:{code:'METHOD_NOT_ALLOWED',message:`Use ${expected} for this action.`}},{Allow:expected});
@@ -40,25 +49,19 @@ export function createTerminalHandler({ store: providedStore, env = process.env,
       store ||= createSupabaseStore(env,fetcher);
       const time = now();
       const ip = clientIdentifier(event,secret);
-      async function rate(namespace, identifier, limit, windowMs) {
-        const result = await store.consumeRateLimit(`${namespace}:${sha256(identifier)}`,limit,windowMs,time);
-        if (!result.allowed) {
-          const error = new TerminalError('RATE_LIMITED','Too many requests. Wait before trying again.',429);
-          error.retryAfter = Math.max(1,Math.ceil(result.retryAfterMs/1000));
-          throw error;
-        }
-      }
+      const rate = workspaceRateLimiter(store, secret, time);
       await rate('request',ip,600,5*60_000);
       const body = method === 'POST' ? parseBody(event) : null;
       const rawToken = cookieToken(event);
-      const session = rawToken ? await store.getSession(sha256(rawToken),time) : null;
-      const getRecord = async id => {
+      const session = rawToken ? await workspaceSession(event,store,time) : null;
+      const getRecord = async (id,actor = session) => {
+        if (actor) authorizeWorkspaceRecord(actor,id,time);
         const record = await store.getState(id);
         if (!record) fail('STATE_UNAVAILABLE','Your workspace could not be loaded.',503);
         return record;
       };
       const sessionData = async (user, value) => {
-        const record = await getRecord(user.id);
+        const record = await getRecord(user.id,user);
         return {
           user:{id:user.id,kind:user.kind,...(user.email ? {email:user.email} : {}),...(user.name ? {name:user.name} : {}),emailVerified:false},
           csrfToken:csrfToken(value,secret),state:snapshot(record.state,{now:time}),revision:record.revision,integrations:integrationStatus(env),capabilities:terminalCapabilities(env),
@@ -160,6 +163,7 @@ export function createTerminalHandler({ store: providedStore, env = process.env,
       const known = error instanceof TerminalError || (typeof error?.code === 'string' && /^[A-Z][A-Z0-9_]{2,60}$/.test(error.code) && Number.isInteger(error.status) && error.status >= 400 && error.status < 500);
       return response(known ? error.status : 503,{error:{code:known ? error.code : 'WORKSPACE_UNAVAILABLE',message:known ? error.message : 'Trading workspace is temporarily unavailable. Your action was not confirmed; retry with the same request ID.'},capabilities:terminalCapabilities(env)},error?.status === 429 ? {'Retry-After':String(error.retryAfter || 1)} : {});
     }
-  };
+  }
+  return async function terminalHandler(event = {}) { return secureWorkspaceResponse(await runTerminal(event),event); };
 }
 export const handler = createTerminalHandler();

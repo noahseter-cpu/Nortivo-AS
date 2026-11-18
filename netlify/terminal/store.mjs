@@ -43,8 +43,8 @@ export function createSupabaseStore(env = process.env, fetcher = fetch) {
       const sessions = await request(`terminal_sessions?token_hash=eq.${eq(hash)}&expires_at=gt.${now}&limit=1`);
       if (!sessions?.length) return null;
       const user = (await request(`terminal_users?id=eq.${eq(sessions[0].user_id)}&limit=1`))?.[0];
-      if (!user || (user.expires_at && Number(user.expires_at) <= now)) return null;
-      return { ...user, session_expires_at: Number(sessions[0].expires_at) };
+      if (!user || user.id !== sessions[0].user_id || sessions[0].revoked_at != null || (user.expires_at != null && Number(user.expires_at) <= now)) return null;
+      return { ...user, session_created_at: Number(sessions[0].created_at), session_expires_at: Number(sessions[0].expires_at) };
     },
     async deleteSession(hash) { await request(`terminal_sessions?token_hash=eq.${eq(hash)}`, { method: 'DELETE' }); },
     async getState(userId) {

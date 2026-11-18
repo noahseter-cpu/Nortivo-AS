@@ -1,5 +1,8 @@
 # Tilgang til supportsaker
 
+> Historisk beskrivelse av den tidligere billettløsningen. I den lokale samlede oppgraderingen bruker administrasjonen navngitte, verifiserte kontoer, fersk MFA og tilbakekallbare økter. De aktive billettendepunktene bruker en delt atomisk teller. Ny samtalehistorikk og prosjektforespørsler følger en egen, kryptert datasti. Gjeldende tilgangsregler og driftskrav finnes i [integrasjonsoversikten](../services/security-core/docs/integration-status.md).
+
+
 Implementert lokalt 21. september 2026. Ingen produksjonsdata, skjemaer, nøkler eller leverandørinnstillinger er endret. Publisering, faktisk e-postlevering og driftstest gjenstår.
 
 ## API og klientflyt

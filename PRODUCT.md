@@ -1,5 +1,13 @@
 # Product
 
+## Approved daughter-company extension — 19 November 2026
+
+Nortivo retains investment research, education and trading technology as its primary business. The owner identifies KORVNT as its daughter company and korvnt.no as its standalone domain, purchased through Uniweb. This does not establish an AS registration, organization number or professional authorization. Nortivo retains substantive localized /security/ introductions and actual integration information; those pages do not redirect away.
+
+KORVNT's five developing service areas are cybersecurity review, website security, account security, websites/design assistance and case-specific cybercrime asset-recovery assistance. The technical Nortivo KORVNT framework remains distinct from the customer-facing company. No finished AI builder, monitoring operation, recovery outcome or guarantee is implied.
+
+The current local implementation uses independent KORVNT host-bound guest credentials, key rings, namespaces, tracking, presence and explicit staff permissions. Public KORVNT does not inherit Invest accounts or private records. Named staff use the protected parent-host inbox with fresh MFA and the separate grant. Visitor SSO, production hosting/domain activation, sensitive-evidence intake and operational delivery are not implemented claims. The approved Invest and request designs are maintained alongside the protected terminal reference. See [current review](docs/master-upgrade/README_V2.md).
+
 <!-- impeccable:product-schema 1 -->
 
 ## Platform

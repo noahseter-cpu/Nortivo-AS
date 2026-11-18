@@ -1,0 +1,17 @@
+{
+  "name": "@nortivo/security-core",
+  "version": "0.2.0",
+  "private": true,
+  "description": "KORVNT by Nortivo: application-security controls. Local integration under review; unpublished.",
+  "type": "module",
+  "engines": { "node": ">=22.5" },
+  "exports": "./src/index.mjs",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "preview": "node scripts/preview.mjs",
+    "check": "node scripts/check.mjs",
+    "verify": "node scripts/verify.mjs",
+    "verify:integration": "node scripts/verify-integration.mjs --full",
+    "alerts": "node scripts/alerts.mjs"
+  }
+}

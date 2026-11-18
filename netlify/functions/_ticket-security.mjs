@@ -1,4 +1,8 @@
 import crypto from 'node:crypto';
+import {isKorvntHostname} from '../edge-functions/application-routes.mjs';
+import { createSupabaseStore } from '../terminal/store.mjs';
+import { createRateLimiter } from '../../services/security-core/src/rate-limit.mjs';
+import { createAuditLogger } from '../../services/security-core/src/audit.mjs';
 
 export const LINK_TTL = 15 * 60 * 1000;
 export const SESSION_TTL = 30 * 60 * 1000;
@@ -16,7 +20,7 @@ function configuredOrigin(value) {
   try {
     const url = new URL(value);
     const local = process.env.NETLIFY_DEV === 'true' && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
-    if (url.username || url.password || (url.protocol !== 'https:' && !(local && url.protocol === 'http:'))) return '';
+    if (url.username || url.password || isKorvntHostname(url.hostname) || (url.protocol !== 'https:' && !(local && url.protocol === 'http:'))) return '';
     return url.origin;
   } catch { return ''; }
 }
@@ -73,6 +77,36 @@ export function rateLimit(event, namespace, { email, ipLimit = 20, emailLimit = 
   if (!ipAllowed) return false;
   const emailAllowed = !email || consumeRateLimit(`${namespace}:email`, email.toLowerCase(), emailLimit, windowMs);
   return emailAllowed;
+}
+
+// Active support endpoints use this shared atomic path. The older synchronous
+// helpers above remain only for isolated legacy unit checks, never production enforcement.
+export function createSharedSupportLimiter({ store, env = process.env, now = Date.now, auditSink = line => console.info(line) } = {}) {
+  const root = env.SECURITY_CORE_RATE_KEY || env.ADMIN_SESSION_SECRET;
+  if (typeof root !== 'string' || Buffer.byteLength(root) < 32) throw new Error('Support security is not configured.');
+  const derive = purpose => crypto.createHmac('sha256', root).update(`nortivo:security-core:support:${purpose}:v1`).digest();
+  const remote = store || createSupabaseStore(env);
+  if (remote.kind !== 'supabase' && remote.durable !== true) throw new Error('A shared support rate store is required.');
+  const consume = createRateLimiter({ store: { durable: true, consumeRateLimit: remote.consumeRateLimit.bind(remote) }, key: derive('rate'), now });
+  const audit = createAuditLogger({ key: derive('audit'), now, sink: auditSink });
+  return async (event, namespace, { email, ipLimit = 20, emailLimit = 3, windowMs = LINK_TTL } = {}) => {
+    const client = clientIp(event), requestId = crypto.randomUUID();
+    const record = (eventName, decision, status, reason) => audit({ event: eventName, decision, status, reason, routeId: namespace, requestId, clientId: client });
+    try {
+      await consume({ scope: `${namespace}:connection`, identifier: client, limit: ipLimit, windowMs });
+      if (email) await consume({ scope: `${namespace}:email`, identifier: email.toLowerCase(), limit: emailLimit, windowMs });
+      await record('request_allowed', 'allow', 200, 'AUTHORIZED');
+      return true;
+    } catch (error) {
+      await record(error.code === 'RATE_LIMITED' ? 'request_denied' : 'dependency_unavailable', 'deny', error.code === 'RATE_LIMITED' ? 429 : 503, error.code === 'RATE_LIMITED' ? 'RATE_LIMITED' : 'RATE_LIMIT_UNAVAILABLE');
+      if (error.code === 'RATE_LIMITED') return false;
+      throw error;
+    }
+  };
+}
+
+export async function sharedRateLimit(event, namespace, options) {
+  return createSharedSupportLimiter()(event, namespace, options);
 }
 
 export function normalizeTicket(value) {

@@ -7,7 +7,7 @@ export function createOwnerGrant(now = Date.now()) {
 
 export function isOwnerAccount(account) {
   const grant = account?.access;
-  return account?.emailVerified === true && grant?.role === 'owner' && grant.active === true
+  return !account?.disabled && account?.emailVerified === true && grant?.role === 'owner' && grant.active === true
     && grant.grantedBy === 'operator' && Number.isSafeInteger(grant.grantedAt) && grant.grantedAt > 0;
 }
 

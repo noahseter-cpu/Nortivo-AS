@@ -1,10 +1,12 @@
-import { isAdmin, json } from './_utils.mjs';
+import { json } from './_utils.mjs';
 import { sameOrigin } from './_ticket-security.mjs';
 import { privateContent } from '../private/content-loader.mjs';
+import { requireAdmin, adminError } from '../security-core/admin.mjs';
 
-export function createHandler({ loadProjects = privateContent.projects } = {}) {
+export function createHandler({ loadProjects = privateContent.projects, authorizeAdmin = requireAdmin } = {}) {
 return async function handler(event) {
-  if (!isAdmin(event)) return json(401, { error: 'Not signed in.', code: 'NOT_SIGNED_IN' });
+  try { await authorizeAdmin(event, { routeId: 'admin-projects', mutation: false }); }
+  catch (error) { return adminError(error); }
   if (!sameOrigin(event)) return json(403, { error: 'Request origin is not allowed.', code: 'FORBIDDEN' });
   if (event.httpMethod !== 'GET') return json(405, { error: 'Method not allowed.' }, { Allow: 'GET' });
   try {

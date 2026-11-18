@@ -1,15 +1,18 @@
-import { clean, escapeHtml, isAdmin, json, parseBody, sendEmail, supabase } from './_utils.mjs';
+import { clean, escapeHtml, json, parseBody, sendEmail, supabase } from './_utils.mjs';
 import { errorResponse, language } from './_support-language.mjs';
 import { sameOrigin, siteOrigin } from './_ticket-security.mjs';
+import { requireAdmin, adminError } from '../security-core/admin.mjs';
 
-export async function handler(event) {
+export function createHandler({ authorizeAdmin = requireAdmin } = {}) {
+return async function handler(event) {
   let locale = language(event.queryStringParameters?.language);
-  if (!isAdmin(event)) return errorResponse(401, 'NOT_SIGNED_IN', locale);
+  try { await authorizeAdmin(event, { routeId: 'admin-reply', mutation: true }); }
+  catch (error) { return adminError(error); }
   if (event.httpMethod !== 'POST') return errorResponse(405, 'METHOD_NOT_ALLOWED', locale, { Allow: 'POST' });
   if (!sameOrigin(event, { required: true })) return errorResponse(403, 'FORBIDDEN', locale);
   try {
     let body;
-    try { body = parseBody(event); } catch { return errorResponse(400, 'BAD_REQUEST', locale); }
+    try { body = parseBody(event); } catch (error) { return errorResponse(error.status || 400, 'BAD_REQUEST', locale); }
     locale = language(body.language);
     const id = clean(body.id, 60);
     const message = clean(body.message, 4000);
@@ -44,3 +47,5 @@ export async function handler(event) {
     return errorResponse(503, 'UNAVAILABLE', locale);
   }
 }
+}
+export const handler = createHandler();

@@ -25,7 +25,7 @@ async function fixture(t, env = ENV) {
   await legacy.createUser(user, {}); await legacy.createSession({ token_hash: sessionHash, user_id: USER, created_at: NOW, expires_at: NOW + 86400000 });
   const ctx = { store: legacy.product, legacyStore: legacy, sessionHash, user, account: { emailVerified: true, billing: { tier: 'pro', paidUntil: NOW + 86400000 } }, env, now: NOW, origin: ORIGIN, event: { headers: {} }, requireFeature: async () => {}, requireStepUp: async () => {}, fetcher: async () => { throw new Error('Unexpected fixture network request'); } };
   ctx.setOAuthCookie = value => { ctx.oauthCookie = value; ctx.event.headers.cookie = value.split(';')[0]; };
-  await ctx.store.transact([change('accounts', USER, USER, null, ctx.account)]);
+  await ctx.store.transact([change('accounts', USER, USER, null, ctx.account), change('mfa', USER, USER, null, { enabled:true }), change('mfa_sessions', sessionHash, USER, null, { scope:'security', verifiedAt:NOW, validUntil:NOW+600000 })]);
   return ctx;
 }
 async function put(ctx, ns, key, value, ownerId = USER) { const row = await ctx.store.get(ns, key); const result = await ctx.store.transact([change(ns, key, ownerId, row, value)]); assert.equal(result.status, 'applied'); }

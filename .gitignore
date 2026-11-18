@@ -6,6 +6,8 @@
 # Plaintext private workspace inputs and its local-only encryption key.
 netlify/private/projects.mjs
 netlify/private/vibb-runtime.mjs
+netlify/private/owner-market-sealed.mjs
+netlify/private/owner-bootstrap-sealed.mjs
 .env.private-workspace.local
 # Local terminal identities, hashed sessions, private ledger and generated security key.
 .local/

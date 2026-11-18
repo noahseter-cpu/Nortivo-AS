@@ -1,6 +1,6 @@
 import { clean, escapeHtml, json, parseBody, sendEmail, supabase, ticketNumber, validEmail } from './_utils.mjs';
 import { errorResponse, language } from './_support-language.mjs';
-import { normalizeEmail, normalizeTicket, rateLimit, sameOrigin, siteOrigin, ticketSession } from './_ticket-security.mjs';
+import { normalizeEmail, normalizeTicket, sharedRateLimit, sameOrigin, siteOrigin, ticketSession } from './_ticket-security.mjs';
 
 export async function handler(event) {
   let locale = language(event.queryStringParameters?.language);
@@ -8,7 +8,7 @@ export async function handler(event) {
     if (event.httpMethod === 'POST') {
       if (!sameOrigin(event, { required: true })) return errorResponse(403, 'FORBIDDEN', locale);
       let body;
-      try { body = parseBody(event); } catch { return errorResponse(400, 'BAD_REQUEST', locale); }
+      try { body = parseBody(event); } catch (error) { return errorResponse(error.status || 400, 'BAD_REQUEST', locale); }
       locale = language(body.language);
       return await createTicket(event, body, locale);
     }
@@ -30,7 +30,7 @@ async function createTicket(event, body, locale) {
   if (!name || !validEmail(email) || subject.length < 3 || message.length < 10) {
     return errorResponse(400, 'INVALID_FIELDS', locale);
   }
-  if (!rateLimit(event, 'ticket-create', { email, ipLimit: 6, emailLimit: 3, windowMs: 60 * 60 * 1000 })) {
+  if (!await sharedRateLimit(event, 'ticket-create', { email, ipLimit: 6, emailLimit: 3, windowMs: 60 * 60 * 1000 })) {
     return errorResponse(429, 'TOO_MANY_REQUESTS', locale, { 'Retry-After': '3600' });
   }
   const number = ticketNumber();
@@ -72,7 +72,7 @@ async function findTicket(event, locale) {
   // New clients omit email from the URL; legacy clients must still match the proof.
   const email = event.queryStringParameters?.email === undefined ? session?.email : normalizeEmail(event.queryStringParameters.email);
   if (!session || session.ticketNumber !== ticketNumberValue || session.email !== email) return errorResponse(401, 'ACCESS_REQUIRED', locale);
-  if (!rateLimit(event, 'ticket-read', { ipLimit: 60 })) return errorResponse(429, 'TOO_MANY_REQUESTS', locale, { 'Retry-After': '900' });
+  if (!await sharedRateLimit(event, 'ticket-read', { ipLimit: 60 })) return errorResponse(429, 'TOO_MANY_REQUESTS', locale, { 'Retry-After': '900' });
   const params = new URLSearchParams({
     select: 'id,ticket_number,subject,message,status,created_at,updated_at',
     ticket_number: `eq.${ticketNumberValue}`,

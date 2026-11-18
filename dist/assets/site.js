@@ -105,7 +105,7 @@
   const menu = document.querySelector('.mobile-nav');
   const menuHeader = menuButton?.closest('.site-header');
   const menuLabel = menuButton?.querySelector('[data-i18n]');
-  const desktopMenu = matchMedia('(min-width: 881px)');
+  const desktopMenu = matchMedia(document.querySelector('.company-symbol') ? '(min-width: 1161px)' : '(min-width: 881px)');
   const reducedMenuMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const focusableMenuSelector = 'a[href],button,input,select,textarea,[tabindex]';
   let menuMotion;

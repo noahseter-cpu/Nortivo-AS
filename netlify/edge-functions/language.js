@@ -1,6 +1,7 @@
 // Netlify uses .js ES modules for edge functions; no package or external request is needed.
 // API: https://docs.netlify.com/build/edge-functions/api/
 // Routing: https://docs.netlify.com/build/edge-functions/declarations/
+import { applicationRoute } from './application-routes.mjs';
 const legacyPaths = ['/', '/products/', '/support/', '/admin/', '/privacy/', '/about/', '/services/', '/contact/', '/restaurant/', '/studio/', '/arc/', '/studio/services/', '/reviews/', '/terminal/', '/pricing/', '/portfolio/'];
 const supported = value => value === 'nb' || value === 'en';
 const companyOrigin = 'https://nortivo.no';
@@ -70,19 +71,27 @@ function savedLanguage(request) {
 
 export default function languageRedirect(request, context = {}, env = globalThis.Netlify?.env) {
   const url = new URL(request.url);
+  const activation={korvntReady:env?.get?.('KORVNT_SITE_READY')==='true',korvntAliasReady:env?.get?.('KORVNT_ALIAS_READY')==='true'};
   const investment = url.origin === investmentOrigin;
   // Never serve the private administration surface from the application host.
   // Server callbacks and platform APIs are deliberately outside this rule.
   const adminPath = /^(?:\/(?:en|nb))?\/admin(?:\/|$)/.test(url.pathname);
   if (investment && (adminFunctions.some(path => url.pathname === path || url.pathname.startsWith(`${path}/`)) || adminPath && !['GET', 'HEAD'].includes(request.method))) return new Response(null, {status:404,headers:{'Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow'}});
-  if (!['GET', 'HEAD'].includes(request.method)) return;
+  if (!['GET', 'HEAD'].includes(request.method)) {
+    const boundary=applicationRoute(url,{method:request.method,...activation});
+    if(boundary?.kind==='deny')return new Response(null,{status:boundary.status,headers:{'Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow'}});
+    return;
+  }
   const explicit = url.searchParams.get('lang');
   const saved = savedLanguage(request);
   const pathLanguage = /^\/(en|nb)(?:\/|$)/.exec(url.pathname)?.[1];
   const queryLanguage = url.searchParams.get('locale');
   const language = supported(explicit) ? explicit : pathLanguage || (supported(queryLanguage) ? queryLanguage : supported(saved) ? saved : context.geo?.country?.code === 'NO' ? 'nb' : 'en');
+  const application=applicationRoute(url,{language,method:request.method,...activation});
+  if(application?.kind==='deny')return new Response(null,{status:application.status,headers:{'Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow'}});
+  if(application?.kind==='redirect'){const target=new URL(application.location);target.search=safeQueries(target.searchParams).toString();return new Response(null,{status:application.status,headers:{Location:target.href,'Cache-Control':'private, no-store'}});}
+  if(application?.kind==='rewrite'){const target=new URL(application.path,url);target.search='';return target;}
   if (investment) {
-    if (investmentRoots.includes(url.pathname)) { url.pathname = `/${language}/terminal/`; return redirect(url, explicit); }
     if (platformPaths.has(url.pathname)) { const page = platformPage(url.pathname),path=`/${language}/${page}/`; if (url.pathname === path) return; url.pathname=path; return redirect(url, explicit); }
     if (companyPaths.has(url.pathname) || adminPath) { const target = new URL(url.pathname, companyOrigin); target.search=url.search; return redirect(target, explicit, {crossHost:true}); }
     return;
@@ -100,4 +109,4 @@ export default function languageRedirect(request, context = {}, env = globalThis
 // Do not opt into manual edge caching: this decision depends on each visitor.
 // HEAD is not accepted by Netlify's method-filter manifest schema. The handler
 // above gates GET/HEAD itself, so omit the optional deployment-level filter.
-export const config = { path: [...new Set([...legacyPaths, ...platformPaths, ...companyPaths, ...investmentRoots, '/admin', '/admin/*', '/en/admin', '/en/admin/*', '/nb/admin', '/nb/admin/*', ...adminFunctions.flatMap(path => [path, `${path}/*`])])], onError: 'bypass' };
+export const config = { path: '/*' };

@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadReport, renderReportValues, syncDedicatedReports } from './report-presentation.mjs';
 import { buildTerminalLocales } from './build-terminal-locales.mjs';
 import { buildProductLocales } from './build-product-locales.mjs';
+import { buildPublicPages } from './build-public-pages.mjs';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const pages = ['home', 'products', 'support', 'admin', 'privacy', 'about', 'services', 'contact', 'restaurant', 'studio', 'arc', 'studio/services', 'reviews'];
@@ -64,12 +65,23 @@ function tokenize(source) {
 
 function pagePath(page) { return page === 'home' ? '/' : `/${page}/`; }
 
-function localizeHref(href, locale) {
+function localizeHref(href, locale, attrs) {
+  const destination = attrs.get('data-brand-destination')?.value;
+  if (destination === 'invest' || destination === 'security') {
+    const url = new URL(href, 'https://nortivo.no');
+    const target = new URL(destination==='security'?'https://korvnt.no/':'https://invest.nortivo.no/');
+    const targetPath = (attrs.get('data-brand-path')?.value || '').replace(/^\/+/, '');
+    target.pathname = `/${locale}/${targetPath}`;
+    target.search = url.search;
+    target.hash = url.hash;
+    return target.href;
+  }
   if (!href.startsWith('/') || href.startsWith('//')) return href;
   const match = href.match(/^([^?#]*)([?#][\s\S]*)?$/);
   const pathname = match[1];
   const normalized = pathname === '/' ? '/' : `${pathname.replace(/\/$/, '')}/`;
-  if (!['/report-2026/', '/terminal/', '/pricing/', '/portfolio/'].includes(normalized) && !pages.some(page => pagePath(page) === normalized)) return href;
+  if(normalized==='/invest/')return `https://invest.nortivo.no/${locale}/${match[2] || ''}`;
+  if (!['/report-2026/', '/terminal/', '/pricing/', '/portfolio/', '/security/'].includes(normalized) && !pages.some(page => pagePath(page) === normalized)) return href;
   if (['/terminal/', '/pricing/', '/portfolio/'].includes(normalized)) return `https://invest.nortivo.no/${locale}${normalized}${match[2] || ''}`;
   return `/${locale}${normalized}${match[2] || ''}`;
 }
@@ -102,10 +114,13 @@ export function renderLocale(source, dictionary, locale, page, origin = 'https:/
         if (value !== undefined) replacement = setAttribute(replacement, destination, value);
       }
     }
-    if (token.name === 'a' && attrs.has('href')) replacement = setAttribute(replacement, 'href', localizeHref(attrs.get('href').value, locale));
+    if (token.name === 'a' && attrs.has('href')) replacement = setAttribute(replacement, 'href', localizeHref(attrs.get('href').value, locale, attrs));
     if (attrs.has('data-language')) replacement = setAttribute(replacement, 'aria-pressed', String(attrs.get('data-language').value === locale));
     const key = attrs.get('data-i18n')?.value;
     const next = tokens[index + 1];
+    if (token.name === 'a' && attrs.has('data-security-link') && next?.closing && next.name === 'a') {
+      changes.push({ start: token.end, end: next.start, value: 'KORVNT Security' });
+    }
     // Only marked leaf text is replaced; nested markup and form values survive.
     if (key !== undefined && !protectedTextTags.has(token.name) && !attrs.has('contenteditable')) {
       const value = translate(key);
@@ -178,6 +193,8 @@ export async function buildLocales({ distDir = path.join(projectRoot, 'dist'), o
   if (report) await syncDedicatedReports(distDir, report);
   await buildTerminalLocales(distDir);
   await buildProductLocales(distDir);
+  try { await readFile(path.join(distDir,'assets/brand/nortivo-approved.png')); await buildPublicPages(distDir); }
+  catch(error){if(error.code!=='ENOENT')throw error;}
   return outputs.map(output => output.path);
 }
 

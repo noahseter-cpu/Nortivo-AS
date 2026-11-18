@@ -15,13 +15,26 @@ export async function getAiUsage(ctx, tier = ctx.entitlements?.tier || ctx.accou
 }
 export async function reserveAi(ctx, { requestId: id, digest, inputBound, outputBound, tier }) {
   const key = `${ctx.user.id}:${month(ctx.now)}`, reqKey = `${ctx.user.id}:${id}`, limit = limitsFor(tier), tokens = inputBound + outputBound;
+  const day = new Date(ctx.now).toISOString().slice(0, 10);
+  const externalLimit = Number(ctx.env?.PRODUCT_AI_DAILY_PROVIDER_TOKEN_LIMIT ?? 2200000);
+  if (!Number.isSafeInteger(externalLimit) || externalLimit < 0 || externalLimit > 1000000000)
+    fail('AI_NOT_CONFIGURED', 'The shared provider resource limit is invalid.', 503);
+  if (![inputBound, outputBound].every(n => Number.isSafeInteger(n) && n > 0))
+    fail('AI_CONTEXT_TOO_LARGE', 'The explanation exceeds its resource limits.', 400);
   for (let attempt = 0; attempt < 50; attempt++) {
-    const [request, usage] = await Promise.all([ctx.store.get('ai_requests', reqKey), ctx.store.get('ai_usage', key)]);
+    const [request, usage, meter] = await Promise.all([ctx.store.get('ai_requests', reqKey), ctx.store.get('ai_usage', key), ctx.store.get('provider_meter', 'openai:daily')]);
     if (request) { if (request.ownerId !== ctx.user.id || request.value.digest !== digest) fail('IDEMPOTENCY_CONFLICT', 'That request ID belongs to a different explanation.', 409); return { replay: true, request: request.value }; }
     const current = usage?.value || { requests: 0, tokens: 0 };
     if (!isOwnerContext(ctx) && (current.requests >= limit.requests || current.tokens + tokens > limit.tokens)) fail('AI_QUOTA_EXHAUSTED', 'Your included AI allowance is used. It resets next month.', 429);
+    if (meter && (!/^\d{4}-\d{2}-\d{2}$/.test(meter.value.day) || meter.value.day > day))
+      fail('AI_NOT_CONFIGURED', 'The shared provider resource window is unavailable.', 503);
+    const used = meter?.value.day === day ? meter.value.reservedTokens : 0;
+    if (!Number.isSafeInteger(used) || used < 0) fail('AI_NOT_CONFIGURED', 'The shared provider resource meter is unavailable.', 503);
+    if (used + tokens > externalLimit) fail('AI_PROVIDER_BUDGET', 'The shared provider allowance for today has been reached.', 429);
+    // Charge the worst-case upstream reservation once, including unknown outcomes; a replay does not spend it again.
+    const providerCharge = change('provider_meter', 'openai:daily', SYSTEM_OWNER, meter, { day, reservedTokens: used + tokens });
     const value = { digest, state: 'reserved', reservedTokens: tokens, usageKey: key, createdAt: ctx.now, tier, inputBound, outputBound, ...(isOwnerContext(ctx) ? { quotaExempt: true } : {}) };
-    const result = await ctx.store.transact([change('ai_usage', key, ctx.user.id, usage, { requests: current.requests + 1, tokens: current.tokens + tokens }), change('ai_requests', reqKey, ctx.user.id, null, value)]);
+    const result = await ctx.store.transact([providerCharge, change('ai_usage', key, ctx.user.id, usage, { requests: current.requests + 1, tokens: current.tokens + tokens }), change('ai_requests', reqKey, ctx.user.id, null, value)]);
     if (result.status === 'applied') return { replay: false, request: value };
   }
   fail('CONCURRENT_UPDATE', 'Your AI allowance is being updated. Retry with the same request ID.', 409);

@@ -126,3 +126,20 @@ test('signup ignores requested owner/admin/billing/verification fields', async t
   assert.equal(record.value.billing.status, 'none'); assert.equal(isOwnerAccount(record.value), false);
   assert.equal(deriveEntitlements(record.value, NOW).tier, 'none');
 });
+
+
+test('a single atomic provider budget covers owners and customers across retries and UTC rollover', async t => {
+  const ctx = await fixture(t);
+  ctx.env.PRODUCT_AI_DAILY_PROVIDER_TOKEN_LIMIT = '400';
+  const customer = { ...ctx, user:{ id: OTHER, kind:'user' }, account:{emailVerified:true} };
+  const reserve = (actor, id) => reserveAi(actor, { requestId:id, digest:id, tier:'pro', inputBound:100, outputBound:100 });
+  const results = await Promise.allSettled([reserve(ctx,'one'),reserve(customer,'two'),reserve(ctx,'three')]);
+  assert.equal(results.filter(item=>item.status==='fulfilled').length,2);
+  assert.equal(results.find(item=>item.status==='rejected').reason.code,'AI_PROVIDER_BUDGET');
+  assert.equal((await reserve(ctx,'one')).replay,true);
+  assert.equal((await getAiUsage(ctx)).unlimited,true);
+  const next = {...ctx,now:ctx.now+86400000};
+  assert.equal((await reserve(next,'next')).replay,false);
+  await assert.rejects(reserve(ctx,'old-clock'),{code:'AI_NOT_CONFIGURED'});
+  assert.equal((await ctx.store.get('provider_meter','openai:daily')).value.reservedTokens,200);
+});

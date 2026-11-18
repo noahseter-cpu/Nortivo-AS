@@ -1,7 +1,7 @@
 import { createSupabaseStore } from '../terminal/store.mjs';
 import { snapshot,createInitialState } from '../terminal/engine.mjs';
 import crypto from 'node:crypto';
-import { TerminalError,fail,header,sessionSecret,token,sha256,csrfToken,equalToken,cookieToken,cookie,requireSameOrigin,requestOrigin,parseBody,clientIdentifier,response,isLocalRuntime,GUEST_TTL,SESSION_TTL,GUEST_SESSION_TTL } from '../terminal/security.mjs';
+import { TerminalError,fail,header,sessionSecret,token,sha256,csrfToken,equalToken,cookieToken,cookie,requireSameOrigin,requestOrigin,parseBody,clientIdentifier,response,isLocalRuntime,GUEST_TTL,SESSION_TTL,GUEST_SESSION_TTL,workspaceSession,workspaceRateLimiter,authorizeWorkspaceRecord,authorizeWorkspaceAdmin,secureWorkspaceResponse } from '../terminal/security.mjs';
 import { ensureAccount,handlePublicAuth,handleAccount,emailReady } from './auth.mjs';
 import { deriveEntitlements,requireEntitlement } from './entitlements.mjs';
 import { isOwnerContext } from './owner.mjs';
@@ -17,20 +17,27 @@ const BILLING=new Set(['product-checkout','product-portal','product-change-previ
 const ALIASES={'product-pricing':'product-plans','product-auth-resend':'product-resend','product-auth-recover':'product-forgot','product-auth-reset':'product-reset','product-auth-verify':'product-verify','product-auth-password':'product-change-password','product-auth-sessions':'product-sessions','product-auth-session-revoke':'product-revoke'};
 export function createProductHandler({store:providedStore,env,now,fetcher,testEmail,stripe,legacyHandler}) {
  let legacyStore=providedStore;
- return async event=>{try{
+ const runProduct=async event=>{try{
   const method=String(event.httpMethod||event.method||'GET').toUpperCase(),params=event.queryStringParameters||Object.fromEntries(new URL(event.rawUrl).searchParams);const action=ALIASES[params.action]||params.action||'session';
   if(!['GET','POST'].includes(method)||!(method==='GET'?GETS:POSTS).has(action))fail('NOT_FOUND','Workspace action not found.',404);
   if(action==='product-broker-callback')requestOrigin(event,env);else requireSameOrigin(event,env,method==='POST');const origin=new URL(event.rawUrl).origin,secret=sessionSecret(env),time=now();legacyStore||=createSupabaseStore(env,fetcher);
   const store=legacyStore.product,ip=clientIdentifier(event,secret);if(!store)fail('STORAGE_MIGRATION_REQUIRED','The product database migration is required.',503);
-  const rate=async(namespace,id,limit,windowMs)=>{const r=await legacyStore.consumeRateLimit(`${namespace}:${sha256(id)}`,limit,windowMs,time);if(!r.allowed){const e=new TerminalError('RATE_LIMITED','Too many requests. Wait before trying again.',429);e.retryAfter=Math.max(1,Math.ceil(r.retryAfterMs/1000));throw e;}};
-  await rate('product-request',ip,600,300000);const body=method==='POST'?parseBody(event):null,raw=cookieToken(event),sessionHash=raw?sha256(raw):null,user=raw?await legacyStore.getSession(sessionHash,time):null;
+  const rate=workspaceRateLimiter(legacyStore,secret,time);
+  await rate('product-request',ip,600,300000);const body=method==='POST'?parseBody(event):null,raw=cookieToken(event),sessionHash=raw?sha256(raw):null,user=raw?await workspaceSession(event,legacyStore,time):null;
+  if(action==='logout'){
+   if(!raw)fail('AUTH_REQUIRED','Sign in to your account.',401);
+   if(!equalToken(header(event,'x-csrf-token'),csrfToken(raw,secret)))fail('CSRF_FAILED','Refresh your session and try again.',403);
+   await legacyStore.deleteSession(sessionHash);
+   return response(200,{ok:true},{'Set-Cookie':cookie('',0,isLocalRuntime(env))});
+  }
   let oauthCookie='';
   const ctx={store,legacyStore,user,sessionHash,env,now:time,clock:now,fetcher,origin,ip,rate,testEmail,stripe,method,event,requestHeaders:event.headers||{},setOAuthCookie(value){if(typeof value!=='string'||value.length>1000||/[\r\n]/.test(value))throw new Error('Invalid OAuth cookie envelope.');oauthCookie=value;}};
+  if(['product-health','product-health-probe'].includes(action)){if(!user)fail('AUTH_REQUIRED','Sign in to your account.',401);await authorizeWorkspaceAdmin(user,env,store,sessionHash,time);}
   function integrationResponse(result){const extra=oauthCookie?{'Set-Cookie':oauthCookie}:{};return result?.statusCode?{...result,headers:{...extra,...result.headers}}:response(200,result,extra);}
   // These promises live for one request only. Every new request still reads its
   // session and account afresh; no owner/MFA/risk/entitlement state is cached globally.
   const accountReads=new Map(),brokerReads=new Map(),readinessReads=new Map();
-  function accountFor(actor){if(!accountReads.has(actor.id))accountReads.set(actor.id,ensureAccount({...ctx,user:actor}));return accountReads.get(actor.id);}
+  function accountFor(actor){if(!accountReads.has(actor.id))accountReads.set(actor.id,ensureAccount({...ctx,user:actor}).then(account=>{authorizeWorkspaceRecord(actor,account.ownerId,time);return account;}));return accountReads.get(actor.id);}
   function brokerFor(target){const key=target.user.id;if(!brokerReads.has(key))brokerReads.set(key,getBrokerStatus(target));return brokerReads.get(key);}
   if(user?.kind==='user'){ctx.account=(await accountFor(user)).value;ctx.entitlements=deriveEntitlements(ctx.account,time);}
   const integrationModule=await import('./providers.mjs');ctx.providers=integrationModule.getProviders?await integrationModule.getProviders(ctx):await integrationModule.createProductProviders?.(env,fetcher,store);
@@ -49,7 +56,6 @@ export function createProductHandler({store:providedStore,env,now,fetcher,testEm
   if(action==='product-broker-callback'){const {handleBrokerCallback}=await import('./broker.mjs');return integrationResponse(await handleBrokerCallback(ctx,params));}
   if(action==='guest'){await rate('product-guest',ip,12,86400000);if(user)return response(200,{product:await productSnapshot(user),csrfToken:csrfToken(raw,secret),capabilities});const guest={id:crypto.randomUUID(),kind:'guest',created_at:time,expires_at:time+GUEST_TTL};await legacyStore.createUser(guest,createInitialState({now:time}));return issue(guest);}
   if(!user)fail('AUTH_REQUIRED','Sign in to your account.',401);await rate('product-user',user.id,1200,300000);
-  if(action==='logout'){await legacyStore.deleteSession(sessionHash);return response(200,{ok:true},{'Set-Cookie':cookie('',0,isLocalRuntime(env))});}
   if(action==='product')return response(200,await productSnapshot(user));
   if(action==='session'){const old=await legacyHandler(event);if(old.statusCode!==200)return old;const data=JSON.parse(old.body),product=await productSnapshot(user);return response(200,{...data,user:product.user,capabilities,product,storage:{...data.storage,description:user.kind==='guest'?'Read-only sample preview. Sample data does not transfer to an account.':'Private account storage. Account history and export remain available after subscription expiry.'}});}
   if(action==='command'||action==='broker')fail('DEMO_READ_ONLY','Sample replay is read-only. Use your subscribed workspace for account actions.',403);
@@ -64,4 +70,5 @@ export function createProductHandler({store:providedStore,env,now,fetcher,testEm
   else result=await integrationModule.handleIntegrations(ctx,action,body,params);
   return integrationResponse(result);
  }catch(error){const known=error instanceof TerminalError||(typeof error?.code==='string'&&/^[A-Z][A-Z0-9_]{2,60}$/.test(error.code)&&Number.isInteger(error.status)&&error.status>=400&&error.status<500);return response(known?error.status:503,{error:{code:known?error.code:'WORKSPACE_UNAVAILABLE',message:known?error.message:'Your action was not confirmed. Retry with the same request ID.'}},error?.status===429?{'Retry-After':String(error.retryAfter||1)}:{});}};
+ return async event=>secureWorkspaceResponse(await runProduct(event),event);
 }

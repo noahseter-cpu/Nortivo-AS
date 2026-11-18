@@ -3,10 +3,15 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { handler as access } from '../netlify/functions/ticket-access.mjs';
 import { handler as tickets } from '../netlify/functions/tickets.mjs';
-import { handler as adminTickets } from '../netlify/functions/admin-tickets.mjs';
+import { handler as defaultAdminTickets, createHandler as createAdminTickets } from '../netlify/functions/admin-tickets.mjs';
 import { handler as adminLogin } from '../netlify/functions/admin-login.mjs';
-import { handler as reply } from '../netlify/functions/reply-ticket.mjs';
-import { createAdminSession, isAdmin } from '../netlify/functions/_utils.mjs';
+import { handler as defaultReply, createHandler as createReply } from '../netlify/functions/reply-ticket.mjs';
+import { createCoreAdminFixture } from './helpers/core-admin.mjs';
+const adminFixture = await createCoreAdminFixture();
+test.after(() => adminFixture.close());
+const adminTickets = createAdminTickets({authorizeAdmin: adminFixture.authorizeAdmin});
+const reply = createReply({authorizeAdmin: adminFixture.authorizeAdmin});
+import { createAdminSession } from '../netlify/functions/_utils.mjs';
 import { LINK_TTL, SESSION_TTL, TICKET_COOKIE, consumeRateLimit, issueToken, rateLimit, readToken, signaturesEqual, siteOrigin, sameOrigin, ticketCookie } from '../netlify/functions/_ticket-security.mjs';
 
 // Dummy configuration only. Every fetch is intercepted; no production services are used.
@@ -24,15 +29,30 @@ const identity = { ticketNumber: 'NT-2026-ABC234', email: 'synthetic@example.inv
 const syntheticTicket = { id: 'test-ticket-id', ticket_number: identity.ticketNumber, email: identity.email, name: 'Synthetic user', subject: 'Synthetic subject', message: 'Synthetic private message', status: 'open' };
 let requestCounter = 0;
 const event = (body, overrides = {}) => ({ httpMethod: 'POST', rawUrl: 'https://nortivo.no/.netlify/functions/ticket-access',
-  headers: { origin: 'https://nortivo.no', 'x-forwarded-proto': 'https', 'x-nf-client-connection-ip': `test-${++requestCounter}` },
+  headers: { origin: 'https://nortivo.no', 'content-type': 'application/json', 'x-forwarded-proto': 'https', 'x-nf-client-connection-ip': `test-${++requestCounter}` },
   body: JSON.stringify(body), ...overrides });
 const data = response => JSON.parse(response.body);
 const response = value => ({ ok: true, status: 200, text: async () => JSON.stringify(value), json: async () => value });
 const cookieHeader = value => value.split(';')[0];
+let rateCounters;
+const isRateRpc = url => String(url).includes('/rest/v1/rpc/terminal_consume_limit');
+const serviceCalls = () => globalThis.fetch.mock.calls.filter(call => !isRateRpc(call.arguments[0]));
+function mockFetch(t, implementation) {
+  return t.mock.method(globalThis, 'fetch', async (url, options = {}) => {
+    if (!isRateRpc(url)) return implementation(url, options);
+    const {p_key:key,p_limit:limit,p_window_ms:windowMs,p_now:now} = JSON.parse(options.body);
+    let bucket = rateCounters.get(key);
+    if (!bucket || bucket.until <= now) { bucket = {count:0,until:now+windowMs}; rateCounters.set(key,bucket); }
+    bucket.count++;
+    return response({allowed:bucket.count<=limit,retryAfterMs:bucket.count<=limit?0:bucket.until-now});
+  });
+}
 
 beforeEach(t => {
-  t.mock.method(globalThis, 'fetch', async () => { throw new Error('Unexpected external call blocked by test.'); });
+  rateCounters = new Map();
+  mockFetch(t, async () => { throw new Error('Unexpected external call blocked by test.'); });
   t.mock.method(console, 'error', () => {});
+  t.mock.method(console, 'info', () => {});
 });
 
 test('tokens expire exactly at their boundary and use independent purposes', () => {
@@ -64,10 +84,11 @@ test('signatures reject same-length tampering, malformed lengths and noncanonica
 
 test('customer tokens cannot authenticate as admin, and admin cookie cannot read a customer ticket', async () => {
   const token = issueToken('ticket-session', identity);
-  assert.equal(isAdmin({ headers: { cookie: `nortivo_admin=${token}` } }), false);
-  const result = await tickets(event({}, { httpMethod: 'GET', queryStringParameters: identity, headers: { cookie: `nortivo_admin=${createAdminSession()}` } }));
+  const deniedAdmin = await defaultAdminTickets(event({}, {httpMethod:'GET',headers:{cookie:`nortivo_admin=${token}`}}));
+  assert.equal(deniedAdmin.statusCode,401);
+  const result = await tickets(event({}, { httpMethod: 'GET', queryStringParameters: identity, headers: adminFixture.headers() }));
   assert.equal(result.statusCode, 401);
-  assert.equal(globalThis.fetch.mock.calls.length, 0);
+  assert.equal(serviceCalls().length, 0);
 });
 
 test('unauthenticated and wrong-ticket lookups never reach storage', async () => {
@@ -81,7 +102,7 @@ test('unauthenticated and wrong-ticket lookups never reach storage', async () =>
 
 test('valid request emails a safe fragment link, verifies and reads only the matching ticket', async t => {
   const mails = [];
-  t.mock.method(globalThis, 'fetch', async (url, options = {}) => {
+  mockFetch(t, async (url, options = {}) => {
     if (url === 'https://api.resend.com/emails') { mails.push(JSON.parse(options.body)); return response({ id: 'synthetic-email-id' }); }
     assert.ok(url.startsWith('https://database.invalid/rest/v1/'));
     if (url.includes('ticket_replies?')) return response([{ body: 'Synthetic private reply' }]);
@@ -114,20 +135,20 @@ test('valid request emails a safe fragment link, verifies and reads only the mat
 
 test('missing ticket, throttling and service failure return the same neutral request response', async t => {
   const details = { ticketNumber: 'NT-2026-MISS99', email: 'missing@example.invalid' };
-  t.mock.method(globalThis, 'fetch', async () => response([]));
+  mockFetch(t, async () => response([]));
   const first = await access(event({ action: 'request', ...details }));
   assert.equal(first.statusCode, 202);
-  t.mock.method(globalThis, 'fetch', async () => { throw new Error('Synthetic secret must not leak.'); });
+  mockFetch(t, async () => { throw new Error('Synthetic secret must not leak.'); });
   const second = await access(event({ action: 'request', ...details }));
   const third = await access(event({ action: 'request', ...details }));
-  const callsBefore = globalThis.fetch.mock.calls.length;
+  const callsBefore = serviceCalls().length;
   const fourth = await access(event({ action: 'request', ...details }));
-  assert.equal(globalThis.fetch.mock.calls.length, callsBefore);
+  assert.equal(serviceCalls().length, callsBefore);
   for (const current of [second, third, fourth]) { assert.equal(current.statusCode, 202); assert.equal(current.body, first.body); }
 });
 
 test('email delivery failure remains neutral and does not expose service response', async t => {
-  t.mock.method(globalThis, 'fetch', async url => url === 'https://api.resend.com/emails'
+  mockFetch(t, async url => url === 'https://api.resend.com/emails'
     ? { ok: false, status: 500, text: async () => 'PRIVATE_PROVIDER_SECRET' } : response([syntheticTicket]));
   const result = await access(event({ action: 'request', ticketNumber: identity.ticketNumber, email: 'delivery@example.invalid' }));
   assert.equal(result.statusCode, 202);
@@ -170,7 +191,7 @@ test('site links use allowlisted deployment origins and ignore hostile forwarded
   assert.equal(sameOrigin({ ...preview, headers: { origin: 'https://nortivo.no' } }, { required: true }), false);
 });
 
-test('IP and email limits count actual attempts and reset after their windows', () => {
+test('isolated legacy limiter helpers count attempts and reset after their windows', () => {
   const key = crypto.randomUUID();
   assert.equal(consumeRateLimit('test', key, 2, 1000, 100), true);
   assert.equal(consumeRateLimit('test', key, 2, 1000, 101), true);
@@ -179,17 +200,17 @@ test('IP and email limits count actual attempts and reset after their windows', 
 });
 
 test('repeated verification is throttled by Netlify IP regardless of spoofed forwarded IP', async () => {
-  const request = event({ action: 'verify', token: 'bad' });
+  const request = event({ action: 'verify', token: issueToken('email-proof', identity) });
   for (let index = 0; index < 20; index++) {
     request.headers['x-forwarded-for'] = `spoofed-${index}`;
-    assert.equal((await access(request)).statusCode, 401);
+    assert.equal((await access(request)).statusCode, 200);
   }
   const limited = await access(request);
   assert.equal(limited.statusCode, 429);
   assert.equal(limited.headers['Retry-After'], '900');
 });
 
-test('blocked IP cannot exhaust limiter capacity by supplying thousands of different emails', () => {
+test('isolated legacy limiter helper prevents blocked IP from exhausting capacity', () => {
   const blocked = event({});
   const namespace = `capacity-${crypto.randomUUID()}`;
   assert.equal(rateLimit(blocked, namespace, { ipLimit: 1, email: 'first@example.invalid' }), true);
@@ -205,6 +226,9 @@ test('malformed JSON, oversized body and invalid identities fail before any serv
     assert.equal(result.statusCode, 400);
     assert.equal(data(result).code, 'BAD_REQUEST');
   }
+  const wrongType = event({ action: 'request', ...identity });
+  wrongType.headers['content-type'] = 'text/plain';
+  assert.equal((await access(wrongType)).statusCode, 415);
   for (const details of [{ ticketNumber: 'bad', email: identity.email }, { ticketNumber: identity.ticketNumber, email: 'bad' }]) {
     assert.equal((await access(event({ action: 'request', ...details }))).statusCode, 400);
   }
@@ -213,7 +237,7 @@ test('malformed JSON, oversized body and invalid identities fail before any serv
 
 test('new ticket remains schema-compatible, sends selected language and grants no private session', async t => {
   const calls = [];
-  t.mock.method(globalThis, 'fetch', async (url, options) => {
+  mockFetch(t, async (url, options) => {
     calls.push({ url, options });
     if (url === 'https://api.resend.com/emails') return response({ id: 'synthetic-mail' });
     const saved = JSON.parse(options.body);
@@ -242,50 +266,50 @@ test('populated honeypot rejects without fake saved success, storage or email', 
 });
 
 test('saved ticket remains successful if confirmation email fails', async t => {
-  t.mock.method(globalThis, 'fetch', async url => url === 'https://api.resend.com/emails' ? { ok: false, status: 500 } : response([syntheticTicket]));
+  mockFetch(t, async url => url === 'https://api.resend.com/emails' ? { ok: false, status: 500 } : response([syntheticTicket]));
   const result = await tickets(event({ name: 'Synthetic', email: 'saved@example.invalid', subject: 'Saved ticket', message: 'Synthetic complete message' }));
   assert.equal(result.statusCode, 201);
   assert.equal(data(result).confirmationSent, false);
 });
 
 test('database exceptions are caught and do not expose provider or configuration data', async t => {
-  t.mock.method(globalThis, 'fetch', async () => { throw new Error('SECRET_DATABASE_KEY_AND_EMAIL'); });
+  mockFetch(t, async () => { throw new Error('SECRET_DATABASE_KEY_AND_EMAIL'); });
   const result = await tickets(event({}, { httpMethod: 'GET', queryStringParameters: identity, headers: { cookie: cookieHeader(ticketCookie(identity)) } }));
   assert.equal(result.statusCode, 503);
   assert.equal(data(result).code, 'UNAVAILABLE');
   assert.ok(!result.body.includes('SECRET'));
 });
 
-test('existing admin session still authorizes server reads and unauthenticated reads fail', async t => {
+test('current named MFA admin session authorizes server reads while legacy proofs fail', async t => {
   const denied = await adminTickets(event({}, { httpMethod: 'GET', headers: {} }));
   assert.equal(denied.statusCode, 401);
+  const legacy = { origin:'https://nortivo.no', cookie: `nortivo_admin=${createAdminSession()}` };
+  assert.equal((await defaultAdminTickets(event({}, {httpMethod:'GET',headers:legacy}))).statusCode,401);
+  assert.equal((await defaultReply(event({id:'test-ticket-id',message:'Synthetic reply'},{headers:legacy}))).statusCode,401);
   assert.equal(globalThis.fetch.mock.calls.length, 0);
-  t.mock.method(globalThis, 'fetch', async () => response([syntheticTicket]));
-  const allowed = await adminTickets(event({}, { httpMethod: 'GET', headers: { cookie: `nortivo_admin=${createAdminSession()}` } }));
+  mockFetch(t, async () => response([syntheticTicket]));
+  const allowed = await adminTickets(event({}, { httpMethod: 'GET', headers: adminFixture.headers() }));
   assert.equal(allowed.statusCode, 200);
   assert.equal(data(allowed).tickets[0].id, syntheticTicket.id);
 });
 
-test('admin login preserves cookie contract and rate-limits bad passwords', async () => {
-  const accepted = await adminLogin(event({ password: 'synthetic-password' }));
-  assert.equal(accepted.statusCode, 200);
-  assert.match(accepted.headers['Set-Cookie'], /^nortivo_admin=/);
-  assert.match(accepted.headers['Set-Cookie'], /HttpOnly; SameSite=Strict; Max-Age=28800; Secure/);
-  const request = event({ password: 'incorrect' });
-  for (let i = 0; i < 10; i++) assert.equal((await adminLogin(request)).statusCode, 401);
-  assert.equal((await adminLogin(request)).statusCode, 429);
+test('legacy shared-password login cannot issue an administrator session', async () => {
+  const rejected = await adminFixture.security.login(event({ password: 'synthetic-password' }));
+  assert.equal(rejected.statusCode, 400);
+  assert.equal(rejected.headers['Set-Cookie'], undefined);
+  assert.doesNotMatch(rejected.body, /synthetic-password/);
 });
 
 test('admin replies require admin proof and support Norwegian email without schema change', async t => {
   assert.equal((await reply(event({ id: 'test-ticket-id', message: 'Synthetic response' }))).statusCode, 401);
   const mails = [];
-  t.mock.method(globalThis, 'fetch', async (url, options = {}) => {
+  mockFetch(t, async (url, options = {}) => {
     if (url === 'https://api.resend.com/emails') { mails.push(JSON.parse(options.body)); return response({ id: 'synthetic-email' }); }
     if (options.method === 'POST') assert.deepEqual(Object.keys(JSON.parse(options.body)).sort(), ['body', 'sender', 'ticket_id']);
     return response(options.method ? null : [syntheticTicket]);
   });
   const request = event({ id: 'test-ticket-id', message: 'Et syntetisk svar.', language: 'nb' });
-  request.headers.cookie = `nortivo_admin=${createAdminSession()}`;
+  request.headers = {...request.headers,...adminFixture.headers()};
   const result = await reply(request);
   assert.equal(result.statusCode, 200);
   assert.match(mails[0].text, /Saksnummer:/);

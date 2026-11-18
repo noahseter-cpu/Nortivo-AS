@@ -1,0 +1,55 @@
+{
+  "date": "2026-11-18",
+  "selectedBy": "owner",
+  "references": [
+    {
+      "file": "korvnt-approved.png",
+      "bytes": 1823872,
+      "sha256": "fefaacc37cc3652818b06d12fd746bda20ff1a178099d6d558628e6162fa0216",
+      "width": 856,
+      "height": 1838
+    },
+    {
+      "file": "invest-approved.png",
+      "bytes": 1850362,
+      "sha256": "fc1f302a755211afbcfea5f1fada7d2eb6166384e9a9ecc0033db2a8df70c12e",
+      "width": 897,
+      "height": 1752
+    },
+    {
+      "file": "request-approved.png",
+      "bytes": 1538943,
+      "sha256": "d0bdac57202638cc924616592b4a9fad3645c07125696053291fa1494f6d670b",
+      "width": 1487,
+      "height": 1058
+    },
+    {
+      "file": "terminal-original.jpg",
+      "bytes": 199089,
+      "sha256": "d1183660bdcf74d91dc8db1e1d3d819e497e8d3f5b6696d6b0b6395b496ef0ad"
+    },
+    {
+      "file": "nortivo-original.png",
+      "bytes": 9131,
+      "sha256": "b4ac18728d6d5aed9b383d9a46dde8faf54c694b29da5056bc0b43cca01ef7f6",
+      "width": 300,
+      "height": 300
+    },
+    {
+      "file": "../../dist/assets/brand/korvnt-aperture.png",
+      "bytes": 2000186,
+      "sha256": "63ac6656a0e610174ee9a56e2ab36ce4da36e168530a2d8b92ddb179a035c7b5",
+      "width": 1586,
+      "height": 992,
+      "type": "generated production background only"
+    },
+    {
+      "file": "../../dist/assets/brand/invest-titanium.png",
+      "bytes": 1892077,
+      "sha256": "eb7cb521d65ca037c0253de5a5b77d4ed7d079e6517665e409b29b4be6c2505c",
+      "width": 1672,
+      "height": 941,
+      "type": "generated production background only"
+    }
+  ]
+}

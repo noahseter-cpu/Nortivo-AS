@@ -78,7 +78,16 @@ test('public studio styling remains separate from the private workspace and rest
 
 test('home and support share complete localized desktop and mobile navigation', () => {
   for(const lang of ['nb','en']){
-    const expected=['https://invest.nortivo.no/'+lang+'/terminal/',...['research','systems','education'].map(id=>'/'+lang+'/#'+id),...['about','report-2026'].map(route=>'/'+lang+'/'+route+'/')];
+    const expected=[
+      `https://invest.nortivo.no/${lang}/`,
+      ...['research','systems','education'].map(id=>`/${lang}/#${id}`),
+      `/${lang}/security/`,
+      `/${lang}/about/`,
+      `/${lang}/report-2026/`,
+    ];
+    const parentSecurity=read('dist/'+lang+'/security/index.html');
+    assert.ok(parentSecurity.includes('id="controls"'));
+    assert.ok(parentSecurity.includes('href="https://korvnt.no/'+lang+'/"'));
     for(const route of ['','support/']){
       const html=read('dist/'+lang+'/'+route+'index.html');
       for(const selector of ['class="desktop-nav"','id="mobile-nav"']){
@@ -94,6 +103,13 @@ test('home and support share complete localized desktop and mobile navigation', 
   }
 });
 test('refined restaurant preserves truthful imagery and native keyboard time choices', () => {
+  for(const lang of ['en','nb']){
+    const restaurant=read(`dist/${lang}/restaurant/index.html`);
+    const primary=restaurant.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/)?.[0];
+    assert.ok(primary,`Missing ${lang} restaurant navigation`);
+    assert.deepEqual([...primary.matchAll(/href="([^"]+)"/g)].map(match=>match[1]),['#menu','#visit','#booking']);
+    for(const id of ['menu','visit','booking'])assert.ok(restaurant.includes(`id="${id}"`),`Missing ${lang} restaurant section ${id}`);
+  }
   const html=read('dist/restaurant/index.html');
   assert.match(html,/lune-interior\.webp/);
   assert.match(html,/lune-table\.webp/);

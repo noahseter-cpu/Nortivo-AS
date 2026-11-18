@@ -5,9 +5,15 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createAdminSession } from '../netlify/functions/_utils.mjs';
-import { handler as realCatalog, createHandler as createCatalog } from '../netlify/functions/admin-projects.mjs';
-import { handler as realCourse, createHandler } from '../netlify/functions/admin-vibb.mjs';
+import { createCoreAdminFixture } from './helpers/core-admin.mjs';
+import { handler as realCatalog, createHandler as catalogFactory } from '../netlify/functions/admin-projects.mjs';
+import { createHandler as courseFactory } from '../netlify/functions/admin-vibb.mjs';
+const fixture = await createCoreAdminFixture();
+test.after(() => fixture.close());
+const createCatalog = options => catalogFactory({...options, authorizeAdmin: fixture.authorizeAdmin});
+const createHandler = options => courseFactory({...options, authorizeAdmin: fixture.authorizeAdmin});
+const configuredCatalog = createCatalog();
+const configuredCourse = createHandler();
 import { createPrivateContentLoader, validatePrivateContent } from '../netlify/private/content-loader.mjs';
 import { decryptContent, encryptContent } from '../netlify/private/content-crypto.mjs';
 
@@ -38,12 +44,12 @@ const loader = createPrivateContentLoader(syntheticEnvelope);
 const catalog = createCatalog({ loadProjects: loader.projects });
 const course = createHandler({ loadWorker: loader.worker });
 const cookie = token => 'nortivo_admin=' + token;
-const signed = () => cookie(createAdminSession());
+const signed = () => fixture.cookie;
 const event = (pathname = '/admin/projects/vibb/', extra = {}) => ({
   path: pathname, rawUrl: 'https://nortivo.no' + pathname, httpMethod: 'GET', headers: {}, ...extra,
 });
 const decoded = result => result.isBase64Encoded ? Buffer.from(result.body, 'base64').toString('utf8') : result.body;
-const withCookie = (pathname, token = signed(), extra = {}) => event(pathname, { ...extra, headers: { cookie: token, ...extra.headers } });
+const withCookie = (pathname, token = signed(), extra = {}) => event(pathname, { ...extra, headers: { ...fixture.headers(), cookie: token, ...extra.headers } });
 const expiredPayload = Buffer.from(JSON.stringify({ exp: Date.now() - 1000 })).toString('base64url');
 const expired = cookie(expiredPayload + '.' + crypto.createHmac('sha256', process.env.ADMIN_SESSION_SECRET).update(expiredPayload).digest('base64url'));
 
@@ -183,8 +189,8 @@ test('missing or changed keys fail closed even after cached success, without aff
   try {
     for (const key of [undefined, crypto.randomBytes(32).toString('base64')]) {
       if (key) process.env.NORTIVO_PRIVATE_CONTENT_KEY = key; else delete process.env.NORTIVO_PRIVATE_CONTENT_KEY;
-      for (const handler of [catalog, realCatalog, course, realCourse]) {
-        const pathname = handler === catalog || handler === realCatalog ? '/.netlify/functions/admin-projects' : '/admin/projects/vibb/';
+      for (const handler of [catalog, configuredCatalog, course, configuredCourse]) {
+        const pathname = handler === catalog || handler === configuredCatalog ? '/.netlify/functions/admin-projects' : '/admin/projects/vibb/';
         const result = await handler(withCookie(pathname));
         assert.equal(result.statusCode, 503);
         assert.doesNotMatch(result.body, /decrypt|cipher|authentication tag|NORTIVO_PRIVATE_CONTENT_KEY|sourceVersion/);

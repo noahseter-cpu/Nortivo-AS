@@ -11,7 +11,7 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     "admin.menu": "Meny",
     "admin.heading": "Nortivo administrasjon",
     "admin.lead": "Logg inn for å håndtere kundesupport og se tjenesteoppsettet.",
-    "admin.password": "Administratorpassord",
+    "admin.password": "Kontopassord",
     "admin.signIn": "Logg inn",
     "admin.tickets": "Supportsaker",
     "admin.workspaceIntro": "Les henvendelser, svar på e-post og oppdater status.",
@@ -36,8 +36,8 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     "admin.signingIn": "Logger inn…",
     "admin.signingOut": "Logger ut…",
     "admin.signedOut": "Du er logget ut.",
-    "admin.passwordRequired": "Skriv inn administratorpassordet.",
-    "admin.wrongPassword": "Feil passord. Prøv igjen.",
+    "admin.passwordRequired": "Skriv inn kontopassordet ditt.",
+    "admin.wrongPassword": "Kontoinformasjonen eller sikkerhetskoden ble ikke godtatt. Prøv igjen.",
     "admin.sessionExpired": "Økten er utløpt. Logg inn igjen. Utkastene er beholdt. Innsendte endringer kan fortsatt bli fullført; sjekk saken og e-postaktiviteten før du prøver igjen.",
     "admin.loginUnavailable": "Innlogging er midlertidig utilgjengelig. Prøv igjen senere.",
     "admin.network": "Serveren kunne ikke nås. Sjekk tilkoblingen og prøv igjen.",
@@ -130,7 +130,12 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     "admin.serviceAi": "KI-forklaringer",
     "admin.serviceBroker": "Megler",
     "admin.serviceEmail": "E-post",
-    "admin.servicePayments": "Betaling"
+    "admin.servicePayments": "Betaling",
+    "admin.email": "E-post til kontoen",
+    "admin.securityCode": "Kode fra autentiseringsapp eller gjenopprettingskode",
+    "admin.securityHelp": "Bruk din egen Nortivo-konto med bekreftet e-post og MFA allerede aktivert i handelsplattformens sikkerhetsinnstillinger. Administratortilgang må tildeles separat.",
+    "admin.emailRequired": "Skriv inn e-postadressen til Nortivo-kontoen din.",
+    "admin.codeRequired": "Skriv inn den sekssifrede koden fra autentiseringsappen eller en gjenopprettingskode."
   },
   "en": {
     "admin.title": "Support Workspace — Nortivo",
@@ -141,7 +146,7 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     "admin.menu": "Menu",
     "admin.heading": "Nortivo administration",
     "admin.lead": "Sign in to manage customer support and view service configuration.",
-    "admin.password": "Admin password",
+    "admin.password": "Account password",
     "admin.signIn": "Sign in",
     "admin.tickets": "Support tickets",
     "admin.workspaceIntro": "Read requests, reply by email and manage their status.",
@@ -166,8 +171,8 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     "admin.signingIn": "Signing in…",
     "admin.signingOut": "Signing out…",
     "admin.signedOut": "You are signed out.",
-    "admin.passwordRequired": "Enter the admin password.",
-    "admin.wrongPassword": "Incorrect password. Try again.",
+    "admin.passwordRequired": "Enter your account password.",
+    "admin.wrongPassword": "Your account details or security code were not accepted. Try again.",
     "admin.sessionExpired": "Your session has expired. Sign in again. Drafts are retained. Submitted changes may still complete; check the ticket and email activity before retrying.",
     "admin.loginUnavailable": "Sign-in is temporarily unavailable. Try again later.",
     "admin.network": "The server could not be reached. Check your connection and try again.",
@@ -260,7 +265,12 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     "admin.serviceAi": "AI explanations",
     "admin.serviceBroker": "Brokerage",
     "admin.serviceEmail": "Email",
-    "admin.servicePayments": "Payments"
+    "admin.servicePayments": "Payments",
+    "admin.email": "Account email",
+    "admin.securityCode": "Authenticator or recovery code",
+    "admin.securityHelp": "Use your own Nortivo account with verified email and MFA already enabled in the trading platform’s account security settings. Administrator access must be assigned separately.",
+    "admin.emailRequired": "Enter your Nortivo account email.",
+    "admin.codeRequired": "Enter your six-digit authenticator code or a recovery code."
   }
 };
   const site = window.Nortivo;
@@ -275,6 +285,7 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
   let activeId = null;
   let detailVersion = 0;
   let authVersion = 0;
+  let csrfToken = "";
   let listRequest = null;
   let loginBusy = false;
   let logoutBusy = false;
@@ -310,7 +321,36 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     item.textContent = (prefix ? t(prefix) + " " : "") + formatDate(value);
     return item;
   }
+  const workflowTitles=()=>{
+    const title=site.getLanguage()==="nb"?"Samtaler og prosjekter":"Conversations & projects";
+    el("workflow-choice").textContent=title;el("workflow-title").textContent=title;
+    const korvntTitle=site.getLanguage()==="nb"?"KORVNT-henvendelser":"KORVNT enquiries";
+    el("korvnt-choice").textContent=korvntTitle;el("korvnt-title").textContent=korvntTitle;
+  };
+  workflowTitles();
+  let workflowInbox,korvntInbox;
+  async function openWorkflowInbox() {
+    const version=authVersion;
+    try {
+      const {mountWorkflowInbox}=await import("./workflow-operator.js");
+      if(version!==authVersion || workspaceView!=="workflow")return;
+      if(workflowInbox){workflowInbox.refresh();return;}
+      workflowInbox=mountWorkflowInbox(el("workflow-app"),body=>api("workflow-inbox",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}));
+    } catch { if(version===authVersion)message(el("dashboard-message"),"unavailable","error"); }
+  }
+  async function openKorvntInbox() {
+    const version=authVersion;
+    try {
+      const {mountWorkflowInbox}=await import("./workflow-operator.js");
+      if(version!==authVersion || workspaceView!=="korvnt")return;
+      if(korvntInbox){korvntInbox.refresh();return;}
+      korvntInbox=mountWorkflowInbox(el("korvnt-app"),(body,endpoint)=>api(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}),{business:"korvnt"});
+    } catch {if(version===authVersion)message(el("dashboard-message"),"unavailable","error");}
+  }
   function showLogin(key, focus = true) {
+    workflowInbox?.clear();workflowInbox=null;
+    korvntInbox?.clear();korvntInbox=null;
+    csrfToken = "";
     authVersion++;
     listGeneration++;
     configurationGeneration++;
@@ -336,16 +376,18 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     el("login-card").hidden = false;
     message(el("login-message"), key || "", key === "signedOut" ? "success" : "error");
     el("operations-checked").textContent="";
-    if (focus) el("password").focus();
+    if (focus) el("admin-email").focus();
   }
   function selectWorkspace(view, focus = false) {
-    workspaceView = ["overview","inbox","operations"].includes(view) ? view : "overview";
-    for (const name of ["overview","inbox","operations"]) {
+    workspaceView = ["overview","inbox","operations","workflow","korvnt"].includes(view) ? view : "overview";
+    for (const name of ["overview","inbox","operations","workflow","korvnt"]) {
       el(name+"-panel").hidden = name !== workspaceView;
       el(name+"-choice").setAttribute("aria-pressed",String(name === workspaceView));
     }
     if (focus) el(workspaceView+"-title").focus({preventScroll:true});
     if (workspaceView === "operations" && !operationsData) void loadOperations();
+    if (workspaceView === "workflow") void openWorkflowInbox();
+    if (workspaceView === "korvnt") void openKorvntInbox();
   }
   function showDashboard() {
     el("login-card").hidden = true;
@@ -401,19 +443,32 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 25000);
     try {
-      const response = await fetch("/.netlify/functions/" + path, {credentials:"same-origin", cache:"no-store", signal:controller.signal, ...options});
+      const mutation = !["GET", "HEAD"].includes(String(options.method || "GET").toUpperCase());
+      if (mutation && path !== "admin-login" && !csrfToken) {
+        if (context === "general") showLogin("sessionExpired");
+        throw Object.assign(new Error("Security session required"), {status:401, code:"CSRF_REQUIRED"});
+      }
+      const headers = {...options.headers, ...(mutation && path !== "admin-login" ? {"x-csrf-token":csrfToken} : {})};
+      const response = await fetch("/.netlify/functions/" + path, {credentials:"same-origin", cache:"no-store", signal:controller.signal, ...options, headers});
       const data = await response.json().catch(() => ({}));
       if (version !== authVersion) throw Object.assign(new Error("Session changed"),{status:401,code:"STALE_SESSION"});
       if (!response.ok) {
-        if (response.status === 401 && context === "general" && version === authVersion) showLogin("sessionExpired");
+        if ((response.status === 401 || response.status === 403 && ["MFA_REQUIRED", "CSRF_FAILED", "FORBIDDEN"].includes(data.code)) && context === "general" && version === authVersion) showLogin("sessionExpired");
         throw Object.assign(new Error("Request failed"), {status:response.status, code:data.code});
       }
       return data;
     } finally { clearTimeout(timeout); }
   }
+  function acceptSession(data) {
+    if (data?.ok !== true || typeof data.csrfToken !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(data.csrfToken)) {
+      csrfToken = "";
+      throw Object.assign(new Error("Security session unavailable"), {status:503, code:"UNAVAILABLE"});
+    }
+    csrfToken = data.csrfToken;
+  }
   const json = (method, body) => ({method, headers:{"Content-Type":"application/json"}, body:JSON.stringify({...body, language:site.getLanguage()})});
   function errorKey(error, context = "") {
-    if (error.status === 401) return context === "login" ? "wrongPassword" : "sessionExpired";
+    if (error.status === 401 || error.status === 403 && ["MFA_REQUIRED", "CSRF_FAILED", "FORBIDDEN"].includes(error.code)) return context === "login" ? "wrongPassword" : "sessionExpired";
     if (error.status === 429) return "rateLimited";
     if (error.status === 404) return "notFound";
     if (error.status === 503 || error.status >= 500) return context === "login" ? "loginUnavailable" : "unavailable";
@@ -640,24 +695,37 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     event.preventDefault();
     if (loginBusy) return;
     const form = event.currentTarget;
+    const email = el("admin-email");
     const password = el("password");
-    if (!password.value) {
-      const error = el("password-error");
-      error.hidden = false;
-      error.dataset.i18n = "admin.passwordRequired";
-      error.textContent = t("passwordRequired");
-      password.setAttribute("aria-invalid", "true");
-      password.focus();
-      return;
+    const securityCode = el("admin-security-code");
+    const code = securityCode.value.replace(/\s/g, "");
+    const fields = [
+      [email, "admin-email-error", "emailRequired", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()) && email.value.trim().length <= 160],
+      [password, "password-error", "passwordRequired", Boolean(password.value)],
+      [securityCode, "admin-code-error", "codeRequired", /^[A-Za-z0-9_-]{6,64}$/.test(code)]
+    ];
+    for (const [field, errorId, key, valid] of fields) {
+      const error = el(errorId);
+      error.hidden = valid;
+      if (valid) field.removeAttribute("aria-invalid");
+      else {
+        error.dataset.i18n = "admin." + key;
+        error.textContent = t(key);
+        field.setAttribute("aria-invalid", "true");
+      }
     }
+    const invalid = fields.find(([, , , valid]) => !valid);
+    if (invalid) { invalid[0].focus(); return; }
     loginBusy = true;
+    csrfToken = "";
     authVersion++;
     const button = form.querySelector('[type="submit"]');
     button.disabled = true;
     form.setAttribute("aria-busy", "true");
     message(el("login-message"), "signingIn");
     try {
-      await api("admin-login", json("POST", {password:password.value}), "login");
+      const result = await api("admin-login", json("POST", {email:email.value.trim(), password:password.value, ...(/^\d{6}$/.test(code) ? {code} : {recoveryCode:code})}), "login");
+      acceptSession(result);
       form.reset();
       showDashboard();
       el("dashboard-title").focus();
@@ -671,12 +739,14 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
       form.removeAttribute("aria-busy");
     }
   });
-  el("password").addEventListener("input", () => {
-    el("password").removeAttribute("aria-invalid");
-    el("password-error").hidden = true;
-  });
-  el("refresh-button").addEventListener("click",()=>workspaceView==="operations"?loadOperations():loadTickets());
-  for(const view of ["overview","inbox","operations"])el(view+"-choice").addEventListener("click",()=>selectWorkspace(view,true));
+  for (const [fieldId, errorId] of [["admin-email", "admin-email-error"], ["password", "password-error"], ["admin-security-code", "admin-code-error"]]) {
+    el(fieldId).addEventListener("input", () => {
+      el(fieldId).removeAttribute("aria-invalid");
+      el(errorId).hidden = true;
+    });
+  }
+  el("refresh-button").addEventListener("click",()=>workspaceView==="workflow"?openWorkflowInbox():workspaceView==="korvnt"?openKorvntInbox():workspaceView==="operations"?loadOperations():loadTickets());
+  for(const view of ["overview","inbox","operations","workflow","korvnt"])el(view+"-choice").addEventListener("click",()=>selectWorkspace(view,true));
   document.querySelectorAll("[data-inbox-shortcut]").forEach(button=>button.addEventListener("click",()=>openInbox(button.dataset.inboxShortcut)));
   el("load-more-button").addEventListener("click",()=>loadTickets(true,true));
   el("clear-filters").addEventListener("click",()=>{el("search").value="";el("status-filter").value="all";el("older-filter").checked=false;el("sort-order").value="newest";renderList();el("search").focus();});
@@ -710,6 +780,7 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
     }
   });
   document.addEventListener("nortivo:language", () => {
+    workflowTitles();
     document.title = t("title");
     renderList();
     updateStats();
@@ -720,7 +791,7 @@ import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} 
   document.title = t("title");
   (async () => {
     const version=authVersion;message(el("login-message"),"checkingSession");
-    try{const data=await api("admin-tickets?language="+site.getLanguage()+"&offset=0",{},"session-check");if(version!==authVersion)return;applyTickets(data);message(el("login-message"),"");showDashboard();}
-    catch(error){if(version!==authVersion)return;if(error.status===401)showLogin("",false);else message(el("login-message"),errorKey(error),"error");}
+    try{const session=await api("admin-session",{},"session-check");if(version!==authVersion)return;acceptSession(session);const data=await api("admin-tickets?language="+site.getLanguage()+"&offset=0",{},"session-check");if(version!==authVersion)return;applyTickets(data);message(el("login-message"),"");showDashboard();}
+    catch(error){if(version!==authVersion)return;if(error.status===401||error.status===403)showLogin("",false);else{csrfToken="";message(el("login-message"),errorKey(error),"error");}}
   })();
 })();

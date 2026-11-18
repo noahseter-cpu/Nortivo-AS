@@ -18,10 +18,11 @@
 <meta name="theme-color" content="#08090b">
 
     
-<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=nortivo-20260922" />
+<link rel="icon" type="image/png" href="/favicon.png" />
 <link rel="stylesheet" href="/assets/site.css" />
 <link rel="stylesheet" href="/assets/portal-v2.css" />
 <link rel="stylesheet" href="/assets/admin-workspace.css" />
+<link rel="stylesheet" href="/assets/workflows.css" />
 <script src="/assets/site.js" defer>
 </script>
 <script type="module" src="/assets/admin.js" defer>
@@ -43,10 +44,21 @@
           <p class="portal-lead" data-i18n="admin.lead">Logg inn for å håndtere kundesupport og se tjenesteoppsettet.</p>
           <form id="login-form" method="post" novalidate>
             <div class="field">
-              <label for="password" data-i18n="admin.password">Administratorpassord</label>
+              <label for="admin-email" data-i18n="admin.email">E-post til kontoen</label>
+              <input id="admin-email" name="email" type="email" autocomplete="username" maxlength="160" aria-describedby="admin-email-error admin-security-help" required />
+              <span class="field-error" id="admin-email-error" hidden></span>
+            </div>
+            <div class="field">
+              <label for="password" data-i18n="admin.password">Kontopassord</label>
               <div class="admin-password"><input id="password" name="password" type="password" autocomplete="current-password" aria-describedby="password-error" required /><button id="password-visibility" type="button" aria-pressed="false" data-i18n="admin.showPassword">Vis</button></div>
               <span class="field-error" id="password-error" hidden></span>
             </div>
+            <div class="field">
+              <label for="admin-security-code" data-i18n="admin.securityCode">Kode fra autentiseringsapp eller gjenopprettingskode</label>
+              <input id="admin-security-code" name="securityCode" type="password" autocomplete="one-time-code" maxlength="64" autocapitalize="none" spellcheck="false" aria-describedby="admin-code-error admin-security-help" required />
+              <span class="field-error" id="admin-code-error" hidden></span>
+            </div>
+            <p id="admin-security-help" class="panel-intro" data-i18n="admin.securityHelp">Bruk din egen Nortivo-konto med bekreftet e-post og MFA allerede aktivert i handelsplattformens sikkerhetsinnstillinger. Administratortilgang må tildeles separat.</p>
             <div class="form-actions"><button class="button" type="submit" data-i18n="admin.signIn">Logg inn</button></div>
             <p class="message" id="login-message" role="status" aria-live="polite" aria-atomic="true"></p>
           </form>
@@ -59,6 +71,8 @@
         </header>
         <nav class="workspace-choices" aria-label="Velg arbeidsområde" data-i18n-aria="admin.workspaceChoice">
           <button type="button" id="overview-choice" aria-pressed="true" aria-controls="overview-panel" data-i18n="admin.overview">Oversikt</button>
+          <button type="button" id="workflow-choice" aria-pressed="false" aria-controls="workflow-panel">Conversations &amp; projects</button>
+          <button type="button" id="korvnt-choice" aria-pressed="false" aria-controls="korvnt-panel">KORVNT enquiries</button>
           <button type="button" id="inbox-choice" aria-pressed="false" aria-controls="inbox-panel" data-i18n="admin.inbox">Innboks</button>
           <button type="button" id="operations-choice" aria-pressed="false" aria-controls="operations-panel" data-i18n="admin.operations">Drift</button>
         </nav>
@@ -93,6 +107,12 @@
             </div>
             <div class="ticket-detail" id="ticket-detail" aria-busy="false"><div class="empty"><p data-i18n="admin.selectTicket">Velg en sak for å lese og svare.</p></div></div>
           </section>
+        </section>
+        <section id="workflow-panel" aria-labelledby="workflow-title" hidden>
+          <h2 id="workflow-title" tabindex="-1">Conversations &amp; projects</h2><div id="workflow-app"></div>
+        </section>
+        <section id="korvnt-panel" aria-labelledby="korvnt-title" hidden>
+          <h2 id="korvnt-title" tabindex="-1">KORVNT enquiries</h2><div id="korvnt-app"></div>
         </section>
         <section id="operations-panel" aria-labelledby="operations-title" hidden>
           <div class="admin-section-head"><div><h2 id="operations-title" tabindex="-1" data-i18n="admin.operations">Drift</h2><p data-i18n="admin.operationsIntro">Tjenesteoppsett og direkte tilgang til driftsverktøyene dine.</p></div></div>

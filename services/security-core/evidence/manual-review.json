@@ -1,0 +1,23 @@
+{
+  "reviewedAt": "2026-11-18",
+  "scope": "Initial local review release",
+  "preview": {
+    "homepageVisuallyObserved": true,
+    "transport": "file",
+    "otherPages": "Static checks and synthetic DOM interaction checks; not visually inspected",
+    "httpBrowserValidation": false,
+    "reason": "Sandbox socket access denied; loopback browser navigation timed out."
+  },
+  "dependencyAdvisoryCheck": {
+    "available": false,
+    "result": "npm audit returned no advisory metadata in the restricted environment. Rerun before release."
+  },
+  "productionChangesBySentinelTask": false,
+  "previewAssetHashes": {
+    "index.html": "ef08facc6f6683b96da166e3d1eca319a4f7faf9929b0819c2485b9f6fac6880",
+    "security.html": "982212797d44be455e84bfba550c9e25c948a398529b324db2aca3f1deccc296",
+    "report.html": "6fee8a1fb24c967a1d83076e2f62286ec00c9f63967475adf73a1ba6eec9e2ed",
+    "styles.css": "1bc1168532e3b8a3d38fbf9538ea5f5446da0252894e593d2fe6e8d0bb9782e3",
+    "preview.js": "04f7569752467c69282cb51b3d51392850d4209c84d64ff2ed11bc6887f33177"
+  }
+}
