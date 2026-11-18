@@ -100,4 +100,3 @@ Before rollback, stop automation through the product, keep broker protective ord
 
 ## Incident identification
 Owner health explicitly scopes unresolved intents to that owner's account. The private persistent-worker log preserves the affected internal owner UUID and a bounded error code for cross-account incident triage. It excludes email, tokens, positions and raw upstream bodies. Review these private logs whenever worker health is degraded; absence from the owner's own intent list is not a system-wide clean bill of health.
-
