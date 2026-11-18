@@ -38,7 +38,7 @@ The owner positions Nortivo as an investment company focused on financial resear
 - The complete local terminal uses Node 24 SQLite. Hosted activation requires the additive `supabase/terminal.sql` migration and separate terminal security configuration; a static preview does not activate it. Provider research requires explicit credentials and display permission. The subscription product has separate account, entitlement and provider gates. Production live execution remains disabled; enabling it is outside this design refinement. See [TERMINAL_SERVER.md](docs/TERMINAL_SERVER.md) and [TERMINAL_ENGINE.md](docs/TERMINAL_ENGINE.md).
 
 - The enabled subscription product uses shared account entry and private sessions, Portfolio manual-ledger tools and Terminal Pro workspaces. Prices and paid availability are defined by the existing server catalog. This refinement changes presentation, not subscriptions, provider contracts or execution permissions.
-- Terminal Pro, Portfolio, pricing and account screens now share the homepage’s black-and-ivory system and text-only NORTIVO wordmark. See [PRODUCT_REFINEMENT_SPEC.md](docs/PRODUCT_REFINEMENT_SPEC.md).
+- Portfolio and pricing retain the homepage identity. The latest owner correction restores Terminal Pro’s approved green-charcoal reference, compact density and original mark while preserving the refinement’s behavior fixes. See [TERMINAL_REFERENCE_RESTORATION.md](docs/TERMINAL_REFERENCE_RESTORATION.md).
 
 ## Brand Commitments
 

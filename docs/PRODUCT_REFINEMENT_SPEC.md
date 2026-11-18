@@ -1,3 +1,5 @@
+> Historical brief: the subsequent user-supplied terminal image supersedes its palette, panel shape and desktop-density instructions for Terminal Pro. See TERMINAL_REFERENCE_RESTORATION.md. All behavioral safeguards remain applicable.
+
 Act as a senior product designer and frontend engineer. Inspect the existing Nortivo project, then implement a complete visual and UX refinement of its trading platform so that it clearly belongs to the same company as the main website.
 
 **Brand reference:** https://nortivo.no/en/

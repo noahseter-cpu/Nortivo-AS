@@ -1,15 +1,14 @@
 # Terminal and Portfolio surface brief
 
-The owner’s 18 November 2026 refinement brief in `docs/PRODUCT_REFINEMENT_SPEC.md` supersedes the older green-charcoal screenshot as visual authority. The current rendered homepage is the reference for Terminal Pro, Portfolio and their shared account screens.
+The latest 18 November 2026 correction restores the terminal shown in the user-supplied `trading-platform-1920.jpg`. This supersedes the previous homepage-palette instructions for Terminal Pro. Portfolio and public pages retain their current identity. See `TERMINAL_REFERENCE_RESTORATION.md` for scope and verification.
 
 ## Direction
 
-- Near-black background, ivory Manrope typography, neutral surfaces and straight rules. IBM Plex Mono distinguishes compact financial figures.
-- One text-only NORTIVO wordmark. Shared semantic tokens live in `dist/assets/product-tokens.css`.
-- The side rail owns workspace navigation; the top bar contains product switching, instrument search, connection state and account access.
-- Overview keeps the watchlist–chart–context composition and six KPIs. Other destinations use relevant compact context and distinct task layouts.
-- Neutral actions and selection; financial and operational colours retain meaning. Zero is neutral, missing data stays unavailable.
-- Read-only sample, paper execution and production data states remain explicitly distinct. A subscription does not repair an unavailable provider.
+- Original green-charcoal terminal surfaces, emerald selections, 8–10px panels and compact controls.
+- Existing Nortivo mark, instrument glyphs and actual engine illustration.
+- Compact 160px rail and 66px header; approximately 490px desktop market region so the four lower panels fit the reference viewport.
+- Preserve the improved product switch, complete side navigation and task-specific secondary screens.
+- Keep zero neutral, missing values unavailable, losses red, sample read-only and provider status separate from subscription eligibility.
 
 ## Behaviour boundaries
 

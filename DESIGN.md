@@ -19,15 +19,15 @@ colors:
   financial-negative: "#dc8c91"
   action-hover: "#c6cad1"
   field-focus: "#c6cad1"
-  terminal-bg: "#08090b"
-  terminal-panel: "#111318"
-  terminal-raised: "#181b21"
-  terminal-line: "#30343c"
-  terminal-text: "#f2f1ed"
-  terminal-muted: "#b5b8c0"
-  terminal-green: "#78b99a"
-  terminal-green-soft: "#78b99a"
-  terminal-negative: "#e59ca2"
+  terminal-bg: "#080c0e"
+  terminal-panel: "#101719"
+  terminal-raised: "#19221f"
+  terminal-line: "#34413d"
+  terminal-text: "#f0f4f2"
+  terminal-muted: "#a7b5b3"
+  terminal-green: "#5cf395"
+  terminal-green-soft: "#a2efb6"
+  terminal-negative: "#ff9298"
   terminal-caution: "#e8c76a"
 typography:
   display:
@@ -91,7 +91,7 @@ typography:
     lineHeight: 1.25
   terminal-body:
     fontFamily: "Manrope, sans-serif"
-    fontSize: "14px"
+    fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.45
   terminal-metadata:
@@ -109,8 +109,8 @@ rounded:
   action: "2px"
   field: "3px"
   workspace: "5px"
-  terminal-control: "4px"
-  terminal-panel: "2px"
+  terminal-control: "5px"
+  terminal-panel: "10px"
   terminal-pill: "20px"
 spacing:
   compact: "12px"
@@ -329,17 +329,17 @@ V2 navigation can use native cross-document view transitions where supported. Th
 
 The private Vibb project remains governed by its authenticated route and separate visual system.
 
-### Product applications — homepage identity
+### Product applications — approved terminal reference
 
-The 18 November product refinement brief supersedes the earlier green-charcoal terminal reference. Terminal Pro, Portfolio, pricing and account flows now share the rendered homepage's near-black and ivory identity. `dist/assets/product-tokens.css` defines semantic surface, text, border, financial and chart roles; `dist/terminal/app.css` and `dist/assets/product.css` consume them. The canonical wordmark is text-only NORTIVO in Manrope, without a product-only badge.
+The owner's latest 18 November correction restores the terminal design shown in the supplied `trading-platform-1920.jpg`. It supersedes the black-and-ivory palette and square-panel instructions for Terminal Pro only. The homepage, Portfolio and pricing retain their current identity. Historical briefs remain in the repository as history, not as authority over this newer image.
 
-Use neutral raised surfaces and an ivory indicator for navigation, ivory primary actions, 0–4px panels and 4–6px controls. Green means positive financial or real operational state; red means loss/error; amber means caution. Zero P&L is neutral and unknown values remain unavailable. Primary application text is 14px, metadata at least 12px, and numerical data uses tabular numerals or IBM Plex Mono.
+Terminal Pro uses the original green-charcoal surfaces, emerald selections and subtle green panel depth, 8–10px rounded panels, compact controls and the existing slashed Nortivo mark. Keep the reference's workbench proportions: roughly 160px rail, 66px top bar, 100px KPIs, a bounded 490px desktop market region and the four lower panels visible at a 1920×1061 viewport. The watchlist remains compact, the chart dominant and news/calendar subordinate. Restore the actual existing engine illustration and small instrument glyphs.
 
-The top bar contains brand, product switch, instrument search, state and account access. The grouped side rail owns workspace navigation. Only Overview carries the six-summary KPI strip. Trade, Bots, Strategies, Research, News, Calendar, Analytics, Reports and Settings have task-specific layouts or honest unavailable states. A compact context strip separates data mode from execution mode. Provider availability and plan eligibility are independent: buying a plan cannot repair an unavailable feed.
+Shared semantic tokens still define surfaces, text, borders, financial and chart roles, with scoped terminal overrides rather than a replacement Portfolio theme. Zero P&L remains neutral, unknown values remain unavailable and losses stay red. Primary application text remains readable at 13px and metadata at least 12px. Mobile controls retain comfortable 44px targets.
 
-The chart remains dominant on market views. Preserve instrument, resolution, pan, explicit zoom and indicator choices through normal rerenders. A newly selected event can intentionally focus its candle. Chart series use distinct ivory/slate/amber roles; candles retain their actual financial meaning. Keep accessible data tables, keyboard guidance and visible zoom controls. Wide tables scroll within labelled regions, not the document. On small screens navigation remains reachable, controls wrap and touch targets grow to 44px.
+Preserve the usability fixes: product switching and grouped side navigation, task-specific secondary views, Overview-only KPI strip, instrument-only search, chart state restoration, labelled data tables, localized account flows, clear read-only mode and separate provider availability/plan eligibility. The restoration does not activate provider connections or trading. The reference's executable paper controls are not copied into the public read-only sample.
 
-Controls use 140–160ms feedback and overlays 180ms opacity with minimal movement. Reduced motion removes transitions. Financial quantities do not count up or animate between invented values. Company history remains a separate NOK report; it never initializes the customer account or the sample USD ledger. Its average session return is on deployed capital, not a promised daily account return.
+Keep brief 140–160ms control feedback and 180ms overlays, reduced-motion handling and no financial count-up effects. The company NOK report remains separate from customer and sample USD records, with the deployed-capital session definition and real drawdown retained. Full methodology remains reachable from the compact Overview report and the complete Reports workspace.
 
 ## Do's and Don'ts
 
