@@ -48,13 +48,13 @@ test('ordinary reads, authentication, history, backtests and all mutations recei
   }
 });
 
-test('instrument selection renders the completed market chart after a slow optional news deadline',async()=>{
+test('instrument selection renders the completed market chart before a slow optional news deadline',async()=>{
   const quote={quote:{instrumentId:'XNAS:NVDA:USD',price:'154.81',asOf:'2026-11-18T20:00:00Z'},bars:[]};
   const h=harness(async url=>url.searchParams.get('action')==='product-quotes'?response(quote):new Promise(()=>{}));
-  h.run(`renderTerminal=()=>{globalThis.renders=(globalThis.renders||0)+1;};notify=()=>{};`);
+  h.run(`root={};dialog={open:false};renderTerminal=()=>{globalThis.renders=(globalThis.renders||0)+1;};notify=()=>{};`);
   const pending=h.run(`selectMarket({id:'XNAS:NVDA:USD',symbol:'NVDA'})`);await flush();
-  assert.equal(h.context.renders,1);h.expire();await pending;
-  assert.equal(h.context.renders,2);assert.equal(h.run('marketData'),quote);
+  await pending;await flush();assert.equal(h.context.renders,2);assert.equal(h.run('marketData'),quote);
+  assert.equal(h.timers.size,1);h.expire();await flush();
   assert.equal(h.run('selectedInstrument.symbol'),'NVDA');
 });
 

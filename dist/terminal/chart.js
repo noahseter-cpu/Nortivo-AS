@@ -1,4 +1,9 @@
 // Price geometry uses server-owned integer cents. Never synthesize bars or interpolate gaps.
+let exchangeDayFormatter;
+function exchangeDay(value) {
+  exchangeDayFormatter ||= new Intl.DateTimeFormat('en-CA', {timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'});
+  return exchangeDayFormatter.format(new Date(value));
+}
 export function emaSeries(bars, period) {
   let previous = null, total = 0;
   return bars.map((bar, index) => {
@@ -11,7 +16,7 @@ export function emaSeries(bars, period) {
 export function vwapSeries(bars) {
   let session = '', volume = 0, value = 0;
   return bars.map(bar => {
-    const key = new Intl.DateTimeFormat('en-CA', {timeZone: 'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(bar.time));
+    const key = exchangeDay(bar.time);
     if (key !== session) { session = key; volume = 0; value = 0; }
     volume += bar.volume;
     value += ((bar.high + bar.low + bar.close) / 3) * bar.volume;
@@ -23,7 +28,7 @@ export function aggregateBars(bars, minutes) {
   // Exchange sessions stay separate. Only complete consecutive groups are exposed.
   const groups = new Map();
   for (const bar of bars) {
-    const d = new Date(bar.time), key = new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+    const key = exchangeDay(bar.time);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(bar);
   }
@@ -67,15 +72,30 @@ function chartPalette(container) {
 export class MarketChart {
   constructor(container, options) {
     this.container = container; this.options = options; this.canvas = container.querySelector('canvas'); this.tip = container.querySelector('.chart-tooltip'); this.ctx = this.canvas.getContext('2d'); this.offset = 0; this.count = this.defaultCount(); this.userZoomed = false; this.crosshair = null; this.marker = null; this.drag = null; this.palette = chartPalette(container);
-    this.resize = new ResizeObserver(() => {if(!this.userZoomed)this.count=this.defaultCount();this.draw();}); this.resize.observe(container);
-    this.canvas.addEventListener('wheel', e => {e.preventDefault(); if(e.shiftKey) this.offset = Math.max(0, Math.min(Math.max(0,this.bars.length-5),this.offset + Math.sign(e.deltaY) * 5)); else {this.count = Math.max(12,Math.min(300,this.count + Math.sign(e.deltaY) * 8));this.userZoomed=true;} this.draw();}, {passive:false});
-    this.canvas.addEventListener('pointerdown', e => {this.drag={x:e.clientX,offset:this.offset};this.canvas.setPointerCapture(e.pointerId);});
-    this.canvas.addEventListener('pointermove',e=>{const r=this.canvas.getBoundingClientRect();this.crosshair={x:e.clientX-r.left,y:e.clientY-r.top};if(this.drag){this.offset=Math.max(0,Math.min(Math.max(0,this.bars.length-5),this.drag.offset+Math.round((e.clientX-this.drag.x)/Math.max(3,(r.width-62)/this.count))));}this.draw();});
-    this.canvas.addEventListener('pointerup',()=>{this.drag=null;});
-    this.canvas.addEventListener('pointercancel',()=>{this.drag=null;});
-    this.canvas.addEventListener('pointerleave',()=>{if(!this.drag){this.crosshair=null;this.tip.classList.remove('visible');this.draw();}});
-    this.canvas.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','+','-','Home','End'].includes(e.key)){e.preventDefault();if(e.key==='ArrowLeft')this.offset=Math.min(Math.max(0,this.bars.length-5),this.offset+5);if(e.key==='ArrowRight')this.offset=Math.max(0,this.offset-5);if(e.key==='+'){this.count=Math.max(12,this.count-8);this.userZoomed=true;}if(e.key==='-'){this.count=Math.min(300,this.count+8);this.userZoomed=true;}if(e.key==='Home')this.offset=Math.max(0,this.bars.length-this.count);if(e.key==='End')this.offset=0;this.draw();}});
-    container.querySelectorAll('[data-chart-action]').forEach(button=>button.addEventListener('click',()=>{const a=button.dataset.chartAction;if(a==='in'){this.count=Math.max(12,this.count-15);this.userZoomed=true;}if(a==='out'){this.count=Math.min(300,this.count+15);this.userZoomed=true;}if(a==='reset'){this.offset=0;this.count=this.defaultCount();this.userZoomed=false;}this.draw();}));
+    this.listeners = []; this.frame = null; this.pendingPointer = null; this.destroyed = false;
+    this.resize = new ResizeObserver(() => {if(this.destroyed)return;if(!this.userZoomed)this.count=this.defaultCount();this.requestDraw();});
+    this.resize.observe(container);
+    this.listen(this.canvas,'wheel',e=>{e.preventDefault();if(e.shiftKey)this.offset=Math.max(0,Math.min(Math.max(0,this.bars.length-5),this.offset+Math.sign(e.deltaY)*5));else{this.count=Math.max(12,Math.min(300,this.count+Math.sign(e.deltaY)*8));this.userZoomed=true;}this.requestDraw();},{passive:false});
+    this.listen(this.canvas,'pointerdown',e=>{this.drag={x:e.clientX,offset:this.offset};this.canvas.setPointerCapture(e.pointerId);});
+    this.listen(this.canvas,'pointermove',e=>{this.pendingPointer={x:e.clientX,y:e.clientY};this.requestDraw();});
+    this.listen(this.canvas,'pointerup',()=>{if(this.pendingPointer)this.draw();this.drag=null;});
+    this.listen(this.canvas,'pointercancel',()=>{this.drag=null;this.pendingPointer=null;this.crosshair=null;this.tip.classList.remove('visible');this.requestDraw();});
+    this.listen(this.canvas,'pointerleave',()=>{if(!this.drag){this.pendingPointer=null;this.crosshair=null;this.tip.classList.remove('visible');this.requestDraw();}});
+    this.listen(this.canvas,'keydown',e=>{if(['ArrowLeft','ArrowRight','+','-','Home','End'].includes(e.key)){e.preventDefault();if(e.key==='ArrowLeft')this.offset=Math.min(Math.max(0,this.bars.length-5),this.offset+5);if(e.key==='ArrowRight')this.offset=Math.max(0,this.offset-5);if(e.key==='+'){this.count=Math.max(12,this.count-8);this.userZoomed=true;}if(e.key==='-'){this.count=Math.min(300,this.count+8);this.userZoomed=true;}if(e.key==='Home')this.offset=Math.max(0,this.bars.length-this.count);if(e.key==='End')this.offset=0;this.draw();}});
+    container.querySelectorAll('[data-chart-action]').forEach(button=>this.listen(button,'click',()=>{const a=button.dataset.chartAction;if(a==='in'){this.count=Math.max(12,this.count-15);this.userZoomed=true;}if(a==='out'){this.count=Math.min(300,this.count+15);this.userZoomed=true;}if(a==='reset'){this.offset=0;this.count=this.defaultCount();this.userZoomed=false;}this.draw();}));
+  }
+  listen(target,type,listener,options){target.addEventListener(type,listener,options);this.listeners.push(()=>target.removeEventListener(type,listener,options));}
+  requestDraw(){
+    if(this.destroyed||this.frame!==null)return;
+    if(typeof requestAnimationFrame!=='function'){this.draw();return;}
+    this.frame=requestAnimationFrame(()=>{this.frame=null;if(!this.destroyed)this.draw();});
+  }
+  cancelDraw(){if(this.frame!==null){cancelAnimationFrame(this.frame);this.frame=null;}}
+  applyPointer(){
+    if(!this.pendingPointer)return;
+    const r=this.canvas.getBoundingClientRect(),pointer=this.pendingPointer;this.pendingPointer=null;
+    this.crosshair={x:pointer.x-r.left,y:pointer.y-r.top};
+    if(this.drag)this.offset=Math.max(0,Math.min(Math.max(0,this.bars.length-5),this.drag.offset+Math.round((pointer.x-this.drag.x)/Math.max(3,(r.width-62)/this.count))));
   }
   defaultCount(){const width=this.container.getBoundingClientRect().width;return width<540?34:width<730?56:width<900?64:78;}
   getViewState(){return {symbol:this.symbol,timeframe:this.timeframe,offset:this.offset,count:this.count,userZoomed:this.userZoomed,markerKey:this.marker?.time||null};}
@@ -94,11 +114,17 @@ export class MarketChart {
     if(marker?.time&&this.markerKey!==marker.time){const index=this.bars.findIndex(bar=>new Date(bar.time)>=new Date(marker.time));if(index>=0)this.offset=Math.max(0,this.bars.length-Math.min(this.bars.length,index+Math.round(this.count/2)));this.markerKey=marker.time;}
     this.draw();
   }
-  destroy(){this.resize.disconnect();}
+  destroy(){
+    this.destroyed=true;this.resize.disconnect();this.cancelDraw();
+    for(const remove of this.listeners)remove();this.listeners=[];
+    this.pendingPointer=null;this.drag=null;this.crosshair=null;this.tip.classList.remove('visible');
+  }
   draw(){
-    if(!this.market)return;
+    this.cancelDraw();
+    if(this.destroyed||!this.market)return;
+    this.applyPointer();
     const {width:w,height:h}=this.container.getBoundingClientRect();if(!w||!h)return;
-    const dpr=Math.min(window.devicePixelRatio||1,2);this.canvas.width=w*dpr;this.canvas.height=h*dpr;this.ctx.setTransform(dpr,0,0,dpr,0,0);const c=this.ctx;c.clearRect(0,0,w,h);
+    const dpr=Math.min(window.devicePixelRatio||1,2),pixelWidth=Math.floor(w*dpr),pixelHeight=Math.floor(h*dpr);if(this.canvas.width!==pixelWidth)this.canvas.width=pixelWidth;if(this.canvas.height!==pixelHeight)this.canvas.height=pixelHeight;this.ctx.setTransform(dpr,0,0,dpr,0,0);const c=this.ctx;c.clearRect(0,0,w,h);
     const right=61,left=7,top=12,bottom=25,volumeH=h*.15,priceBottom=h-bottom-volumeH-10,pw=w-right-left,ph=priceBottom-top;
     const end=Math.max(1,this.bars.length-this.offset),start=Math.max(0,end-this.count),visible=this.bars.slice(start,end);
     const p=this.palette;

@@ -62,7 +62,7 @@ export function createProviderTransport({ env, fetcher = fetch, store, clock = D
   }
   async function health(capability, value) { return updateRecord(store, 'provider_health', capability, SYSTEM_OWNER, current => ({ ...current, ...value })); }
   return {
-    async request({ provider, capability, url, headers, rights, units = 1, ttl = 0, method = 'GET', body, normalize, maxBytes = 2_000_000 }) {
+    async request({ provider, capability, url, headers, rights, units = 1, ttl = 0, method = 'GET', body, normalize, maxBytes = 2_000_000, recordSuccess = true }) {
       const now = clock();
       if (!Number.isInteger(maxBytes) || maxBytes < 1000 || maxBytes > 16_000_000) fail('INTEGRATION_NOT_CONFIGURED', 'The provider response bound is invalid.', 503);
       if (!rights.ready) fail('COMMERCIAL_PERMISSION_REQUIRED', 'This data service awaits verified commercial permissions.', 503);
@@ -81,7 +81,7 @@ export function createProviderTransport({ env, fetcher = fetch, store, clock = D
         const result = await normalize(payload, now);
         const quoteEvidence = result.quote ? { quoteSuccessAt: now, quoteFreshness: result.quote.freshness } : {};
         const historyEvidence = result.historyType === 'adjusted_daily' && Array.isArray(result.bars) ? { historySuccessAt: now, historyBars: result.bars.length, historyInstrumentId: result.instrumentId } : {};
-        await health(capability, { provider, reachable: true, lastSuccessAt: now, lastAttemptAt: now, failures: 0, retryAt: 0, ...quoteEvidence, ...historyEvidence, freshness: result.quote?.freshness || result.freshness || (capability === 'market' ? state?.value.quoteFreshness || 'unavailable' : 'current') });
+        if (recordSuccess) await health(capability, { provider, reachable: true, lastSuccessAt: now, lastAttemptAt: now, failures: 0, retryAt: 0, ...quoteEvidence, ...historyEvidence, freshness: result.quote?.freshness || result.freshness || (capability === 'market' ? state?.value.quoteFreshness || 'unavailable' : 'current') });
         const seconds = Math.min(ttl, rights.cacheSeconds);
         if (seconds > 0 && Buffer.byteLength(JSON.stringify(result)) < 200000) await updateRecord(store, 'provider_cache', cacheKey, SYSTEM_OWNER, () => ({ requestDigest, result, until: now + seconds * 1000 }));
         return { ...result, cacheHit: false };
