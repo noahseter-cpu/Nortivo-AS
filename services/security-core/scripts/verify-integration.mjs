@@ -57,7 +57,7 @@ const sourcePaths = [
   'netlify/product/store.mjs', 'netlify/product/broker.mjs', 'netlify/conversations/handler.mjs',
   'netlify/conversations/model.mjs', 'netlify/conversations/presence.mjs', 'netlify/conversations/tenancy.mjs',
   'netlify/functions/workflow-inbox.mjs','netlify/functions/korvnt-service.mjs','netlify/functions/korvnt-inbox.mjs',
-  'netlify/edge-functions/application-routes.mjs','netlify/edge-functions/language.js',
+  'netlify/routing/application-routes.mjs','netlify/edge-functions/language.js',
   'supabase/workflows.sql', 'scripts/build-locales.mjs', 'scripts/preview-private-admin.mjs'
 ];
 const hashes = {};

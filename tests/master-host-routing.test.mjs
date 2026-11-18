@@ -1,7 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {applicationRoute,applicationHost} from '../netlify/edge-functions/application-routes.mjs';
+import {readdir} from 'node:fs/promises';
+import {applicationRoute,applicationHost} from '../netlify/routing/application-routes.mjs';
 import languageRedirect from '../netlify/edge-functions/language.js';
+
+test('every discoverable Netlify edge module has a callable default handler',async()=>{
+ const directory=new URL('../netlify/edge-functions/',import.meta.url);
+ const entries=(await readdir(directory,{withFileTypes:true})).filter(entry=>entry.isFile() && /\.(?:js|mjs|ts|mts)$/.test(entry.name));
+ assert.ok(entries.some(entry=>entry.name==='language.js'),'The language edge entry must be present.');
+ for(const entry of entries){
+  const {default:handler}=await import(new URL(entry.name,directory));
+  assert.ok(typeof handler==='function'||typeof handler?.fetch==='function',entry.name+' must default-export a function or an object with a fetch handler.');
+ }
+});
 test('Invest roots serve their own public homepage without terminal initialization or authentication redirects',()=>{
  for(const locale of ['en','nb']){
   const route=applicationRoute(`https://invest.nortivo.no/${locale}/`);assert.equal(route.kind,'rewrite');assert.equal(route.path,`/invest/${locale}/index.html`);

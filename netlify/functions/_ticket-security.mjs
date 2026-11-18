@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import {isKorvntHostname} from '../edge-functions/application-routes.mjs';
+import {isKorvntHostname} from '../routing/application-routes.mjs';
 import { createSupabaseStore } from '../terminal/store.mjs';
 import { createRateLimiter } from '../../services/security-core/src/rate-limit.mjs';
 import { createAuditLogger } from '../../services/security-core/src/audit.mjs';

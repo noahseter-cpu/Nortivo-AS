@@ -1,7 +1,7 @@
 // Netlify uses .js ES modules for edge functions; no package or external request is needed.
 // API: https://docs.netlify.com/build/edge-functions/api/
 // Routing: https://docs.netlify.com/build/edge-functions/declarations/
-import { applicationRoute } from './application-routes.mjs';
+import { applicationRoute } from '../routing/application-routes.mjs';
 const legacyPaths = ['/', '/products/', '/support/', '/admin/', '/privacy/', '/about/', '/services/', '/contact/', '/restaurant/', '/studio/', '/arc/', '/studio/services/', '/reviews/', '/terminal/', '/pricing/', '/portfolio/'];
 const supported = value => value === 'nb' || value === 'en';
 const companyOrigin = 'https://nortivo.no';

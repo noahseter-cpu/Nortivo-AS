@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import {isKorvntHostname} from '../edge-functions/application-routes.mjs';
+import {isKorvntHostname} from '../routing/application-routes.mjs';
 import { verifiedMfaTime } from '../security-core/mfa-proof.mjs';
 import { isOwnerAccount } from '../product/owner.mjs';
 import { createSessionVerifier } from '../../services/security-core/src/sessions.mjs';

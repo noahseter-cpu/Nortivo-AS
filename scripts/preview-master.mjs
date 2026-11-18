@@ -12,7 +12,7 @@ import {createKorvntService} from '../netlify/functions/korvnt-service.mjs';
 import {createKorvntInbox} from '../netlify/functions/korvnt-inbox.mjs';
 import {createAdminSecurity,adminJson,adminError} from '../netlify/security-core/admin.mjs';
 import {securityHeaders} from '../services/security-core/src/headers.mjs';
-import {applicationRoute,applicationHost,REVIEW_HOSTS} from '../netlify/edge-functions/application-routes.mjs';
+import {applicationRoute,applicationHost,REVIEW_HOSTS} from '../netlify/routing/application-routes.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

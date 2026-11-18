@@ -3,7 +3,7 @@ import { createSupabaseStore } from '../terminal/store.mjs';
 import { verifyPassword } from '../terminal/auth.mjs';
 import { isReviewHost, isActiveWorkspaceSession } from '../terminal/security.mjs';
 import { verifiedMfaTime } from './mfa-proof.mjs';
-import {isKorvntHostname} from '../edge-functions/application-routes.mjs';
+import {isKorvntHostname} from '../routing/application-routes.mjs';
 import { consumeMfa } from '../product/mfa.mjs';
 import { isOwnerAccount } from '../product/owner.mjs';
 import { SecurityCoreError, createSessionVerifier, randomSessionToken, sessionCookie, clearSessionCookie, authorize, createRateLimiter, createAuditLogger, securityHeaders, readJson, validateObject } from '../../services/security-core/src/index.mjs';
