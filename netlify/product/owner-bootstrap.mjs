@@ -4,6 +4,17 @@ import { createSupabaseStore } from '../terminal/store.mjs';
 import { TerminalError, fail, header, sha256, requireSameOrigin, parseBody, response } from '../terminal/security.mjs';
 import { SYSTEM_OWNER, change } from './providers-core.mjs';
 import { createOwnerGrant } from './owner.mjs';
+import { openRuntimeValue } from './runtime-envelope.mjs';
+
+export function loadOwnerBootstrapConfiguration(env = {}) {
+  try {
+    const raw = env.PRODUCT_OWNER_BOOTSTRAP_ENVELOPE;
+    if (typeof raw !== 'string' || !raw || Buffer.byteLength(raw) > 65536) throw new Error();
+    return openRuntimeValue(JSON.parse(raw), env, 'owner-bootstrap-v1');
+  } catch {
+    fail('OWNER_BOOTSTRAP_NOT_CONFIGURED', 'Owner provisioning is not configured.', 503);
+  }
+}
 
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const HASH = /^scrypt-v1\$32768\$8\$1\$[A-Za-z0-9_-]{22}\$[A-Za-z0-9_-]{86}$/;

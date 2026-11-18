@@ -5,11 +5,10 @@ import { createLocalStore } from '../netlify/terminal/store-local.mjs';
 import { createInitialState } from '../netlify/terminal/engine.mjs';
 import { hashPassword, verifyPassword } from '../netlify/terminal/auth.mjs';
 import { sha256 } from '../netlify/terminal/security.mjs';
-import { createOwnerBootstrapHandler } from '../netlify/product/owner-bootstrap.mjs';
+import { createOwnerBootstrapHandler, loadOwnerBootstrapConfiguration } from '../netlify/product/owner-bootstrap.mjs';
 import { isOwnerAccount } from '../netlify/product/owner.mjs';
 import { SYSTEM_OWNER } from '../netlify/product/providers-core.mjs';
 import { sealRuntimeValue, openRuntimeValue } from '../netlify/product/runtime-envelope.mjs';
-import { loadOwnerBootstrapConfiguration } from '../netlify/functions/product-owner-bootstrap.mjs';
 
 const NOW = Date.parse('2026-11-18T20:00:00Z');
 const ORIGIN = 'https://invest.nortivo.no';
