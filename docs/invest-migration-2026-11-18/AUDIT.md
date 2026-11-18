@@ -36,7 +36,7 @@ The evidence column distinguishes current observation from implementation covera
 | Brokerage OAuth, supported orders, risk gates | Partially implemented; unconnected | Source/contracts only; no verified brokerage application or callback registration. |
 | Live execution / autonomous trading | Intentionally disabled | No enablement in this migration. Consent, subscription, provider, freshness and risk checks remain independent. |
 | Company history | Working presentation | Separate NOK company report, definitions and drawdown retained. It is not the user's portfolio, sample return or a promise of future gains. |
-| New hostname | In progress | Alias and one CNAME added; DNS propagation, TLS, routing and hosted API checks are recorded separately before link cutover. |
+| New hostname | Working | Alias, CNAME, HTTPS, bilingual entry, assets, API, public links and old bookmark redirects verified. See final release receipt and 24 read-only hosted checks. |
 
 ## Boundaries
 

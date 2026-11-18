@@ -46,4 +46,17 @@ All private checks used isolated local fixtures on `127.0.0.1:4422`, without loa
 
 No real payment, invoice, Stripe portal, funded AI response, licensed data/news/calendar connection, broker OAuth or live order was exercised. These remain unavailable or disabled. No new account signup or password change was submitted through the browser. No claim of WCAG certification, screen-reader certification, physical-device testing, 200% browser zoom or an OS reduced-motion toggle test is made. Existing reduced-motion rules were preserved; this release adds no animation. Financial, identity, authorization, entitlement and freshness regressions are covered by the existing and new automated tests.
 
-Publication receipts and final hostname checks are appended after the staged release.
+## Final publication receipt
+
+- **Published** to the existing Netlify production project. Production code commit: `1b87184`.
+- Final deploy: `6afdf2adeada72708f837a4f`, 18 November 2026 at 19:47 Europe/Oslo; Netlify reported successful publication in 18 seconds, with 13 functions and one edge function deployed.
+- Live entry: https://invest.nortivo.no/ ; English: https://invest.nortivo.no/en/terminal/ ; Norwegian: https://invest.nortivo.no/nb/terminal/ . Company homepage stays at https://nortivo.no/ .
+- Final full test suite: **248 passed, zero failed**. An old restaurant/navigation assertion was updated to the required investment destination after the locale build exposed it; no application failure was hidden.
+- **24 read-only hosted checks passed**, recorded in `hosted-checks.json`: both languages, new roots, company home separation, old annual pricing and account/index bookmarks, retained safe workspace context, company destinations, six isolated admin endpoints, four same-origin assets/data files, and public API catalogs on both hosts. These requests create no account, session or financial record.
+- Browser confirmed old Norwegian pricing bookmark redirects to the investment host with Pro/year and intended terminal destination retained. Browser confirmed company navigation links point directly to the investment host in English and after switching to Norwegian.
+- A synthetic verification fragment reached the investment confirmation screen through an old company-host URL. The existing client then removed the fragment from the address bar before submission, as designed. No real verification token was used or submitted.
+- Final live sample screenshot measured all six KPIs and exactly the same central chart rectangle as the baseline (931.05 × 490px). `live-invest-terminal-1920.jpg` is the published result, not a mockup. No page-wide overflow at the measured desktop viewport.
+- `netlify-final-deploy.jpg` and `netlify-invest-https.jpg` provide publication/certificate evidence. Before/after captures and phone/tablet captures are included alongside this receipt.
+- Temporary browser test tabs were closed and the live platform left open. Viewport override was reset. Local preview remains available at http://127.0.0.1:4422/en/terminal/ with isolated test data and no production keys.
+
+No production database record migration, commercial enablement or real-money action was performed. The hostname uses the same backend and records; host-only cookies intentionally require a new sign-in. External service and private-flow limits above remain applicable.

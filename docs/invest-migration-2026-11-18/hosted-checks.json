@@ -1,0 +1,104 @@
+{
+  "verifiedAt": "2026-11-18T18:49:16.179Z",
+  "productionCommit": "1b87184",
+  "deployId": "6afdf2adeada72708f837a4f",
+  "checks": [
+    {
+      "name": "company destination /en/admin/",
+      "result": "pass"
+    },
+    {
+      "name": "company destination /en/report-2026/",
+      "result": "pass"
+    },
+    {
+      "name": "company destination /en/support/",
+      "result": "pass"
+    },
+    {
+      "name": "company destination /nb/privacy/",
+      "result": "pass"
+    },
+    {
+      "name": "en: company home and platform shell remain separate",
+      "result": "pass"
+    },
+    {
+      "name": "en: old account bookmark retains workspace",
+      "result": "pass"
+    },
+    {
+      "name": "en: old pricing keeps annual plan and safe destination",
+      "result": "pass"
+    },
+    {
+      "name": "en: root and localized investment entry",
+      "result": "pass"
+    },
+    {
+      "name": "invest.nortivo.no: public API catalog",
+      "result": "pass"
+    },
+    {
+      "name": "nb: company home and platform shell remain separate",
+      "result": "pass"
+    },
+    {
+      "name": "nb: old account bookmark retains workspace",
+      "result": "pass"
+    },
+    {
+      "name": "nb: old pricing keeps annual plan and safe destination",
+      "result": "pass"
+    },
+    {
+      "name": "nb: root and localized investment entry",
+      "result": "pass"
+    },
+    {
+      "name": "nortivo.no: public API catalog",
+      "result": "pass"
+    },
+    {
+      "name": "private endpoint isolated: admin-login",
+      "result": "pass"
+    },
+    {
+      "name": "private endpoint isolated: admin-logout",
+      "result": "pass"
+    },
+    {
+      "name": "private endpoint isolated: admin-projects",
+      "result": "pass"
+    },
+    {
+      "name": "private endpoint isolated: admin-tickets",
+      "result": "pass"
+    },
+    {
+      "name": "private endpoint isolated: admin-vibb",
+      "result": "pass"
+    },
+    {
+      "name": "private endpoint isolated: reply-ticket",
+      "result": "pass"
+    },
+    {
+      "name": "same-origin resource /assets/product-client.js",
+      "result": "pass"
+    },
+    {
+      "name": "same-origin resource /assets/product.css",
+      "result": "pass"
+    },
+    {
+      "name": "same-origin resource /report-2026/summary.json",
+      "result": "pass"
+    },
+    {
+      "name": "same-origin resource /terminal/chart.js",
+      "result": "pass"
+    }
+  ],
+  "limits": "Read-only public HTTP checks. No account creation, login, financial transaction or external provider activation."
+}
