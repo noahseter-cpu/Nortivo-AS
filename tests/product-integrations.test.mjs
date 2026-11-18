@@ -6,7 +6,7 @@ import { createDataProviders, normalizeCatalog, normalizeQuote, normalizeEconomi
 import { createProviderTransport, rightsFor, SYSTEM_OWNER, change, listAllRecords } from '../netlify/product/providers-core.mjs';
 import { getIntegrationReadiness, handleIntegrations } from '../netlify/product/providers.mjs';
 import { reserveAi, settleAi, getAiUsage, explainAi, buildAiEvidence } from '../netlify/product/ai.mjs';
-import { encryptBrokerToken, decryptBrokerToken, createBrokerClient, connectBroker, handleBrokerCallback, brokerControl, syncBroker } from '../netlify/product/broker.mjs';
+import { encryptBrokerToken, decryptBrokerToken, createBrokerClient, connectBroker, handleBrokerCallback, brokerControl, syncBroker, brokerOAuthCookieName } from '../netlify/product/broker.mjs';
 import { approvalBytes, liveRelease } from '../netlify/product/broker-release.mjs';
 import { acquireAccountLease, assertAccountLease, enqueueOrder, mergeBrokerOrder, validateRisk, processOrder, reconcileIntent } from '../netlify/product/execution.mjs';
 import { backtestStrategy, signals } from '../netlify/product/execution-strategy.mjs';
@@ -21,7 +21,11 @@ const ENV = { TWELVE_DATA_API_KEY: 'fixture-not-a-key', FINNHUB_API_KEY: 'fixtur
 const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
 async function fixture(t, env = ENV) {
   const legacy = await createLocalStore(':memory:'); t.after(() => legacy.close());
-  const ctx = { store: legacy.product, user: { id: USER }, account: { emailVerified: true, billing: { tier: 'pro', paidUntil: NOW + 86400000 } }, env, now: NOW, origin: ORIGIN, requireFeature: async () => {}, requireStepUp: async () => {}, fetcher: async () => { throw new Error('Unexpected fixture network request'); } };
+  const sessionHash = crypto.randomBytes(32).toString('hex'), user = { id: USER, kind: 'user', created_at: NOW };
+  await legacy.createUser(user, {}); await legacy.createSession({ token_hash: sessionHash, user_id: USER, created_at: NOW, expires_at: NOW + 86400000 });
+  const ctx = { store: legacy.product, legacyStore: legacy, sessionHash, user, account: { emailVerified: true, billing: { tier: 'pro', paidUntil: NOW + 86400000 } }, env, now: NOW, origin: ORIGIN, event: { headers: {} }, requireFeature: async () => {}, requireStepUp: async () => {}, fetcher: async () => { throw new Error('Unexpected fixture network request'); } };
+  ctx.setOAuthCookie = value => { ctx.oauthCookie = value; ctx.event.headers.cookie = value.split(';')[0]; };
+  await ctx.store.transact([change('accounts', USER, USER, null, ctx.account)]);
   return ctx;
 }
 async function put(ctx, ns, key, value, ownerId = USER) { const row = await ctx.store.get(ns, key); const result = await ctx.store.transact([change(ns, key, ownerId, row, value)]); assert.equal(result.status, 'applied'); }
@@ -93,15 +97,72 @@ test('broker encryption binds actor, connection and paper/live mode; tampering f
 test('broker OAuth state is unpredictable, single use, scoped trading only, paper fixed, replay rejected', async t => {
   const ctx = await fixture(t); const started = await connectBroker(ctx, { requestId: 'connect-123', mode: 'paper' }), url = new URL(started.authorizationUrl);
   assert.equal(url.searchParams.get('scope'), 'trading'); assert.equal(url.searchParams.get('env'), 'paper');
+  assert.match(ctx.oauthCookie, /^__Host-nortivo_broker_oauth=[A-Za-z0-9_-]{43};/); assert.match(ctx.oauthCookie, /Path=\/; HttpOnly; Secure; SameSite=Lax; Max-Age=600/); assert.doesNotMatch(ctx.oauthCookie, /Domain=|nortivo_terminal/);
   ctx.fetcher = async url => String(url).includes('oauth/token') ? json({ access_token: 'fixture-token', scope: 'trading' }) : json(account());
   const params = { state: url.searchParams.get('state'), code: 'fixture-code' }, result = await handleBrokerCallback(ctx, params);
-  assert.equal(result.mode, 'paper'); assert.equal(result.connection.automationEnabled, false); assert.equal(result.connection.token, undefined);
+  assert.equal(result.statusCode, 303); assert.equal(result.headers.Location, '/en/terminal/?broker=connected'); assert.equal(result.headers['Referrer-Policy'], 'no-referrer'); assert.equal(result.body, '');
+  const binding = await ctx.store.get('broker_connections', 'binding:paper:account-12345'), connectionId = binding.value.connectionId;
+  const saved = await ctx.store.get('broker_connections', `${USER}:${connectionId}`); assert.equal(saved.value.mode, 'paper'); assert.equal(saved.value.automationEnabled, false);
   await assert.rejects(handleBrokerCallback(ctx, params), { code: 'BROKER_OAUTH_INVALID' });
-  const existing = await ctx.store.get('broker_connections', `${USER}:${result.connection.id}`);
+  const existing = await ctx.store.get('broker_connections', `${USER}:${connectionId}`);
   await put(ctx, 'broker_connections', existing.key, { ...existing.value, status: 'authorization_required', automationEnabled: true });
   const reconnect = await connectBroker(ctx, { requestId: 'reconnect-123', mode: 'paper' });
   const reconnectUrl = new URL(reconnect.authorizationUrl), restored = await handleBrokerCallback(ctx, { state: reconnectUrl.searchParams.get('state'), code: 'new-fixture-code' });
-  assert.equal(restored.connection.id, result.connection.id); assert.equal(restored.connection.automationEnabled, false);
+  assert.equal(restored.statusCode, 303);
+  assert.equal((await ctx.store.get('broker_connections', 'binding:paper:account-12345')).value.connectionId, connectionId);
+  assert.equal((await ctx.store.get('broker_connections', existing.key)).value.automationEnabled, false);
+});
+test('valid browser-bound broker denial consumes state, clears the cookie and redirects without exchanging a code', async t => {
+  const ctx = await fixture(t); ctx.account.locale = 'nb';
+  const started = await connectBroker(ctx, { requestId: 'cancel-connect-123', mode: 'paper' }), state = new URL(started.authorizationUrl).searchParams.get('state');
+  let calls = 0; ctx.fetcher = async () => { calls++; throw new Error('Cancelled authorization must never reach the broker API'); };
+  const result = await handleBrokerCallback({ ...ctx, user: null, sessionHash: null }, { state, error: 'access_denied', error_description: '<script>private provider text</script>' });
+  assert.equal(result.statusCode, 303); assert.equal(result.headers.Location, '/nb/terminal/?broker=cancelled'); assert.equal(result.headers['Referrer-Policy'], 'no-referrer'); assert.match(result.headers['Set-Cookie'], /Max-Age=0/); assert.equal(result.body, ''); assert.equal(calls, 0);
+  const hash = crypto.createHash('sha256').update(state).digest('hex'); assert.equal((await ctx.store.get('broker_states', hash)).value.consumed, true);
+  assert.equal((await ctx.store.list('broker_connections', { ownerId: USER })).length, 0);
+  await assert.rejects(handleBrokerCallback(ctx, { state, error: 'access_denied' }), { code: 'BROKER_OAUTH_INVALID' });
+});
+test('local broker OAuth cookie has a separate name and is never used in hosted production', async t => {
+  const localOrigin = 'http://127.0.0.1:4420', ctx = await fixture(t, { ...ENV, TERMINAL_LOCAL: 'true', ALPACA_OAUTH_REDIRECT_URI: `${localOrigin}/.netlify/functions/terminal?action=product-broker-callback` }); ctx.origin = localOrigin;
+  await connectBroker(ctx, { requestId: 'local-connect-123', mode: 'paper' });
+  assert.match(ctx.oauthCookie, /^nortivo_broker_oauth_local=/); assert.match(ctx.oauthCookie, /HttpOnly; SameSite=Lax; Max-Age=600/); assert.doesNotMatch(ctx.oauthCookie, /Secure|Domain=/);
+  assert.equal(brokerOAuthCookieName({ ...ctx.env, NETLIFY: 'true' }), '__Host-nortivo_broker_oauth');
+});
+test('revoking the initiating session during the broker exchange prevents persisting the connection', async t => {
+  const ctx = await fixture(t), started = await connectBroker(ctx, { requestId: 'revoke-during-123', mode: 'paper' }), state = new URL(started.authorizationUrl).searchParams.get('state');
+  ctx.fetcher = async url => {
+    if (String(url).includes('oauth/token')) { await ctx.legacyStore.deleteSession(ctx.sessionHash); return json({ access_token: 'fixture-token', scope: 'trading' }); }
+    return json(account());
+  };
+  const result = await handleBrokerCallback(ctx, { state, code: 'fixture-code' });
+  assert.equal(result.statusCode, 303); assert.equal(result.headers.Location, '/en/terminal/?broker=failed'); assert.match(result.headers['Set-Cookie'], /Max-Age=0/); assert.equal(result.headers['Referrer-Policy'], 'no-referrer'); assert.equal(result.headers['Cache-Control'], 'no-store'); assert.equal(result.body, '');
+  assert.equal((await ctx.store.list('broker_connections', { ownerId: USER })).length, 0);
+});
+test('trusted consumed OAuth failures clear the callback URL without reflecting provider data', async t => {
+  const scenarios = [
+    { name: 'token exchange failure', token: { error: 'private-provider-error-token' }, tokenStatus: 500, calls: 1 },
+    { name: 'unexpected scope', token: { access_token: 'private-provider-error-token', scope: 'trading account:write' }, calls: 1 },
+    { name: 'ineligible account', token: { access_token: 'private-provider-error-token', scope: 'trading' }, account: { ...account(), status: 'ACCOUNT_CLOSED' }, calls: 2 },
+  ];
+  for (const scenario of scenarios) await t.test(scenario.name, async sub => {
+    const ctx = await fixture(sub); ctx.account.locale = 'nb';
+    const started = await connectBroker(ctx, { requestId: 'failure-connect-123', mode: 'paper' }), state = new URL(started.authorizationUrl).searchParams.get('state');
+    let calls = 0;
+    ctx.fetcher = async url => { calls++; return String(url).includes('/oauth/token') ? json(scenario.token, scenario.tokenStatus || 200) : json(scenario.account || account()); };
+    const result = await handleBrokerCallback({ ...ctx, user: null, sessionHash: null }, { state, code: 'callback-code-must-not-be-reflected' });
+    assert.equal(result.statusCode, 303); assert.equal(result.headers.Location, '/nb/terminal/?broker=failed'); assert.match(result.headers['Set-Cookie'], /Max-Age=0/); assert.equal(result.headers['Referrer-Policy'], 'no-referrer'); assert.equal(result.headers['Cache-Control'], 'no-store'); assert.equal(result.body, '');
+    assert.doesNotMatch(JSON.stringify(result), /private-provider-error-token|callback-code-must-not-be-reflected/); assert.equal(calls, scenario.calls);
+    const hash = crypto.createHash('sha256').update(state).digest('hex'); assert.equal((await ctx.store.get('broker_states', hash)).value.consumed, true);
+    assert.equal((await ctx.store.list('broker_connections', { ownerId: USER })).length, 0);
+  });
+});
+test('trusted operator bootstrap trims the current administrator allowlist on callback', async t => {
+  const ctx = await fixture(t, { ...ENV, PRODUCT_ADMIN_USER_IDS: ` ${OTHER}, ${USER} ` });
+  ctx.account.billing = { status: 'none', tier: 'none', paidUntil: null }; await put(ctx, 'accounts', USER, ctx.account);
+  const started = await connectBroker({ ...ctx, brokerOperatorBootstrap: true }, { requestId: 'trimmed-admin-123', mode: 'paper' }), state = new URL(started.authorizationUrl).searchParams.get('state');
+  ctx.fetcher = async url => String(url).includes('/oauth/token') ? json({ access_token: 'fixture-token', scope: 'trading' }) : json(account());
+  const result = await handleBrokerCallback({ ...ctx, user: null, sessionHash: null }, { state, code: 'fixture-code' }); assert.equal(result.statusCode, 303); assert.equal(result.headers.Location, '/en/terminal/?broker=connected');
+  assert.equal((await ctx.store.get('accounts', USER)).value.billing.tier, 'none');
 });
 test('live flag alone cannot enable transmission; signed approvals bind build, app, country and account', async t => {
   const { privateKey, publicKey } = crypto.generateKeyPairSync('ed25519'), ctx = await fixture(t, { ...ENV, PRODUCT_LIVE_TRANSMISSION_ENABLED: 'true', PRODUCT_RELEASE_BUILD_ID: 'fixture-build', PRODUCT_BROKER_APPROVAL_PUBLIC_KEY: publicKey.export({ type: 'spki', format: 'pem' }) });

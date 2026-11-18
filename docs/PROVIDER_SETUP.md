@@ -49,7 +49,7 @@ Use `/.netlify/functions/terminal?action=...` with the existing authenticated co
 | product-ai / product-ai-usage | POST / GET | `{requestId,question,kind:"basic"|"advanced",portfolioId?,instrumentId?,newsId?,eventId?}`; sourced explanation/remaining allowance |
 | product-broker-status / product-broker-orders | GET | Owned public connections/intents; no access-token material |
 | product-broker-connect | POST | `{requestId,mode:"paper"|"live"}`; approved OAuth URL and required MFA |
-| product-broker-callback | GET | Only this public return consumes one-use hashed state plus the broker code; safe local return route retained |
+| product-broker-callback | GET | Public return verifies the initiating browser nonce and still-active original Nortivo session before consuming one-use state; successful connection or provider cancellation returns a clearing 303 to the validated local route |
 | product-broker-sync | POST | Owned `connectionId`; broker positions and open orders authoritative |
 | product-broker-consent | POST | `{requestId,connectionId,risk,automationEnabled,strategyId?}`; risk has decimal `maxOrderNotional,maxPositionNotional,maxDailyLoss`, integer `maxOrdersPerDay`; automation needs an enabled bound strategy; live additionally `liveConsentConfirmed:true` |
 | product-broker-order | POST | `{requestId,connectionId,instrumentId,side,quantity,type,timeInForce:"day",confirmed:true,limitPrice?,reduceOnly?}`; returns durable pending intent; worker/broker acceptance determines outcome |
@@ -59,6 +59,8 @@ Use `/.netlify/functions/terminal?action=...` with the existing authenticated co
 | product-health / product-health-probe | GET / POST | Owner UUID allowlist only; credential-free diagnostics / bounded real checks |
 
 Supported order types here are whole-share common-stock/ETF market or limit day orders during a verified regular session; no shorts, leverage controls, funds transfers, options, crypto or unsupported venues. Existing protective broker orders are read/reconciled and never silently removed by stop, downgrade or disconnect. If broker access fails, direct management is `https://app.alpaca.markets/`.
+
+OAuth uses an independent host-only `__Host-nortivo_broker_oauth` cookie for ten minutes with `Path=/`, HttpOnly, Secure and SameSite=Lax. Only the standalone local runtime uses the separate non-Secure `nortivo_broker_oauth_local` name. The main Nortivo session cookie stays SameSite=Strict. The callback compares the browser nonce hash in constant time, rechecks the original persisted session/account entitlement, and sends no provider code/state in HTML. Owner setup probes store a trusted server bootstrap marker and recheck the current administrator allowlist. Success and verified `access_denied` cancellation consume the state, clear the nonce cookie, and redirect with `Referrer-Policy:no-referrer`. One pending OAuth browser flow is supported at a time.
 
 ## Live release evidence
 

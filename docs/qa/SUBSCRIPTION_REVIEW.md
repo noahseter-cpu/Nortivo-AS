@@ -14,16 +14,18 @@ Independent release-blocking review of account authentication and MFA, Stripe bi
 - **Incomplete broker order snapshots could understate reservations.** A maximum-size open-order page now fails closed. Nested protective legs are flattened, bounded, deduplicated by broker ID, validated for conflicting representations and included in reducible-quantity checks; terminal child legs reserve nothing.
 - **Strategy changes could leave old automation active.** Strategy writes now atomically persist a permanent idempotency receipt and stop matching old/new connection bindings. Moving a strategy disables the old connection in the same transaction; queued old-version entries fail closed. Owner-only strategy reads remain available after expiry.
 - **Broker reconnection could duplicate one account.** Reauthorization reuses the existing owner-bound broker connection, resets live consent and automation, and retains one account binding.
+- **Broker OAuth could be completed from a different browser and returned raw callback responses.** The flow now binds each state to a separate 10-minute `HttpOnly`, host-only, `SameSite=Lax` nonce cookie while preserving the primary `SameSite=Strict` session cookie. Callback completion requires the original active owner session plus current entitlement (or a currently verified owner-admin probe), consumes state once, and rechecks the session after broker exchange. Successful, canceled and trusted post-consume failure paths return an empty `303` to a fixed localized terminal route, clear the nonce, and apply `no-referrer`/`no-store`; forged state, wrong-browser nonce and pre-authorization failures remain hard errors without a redirect.
 - **Large retained histories could hide unresolved work.** Internal ordered cursor pagination now scans beyond the first 1,000 records. The additive Supabase cursor function and owner isolation were exercised in an actual PostgreSQL transaction and rolled back cleanly.
 - **Worker failures lacked account attribution.** Private worker logs now retain only a validated internal owner UUID plus a sanitized error code, while the customer-facing/admin account view labels its unresolved-order scope explicitly. Emails, tokens, positions and provider bodies remain excluded from logs.
 
 ## Validation
 
-- Full local Node test suite: **209 passing, 0 failing** after the fixes above.
+- Full local Node test suite: **224 passing, 0 failing** after the fixes above.
 - Focused commerce tests cover exact prices, readiness fail-closed behavior, signed webhooks, customer/subscription ownership, concurrent checkout, canceled resubscription, subscription pagination, paid-upgrade failure, scheduled downgrade, lost responses and expiry.
 - Focused execution tests cover leases, partial/out-of-order fills, ambiguous POST outcomes, restart reconciliation without resubmission, entitlement loss, unrelated versus conflicting unresolved orders, malformed quantities, post-validation risk changes, full broker pages, and nested protective legs.
 - Portfolio tests cover private owner binding, immutable accounting history, exact fixed-point arithmetic, concurrent count bounds, stale/future quote and FX rejection, retained reads/export and blocked expired writes.
 - Authentication tests cover existing-account preservation, generic recovery, single-use tokens, session revocation, encrypted MFA secrets, replay rejection and expiring step-up sessions.
+- Broker OAuth tests cover production and local cookie attributes, missing/wrong browser binding, revoked originating sessions, entitlement loss, owner-admin revalidation, cancellation, replay, token/scope/account failures, safe callback redirects and provider-data non-reflection.
 - Store tests cover owner immutability, atomic multi-record CAS, tombstone/ABA behavior, storage bounds and AI quota reservation/settlement.
 
 ## Ship verdict and residual risk

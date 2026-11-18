@@ -22,7 +22,9 @@ export function createProductHandler({store:providedStore,env,now,fetcher,testEm
   const store=legacyStore.product,ip=clientIdentifier(event,secret);if(!store)fail('STORAGE_MIGRATION_REQUIRED','The product database migration is required.',503);
   const rate=async(namespace,id,limit,windowMs)=>{const r=await legacyStore.consumeRateLimit(`${namespace}:${sha256(id)}`,limit,windowMs,time);if(!r.allowed){const e=new TerminalError('RATE_LIMITED','Too many requests. Wait before trying again.',429);e.retryAfter=Math.max(1,Math.ceil(r.retryAfterMs/1000));throw e;}};
   await rate('product-request',ip,600,300000);const body=method==='POST'?parseBody(event):null,raw=cookieToken(event),sessionHash=raw?sha256(raw):null,user=raw?await legacyStore.getSession(sessionHash,time):null;
-  const ctx={store,legacyStore,user,sessionHash,env,now:time,fetcher,origin,ip,rate,testEmail,stripe,method};
+  let oauthCookie='';
+  const ctx={store,legacyStore,user,sessionHash,env,now:time,fetcher,origin,ip,rate,testEmail,stripe,method,event,requestHeaders:event.headers||{},setOAuthCookie(value){if(typeof value!=='string'||value.length>1000||/[\r\n]/.test(value))throw new Error('Invalid OAuth cookie envelope.');oauthCookie=value;}};
+  function integrationResponse(result){const extra=oauthCookie?{'Set-Cookie':oauthCookie}:{};return result?.statusCode?{...result,headers:{...extra,...result.headers}}:response(200,result,extra);}
   const integrationModule=await import('./providers.mjs');ctx.providers=integrationModule.getProviders?await integrationModule.getProviders(ctx):await integrationModule.createProductProviders?.(env,fetcher,store);
   const readiness=await integrationModule.getIntegrationReadiness(ctx);ctx.readiness=readiness?.readiness||readiness||{};
   const mail=await store.get('provider_health','email');ctx.readiness.email={configured:emailReady(env),permissionsReady:emailReady(env),reachable:mail?.value.reachable===true?true:null,freshness:mail?.value.reachable===true?'current':'unavailable',reason:emailReady(env)?'Delivery awaits verification.':'Email delivery is not configured.'};
@@ -37,7 +39,7 @@ export function createProductHandler({store:providedStore,env,now,fetcher,testEm
   }
   async function issue(actor){const ttl=actor.kind==='guest'?GUEST_SESSION_TTL:SESSION_TTL,newToken=token();await legacyStore.productCreateSession({token_hash:sha256(newToken),user_id:actor.id,created_at:time,expires_at:time+ttl});if(raw)await legacyStore.deleteSession(sessionHash);const product=await productSnapshot({...actor,session_expires_at:time+ttl},newToken);const record=await legacyStore.getState(actor.id);return response(200,{user:product.user,csrfToken:product.csrfToken,state:snapshot(record.state,{now:time}),revision:record.revision,product,capabilities},{'Set-Cookie':cookie(newToken,ttl,isLocalRuntime(env))});}
   if(PUBLIC_AUTH.has(action)){await rate('product-auth',ip,24,900000);const result=await handlePublicAuth(ctx,action,body,issue);return result?.statusCode?result:response(200,result);}
-  if(action==='product-broker-callback'){const {handleBrokerCallback}=await import('./broker.mjs');const result=await handleBrokerCallback(ctx,params);if(result?.connected&&/^\/(?:en|nb)\/terminal\/\?broker=connected$/.test(result.returnPath||''))return response(303,{connected:true},{Location:`${origin}${result.returnPath}`});return result?.statusCode?result:response(200,result);}
+  if(action==='product-broker-callback'){const {handleBrokerCallback}=await import('./broker.mjs');return integrationResponse(await handleBrokerCallback(ctx,params));}
   if(action==='guest'){await rate('product-guest',ip,12,86400000);if(user)return response(200,{product:await productSnapshot(user),csrfToken:csrfToken(raw,secret),capabilities});const guest={id:crypto.randomUUID(),kind:'guest',created_at:time,expires_at:time+GUEST_TTL};await legacyStore.createUser(guest,createInitialState({now:time}));return issue(guest);}
   if(!user)fail('AUTH_REQUIRED','Sign in to your account.',401);await rate('product-user',user.id,1200,300000);
   if(action==='logout'){await legacyStore.deleteSession(sessionHash);return response(200,{ok:true},{'Set-Cookie':cookie('',0,isLocalRuntime(env))});}
@@ -53,6 +55,6 @@ export function createProductHandler({store:providedStore,env,now,fetcher,testEm
   let result;
   if(action.startsWith('product-portfolio')){const {handlePortfolio}=await import('./portfolio-service.mjs');result=await handlePortfolio(ctx,action,body,params);}
   else result=await integrationModule.handleIntegrations(ctx,action,body,params);
-  return result?.statusCode?result:response(200,result);
+  return integrationResponse(result);
  }catch(error){const known=error instanceof TerminalError||(typeof error?.code==='string'&&/^[A-Z][A-Z0-9_]{2,60}$/.test(error.code)&&Number.isInteger(error.status)&&error.status>=400&&error.status<500);return response(known?error.status:503,{error:{code:known?error.code:'WORKSPACE_UNAVAILABLE',message:known?error.message:'Your action was not confirmed. Retry with the same request ID.'}},error?.status===429?{'Retry-After':String(error.retryAfter||1)}:{});}};
 }

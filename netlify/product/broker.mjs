@@ -1,10 +1,39 @@
 import crypto from 'node:crypto';
-import { fail, sha256, commandDigest } from '../terminal/security.mjs';
+import { fail, sha256, commandDigest, header, equalToken, isLocalRuntime } from '../terminal/security.mjs';
 import { change, owned, updateRecord, requestId, readJsonResponse, clean, SYSTEM_OWNER, listAllRecords } from './providers-core.mjs';
 import { liveRelease, requireLiveRelease } from './broker-release.mjs';
 import { brokerVenue } from './providers-data.mjs';
+import { requireEntitlement } from './entitlements.mjs';
 
 export const BROKER_MANAGEMENT_URL = 'https://app.alpaca.markets/';
+export const brokerOAuthCookieName = env => isLocalRuntime(env) ? 'nortivo_broker_oauth_local' : '__Host-nortivo_broker_oauth';
+export function brokerOAuthCookie(value, env, clear = false) { return `${brokerOAuthCookieName(env)}=${value}; Path=/; HttpOnly; ${isLocalRuntime(env) ? '' : 'Secure; '}SameSite=Lax; Max-Age=${clear ? 0 : 600}`; }
+function oauthNonce(ctx) {
+  const cookies = header(ctx.event || { headers: ctx.requestHeaders || {} }, 'cookie').split(';').map(x => x.trim()).filter(x => x.startsWith(`${brokerOAuthCookieName(ctx.env)}=`));
+  const value = cookies.length === 1 ? cookies[0].slice(brokerOAuthCookieName(ctx.env).length + 1) : '';
+  return /^[A-Za-z0-9_-]{43}$/.test(value) ? value : '';
+}
+async function activeOAuthActor(ctx, sessionHash, ownerId, operatorBootstrap = false) {
+  if (!/^[a-f0-9]{64}$/.test(sessionHash || '') || !ctx.legacyStore?.getSession) fail('BROKER_OAUTH_SESSION_REQUIRED', 'Sign in again and restart the broker connection.', 403);
+  const actor = await ctx.legacyStore.getSession(sessionHash, ctx.now);
+  if (!actor || actor.kind !== 'user' || actor.id !== ownerId) fail('BROKER_OAUTH_SESSION_REQUIRED', 'The original sign-in expired or was revoked. Sign in and restart the broker connection.', 403);
+  const account = await owned(ctx.store, 'accounts', ownerId, ownerId);
+  if (operatorBootstrap) {
+    if (!(ctx.env.PRODUCT_ADMIN_USER_IDS || '').split(',').map(id => id.trim()).filter(Boolean).includes(ownerId) || account.value.emailVerified !== true) fail('ADMIN_REQUIRED', 'Owner verification is required for this broker setup check.', 403);
+  } else requireEntitlement(account.value, 'broker.connect', ctx.now);
+  return actor;
+}
+function brokerReturnPath(ctx, state, status) {
+  const path = state.returnPath;
+  let allowed = false;
+  try { allowed = /^\/(?:en|nb)\/terminal\/\?broker=connected$/.test(path || '') && new URL(state.redirectUri).origin === ctx.origin; } catch { /* reject invalid stored destinations */ }
+  if (!allowed) fail('BROKER_OAUTH_INVALID', 'The broker return destination could not be verified.', 400);
+  return path.replace('broker=connected', `broker=${status}`);
+}
+function brokerCallbackRedirect(ctx, path) {
+  const clear = brokerOAuthCookie('', ctx.env, true); ctx.setOAuthCookie?.(clear);
+  return { statusCode: 303, headers: { Location: path, 'Set-Cookie': clear, 'Referrer-Policy': 'no-referrer', 'Cache-Control': 'no-store', 'Content-Type': 'text/plain; charset=utf-8', 'X-Content-Type-Options': 'nosniff' }, body: '' };
+}
 function key(env) { const value = env.PRODUCT_BROKER_TOKEN_KEY || ''; if (!/^[A-Za-z0-9+/]{43}=$/.test(value) || Buffer.from(value, 'base64').length !== 32) fail('BROKER_NOT_CONFIGURED', 'Broker token encryption is not configured.', 503); return Buffer.from(value, 'base64'); }
 export function encryptBrokerToken(raw, ownerId, connectionId, env, mode = 'paper') {
   const iv = crypto.randomBytes(12), cipher = crypto.createCipheriv('aes-256-gcm', key(env), iv); cipher.setAAD(Buffer.from(`${ownerId}:${connectionId}:${mode}:v1`));
@@ -29,16 +58,20 @@ export async function getBrokerStatus(ctx) {
 }
 export async function connectBroker(ctx, body) {
   requestId(body.requestId); await ctx.requireFeature('broker.connect'); await ctx.requireStepUp('broker');
+  const operatorBootstrap = ctx.brokerOperatorBootstrap === true;
+  await activeOAuthActor(ctx, ctx.sessionHash, ctx.user.id, operatorBootstrap);
+  if (typeof ctx.setOAuthCookie !== 'function') fail('BROKER_NOT_CONFIGURED', 'Broker browser authorization is not configured.', 503);
   if (!['paper', 'live'].includes(body.mode)) fail('INVALID_BROKER_MODE', 'Choose paper or live brokerage explicitly.', 400);
   if (body.mode === 'live') await requireLiveRelease(ctx);
   if (!brokerConfigured(ctx.env) || !brokerPaperApproved(ctx.env)) fail('BROKER_NOT_CONFIGURED', 'Broker connections await approved application configuration.', 503);
   key(ctx.env);
   const redirect = new URL(ctx.env.ALPACA_OAUTH_REDIRECT_URI);
   if (redirect.origin !== ctx.origin || redirect.pathname !== '/.netlify/functions/terminal' || redirect.searchParams.get('action') !== 'product-broker-callback') fail('BROKER_NOT_CONFIGURED', 'The registered broker return route does not match this website.', 503);
-  const state = crypto.randomBytes(32).toString('base64url'), stateHash = sha256(state), connectionId = crypto.randomUUID();
+  const state = crypto.randomBytes(32).toString('base64url'), stateHash = sha256(state), nonce = crypto.randomBytes(32).toString('base64url'), connectionId = crypto.randomUUID();
   const locale = ctx.account?.locale === 'nb' ? 'nb' : 'en';
-  const result = await ctx.store.transact([change('broker_states', stateHash, ctx.user.id, null, { ownerId: ctx.user.id, connectionId, mode: body.mode, redirectUri: redirect.href, returnPath: `/${locale}/terminal/?broker=connected`, expiresAt: ctx.now + 600000, consumed: false }, ctx.now + 600000)]);
+  const result = await ctx.store.transact([change('broker_states', stateHash, ctx.user.id, null, { ownerId: ctx.user.id, connectionId, mode: body.mode, redirectUri: redirect.href, returnPath: `/${locale}/terminal/?broker=connected`, sessionHash: ctx.sessionHash, bindingHash: sha256(nonce), operatorBootstrap, expiresAt: ctx.now + 600000, consumed: false }, ctx.now + 600000)]);
   if (result.status !== 'applied') fail('CONCURRENT_UPDATE', 'Broker connection could not start. Try again.', 409);
+  ctx.setOAuthCookie(brokerOAuthCookie(nonce, ctx.env));
   const url = new URL('https://app.alpaca.markets/oauth/authorize');
   Object.entries({ response_type: 'code', client_id: ctx.env.ALPACA_OAUTH_CLIENT_ID, redirect_uri: redirect.href, state, scope: 'trading', env: body.mode }).forEach(([name, value]) => url.searchParams.set(name, value));
   return { authorizationUrl: url.href, mode: body.mode, scopes: ['trading'], expiresAt: ctx.now + 600000 };
@@ -65,13 +98,20 @@ export function createBrokerClient(env, fetcher = fetch) {
   };
 }
 export async function handleBrokerCallback(ctx, params) {
-  if (!/^[A-Za-z0-9_-]{43}$/.test(params.state || '') || typeof params.code !== 'string' || params.code.length > 500) fail('BROKER_OAUTH_INVALID', 'Broker authorization could not be verified. Start again.', 400);
+  const denied = params.error === 'access_denied';
+  if (!/^[A-Za-z0-9_-]{43}$/.test(params.state || '') || !denied && (typeof params.code !== 'string' || !params.code || params.code.length > 500)) fail('BROKER_OAUTH_INVALID', 'Broker authorization could not be verified. Start again.', 400);
   const hash = sha256(params.state), row = await ctx.store.get('broker_states', hash);
-  if (!row || row.value.consumed || row.value.expiresAt <= ctx.now || !['paper', 'live'].includes(row.value.mode)) fail('BROKER_OAUTH_INVALID', 'This broker authorization is expired or already used.', 400);
-  if (row.value.mode === 'live') await requireLiveRelease(ctx);
-  if (!brokerConfigured(ctx.env) || !brokerPaperApproved(ctx.env)) fail('BROKER_NOT_CONFIGURED', 'Broker application configuration is unavailable.', 503);
+  if (!row || row.value.ownerId !== row.ownerId || row.value.consumed || row.value.expiresAt <= ctx.now || !['paper', 'live'].includes(row.value.mode)) fail('BROKER_OAUTH_INVALID', 'This broker authorization is expired or already used.', 400);
+  const nonce = oauthNonce(ctx);
+  if (!nonce || !equalToken(sha256(nonce), row.value.bindingHash)) fail('BROKER_OAUTH_BROWSER_MISMATCH', 'Return to the browser that started this broker connection and try again.', 403);
+  await activeOAuthActor(ctx, row.value.sessionHash, row.ownerId, row.value.operatorBootstrap === true);
+  const returnPath = brokerReturnPath(ctx, row.value, denied ? 'cancelled' : 'connected');
   const consume = await ctx.store.transact([change('broker_states', hash, row.ownerId, row, { ...row.value, consumed: true, consumedAt: ctx.now }, row.value.expiresAt)]);
   if (consume.status !== 'applied') fail('BROKER_OAUTH_INVALID', 'This broker authorization was already used.', 409);
+  if (denied) return brokerCallbackRedirect(ctx, returnPath);
+  try {
+  if (row.value.mode === 'live') await requireLiveRelease(ctx);
+  if (!brokerConfigured(ctx.env) || !brokerPaperApproved(ctx.env)) fail('BROKER_NOT_CONFIGURED', 'Broker application configuration is unavailable.', 503);
   let response, data;
   try {
     response = await (ctx.fetcher || fetch)('https://api.alpaca.markets/oauth/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ grant_type: 'authorization_code', code: params.code, client_id: ctx.env.ALPACA_OAUTH_CLIENT_ID, client_secret: ctx.env.ALPACA_OAUTH_CLIENT_SECRET, redirect_uri: row.value.redirectUri }).toString(), signal: AbortSignal.timeout(10000), redirect: 'error' });
@@ -83,6 +123,7 @@ export async function handleBrokerCallback(ctx, params) {
   let value = { id: row.value.connectionId, ownerId: row.ownerId, mode: row.value.mode, status: 'connected', automationEnabled: false, token: encryptBrokerToken(tokenData, row.ownerId, row.value.connectionId, ctx.env, row.value.mode), connectedAt: ctx.now };
   const broker = createBrokerClient(ctx.env, ctx.fetcher), account = await broker(value, 'account');
   if (!/^[A-Za-z0-9-]{8,100}$/.test(account.id || '') || account.status !== 'ACTIVE') fail('BROKER_ACCOUNT_INELIGIBLE', 'This paper account is not active.', 403);
+  await activeOAuthActor(ctx, row.value.sessionHash, row.ownerId, row.value.operatorBootstrap === true);
   value.accountId = account.id; value.accountLabel = `${value.mode === 'paper' ? 'Paper' : 'Live'} • ${clean(account.account_number, 24).slice(-6) || account.id.slice(-6)}`;
   const bindingKey = `binding:${value.mode}:${account.id}`, binding = await ctx.store.get('broker_connections', bindingKey);
   if (binding && binding.ownerId !== row.ownerId) fail('BROKER_ACCOUNT_ALREADY_BOUND', 'This brokerage account is already linked to another Nortivo account.', 409);
@@ -91,7 +132,12 @@ export async function handleBrokerCallback(ctx, params) {
   const result = await ctx.store.transact([change('broker_connections', `${row.ownerId}:${value.id}`, row.ownerId, previous, value), change('broker_connections', bindingKey, row.ownerId, binding, { ownerId: row.ownerId, connectionId: value.id, mode: value.mode })]);
   if (result.status !== 'applied') fail('BROKER_CONNECTION_CONFLICT', 'The brokerage account was updated concurrently. Start again.', 409);
   await updateRecord(ctx.store, 'provider_health', 'broker', SYSTEM_OWNER, current => ({ ...current, provider: 'Alpaca', reachable: true, lastSuccessAt: ctx.now, verifiedMode: value.mode, appClientId: ctx.env.ALPACA_OAUTH_CLIENT_ID }));
-  return { connected: true, mode: value.mode, connection: publicConnection(value), returnPath: row.value.returnPath || '/en/terminal/?broker=connected' };
+  return brokerCallbackRedirect(ctx, returnPath);
+  } catch {
+    // Only a nonce/session-verified, consumed flow reaches here. No provider text or code
+    // is reflected, and the browser immediately leaves the query-bearing callback URL.
+    return brokerCallbackRedirect(ctx, returnPath.replace('broker=connected', 'broker=failed'));
+  }
 }
 export async function syncBroker(ctx, connectionId) {
   const row = await owned(ctx.store, 'broker_connections', `${ctx.user.id}:${connectionId}`, ctx.user.id), broker = createBrokerClient(ctx.env, ctx.fetcher);

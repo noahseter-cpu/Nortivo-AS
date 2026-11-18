@@ -119,8 +119,8 @@ export async function handleIntegrations(ctx, action, body = {}, params = {}) {
           if (!selected) fail('BROKER_AUTHORIZATION_REQUIRED', 'Choose an already authorized owner account to verify the broker.', 409);
           const synced = await syncBroker(ctx, selected.id); results.broker = { success: true, mode: synced.mode, lastSyncAt: synced.lastSyncAt };
         }
-        if (service === 'broker_oauth_paper') results.broker_oauth_paper = await connectBroker({ ...ctx, requireFeature: async () => {} }, { requestId: body.requestId, mode: 'paper' });
-        if (service === 'broker_oauth_live') results.broker_oauth_live = await connectBroker({ ...ctx, requireFeature: async () => {} }, { requestId: body.requestId, mode: 'live' });
+        if (service === 'broker_oauth_paper') results.broker_oauth_paper = await connectBroker({ ...ctx, brokerOperatorBootstrap: true, requireFeature: async () => {} }, { requestId: body.requestId, mode: 'paper' });
+        if (service === 'broker_oauth_live') results.broker_oauth_live = await connectBroker({ ...ctx, brokerOperatorBootstrap: true, requireFeature: async () => {} }, { requestId: body.requestId, mode: 'live' });
       } catch (error) { results[service] = { success: false, code: error.code || 'PROBE_FAILED', message: error.code ? error.message : 'The service could not be verified.' }; }
     }
     return { results, readiness: await getIntegrationReadiness(ctx), verification: 'Only successful authenticated upstream responses establish provider reachability; this action never transmits an order.' };
