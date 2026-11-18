@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Private Workspace — Nortivo</title>
-    <meta name="description" content="Open your private projects and manage support tickets." />
+    <title>Support Workspace — Nortivo</title>
+    <meta name="description" content="Sign in to manage customer support and view service configuration." />
     <link rel="canonical" href="https://nortivo.no/en/admin/" />
     <link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/admin/" />
     <link rel="alternate" hreflang="en" href="https://nortivo.no/en/admin/" />
     <link rel="alternate" hreflang="x-default" href="https://nortivo.no/admin/" />
-    <meta property="og:title" content="Private Workspace — Nortivo" />
-    <meta property="og:description" content="Open your private projects and manage support tickets." />
+    <meta property="og:title" content="Support Workspace — Nortivo" />
+    <meta property="og:description" content="Sign in to manage customer support and view service configuration." />
     <meta property="og:url" content="https://nortivo.no/en/admin/" />
     <meta property="og:locale" content="en_GB" />
     <meta property="og:locale:alternate" content="nb_NO" />
@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="/assets/admin-workspace.css" />
 <script src="/assets/site.js" defer>
 </script>
-<script src="/assets/admin.js" defer>
+<script type="module" src="/assets/admin.js" defer>
 </script>
   <link rel="stylesheet" href="/assets/investment.css">
 <link rel="stylesheet" href="/assets/market.css">
@@ -38,96 +38,71 @@
     <header class="site-header nt-header"><div class="nav-shell"><a href="/en/" class="brand" aria-label="Nortivo">NORTIVO</a><nav class="desktop-nav" aria-label="Main navigation" data-i18n-aria="nav.label"><a class="nt-platform-nav" href="https://invest.nortivo.no/en/terminal/" data-i18n="platform.nav">Trading Platform</a><a href="/en/#research" data-i18n="v2.research">Research</a><a href="/en/#systems" data-i18n="master.systemsNav">Systems</a><a href="/en/#education" data-i18n="master.guidesNav">Guides</a><a href="/en/about/" data-i18n="nav.about">About Nortivo</a><a href="/en/report-2026/" class="master-nav-report" data-i18n="master.reportAction">View trading report</a></nav><div class="header-tools"><div class="invest-languages" role="group" aria-label="Language" data-i18n-aria="footer.language"><button type="button" data-language="nb" lang="nb" aria-pressed="false">NO</button><button type="button" data-language="en" lang="en" aria-pressed="true">EN</button></div><button type="button" class="menu-toggle" aria-controls="mobile-nav" aria-expanded="false"><span data-i18n="nav.menu">Menu</span></button></div></div><nav id="mobile-nav" class="mobile-nav" aria-label="Main navigation" data-i18n-aria="nav.label" hidden><a href="https://invest.nortivo.no/en/terminal/" data-i18n="platform.nav">Trading Platform</a><a href="/en/#research" data-i18n="v2.research">Research</a><a href="/en/#systems" data-i18n="master.systemsNav">Systems</a><a href="/en/#education" data-i18n="master.guidesNav">Guides</a><a href="/en/about/" data-i18n="nav.about">About Nortivo</a><a href="/en/report-2026/" class="master-nav-report" data-i18n="master.reportAction">View trading report</a><div class="master-mobile-utility"><a class="" href="/en/contact/" data-i18n="nav.contact">Get in touch</a><a class="" href="/en/support/" data-i18n="master.supportLabel">Customer support</a></div></nav></header>
     <main class="portal-shell admin-page" id="main">
       <section class="portal-card login-card" id="login-card" aria-labelledby="login-title">
-<div class="portal-card-body">
-<h1 id="login-title" data-i18n="admin.heading">Sign in to Nortivo</h1>
-<p class="portal-lead" data-i18n="admin.lead">Open your private projects and manage support tickets.</p>
-<form id="login-form" method="post" novalidate>
-<div class="field">
-<label for="password" data-i18n="admin.password">Admin password</label>
-<input id="password" name="password" type="password" autocomplete="current-password" aria-describedby="password-error" required />
-<span class="field-error" id="password-error" hidden>
-</span>
-</div>
-<div class="form-actions">
-<button class="button" type="submit" data-i18n="admin.signIn">Sign in</button>
-</div>
-<p class="message" id="login-message" role="status" aria-live="polite" aria-atomic="true">
-</p>
-</form>
-</div>
-</section>
+        <div class="portal-card-body">
+          <h1 id="login-title" data-i18n="admin.heading">Nortivo administration</h1>
+          <p class="portal-lead" data-i18n="admin.lead">Sign in to manage customer support and view service configuration.</p>
+          <form id="login-form" method="post" novalidate>
+            <div class="field">
+              <label for="password" data-i18n="admin.password">Admin password</label>
+              <div class="admin-password"><input id="password" name="password" type="password" autocomplete="current-password" aria-describedby="password-error" required /><button id="password-visibility" type="button" aria-pressed="false" data-i18n="admin.showPassword">Show</button></div>
+              <span class="field-error" id="password-error" hidden></span>
+            </div>
+            <div class="form-actions"><button class="button" type="submit" data-i18n="admin.signIn">Sign in</button></div>
+            <p class="message" id="login-message" role="status" aria-live="polite" aria-atomic="true"></p>
+          </form>
+        </div>
+      </section>
       <section class="dashboard" id="dashboard" aria-labelledby="dashboard-title" hidden>
-        <div class="dashboard-head">
-<div>
-<h1 id="dashboard-title" tabindex="-1" data-i18n="admin.privateWorkspace">Your workspace</h1>
-<p class="panel-intro" data-i18n="admin.privateIntro">Your private projects, tools and customer support.</p>
-</div>
-<div class="dashboard-actions">
-<button class="button secondary" id="refresh-button" type="button" data-i18n="admin.refresh">Refresh</button>
-<button class="button secondary" id="logout-button" type="button" data-i18n="admin.signOut">Sign out</button>
-</div>
-</div>
+        <header class="dashboard-head">
+          <div><h1 id="dashboard-title" tabindex="-1" data-i18n="admin.privateWorkspace">Support workspace</h1><p class="panel-intro" data-i18n="admin.privateIntro">Customer requests, replies and service configuration.</p></div>
+          <div class="dashboard-actions"><button class="button secondary" id="refresh-button" type="button" data-i18n="admin.refresh">Refresh</button><button class="button secondary" id="logout-button" type="button" data-i18n="admin.signOut">Sign out</button></div>
+        </header>
         <nav class="workspace-choices" aria-label="Choose workspace" data-i18n-aria="admin.workspaceChoice">
-<button type="button" id="projects-choice" aria-pressed="true" aria-controls="projects-panel" data-i18n="admin.projectsTools">Projects &amp; tools</button>
-<button type="button" id="support-choice" aria-pressed="false" aria-controls="support-panel" data-i18n="admin.tickets">Support tickets</button>
-</nav>
-<p class="message dashboard-message" id="dashboard-message" role="status" aria-live="polite" aria-atomic="true"></p>
-<section class="private-projects" id="projects-panel" aria-labelledby="projects-title">
-<div class="projects-heading">
-<h2 id="projects-title" tabindex="-1" data-i18n="admin.projectsTools">Projects &amp; tools</h2>
-<p data-i18n="admin.projectsIntro">Open a project to continue where you left off.</p>
-</div>
-<div id="project-list" class="project-list" aria-busy="false"></div>
-<p class="private-workspace-note" data-i18n="admin.projectsNote">This workspace is private. Customer tickets stay in their own area.</p>
-</section>
-<section id="support-panel" aria-labelledby="support-title" hidden>
-<h2 id="support-title" tabindex="-1" data-i18n="admin.tickets">Support tickets</h2>
-<p class="panel-intro" data-i18n="admin.workspaceIntro">Read requests, reply by email and manage their status.</p>
-        <div class="stats" aria-label="Ticket summary" data-i18n-aria="admin.summary">
-<div class="stat">
-<span class="stat-label" data-i18n="admin.open">Open</span>
-<strong class="stat-value" id="open-count">0</strong>
-</div>
-<div class="stat">
-<span class="stat-label" data-i18n="admin.answered">Answered</span>
-<strong class="stat-value" id="answered-count">0</strong>
-</div>
-<div class="stat">
-<span class="stat-label" data-i18n="admin.total">Total</span>
-<strong class="stat-value" id="total-count">0</strong>
-</div>
-</div>
-        <section class="portal-card workspace" aria-label="Ticket workspace" data-i18n-aria="admin.workspace">
-<div class="ticket-list">
-<div class="list-tools">
-<div class="field">
-<label for="search" data-i18n="admin.search">Search tickets</label>
-<input id="search" type="search" placeholder="Number, name or subject" data-i18n-placeholder="admin.searchPlaceholder" />
-</div>
-<div class="field">
-<label for="status-filter" data-i18n="admin.status">Status</label>
-<select id="status-filter">
-<option value="all" data-i18n="admin.all">All statuses</option>
-<option value="open" data-i18n="admin.open">Open</option>
-<option value="answered" data-i18n="admin.answered">Answered</option>
-<option value="closed" data-i18n="admin.closed">Closed</option>
-</select>
-</div>
-</div>
-<div class="tickets" id="tickets" aria-label="Support tickets" data-i18n-aria="admin.tickets">
-</div>
-</div>
-<div class="ticket-detail" id="ticket-detail" aria-busy="false">
-<div class="empty">
-<p data-i18n="admin.selectTicket">Select a ticket to read and answer it.</p>
-</div>
-</div>
-</section>
+          <button type="button" id="overview-choice" aria-pressed="true" aria-controls="overview-panel" data-i18n="admin.overview">Overview</button>
+          <button type="button" id="inbox-choice" aria-pressed="false" aria-controls="inbox-panel" data-i18n="admin.inbox">Inbox</button>
+          <button type="button" id="operations-choice" aria-pressed="false" aria-controls="operations-panel" data-i18n="admin.operations">Operations</button>
+        </nav>
+        <div class="admin-dataset"><p id="ticket-scope" class="admin-muted"></p><p id="refreshed-at" class="admin-muted"></p></div>
+        <p class="message dashboard-message" id="dashboard-message" role="status" aria-live="polite" aria-atomic="true"></p>
+        <section id="overview-panel" aria-labelledby="overview-title">
+          <div class="admin-section-head"><div><h2 id="overview-title" tabindex="-1" data-i18n="admin.overviewTitle">Support at a glance</h2><p data-i18n="admin.overviewIntro">Choose a status to open the matching loaded tickets.</p></div><button class="button secondary" type="button" data-inbox-shortcut="all" data-i18n="admin.openInbox">Open inbox</button></div>
+          <div class="admin-summary" aria-label="Loaded ticket summary" data-i18n-aria="admin.summary">
+            <button type="button" data-inbox-shortcut="open"><span data-i18n="admin.open">Open</span><strong id="open-count">0</strong><small data-i18n="admin.viewTickets">View tickets</small></button>
+            <button type="button" data-inbox-shortcut="answered"><span data-i18n="admin.answered">Answered</span><strong id="answered-count">0</strong><small data-i18n="admin.viewTickets">View tickets</small></button>
+            <button type="button" data-inbox-shortcut="closed"><span data-i18n="admin.closed">Closed</span><strong id="closed-count">0</strong><small data-i18n="admin.viewTickets">View tickets</small></button>
+            <button type="button" data-inbox-shortcut="all"><span data-i18n="admin.totalLoaded">Total loaded</span><strong id="total-count">0</strong><small data-i18n="admin.viewTickets">View tickets</small></button>
+          </div>
+          <div class="admin-overview-grid">
+            <section class="admin-section" aria-labelledby="older-title"><div class="admin-section-head"><div><h2 id="older-title" data-i18n="admin.olderTitle">Open for more than 24 hours</h2><p data-i18n="admin.olderHelp">Ticket age since creation. Reopened tickets are included.</p></div><button class="button secondary" type="button" data-inbox-shortcut="older" data-i18n="admin.viewQueue">View queue</button></div><div id="older-queue" class="admin-queue"></div></section>
+            <section class="admin-section" aria-labelledby="recent-title"><div class="admin-section-head"><div><h2 id="recent-title" data-i18n="admin.recentTitle">Recently updated</h2><p data-i18n="admin.recentHelp">Replies and status changes update a ticket.</p></div></div><div id="recent-queue" class="admin-queue"></div></section>
+          </div>
+        </section>
+        <section id="inbox-panel" aria-labelledby="inbox-title" hidden>
+          <div class="admin-section-head"><div><h2 id="inbox-title" tabindex="-1" data-i18n="admin.inbox">Inbox</h2><p data-i18n="admin.workspaceIntro">Read requests, reply by email and manage their status.</p></div></div>
+          <section class="portal-card workspace" aria-label="Ticket workspace" data-i18n-aria="admin.workspace">
+            <div class="ticket-list">
+              <div class="list-tools">
+                <div class="field admin-search"><label for="search" data-i18n="admin.search">Search tickets</label><input id="search" type="search" placeholder="Number, name, email or subject" data-i18n-placeholder="admin.searchPlaceholder" /></div>
+                <div class="field"><label for="status-filter" data-i18n="admin.status">Status</label><select id="status-filter"><option value="all" data-i18n="admin.all">All statuses</option><option value="open" data-i18n="admin.open">Open</option><option value="answered" data-i18n="admin.answered">Answered</option><option value="closed" data-i18n="admin.closed">Closed</option></select></div>
+                <div class="field"><label for="sort-order" data-i18n="admin.sort">Sort</label><select id="sort-order"><option value="newest" data-i18n="admin.newest">Newest first</option><option value="oldest" data-i18n="admin.oldest">Oldest first</option><option value="updated" data-i18n="admin.lastUpdated">Last updated</option></select></div>
+                <label class="admin-check"><input id="older-filter" type="checkbox" /><span data-i18n="admin.olderFilter">Open more than 24 hours</span></label>
+              </div>
+              <div class="admin-match-row"><p id="match-count" role="status" aria-live="polite"></p><button class="admin-text-button" id="clear-filters" type="button" data-i18n="admin.clearFilters">Clear filters</button></div>
+              <div class="tickets" id="tickets" aria-label="Support tickets" data-i18n-aria="admin.tickets"></div>
+              <div class="admin-list-footer"><button class="button secondary" id="load-more-button" type="button" data-i18n="admin.loadOlder" hidden>Load older tickets</button><p id="list-scope" class="admin-muted"></p></div>
+            </div>
+            <div class="ticket-detail" id="ticket-detail" aria-busy="false"><div class="empty"><p data-i18n="admin.selectTicket">Select a ticket to read and answer it.</p></div></div>
+          </section>
+        </section>
+        <section id="operations-panel" aria-labelledby="operations-title" hidden>
+          <div class="admin-section-head"><div><h2 id="operations-title" tabindex="-1" data-i18n="admin.operations">Operations</h2><p data-i18n="admin.operationsIntro">Service configuration and direct access to your operating tools.</p></div></div>
+          <div class="admin-operations-grid">
+            <section class="admin-section" aria-labelledby="configuration-title"><h3 id="configuration-title" data-i18n="admin.configuration">Service configuration</h3><p class="admin-muted" data-i18n="admin.configurationHelp">Configuration only. A saved setting does not confirm connectivity, provider permission or delivery. No service probes run here.</p><div id="operations-status" role="status" aria-live="polite"></div><p id="operations-checked" class="admin-muted"></p></section>
+            <section class="admin-section" aria-labelledby="tools-title"><h3 id="tools-title" data-i18n="admin.operatingTools">Operating tools</h3><p class="admin-muted" data-i18n="admin.toolsHelp">These open the actual service in a new tab. Each service manages its own sign-in.</p><div class="admin-tool-links"><a href="https://nortivo.no/" target="_blank" rel="noopener noreferrer"><strong data-i18n="admin.mainWebsite">Company website</strong><span>nortivo.no</span></a><a href="https://invest.nortivo.no/" target="_blank" rel="noopener noreferrer"><strong data-i18n="admin.investmentPlatform">Investment platform</strong><span>invest.nortivo.no</span></a><a href="https://app.netlify.com/projects/vermillion-mousse-5e3749/deploys" target="_blank" rel="noopener noreferrer"><strong data-i18n="admin.deployments">Netlify deployments</strong><span>Netlify</span></a><a href="https://resend.com/emails" target="_blank" rel="noopener noreferrer"><strong data-i18n="admin.emailLogs">Email activity</strong><span>Resend</span></a></div></section>
+          </div>
+        </section>
       </section>
-      </section>
-      <noscript>
-<p class="no-script">Support administration needs JavaScript. / Administrasjon krever JavaScript.</p>
-</noscript>
+      <noscript><p class="no-script">Support administration needs JavaScript. / Administrasjon krever JavaScript.</p></noscript>
     </main>
     <footer class="site-footer">
 <div class="footer-shell">

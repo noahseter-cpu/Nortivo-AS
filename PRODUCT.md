@@ -13,11 +13,11 @@ web
 - Customers who need to create or follow a support ticket.
 - Portfolio subscribers recording manual holdings and transactions, and Terminal Pro subscribers inspecting market, research, strategy and broker capabilities according to their actual plan and provider readiness.
 - Visitors inspecting the explicitly selected read-only fictional sample, separate from connected data and account records.
-- Nortivo’s administrator, who uses private side projects/tools and reviews, answers and closes support tickets.
+- Nortivo’s administrator, who reviews support activity, answers and closes tickets, and checks configuration and operational destinations.
 
 ## Product Purpose
 
-Nortivo presents investment technology, financial research and education, provides a direct support workflow and gives its owner an authenticated workspace. Success means visitors immediately understand the company’s services, inspect the existing report with its historical definitions, explore testable tools and methods, and make a relevant enquiry. Customers can create and follow tickets; the administrator can open private tools or answer support. Existing software and design projects remain accessible as secondary work.
+Nortivo presents investment technology, financial research and education, provides a direct support workflow and gives its owner an authenticated workspace. Success means visitors immediately understand the company’s services, inspect the existing report with its historical definitions, explore testable tools and methods, and make a relevant enquiry. Customers can create and follow tickets; the administrator can triage and answer support, review the loaded ticket scope and inspect configuration without exposing credentials. Existing software and design projects remain accessible as secondary work.
 
 ## Positioning
 
@@ -30,7 +30,7 @@ The owner positions Nortivo as an investment company focused on financial resear
 - Supabase stores tickets and replies; Resend handles email delivery.
 - Existing `/`, `/products/`, `/support/` and `/admin/` routes and all form IDs/API contracts must remain stable.
 - The complete public journey supports Norwegian Bokmål and English, with static `/nb/` and `/en/` routes. Explicit language choices are remembered independently of the Arc application.
-- Admin opens on Projects & tools with Support tickets as a separate choice. The project registry is read-only; external shortcuts keep their destination's authentication.
+- Admin opens on a support overview with a separate inbox and operations area. The Vibb and Arc project launcher is removed. Counts describe the loaded ticket scope, and configuration presence is never presented as successful delivery or provider connectivity. Operational destinations retain their own authentication.
 - The private course runs under `/admin/projects/vibb/` with authentication on every asset and tutor request. It remains distinct from the separately hosted Vibb site. The optional tutor requires a server-only provider key; unconfigured requests report 503.
 - Its private [Vibb app and code workspace](docs/PRIVATE_VIBB_APP.md) pairs a compiled practice copy with the protected source catalog and can open beside the course. Code is read-only; practice records use separate browser storage. This learning surface retains Vibb's own warm identity.
 - The public Git repository may contain only the encrypted private-content package. Plaintext local inputs and the content key remain ignored; see [PRIVATE_WORKSPACE.md](docs/PRIVATE_WORKSPACE.md).

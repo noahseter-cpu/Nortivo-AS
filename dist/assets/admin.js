@@ -1,29 +1,30 @@
+import {isOlderOpen,summarizeTickets,selectTickets,mergeTicketPages,ticketPage} from './admin-core.js';
 "use strict";
 (() => {
   const copy = {
   "nb": {
-    "admin.title": "Privat arbeidsområde — Nortivo",
+    "admin.title": "Supportarbeidsområde — Nortivo",
     "admin.skip": "Hopp til innhold",
     "admin.navigation": "Hovedmeny",
     "admin.home": "Hjem",
     "admin.customerSupport": "Kundesupport",
     "admin.menu": "Meny",
-    "admin.heading": "Logg inn hos Nortivo",
-    "admin.lead": "Åpne dine private prosjekter og håndter supportsaker.",
+    "admin.heading": "Nortivo administrasjon",
+    "admin.lead": "Logg inn for å håndtere kundesupport og se tjenesteoppsettet.",
     "admin.password": "Administratorpassord",
     "admin.signIn": "Logg inn",
     "admin.tickets": "Supportsaker",
     "admin.workspaceIntro": "Les henvendelser, svar på e-post og oppdater status.",
     "admin.refresh": "Oppdater",
     "admin.signOut": "Logg ut",
-    "admin.summary": "Saksoversikt",
+    "admin.summary": "Oversikt over innlastede saker",
     "admin.open": "Åpne",
     "admin.answered": "Besvart",
     "admin.closed": "Lukket",
     "admin.total": "Totalt",
     "admin.workspace": "Arbeidsområde for supportsaker",
     "admin.search": "Søk i saker",
-    "admin.searchPlaceholder": "Nummer, navn eller emne",
+    "admin.searchPlaceholder": "Nummer, navn, e-post eller emne",
     "admin.status": "Status",
     "admin.all": "Alle statuser",
     "admin.selectTicket": "Velg en sak for å lese og svare.",
@@ -37,7 +38,7 @@
     "admin.signedOut": "Du er logget ut.",
     "admin.passwordRequired": "Skriv inn administratorpassordet.",
     "admin.wrongPassword": "Feil passord. Prøv igjen.",
-    "admin.sessionExpired": "Økten er utløpt. Logg inn igjen.",
+    "admin.sessionExpired": "Økten er utløpt. Logg inn igjen. Utkastene er beholdt. Innsendte endringer kan fortsatt bli fullført; sjekk saken og e-postaktiviteten før du prøver igjen.",
     "admin.loginUnavailable": "Innlogging er midlertidig utilgjengelig. Prøv igjen senere.",
     "admin.network": "Serveren kunne ikke nås. Sjekk tilkoblingen og prøv igjen.",
     "admin.error": "Handlingen kunne ikke fullføres. Prøv igjen.",
@@ -51,51 +52,109 @@
     "admin.close": "Lukk sak",
     "admin.reopen": "Åpne saken igjen",
     "admin.sendingReply": "Sender svar…",
-    "admin.replySent": "Svaret er sendt på e-post.",
+    "admin.replySent": "Svaret er lagret. E-postleverandøren har godtatt sendingen; levering til innboksen er ikke bekreftet.",
     "admin.replyInvalid": "Skriv et svar på minst 2 tegn.",
     "admin.updating": "Oppdaterer status…",
     "admin.statusUpdated": "Sakens status er oppdatert.",
-    "admin.sent": "Sendt",
+    "admin.sent": "Registrert",
     "admin.replies": "Tidligere svar",
     "admin.loaded": "Sakslisten er oppdatert.",
-    "admin.replyFailed": "Svaret kunne ikke sendes. Utkastet er beholdt. Prøv igjen.",
+    "admin.replyFailed": "Svaret kunne ikke bekreftes. Utkastet er beholdt. Sjekk e-postaktiviteten før du prøver igjen.",
     "admin.statusOpen": "Åpen",
-    "meta.admin.title": "Privat arbeidsområde — Nortivo",
-    "meta.admin.description": "Åpne dine private prosjekter og håndter supportsaker.",
-    "admin.privateWorkspace": "Arbeidsområdet ditt",
-    "admin.privateIntro": "Dine private prosjekter, verktøy og kundesupport.",
+    "meta.admin.title": "Supportarbeidsområde — Nortivo",
+    "meta.admin.description": "Logg inn for å håndtere kundesupport og se tjenesteoppsettet.",
+    "admin.privateWorkspace": "Supportarbeidsområde",
+    "admin.privateIntro": "Kundehenvendelser, svar og tjenesteoppsett.",
     "admin.workspaceChoice": "Velg arbeidsområde",
-    "admin.projectsTools": "Prosjekter og verktøy",
-    "admin.projectsIntro": "Åpne et prosjekt og fortsett der du slapp.",
-    "admin.projectsNote": "Dette arbeidsområdet er privat. Kundesaker har sitt eget område.",
-    "admin.loadingProjects": "Henter prosjekter…",
-    "admin.projectsLoaded": "Prosjektene er oppdatert.",
-    "admin.noProjects": "Ingen prosjekter tilgjengelige. Prøv Oppdater.",
-    "admin.newTab": "Åpnes i en ny fane."
+    "admin.newTab": "Åpnes i en ny fane.",
+    "admin.overview": "Oversikt",
+    "admin.inbox": "Innboks",
+    "admin.operations": "Drift",
+    "admin.overviewTitle": "Support i korte trekk",
+    "admin.overviewIntro": "Velg en status for å åpne de samsvarende innlastede sakene.",
+    "admin.openInbox": "Åpne innboksen",
+    "admin.viewTickets": "Se saker",
+    "admin.totalLoaded": "Totalt innlastet",
+    "admin.olderTitle": "Åpne i mer enn 24 timer",
+    "admin.olderHelp": "Sakens alder siden opprettelse. Gjenåpnede saker er med.",
+    "admin.viewQueue": "Se køen",
+    "admin.recentTitle": "Nylig oppdatert",
+    "admin.recentHelp": "Svar og statusendringer oppdaterer en sak.",
+    "admin.sort": "Sortering",
+    "admin.newest": "Nyeste først",
+    "admin.oldest": "Eldste først",
+    "admin.lastUpdated": "Sist oppdatert",
+    "admin.olderFilter": "Åpne i mer enn 24 timer",
+    "admin.clearFilters": "Nullstill filtre",
+    "admin.loadOlder": "Hent eldre saker",
+    "admin.loadingOlder": "Henter eldre saker…",
+    "admin.operationsIntro": "Tjenesteoppsett og direkte tilgang til driftsverktøyene dine.",
+    "admin.configuration": "Tjenesteoppsett",
+    "admin.configurationHelp": "Kun oppsett. En lagret innstilling bekrefter ikke tilkobling, leverandørtillatelse eller levering. Ingen tjenestetester kjøres her.",
+    "admin.operatingTools": "Driftsverktøy",
+    "admin.toolsHelp": "Disse åpner den faktiske tjenesten i en ny fane. Hver tjeneste har egen innlogging.",
+    "admin.mainWebsite": "Bedriftens nettside",
+    "admin.investmentPlatform": "Investeringsplattform",
+    "admin.deployments": "Netlify-publiseringer",
+    "admin.emailLogs": "E-postaktivitet",
+    "admin.showPassword": "Vis",
+    "admin.hidePassword": "Skjul",
+    "admin.scope": "{count} innlastede saker · tellingene gjelder kun disse registreringene. Oppdater henter den nyeste siden på nytt.",
+    "admin.scopeMore": "Eldre saker finnes. Hent flere i innboksen.",
+    "admin.scopeEnd": "Slutten av den tilgjengelige sakslisten.",
+    "admin.scopeCapped": "Grensen for tilgjengelige sider er nådd. Dette er ikke en telling av hele historikken.",
+    "admin.refreshed": "Sist oppdatert: {time} · Europe/Oslo",
+    "admin.notRefreshed": "Ikke oppdatert ennå.",
+    "admin.matches": "{matches} av {total} innlastede saker",
+    "admin.noOlder": "Ingen innlastede åpne saker er mer enn 24 timer gamle.",
+    "admin.olderLoaded": "{count} innlastede åpne saker eldre enn 24 timer",
+    "admin.updatedAt": "Oppdatert {time}",
+    "admin.loadingOperations": "Leser tjenesteoppsettet…",
+    "admin.configurationChecked": "Oppsett lest: {time} · Europe/Oslo",
+    "admin.configured": "Konfigurert · tilkobling ikke kontrollert",
+    "admin.notConfigured": "Ikke konfigurert",
+    "admin.purchaseUnavailable": "Utilgjengelig med gjeldende oppsett",
+    "admin.notChecked": "Ikke kontrollert",
+    "admin.productEnabled": "Plattformprodukt",
+    "admin.enabled": "Aktivert i oppsettet",
+    "admin.disabled": "Deaktivert i oppsettet",
+    "admin.purchases": "Nye kjøp",
+    "admin.updated": "Oppdatert",
+    "admin.checkingSession": "Kontrollerer administratorøkten…",
+    "admin.unknownStatus": "Ukjent status",
+    "admin.retryTicket": "Prøv saken igjen",
+    "admin.refreshAfterWriteFailed": "Endringen ble lagret, men saken kunne ikke oppdateres. Prøv Oppdater før du gjør en ny endring.",
+    "admin.serviceMarket": "Markedsdata",
+    "admin.serviceNews": "Nyheter",
+    "admin.serviceCalendar": "Økonomisk kalender",
+    "admin.serviceAi": "KI-forklaringer",
+    "admin.serviceBroker": "Megler",
+    "admin.serviceEmail": "E-post",
+    "admin.servicePayments": "Betaling"
   },
   "en": {
-    "admin.title": "Private Workspace — Nortivo",
+    "admin.title": "Support Workspace — Nortivo",
     "admin.skip": "Skip to content",
     "admin.navigation": "Main navigation",
     "admin.home": "Home",
     "admin.customerSupport": "Customer support",
     "admin.menu": "Menu",
-    "admin.heading": "Sign in to Nortivo",
-    "admin.lead": "Open your private projects and manage support tickets.",
+    "admin.heading": "Nortivo administration",
+    "admin.lead": "Sign in to manage customer support and view service configuration.",
     "admin.password": "Admin password",
     "admin.signIn": "Sign in",
     "admin.tickets": "Support tickets",
     "admin.workspaceIntro": "Read requests, reply by email and manage their status.",
     "admin.refresh": "Refresh",
     "admin.signOut": "Sign out",
-    "admin.summary": "Ticket summary",
+    "admin.summary": "Loaded ticket summary",
     "admin.open": "Open",
     "admin.answered": "Answered",
     "admin.closed": "Closed",
     "admin.total": "Total",
     "admin.workspace": "Ticket workspace",
     "admin.search": "Search tickets",
-    "admin.searchPlaceholder": "Number, name or subject",
+    "admin.searchPlaceholder": "Number, name, email or subject",
     "admin.status": "Status",
     "admin.all": "All statuses",
     "admin.selectTicket": "Select a ticket to read and answer it.",
@@ -109,7 +168,7 @@
     "admin.signedOut": "You are signed out.",
     "admin.passwordRequired": "Enter the admin password.",
     "admin.wrongPassword": "Incorrect password. Try again.",
-    "admin.sessionExpired": "Your session has expired. Sign in again.",
+    "admin.sessionExpired": "Your session has expired. Sign in again. Drafts are retained. Submitted changes may still complete; check the ticket and email activity before retrying.",
     "admin.loginUnavailable": "Sign-in is temporarily unavailable. Try again later.",
     "admin.network": "The server could not be reached. Check your connection and try again.",
     "admin.error": "The action could not be completed. Try again.",
@@ -123,27 +182,85 @@
     "admin.close": "Close ticket",
     "admin.reopen": "Reopen ticket",
     "admin.sendingReply": "Sending reply…",
-    "admin.replySent": "Reply sent by email.",
+    "admin.replySent": "Reply saved. The email provider accepted the send request; inbox delivery is not confirmed.",
     "admin.replyInvalid": "Write a reply of at least 2 characters.",
     "admin.updating": "Updating status…",
     "admin.statusUpdated": "Ticket status updated.",
-    "admin.sent": "Sent",
+    "admin.sent": "Recorded",
     "admin.replies": "Previous replies",
     "admin.loaded": "Ticket list refreshed.",
-    "admin.replyFailed": "The reply could not be sent. Your draft has been kept. Try again.",
+    "admin.replyFailed": "The reply could not be confirmed. Your draft is retained. Check email activity before retrying.",
     "admin.statusOpen": "Open",
-    "meta.admin.title": "Private Workspace — Nortivo",
-    "meta.admin.description": "Open your private projects and manage support tickets.",
-    "admin.privateWorkspace": "Your workspace",
-    "admin.privateIntro": "Your private projects, tools and customer support.",
+    "meta.admin.title": "Support Workspace — Nortivo",
+    "meta.admin.description": "Sign in to manage customer support and view service configuration.",
+    "admin.privateWorkspace": "Support workspace",
+    "admin.privateIntro": "Customer requests, replies and service configuration.",
     "admin.workspaceChoice": "Choose workspace",
-    "admin.projectsTools": "Projects & tools",
-    "admin.projectsIntro": "Open a project to continue where you left off.",
-    "admin.projectsNote": "This workspace is private. Customer tickets stay in their own area.",
-    "admin.loadingProjects": "Loading projects…",
-    "admin.projectsLoaded": "Projects refreshed.",
-    "admin.noProjects": "No projects available. Try Refresh.",
-    "admin.newTab": "Opens in a new tab."
+    "admin.newTab": "Opens in a new tab.",
+    "admin.overview": "Overview",
+    "admin.inbox": "Inbox",
+    "admin.operations": "Operations",
+    "admin.overviewTitle": "Support at a glance",
+    "admin.overviewIntro": "Choose a status to open the matching loaded tickets.",
+    "admin.openInbox": "Open inbox",
+    "admin.viewTickets": "View tickets",
+    "admin.totalLoaded": "Total loaded",
+    "admin.olderTitle": "Open for more than 24 hours",
+    "admin.olderHelp": "Ticket age since creation. Reopened tickets are included.",
+    "admin.viewQueue": "View queue",
+    "admin.recentTitle": "Recently updated",
+    "admin.recentHelp": "Replies and status changes update a ticket.",
+    "admin.sort": "Sort",
+    "admin.newest": "Newest first",
+    "admin.oldest": "Oldest first",
+    "admin.lastUpdated": "Last updated",
+    "admin.olderFilter": "Open more than 24 hours",
+    "admin.clearFilters": "Clear filters",
+    "admin.loadOlder": "Load older tickets",
+    "admin.loadingOlder": "Loading older tickets…",
+    "admin.operationsIntro": "Service configuration and direct access to your operating tools.",
+    "admin.configuration": "Service configuration",
+    "admin.configurationHelp": "Configuration only. A saved setting does not confirm connectivity, provider permission or delivery. No service probes run here.",
+    "admin.operatingTools": "Operating tools",
+    "admin.toolsHelp": "These open the actual service in a new tab. Each service manages its own sign-in.",
+    "admin.mainWebsite": "Company website",
+    "admin.investmentPlatform": "Investment platform",
+    "admin.deployments": "Netlify deployments",
+    "admin.emailLogs": "Email activity",
+    "admin.showPassword": "Show",
+    "admin.hidePassword": "Hide",
+    "admin.scope": "{count} loaded tickets · counts cover these records only. Refresh reloads the newest page.",
+    "admin.scopeMore": "Older tickets are available. Load more from the inbox.",
+    "admin.scopeEnd": "End of the available ticket list.",
+    "admin.scopeCapped": "The supported page limit is reached. This is not a complete-history count.",
+    "admin.refreshed": "Last refreshed: {time} · Europe/Oslo",
+    "admin.notRefreshed": "Not refreshed yet.",
+    "admin.matches": "{matches} of {total} loaded tickets",
+    "admin.noOlder": "No loaded open tickets are more than 24 hours old.",
+    "admin.olderLoaded": "{count} loaded open tickets older than 24 hours",
+    "admin.updatedAt": "Updated {time}",
+    "admin.loadingOperations": "Reading service configuration…",
+    "admin.configurationChecked": "Configuration read: {time} · Europe/Oslo",
+    "admin.configured": "Configured · connection not checked",
+    "admin.notConfigured": "Not configured",
+    "admin.purchaseUnavailable": "Unavailable with current configuration",
+    "admin.notChecked": "Not checked",
+    "admin.productEnabled": "Platform product",
+    "admin.enabled": "Enabled in configuration",
+    "admin.disabled": "Disabled in configuration",
+    "admin.purchases": "New purchases",
+    "admin.updated": "Updated",
+    "admin.checkingSession": "Checking your admin session…",
+    "admin.unknownStatus": "Unknown status",
+    "admin.retryTicket": "Retry ticket",
+    "admin.refreshAfterWriteFailed": "The change was saved, but the ticket could not be refreshed. Retry Refresh before making another change.",
+    "admin.serviceMarket": "Market data",
+    "admin.serviceNews": "News",
+    "admin.serviceCalendar": "Economic calendar",
+    "admin.serviceAi": "AI explanations",
+    "admin.serviceBroker": "Brokerage",
+    "admin.serviceEmail": "Email",
+    "admin.servicePayments": "Payments"
   }
 };
   const site = window.Nortivo;
@@ -161,10 +278,15 @@
   let listRequest = null;
   let loginBusy = false;
   let logoutBusy = false;
-  let projects = [];
-  let workspaceView = "projects";
-  let projectsRequest = null;
-  const formatDate = value => new Intl.DateTimeFormat(site.getLanguage() === "nb" ? "nb-NO" : "en-GB", {dateStyle:"medium", timeStyle:"short", timeZone:"Europe/Oslo"}).format(new Date(value));
+  let workspaceView = "overview";
+  let page = ticketPage();
+  let refreshedAt = null;
+  let operationsData = null;
+  let operationsRequest = null;
+  let listGeneration = 0;
+  let configurationGeneration = 0;
+  const formatDate = value => {const parsed=new Date(value);return Number.isFinite(parsed.getTime())?new Intl.DateTimeFormat(site.getLanguage() === "nb" ? "nb-NO" : "en-GB", {dateStyle:"medium", timeStyle:"short", timeZone:"Europe/Oslo"}).format(parsed):"—";};
+  const text = (key,values={}) => t(key).replace(/\{(\w+)\}/g,(_,name)=>String(values[name]??""));
   function node(tag, className, text) {
     const item = document.createElement(tag);
     if (className) item.className = className;
@@ -190,84 +312,89 @@
   }
   function showLogin(key, focus = true) {
     authVersion++;
-    projects = [];
+    listGeneration++;
+    configurationGeneration++;
+    listRequest=null;
+    operationsRequest=null;
+    operations.clear();
+    notices.clear();
+    el("refresh-button").disabled=false;
+    el("load-more-button").disabled=false;
+    operationsData = null;
+    refreshedAt = null;
+    page = ticketPage();
     tickets = [];
     activeId = null;
     detailVersion++;
-    el("project-list").replaceChildren();
+    el("older-queue").replaceChildren();
+    el("recent-queue").replaceChildren();
+    el("operations-status").replaceChildren();
     el("tickets").replaceChildren();
     el("ticket-detail").replaceChildren();
     updateStats();
     el("dashboard").hidden = true;
     el("login-card").hidden = false;
-    if (key) message(el("login-message"), key, key === "signedOut" ? "success" : "error");
+    message(el("login-message"), key || "", key === "signedOut" ? "success" : "error");
+    el("operations-checked").textContent="";
     if (focus) el("password").focus();
   }
-  function renderProjects() {
-    const list = el("project-list");
-    list.replaceChildren();
-    const language = site.getLanguage();
-    for (const project of projects) {
-      // URLs originate only from the authenticated registry; reject malformed responses too.
-      if (!project || !/^[a-z0-9-]+$/.test(project.id) || typeof project.href !== "string") continue;
-      let url;
-      try { url = new URL(project.href, location.origin); } catch { continue; }
-      if (project.external ? url.protocol !== "https:" : url.origin !== location.origin) continue;
-      const localized = field => typeof project[field]?.[language] === "string" ? project[field][language] : "";
-      const row = node("article", "private-project-row");
-      const mark = node("div", "private-project-mark", localized("name").slice(0, 1));
-      mark.setAttribute("aria-hidden", "true");
-      const text = node("div", "private-project-content");
-      text.append(node("h3", "", localized("name")), node("p", "", localized("description")), node("p", "private-project-kind", localized("note")));
-      const link = node("a", "button secondary", localized("action"));
-      link.href = project.href;
-      if (project.external) { link.target = "_blank"; link.rel = "noopener noreferrer"; link.setAttribute("aria-label", localized("action") + ". " + t("newTab")); }
-      row.append(mark, text, link);
-      list.append(row);
-    }
-    if (!list.childElementCount) list.append(translated("p", "message", "noProjects"));
-  }
-  async function loadProjects(announce = true) {
-    if (projectsRequest) return projectsRequest;
-    const version = authVersion;
-    el("project-list").setAttribute("aria-busy", "true");
-    el("refresh-button").disabled = true;
-    if (announce) message(el("dashboard-message"), "loadingProjects");
-    projectsRequest = (async () => {
-      try {
-        const data = await api("admin-projects");
-        if (version !== authVersion) return false;
-        if (!Array.isArray(data.projects)) throw new Error("Invalid project response");
-        projects = data.projects;
-        renderProjects();
-        if (announce) message(el("dashboard-message"), "projectsLoaded", "success");
-        return true;
-      } catch (error) {
-        if (version === authVersion) message(el("dashboard-message"), errorKey(error), "error");
-        return false;
-      } finally {
-        projectsRequest = null;
-        el("project-list").setAttribute("aria-busy", "false");
-        el("refresh-button").disabled = false;
-      }
-    })();
-    return projectsRequest;
-  }
   function selectWorkspace(view, focus = false) {
-    workspaceView = view;
-    const isProjects = view === "projects";
-    el("projects-panel").hidden = !isProjects;
-    el("support-panel").hidden = isProjects;
-    el("projects-choice").setAttribute("aria-pressed", String(isProjects));
-    el("support-choice").setAttribute("aria-pressed", String(!isProjects));
-    message(el("dashboard-message"), "");
-    if (focus) el(isProjects ? "projects-title" : "support-title").focus({preventScroll:true});
-    if (!isProjects) loadTickets();
+    workspaceView = ["overview","inbox","operations"].includes(view) ? view : "overview";
+    for (const name of ["overview","inbox","operations"]) {
+      el(name+"-panel").hidden = name !== workspaceView;
+      el(name+"-choice").setAttribute("aria-pressed",String(name === workspaceView));
+    }
+    if (focus) el(workspaceView+"-title").focus({preventScroll:true});
+    if (workspaceView === "operations" && !operationsData) void loadOperations();
   }
   function showDashboard() {
     el("login-card").hidden = true;
     el("dashboard").hidden = false;
-    selectWorkspace("projects");
+    selectWorkspace("overview");
+  }
+  function openInbox(status="all") {
+    el("search").value="";
+    el("status-filter").value=status==="older"?"open":states.has(status)?status:"all";
+    el("older-filter").checked=status==="older";
+    el("sort-order").value=status==="older"?"oldest":"newest";
+    renderList();
+    selectWorkspace("inbox",true);
+  }
+  function queueButton(ticket, updated=false) {
+    const button=node("button","admin-queue-item");button.type="button";
+    const heading=node("div","admin-queue-top");heading.append(node("strong","",ticket.subject),statusBadge(ticket.status));
+    button.append(heading,node("span","admin-muted",ticket.ticket_number+" · "+ticket.name),node("small","admin-muted",updated?text("updatedAt",{time:formatDate(ticket.updated_at||ticket.created_at)}):formatDate(ticket.created_at)));
+    button.addEventListener("click",()=>{openInbox(updated?"all":"older");void openTicket(ticket.id,true);});
+    return button;
+  }
+  function renderOverview() {
+    const older=selectTickets(tickets,{olderOnly:true,sort:"oldest"}),recent=selectTickets(tickets,{sort:"updated"});
+    el("older-queue").replaceChildren(...older.slice(0,6).map(ticket=>queueButton(ticket)));
+    if(!older.length)el("older-queue").append(translated("p","admin-queue-empty","noOlder"));
+    el("older-title").textContent=t("olderTitle")+" · "+older.length;
+    el("recent-queue").replaceChildren(...recent.slice(0,6).map(ticket=>queueButton(ticket,true)));
+    if(!recent.length)el("recent-queue").append(translated("p","admin-queue-empty","noTickets"));
+  }
+  function renderOperations() {
+    const target=el("operations-status");target.replaceChildren();
+    if(!operationsData)return;
+    const list=node("dl","admin-config-list");
+    const row=(label,value)=>{const entry=node("div");entry.append(node("dt","",label),node("dd","",value));list.append(entry);};
+    row(t("productEnabled"),operationsData.productEnabled===true?t("enabled"):operationsData.productEnabled===false?t("disabled"):t("notChecked"));
+    row(t("purchases"),operationsData.purchasesOpen===false?t("purchaseUnavailable"):t("notChecked"));
+    const names={market:"serviceMarket",news:"serviceNews",calendar:"serviceCalendar",ai:"serviceAi",broker:"serviceBroker",email:"serviceEmail",payments:"servicePayments"};
+    for(const service of operationsData.services||[])row(names[service.id]?t(names[service.id]):String(service.label||service.id),service.configured===true?t("configured"):t("notConfigured"));
+    target.append(list);
+    el("operations-checked").textContent=operationsData.checkedAt?text("configurationChecked",{time:formatDate(operationsData.checkedAt)}):"";
+  }
+  async function loadOperations() {
+    if(operationsRequest)return operationsRequest;
+    const version=authVersion,generation=++configurationGeneration;el("refresh-button").disabled=true;el("operations-status").setAttribute("aria-busy","true");
+    el("operations-status").replaceChildren(translated("p","message","loadingOperations"));
+    operationsRequest=(async()=>{try{const data=await api("admin-tickets?view=operations");if(version!==authVersion)return;operationsData=data.operations||null;renderOperations();if(!operationsData)throw new Error("Invalid configuration response");}
+      catch(error){if(version===authVersion){const failure=node("p");message(failure,errorKey(error),"error");el("operations-status").replaceChildren(failure);}}
+      finally{if(generation===configurationGeneration){operationsRequest=null;el("refresh-button").disabled=false;el("operations-status").removeAttribute("aria-busy");}}})();
+    return operationsRequest;
   }
   async function api(path, options = {}, context = "general") {
     const version = authVersion;
@@ -276,6 +403,7 @@
     try {
       const response = await fetch("/.netlify/functions/" + path, {credentials:"same-origin", cache:"no-store", signal:controller.signal, ...options});
       const data = await response.json().catch(() => ({}));
+      if (version !== authVersion) throw Object.assign(new Error("Session changed"),{status:401,code:"STALE_SESSION"});
       if (!response.ok) {
         if (response.status === 401 && context === "general" && version === authVersion) showLogin("sessionExpired");
         throw Object.assign(new Error("Request failed"), {status:response.status, code:data.code});
@@ -292,70 +420,70 @@
     return error.status ? "error" : "network";
   }
   function statusBadge(value) {
-    const status = states.has(value) ? value : "open";
-    return translated("span", "status " + status, status === "open" ? "statusOpen" : status);
+    return translated("span","status "+(states.has(value)?value:"unknown"),value==="open"?"statusOpen":states.has(value)?value:"unknownStatus");
   }
   function updateStats() {
-    el("open-count").textContent = tickets.filter(item => item.status === "open").length;
-    el("answered-count").textContent = tickets.filter(item => item.status === "answered").length;
-    el("total-count").textContent = tickets.length;
+    const counts=summarizeTickets(tickets);
+    for(const status of ["open","answered","closed"])el(status+"-count").textContent=counts[status];
+    el("total-count").textContent=counts.total;
+    el("ticket-scope").textContent=text("scope",{count:counts.total});
+    el("refreshed-at").textContent=refreshedAt?text("refreshed",{time:formatDate(refreshedAt)}):t("notRefreshed");
+    const canLoad=page.hasMore&&Number.isSafeInteger(page.nextOffset);
+    el("load-more-button").hidden=!canLoad;
+    el("list-scope").textContent=page.hasMore?canLoad?t("scopeMore"):t("scopeCapped"):t("scopeEnd");
+    renderOverview();
   }
   function renderList() {
-    const focusedId = document.activeElement?.dataset.ticketId;
-    const query = el("search").value.trim().toLocaleLowerCase(site.getLanguage());
-    const filter = el("status-filter").value;
-    const filtered = tickets.filter(ticket => {
-      const search = [ticket.ticket_number, ticket.name, ticket.email, ticket.subject].join(" ").toLocaleLowerCase(site.getLanguage());
-      return (filter === "all" || ticket.status === filter) && search.includes(query);
-    });
-    const list = el("tickets");
-    list.replaceChildren();
-    if (!filtered.length) {
-      list.append(translated("div", "empty", tickets.length ? "noMatches" : "noTickets"));
-      return;
-    }
-    for (const ticket of filtered) {
-      const button = node("button", "ticket-item" + (ticket.id === activeId ? " active" : ""));
-      button.type = "button";
-      button.dataset.ticketId = ticket.id;
-      button.setAttribute("aria-controls", "ticket-detail");
-      button.setAttribute("aria-current", ticket.id === activeId ? "true" : "false");
-      const top = node("div", "ticket-item-top");
-      top.append(node("strong", "", ticket.ticket_number), statusBadge(ticket.status));
-      button.append(top, node("p", "", ticket.subject), node("small", "", ticket.name + " · " + formatDate(ticket.created_at)));
-      button.addEventListener("click", () => openTicket(ticket.id, true));
-      list.append(button);
-      if (focusedId === ticket.id) button.focus({preventScroll:true});
+    const focusedId=document.activeElement?.dataset.ticketId;
+    const filtered=selectTickets(tickets,{query:el("search").value,status:el("status-filter").value,olderOnly:el("older-filter").checked,sort:el("sort-order").value,language:site.getLanguage()});
+    el("match-count").textContent=text("matches",{matches:filtered.length,total:tickets.length});
+    const hasFilters=!!el("search").value||el("status-filter").value!=="all"||el("older-filter").checked||el("sort-order").value!=="newest";
+    el("clear-filters").disabled=!hasFilters;
+    const list=el("tickets");list.replaceChildren();
+    if(!filtered.length){list.append(translated("div","empty",tickets.length?"noMatches":"noTickets"));return;}
+    for(const ticket of filtered){
+      const button=node("button","ticket-item"+(ticket.id===activeId?" active":""));button.type="button";button.dataset.ticketId=ticket.id;
+      button.setAttribute("aria-controls","ticket-detail");button.setAttribute("aria-current",ticket.id===activeId?"true":"false");
+      const top=node("div","ticket-item-top");top.append(node("strong","",ticket.ticket_number),statusBadge(ticket.status));
+      button.append(top,node("p","",ticket.subject),node("small","",ticket.name+" · "+ticket.email),node("small","",formatDate(el("sort-order").value==="updated"?ticket.updated_at||ticket.created_at:ticket.created_at)));
+      button.addEventListener("click",()=>openTicket(ticket.id,true));list.append(button);if(focusedId===ticket.id)button.focus({preventScroll:true});
     }
   }
-  async function loadTickets(announce = true) {
+  function applyTickets(data,append=false){
+    if(!Array.isArray(data.tickets))throw new Error("Invalid ticket response");
+    tickets=mergeTicketPages(append?tickets:[],data.tickets);page=ticketPage(data.page);refreshedAt=Date.now();updateStats();renderList();
+  }
+  async function loadTickets(announce = true, append = false) {
     if (listRequest) return listRequest;
-    const version = authVersion;
+    if(append&&(!page.hasMore||!Number.isSafeInteger(page.nextOffset)))return false;
+    const version = authVersion,generation=++listGeneration;
     const refresh = el("refresh-button");
     refresh.disabled = true;
+    el("load-more-button").disabled=true;
     if (announce) message(el("dashboard-message"), "loading");
     el("tickets").setAttribute("aria-busy", "true");
     listRequest = (async () => {
       try {
-        const data = await api("admin-tickets?language=" + site.getLanguage());
+        const offset=append?page.nextOffset:0;
+        const data = await api("admin-tickets?language=" + site.getLanguage()+"&offset="+offset);
         if (version !== authVersion) return false;
-        tickets = Array.isArray(data.tickets) ? data.tickets : [];
-        updateStats();
-        renderList();
+        applyTickets(data,append);
         if (announce) message(el("dashboard-message"), "loaded", "success");
         return true;
       } catch (error) {
         if (version === authVersion) message(el("dashboard-message"), errorKey(error), "error");
         return false;
       } finally {
-        listRequest = null;
+        if(generation===listGeneration){listRequest = null;
         refresh.disabled = false;
-        el("tickets").removeAttribute("aria-busy");
+        el("load-more-button").disabled=false;
+        el("tickets").removeAttribute("aria-busy");}
       }
     })();
     return listRequest;
   }
   function renderDetail(ticket, replies) {
+    const detailAuth=authVersion;
     const detail = el("ticket-detail");
     detail.replaceChildren();
     const head = node("div", "detail-head");
@@ -428,11 +556,13 @@
     }
     busy(operations.has(ticket.id));
     function setNotice(key, tone = "") {
+      if(detailAuth!==authVersion)return;
       notices.set(ticket.id, {key, tone});
       if (activeId === ticket.id && el("reply-message")) message(el("reply-message"), key, tone);
     }
     async function mutate(kind) {
-      if (operations.has(ticket.id)) return;
+      const auth=authVersion;
+      if(detailAuth!==auth||operations.has(ticket.id))return;
       if (kind === "reply" && (textarea.value.trim().length < 2 || textarea.value.length > 4000)) {
         error.hidden = false;
         textarea.setAttribute("aria-invalid", "true");
@@ -455,12 +585,18 @@
           await api("admin-tickets", json("PATCH", {id:ticket.id, status:ticket.status === "closed" ? "open" : "closed"}));
           setNotice("statusUpdated", "success");
         }
-        operations.delete(ticket.id);
-        const loaded = await loadTickets(false);
-        if (loaded && activeId === ticket.id && !el("dashboard").hidden) await openTicket(ticket.id, false);
+        try {
+          const updated=await api("admin-tickets?id="+encodeURIComponent(ticket.id)+"&language="+site.getLanguage());
+          if(auth!==authVersion)return;
+          if(!updated.ticket)throw new Error("Invalid ticket response");
+          tickets=mergeTicketPages(tickets,[updated.ticket]);updateStats();renderList();
+          if(activeId===ticket.id&&!el("dashboard").hidden)renderDetail(updated.ticket,updated.replies||[]);
+        }catch(refreshError){if(auth===authVersion)message(el("dashboard-message"),"refreshAfterWriteFailed","error");}
       } catch (failure) {
+        if(auth!==authVersion)return;
         setNotice(kind === "reply" && failure.status !== 401 ? "replyFailed" : errorKey(failure), "error");
       } finally {
+        if(auth!==authVersion)return;
         operations.delete(ticket.id);
         if (box.isConnected) busy(false);
         if (activeId === ticket.id) {
@@ -525,7 +661,7 @@
       form.reset();
       showDashboard();
       el("dashboard-title").focus();
-      await loadProjects();
+      await loadTickets();
     } catch (error) {
       message(el("login-message"), errorKey(error, "login"), "error");
       password.focus();
@@ -539,9 +675,14 @@
     el("password").removeAttribute("aria-invalid");
     el("password-error").hidden = true;
   });
-  el("refresh-button").addEventListener("click", () => workspaceView === "projects" ? loadProjects() : loadTickets());
-  el("projects-choice").addEventListener("click", () => selectWorkspace("projects", true));
-  el("support-choice").addEventListener("click", () => selectWorkspace("support", true));
+  el("refresh-button").addEventListener("click",()=>workspaceView==="operations"?loadOperations():loadTickets());
+  for(const view of ["overview","inbox","operations"])el(view+"-choice").addEventListener("click",()=>selectWorkspace(view,true));
+  document.querySelectorAll("[data-inbox-shortcut]").forEach(button=>button.addEventListener("click",()=>openInbox(button.dataset.inboxShortcut)));
+  el("load-more-button").addEventListener("click",()=>loadTickets(true,true));
+  el("clear-filters").addEventListener("click",()=>{el("search").value="";el("status-filter").value="all";el("older-filter").checked=false;el("sort-order").value="newest";renderList();el("search").focus();});
+  el("sort-order").addEventListener("change",renderList);
+  el("older-filter").addEventListener("change",renderList);
+  el("password-visibility").addEventListener("click",()=>{const show=el("password").type==="password";el("password").type=show?"text":"password";el("password-visibility").setAttribute("aria-pressed",String(show));el("password-visibility").dataset.i18n="admin."+(show?"hidePassword":"showPassword");el("password-visibility").textContent=t(show?"hidePassword":"showPassword");});
   el("search").addEventListener("input", renderList);
   el("status-filter").addEventListener("change", renderList);
   el("logout-button").addEventListener("click", async () => {
@@ -571,22 +712,15 @@
   document.addEventListener("nortivo:language", () => {
     document.title = t("title");
     renderList();
-    if (!el("dashboard").hidden) renderProjects();
+    updateStats();
+    if(operationsData)renderOperations();
     for (const item of document.querySelectorAll("[data-date]")) item.textContent = (item.dataset.datePrefix ? t(item.dataset.datePrefix) + " " : "") + formatDate(item.dataset.date);
   });
   site.applyTranslations();
   document.title = t("title");
   (async () => {
-    const version = authVersion;
-    try {
-      const data = await api("admin-projects", {}, "session-check");
-      if (version !== authVersion) return;
-      if (!Array.isArray(data.projects)) throw new Error("Invalid project response");
-      projects = data.projects;
-      showDashboard();
-      renderProjects();
-    } catch (error) {
-      if (version === authVersion && error.status !== 401) message(el("login-message"), errorKey(error), "error");
-    }
+    const version=authVersion;message(el("login-message"),"checkingSession");
+    try{const data=await api("admin-tickets?language="+site.getLanguage()+"&offset=0",{},"session-check");if(version!==authVersion)return;applyTickets(data);message(el("login-message"),"");showDashboard();}
+    catch(error){if(version!==authVersion)return;if(error.status===401)showLogin("",false);else message(el("login-message"),errorKey(error),"error");}
   })();
 })();

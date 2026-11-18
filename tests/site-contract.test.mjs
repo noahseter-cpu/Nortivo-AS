@@ -4,6 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { spawnSync } from 'node:child_process';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
@@ -210,7 +211,9 @@ test('local navigation links and same-page/cross-page fragments resolve', () => 
 
 test('all referenced local assets exist and shipped imagery/fonts have valid file signatures', () => {
   const assets = new Set();
+  const moduleAssets = new Set();
   for (const source of sources.values()) for (const { name, attrs } of tags(source)) {
+    if (name === 'script' && attrs.type === 'module' && attrs.src?.startsWith('/assets/')) moduleAssets.add(new URL(attrs.src, 'https://nortivo.no').pathname);
     for (const key of ['src', 'srcset']) {
       for (const candidate of (attrs[key] || '').split(',')) {
         const target = candidate.trim().split(/\s+/)[0];
@@ -236,7 +239,17 @@ test('all referenced local assets exist and shipped imagery/fonts have valid fil
     if (asset.endsWith('.png')) assert.equal(bytes.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', asset);
     if (asset.endsWith('.svg')) assert.match(bytes.toString(), /<svg\b[^>]*xmlns=/, asset);
     if (asset.endsWith('.ttf')) assert.equal(bytes.readUInt32BE(0), 0x00010000, asset);
-    if (asset.endsWith('.js')) assert.doesNotThrow(() => new vm.Script(bytes.toString(), { filename: asset }));
+    if (asset.endsWith('.js') && moduleAssets.has(asset)) {
+      const checked = spawnSync(process.execPath, ['--check', file], { encoding:'utf8' });
+      assert.equal(checked.status, 0, `${asset}: ${checked.stderr}`);
+      for (const match of bytes.toString().matchAll(/(?:import|export)\s+(?:[^;]*?\s+from\s+)?['"]([^'"]+)['"]/g)) {
+        if (!match[1].startsWith('.')) continue;
+        const dependency = new URL(match[1], 'https://nortivo.no' + asset).pathname;
+        assert.ok(dependency.startsWith('/assets/'), `${asset}: unexpected local module destination`);
+        moduleAssets.add(dependency);
+        assets.add(dependency);
+      }
+    } else if (asset.endsWith('.js')) assert.doesNotThrow(() => new vm.Script(bytes.toString(), { filename: asset }));
   }
 });
 
