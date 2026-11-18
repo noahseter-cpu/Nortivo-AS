@@ -92,4 +92,6 @@ Local browser evidence: `.local/qa/terminal-account-entry.jpg` (desktop) and `.l
 
 The full224 automated suite passed on these changes. Independent source review found no auth/entitlement regression. Mechanical detector reported152 advisory token/type findings and zero anti-pattern failures. No backend authorization, paid access, commercial readiness or live-trading checks were relaxed.
 
+Production confirmation: deploy `6afd0563b37a5b9a099238f2`, commit `b5156eb7f71201ff24e09a641f966a1d0db88a3b`, was Published on Netlify. Public JavaScript/CSS matched Git; the actual Norwegian entry and login modal were checked, Escape restored the trigger, and no console warnings/errors were captured. Proof: `.local/qa/published-terminal-account-entry.jpg`. Secret scanning remained enabled and no API/encryption key was published.
+
 final result: passed

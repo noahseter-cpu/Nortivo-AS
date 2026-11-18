@@ -38,7 +38,9 @@ The 18 November follow-up makes Create account and Log in the anonymous terminal
 
 The owner confirmed both key creation and the private `.env.local` destination. An OpenAI project key was created through encrypted provisioning; authenticated model listing returned200 with the selected `gpt-6-luna`. One small Responses request returned429 `credit_balance_exhausted`. Eligible promotional credit was previewed but no organization link/grant was approved. Separate random MFA and broker encryption keys were generated with their required distinct encodings, then saved with the OpenAI key as production-only Netlify secrets. No key value entered Git or the browser bundle.
 
-Initial deployment `6afd0457f512fa3348c7092f` stopped because the public model-name override was incorrectly marked secret and matched normal source references. Netlify reported only `PRODUCT_OPENAI_MODEL`, with no actual API/encryption-key match. Its override was cleared so the existing identical code default is used. Secret scanning and all real-key protection remain enabled. Final successful publication is recorded after verification.
+Initial deployment `6afd0457f512fa3348c7092f` stopped because the public model-name override was incorrectly marked secret and matched normal source references. Netlify reported only `PRODUCT_OPENAI_MODEL`, with no actual API/encryption-key match. Its override was cleared so the existing identical code default is used. Secret scanning and all real-key protection remain enabled.
+
+Netlify then published commit `b5156eb7f71201ff24e09a641f966a1d0db88a3b` as production deploy `6afd0563b37a5b9a099238f2` on 18 November2026 at02:54 Europe/Oslo, in14seconds. Hosted JavaScript/CSS matched the committed files exactly. Public catalog: registration enabled, OpenAI configured with the intended model but reachability unverified, paid plans closed and live execution disabled. The actual Norwegian production entry loaded, its login dialog opened, and Escape restored focus to Log in. No console errors/warnings were captured. Public proof: `.local/qa/published-terminal-account-entry.jpg`.
 
 ### Approved terminal design restored
 
