@@ -26,4 +26,8 @@ Chart zoom survived Research → Overview (63 candles before and after), all thr
 
 The homepage uses the full real 1920×1061 application capture so all four lower panels remain visible when the image scales down. An actual smaller laptop capture also updates the old 1440px asset path. No image synthesis or screenshot alteration was used.
 
-Publication verification pending. Local evidence lives in the ignored `.local/qa/terminal-restore-*` files; the user's reference is preserved there as `terminal-liked-reference.jpg`.
+GitHub main contains `808d3bd5e15640d2df252cbadee8099272111252`.
+
+Netlify deploy `6afd6de9fa395bb37daf0e12` was skipped with the explicit status “Skipped due to account credit usage exceeded.” The team is on Free (300 monthly credits); the billing UI shows the November 16–December 15 cycle exhausted and only operational credits remaining. Those credits keep the existing site online and cannot fund production deployments. No purchase or plan change was made. Production therefore remains on `515dbba`; the green restoration is implemented, tested and pushed, but is not live.
+
+The isolated local preview on port4421 is retained for review, with its public demo in read-only sample mode. Production deployment can resume after the owner resolves the Netlify plan/credit limit. There is no code or secret-configuration blocker. Local evidence lives in the ignored `.local/qa/terminal-restore-*` files; the user's reference is preserved there as `terminal-liked-reference.jpg`.
