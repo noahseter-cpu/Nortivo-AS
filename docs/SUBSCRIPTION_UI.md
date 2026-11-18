@@ -24,9 +24,11 @@ Unknown prices and missing FX remain unknown; incomplete totals are disclosed. N
 
 ## Terminal and integration truth
 
+The owner reconfirmed the approved terminal image on 18 November. Terminal Pro now uses the original dense application bar/side rail, KPI strip, watchlist/chart/news columns and four lower engine/signal/risk/company-report panels. The subscription account, provider and execution actions remain connected through the current product handlers. Longer research, broker, strategy and record tools have their own terminal views. The system menu retains manual Portfolio, plans, support and language controls.
+
 Instrument choice carries through chart, news and explanation. The original canvas chart and its keyboard/data-table alternatives are reused. Production decimal prices are converted only for chart geometry, using an explicit chart scale; quote and ledger displays retain server decimal strings. Actual quotes refresh at a bounded 30-second cadence while visible and idle, with backoff to 120 seconds, retaining timestamped values on a failure. No random/fake quote changes run.
 
-Read-only fixed sample replay is an explicit separate mode. Its prices/news/events remain labeled fictional, and no sample order/engine commands are exposed. The enabled-product backend also rejects those legacy commands. Production provider failures never select sample data automatically.
+Read-only fixed sample replay is an explicit separate mode. Its prices/news/events remain labeled fictional, and no sample order/engine commands are exposed. Every sample navigation view stays isolated from real broker, risk, strategy, AI and order actions. Those real-account controls remain available in provider mode under the existing server permissions, including expiry safety controls. The enabled-product backend also rejects legacy sample commands. Production provider failures never select sample data automatically.
 
 The server snapshot separates plan entitlement, provider configuration, commercial permission, authenticated reachability, freshness and broker authorization. The interface distinguishes upgrade, connect, market closed, delayed, stale, unverified and unavailable states. Owner-only operational health/probe controls appear only when the server grants the admin capability.
 
@@ -36,7 +38,7 @@ The Portfolio feed is scoped to the selected holding or watchlist instrument. Pr
 
 ## Accessibility and verification
 
-Controls use native forms/selects/checkboxes/details/dialogs with visible labels, written errors, draft retention and show/hide password. Native dialogs provide protected focus and Escape dismissal, with focus recovery. Controls meet a 44px minimum target. The layout reflows into one column on mobile; large data tables remain explicitly scrollable. Quiet 160ms color/border feedback follows existing tokens; reduced motion disables transitions. Financial values do not animate.
+Controls use native forms/selects/checkboxes/details/dialogs with visible labels, written errors, draft retention and show/hide password. Native dialogs provide protected focus and Escape dismissal, with focus recovery. Pricing and manual Portfolio use 44px targets; the restored terminal uses compact desktop controls and 44px mobile targets. The layout reflows into one column on mobile; large data tables remain explicitly scrollable. Quiet 160ms color/border feedback follows existing tokens; reduced motion disables transitions. Financial values do not animate.
 
 Completed locally: syntax checks on all modified JavaScript; 16 direct assertions covering exact-decimal display, unknown values, internal return destinations, plan intent validation, safe external links, escaping and distinct provider states; 17 existing engine/indicator/replay tests; balanced CSS and absence of inline event handlers. These are frontend helper/static and legacy regression checks, not evidence of real payment, email, provider or broker activation. Root owns rendered desktop/mobile, keyboard/reduced-motion and complete server integration QA.
 
