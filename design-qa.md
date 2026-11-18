@@ -82,4 +82,6 @@ The complete 224-test suite passed on the first restoration; all 25 focused clie
 
 P3 follow-up: at the reference-height viewport the watchlist and news have their own visible scroll areas, so some lower rows require scrolling. This preserves access and the overall approved composition; no further polish pass was undertaken.
 
+Production confirmation: Netlify published commit `69d89ae41feb621c7e45b7a1c2c43bb2e871b7ae` as deploy `6afcfdf6439be831ea81b439`. The actual Norwegian terminal was opened at `https://nortivo.no/nb/terminal/`, its explicitly selected fixed sample rendered, and no console errors/warnings were captured. Public proof: `.local/qa/published-terminal-restored.jpg`. Paid/live gates remained false. Pricing and subscription functionality remain published separately; external activation dependencies are unchanged.
+
 final result: passed

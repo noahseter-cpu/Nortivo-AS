@@ -32,6 +32,14 @@ Post-review root inspection found that the delegated broker callback needed brow
 
 ## Activation dependencies
 
+### Approved terminal design restored
+
+After the owner reconfirmed `Nortivo_Approved_Trading_Interface.png`, commit `69d89ae41feb621c7e45b7a1c2c43bb2e871b7ae` restored the dense green/charcoal terminal composition while retaining the new product handlers. Netlify production deploy `6afcfdf6439be831ea81b439` was confirmed **Published** from `main` on 18 November 2026 at 02:23 Europe/Oslo. Permalink: `https://6afcfdf6439be831ea81b439--vermillion-mousse-5e3749.netlify.app/`.
+
+The production JavaScript matched the committed Git content exactly (local Windows working-copy CRLFs were normalized for that comparison); the hosted CSS matched the local file. The public catalog still showed signup enabled, paid plans closed and live execution disabled. The actual Norwegian production terminal loaded its restored navigation/panels and its explicitly selected read-only sample. No console errors or warnings were captured. Its saved public proof is `.local/qa/published-terminal-restored.jpg`; desktop/mobile comparisons and functional checks are recorded in root `design-qa.md`.
+
+The restoration passed the full 224-test suite before the final visual/isolation fix batch, then all 25 focused client/engine/OAuth checks and syntax after that batch. Independent review confirmed sample isolation, chart/dialog/event hooks, unchanged authentication/billing and preserved provider-mode expiry safety controls. No keys, commercial rights, payments or real trading were activated by the visual restoration.
+
 | Capability | Implemented | Required before enabling paid use |
 | --- | --- | --- |
 | Accounts/email | Existing identity, verification/recovery, session revocation, TOTP and step-up | Existing Resend sender/key reused; verify an actual owner-controlled delivery. Configure the separate encryption key before MFA activation. |
