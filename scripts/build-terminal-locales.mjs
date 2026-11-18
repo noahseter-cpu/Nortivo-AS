@@ -12,7 +12,7 @@ export async function buildTerminalLocales(distDir) {
       .replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`);
     if (locale === 'nb') html = html
       .replaceAll('Skip to workspace', 'Hopp til arbeidsområdet')
-      .replaceAll('Opening the paper workspace…', 'Åpner papirarbeidsområdet…')
+      .replaceAll('Opening your workspace…', 'Åpner arbeidsområdet ditt…')
       .replaceAll('The trading workspace needs JavaScript. Your account records stay on the server.', 'Handelsarbeidsområdet trenger JavaScript. Kontoregistreringene dine forblir på serveren.')
       .replaceAll('Return to Nortivo', 'Tilbake til Nortivo')
       .replaceAll('href="/en/"', 'href="/nb/"');

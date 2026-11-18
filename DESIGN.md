@@ -19,15 +19,15 @@ colors:
   financial-negative: "#dc8c91"
   action-hover: "#c6cad1"
   field-focus: "#c6cad1"
-  terminal-bg: "#080c0e"
-  terminal-panel: "#101719"
-  terminal-raised: "#19221f"
-  terminal-line: "#34413d"
-  terminal-text: "#f0f4f2"
-  terminal-muted: "#a7b5b3"
-  terminal-green: "#5cf395"
-  terminal-green-soft: "#a2efb6"
-  terminal-negative: "#ff787e"
+  terminal-bg: "#08090b"
+  terminal-panel: "#111318"
+  terminal-raised: "#181b21"
+  terminal-line: "#30343c"
+  terminal-text: "#f2f1ed"
+  terminal-muted: "#b5b8c0"
+  terminal-green: "#78b99a"
+  terminal-green-soft: "#78b99a"
+  terminal-negative: "#e59ca2"
   terminal-caution: "#e8c76a"
 typography:
   display:
@@ -74,14 +74,29 @@ typography:
     fontSize: ".78rem"
     fontWeight: 700
     letterSpacing: ".015em"
+  application-heading:
+    fontFamily: "Manrope, sans-serif"
+    fontSize: "28px"
+    fontWeight: 700
+    lineHeight: 1.25
+  application-section:
+    fontFamily: "Manrope, sans-serif"
+    fontSize: "16px"
+    fontWeight: 700
+    lineHeight: 1.4
+  application-metric:
+    fontFamily: "'IBM Plex Mono', monospace"
+    fontSize: "23px"
+    fontWeight: 400
+    lineHeight: 1.25
   terminal-body:
     fontFamily: "Manrope, sans-serif"
-    fontSize: "13px"
+    fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.45
   terminal-metadata:
     fontFamily: "Manrope, sans-serif"
-    fontSize: "11px"
+    fontSize: "12px"
     fontWeight: 400
     lineHeight: 1.45
   terminal-mono:
@@ -94,8 +109,8 @@ rounded:
   action: "2px"
   field: "3px"
   workspace: "5px"
-  terminal-control: "6px"
-  terminal-panel: "10px"
+  terminal-control: "4px"
+  terminal-panel: "2px"
   terminal-pill: "20px"
 spacing:
   compact: "12px"
@@ -141,7 +156,7 @@ components:
     backgroundColor: "{colors.action-hover}"
     textColor: "{colors.surface}"
   terminal-primary-control:
-    backgroundColor: "{colors.terminal-green}"
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.terminal-bg}"
     rounded: "{rounded.terminal-control}"
     padding: "5px 10px"
@@ -314,15 +329,17 @@ V2 navigation can use native cross-document view transitions where supported. Th
 
 The private Vibb project remains governed by its authenticated route and separate visual system.
 
-### Terminal operations (scoped)
+### Product applications — homepage identity
 
-The `/terminal/` workbench is a separate operational surface, not a public-marketing variant. Its approved green-charcoal world is pinned by `Nortivo_Approved_Trading_Interface.png`; the public black, silver and titanium system above remains unchanged. Use terminal tokens only in this surface and keep the financial-report presentation distinct from the live paper-account workspace.
+The 18 November product refinement brief supersedes the earlier green-charcoal terminal reference. Terminal Pro, Portfolio, pricing and account flows now share the rendered homepage's near-black and ivory identity. `dist/assets/product-tokens.css` defines semantic surface, text, border, financial and chart roles; `dist/terminal/app.css` and `dist/assets/product.css` consume them. The canonical wordmark is text-only NORTIVO in Manrope, without a product-only badge.
 
-Terminal body text is 13px, with 11–12px metadata and compact controls; tabular values use IBM Plex Mono. Desktop uses the implemented dense 142px side rail, KPI strip, three-column work grid, and four-panel lower grid. At 1080px the right column joins the main grid and the lower panels become two columns; at 760px navigation changes to content tabs, nonessential overview columns are hidden, and the working view becomes a single column. Touch-reachable mobile controls are at least 44px even though desktop controls intentionally remain compact.
+Use neutral raised surfaces and an ivory indicator for navigation, ivory primary actions, 0–4px panels and 4–6px controls. Green means positive financial or real operational state; red means loss/error; amber means caution. Zero P&L is neutral and unknown values remain unavailable. Primary application text is 14px, metadata at least 12px, and numerical data uses tabular numerals or IBM Plex Mono.
 
-The chart is the dominant work surface: 300px/220px minimum at the base layout, 285px at the intermediate breakpoint, and 300px/270px minimum on mobile. Its disclosed responsive candle density is 34, 56, 64 or 78 bars according to available chart width; preserve the labelled table alternative instead of making text illegibly small. Green carries positive, selected and permitted states; red carries loss/error and amber carries unavailable or limited states, each with written context.
+The top bar contains brand, product switch, instrument search, state and account access. The grouped side rail owns workspace navigation. Only Overview carries the six-summary KPI strip. Trade, Bots, Strategies, Research, News, Calendar, Analytics, Reports and Settings have task-specific layouts or honest unavailable states. A compact context strip separates data mode from execution mode. Provider availability and plan eligibility are independent: buying a plan cannot repair an unavailable feed.
 
-Terminal control feedback uses 160ms color/border transitions. Dialogs and toast feedback use the implemented 180ms opacity/transform treatment; frequent navigation and financial figures do not animate. Reduced motion removes terminal transitions and transforms. The paper account is virtual USD and its server ledger is separate from the fetched NOK 2026 reported-history summary; never merge, convert, or initialize one from the other.
+The chart remains dominant on market views. Preserve instrument, resolution, pan, explicit zoom and indicator choices through normal rerenders. A newly selected event can intentionally focus its candle. Chart series use distinct ivory/slate/amber roles; candles retain their actual financial meaning. Keep accessible data tables, keyboard guidance and visible zoom controls. Wide tables scroll within labelled regions, not the document. On small screens navigation remains reachable, controls wrap and touch targets grow to 44px.
+
+Controls use 140–160ms feedback and overlays 180ms opacity with minimal movement. Reduced motion removes transitions. Financial quantities do not count up or animate between invented values. Company history remains a separate NOK report; it never initializes the customer account or the sample USD ledger. Its average session return is on deployed capital, not a promised daily account return.
 
 ## Do's and Don'ts
 

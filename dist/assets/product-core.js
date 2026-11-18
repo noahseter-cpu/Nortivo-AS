@@ -30,13 +30,13 @@ export function moneyText(value, currency = 'USD', locale = 'en') {
   return text === '—' ? text : `${text} ${/^[A-Z]{3}$/.test(currency) ? currency : ''}`.trim();
 }
 export function dataState(state, included = true) {
-  if (!included || state?.planIncluded === false) return 'upgrade';
   if (!state || !state.configured || !state.permissionsReady) return 'unavailable';
   if (state.connected === false && state.authorizationRequired) return 'connect';
   if (state.reachable === false) return 'unavailable';
+  if (state.reachable !== true) return 'unverified';
   if (state.freshness === 'stale') return 'stale';
   if (['closed', 'market_closed'].includes(state.freshness)) return 'closed';
   if (state.freshness === 'delayed') return 'delayed';
-  if (state.reachable !== true) return 'unverified';
+  if (!included || state.planIncluded === false) return 'upgrade';
   return 'current';
 }

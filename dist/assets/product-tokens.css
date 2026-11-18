@@ -1,0 +1,60 @@
+@font-face{font-family:Manrope;src:url('/assets/fonts/manrope-regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Manrope;src:url('/assets/fonts/manrope-bold.ttf') format('truetype');font-weight:600 800;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('/assets/fonts/ibm-plex-mono-regular.ttf') format('truetype');font-weight:400;font-display:swap}
+
+/* Nortivo product palette: brand surfaces are neutral; colour conveys data. */
+:root{
+  color-scheme:dark;
+  --app-bg:#08090b;
+  --app-surface:#111318;
+  --app-raised:#181b21;
+  --app-hover:#22262e;
+  --app-selected:#252a32;
+  --app-border:#30343c;
+  --app-border-strong:#69717d;
+  --app-control-border:#737b87;
+  --app-grid:#242830;
+  --app-text:#f2f1ed;
+  --app-muted:#b5b8c0;
+  --app-subtle:#979da8;
+  --app-ivory:#f2f1ed;
+  --app-on-ivory:#08090b;
+  --app-positive:#78b99a;
+  --app-negative:#e59ca2;
+  --app-warning:#dcc07d;
+  --app-positive-surface:#15231d;
+  --app-negative-surface:#2b1b21;
+  --app-warning-surface:#29251c;
+  --app-focus:#f2f1ed;
+  --chart-ema-fast:#e7e4d8;
+  --chart-ema-slow:#9baec9;
+  --chart-vwap:#d5b974;
+  --app-font:Manrope,Arial,sans-serif;
+  --app-numbers:'IBM Plex Mono',monospace;
+  --app-panel-radius:2px;
+  --app-control-radius:4px;
+  --app-space-1:4px;
+  --app-space-2:8px;
+  --app-space-3:12px;
+  --app-space-4:16px;
+  --app-space-6:24px;
+  --app-space-8:32px;
+  --app-feedback:140ms;
+  --app-overlay:180ms;
+  --app-ease:cubic-bezier(.23,1,.32,1);
+  /* Existing components use these aliases without defining a second theme. */
+  --bg:var(--app-bg);
+  --panel:var(--app-surface);
+  --raised:var(--app-raised);
+  --line:var(--app-border);
+  --subtle:var(--app-grid);
+  --text:var(--app-text);
+  --muted:var(--app-muted);
+  --green:var(--app-positive);
+  --green-soft:var(--app-positive);
+  --red:var(--app-negative);
+  --amber:var(--app-warning);
+  --font:var(--app-font);
+  --mono:var(--app-numbers);
+  --ease:var(--app-ease);
+}

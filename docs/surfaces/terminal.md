@@ -1,30 +1,30 @@
-# Terminal surface brief
+# Terminal and Portfolio surface brief
 
-Operational surface for `/terminal/`; it does not establish public marketing behaviour or availability claims. The original replay implementation below remains the compatibility contract when the subscription product is disabled. The enabled subscription extension is described in `docs/SUBSCRIPTION_UI.md` and governed by `docs/SUBSCRIPTION_SPEC.md`.
+The owner’s 18 November 2026 refinement brief in `docs/PRODUCT_REFINEMENT_SPEC.md` supersedes the older green-charcoal screenshot as visual authority. The current rendered homepage is the reference for Terminal Pro, Portfolio and their shared account screens.
 
-## Mode
+## Direction
 
-Operate — a connected paper-trading workbench for reading disclosed replay data, checking risk evidence, creating paper orders, and reviewing the server-backed ledger.
+- Near-black background, ivory Manrope typography, neutral surfaces and straight rules. IBM Plex Mono distinguishes compact financial figures.
+- One text-only NORTIVO wordmark. Shared semantic tokens live in `dist/assets/product-tokens.css`.
+- The side rail owns workspace navigation; the top bar contains product switching, instrument search, connection state and account access.
+- Overview keeps the watchlist–chart–context composition and six KPIs. Other destinations use relevant compact context and distinct task layouts.
+- Neutral actions and selection; financial and operational colours retain meaning. Zero is neutral, missing data stays unavailable.
+- Read-only sample, paper execution and production data states remain explicitly distinct. A subscription does not repair an unavailable provider.
 
-## Direction contract
+## Behaviour boundaries
 
-- **THESIS:** Connected paper-trading workbench.
-- **OWN-WORLD:** User-pinned green-charcoal premium terminal, governed by `Nortivo_Approved_Trading_Interface.png`; do not transplant this palette into the public black/silver/titanium marketing system.
-- **STORY:** Markets → news and signal evidence → risk → paper orders → ledger.
-- **FIRST VIEWPORT:** Exact sequence is top shell, KPI/watch/trend strip, central chart, right news and calendar, then the four bottom panels: engine, signal evidence, risk and reported history.
-- **FORM:** The approved image is pinned reference only; it is not a seed or a composition-approval gate. Implemented native controls, chart and panels carry the interaction.
-- **RISK:** The replay and news are fictional fixtures; orders are current paper records in the user/guest server ledger. The USD paper account and the fetched NOK reported history are separate ledgers and historical contexts. Do not claim live brokerage, live provider data, or future results.
+Preserve authentication, billing prices and entitlements, persisted data, provider adapters, risk controls and broker confirmation requirements. The refinement does not enable feeds, connect brokers or execute orders. Sample views use the fixed fictional catalogue and existing sample ledger, with no AI or provider-success fabrication.
 
-## Development boundaries
+Cache chart viewport by data mode, exact instrument and resolution. Restore it after remount; a newly selected event can intentionally focus its candle. Keep indicators, expansion, zoom controls, accessible recent-candle table and keyboard guidance. Tables scroll within their own labelled region.
 
-### Subscription terminal restoration — 18 November 2026
+Portfolio uses its existing manual ledger, decimal quantities, explicit instrument/display currencies and manual valuation provenance. Holdings without acquisition history must not gain invented purchase dates or historical returns. Company history remains a separate NOK publication, never a customer account balance.
 
-The owner reconfirmed `Nortivo_Approved_Trading_Interface.png` after the subscription release. The enabled Terminal Pro must retain this same visual contract: a compact application bar and side rail, KPI strip, watchlist/chart/news three-column work area and engine/signal/risk/reported-history lower row. Subscription work extends those controls and their real state; it does not replace the terminal with the Portfolio page composition.
+## Responsive and motion
 
-Pricing and manual Portfolio remain separate surfaces. Account, language and plan links remain reachable from the terminal. Production account/market/signal values are shown only when supplied by the relevant current server context. Missing values stay unavailable inside the intended panel. The explicitly selected fixed sample can populate the workbench for inspection, with read-only and fictional-data disclosure. Company history belongs in its own report panel and never initializes a customer balance or signal.
+Inspect 1440px and 1280px desktop, 768px tablet and 390px phone layouts. Navigation, context and actions must wrap or scroll intentionally without document overflow. Touch controls have 44px targets. Fields and dialogs retain labels, focus, Escape handling and viewport scrolling.
 
-The chart needs its accessible recent-candle table, visible control alternatives and its responsive 34/56/64/78-bar presentation. On mobile, content views replace the compressed desktop canvas and touch controls retain 44px minimum targets. Keep color paired with labels and status text. Use 160ms control feedback and 180ms dialog/toast feedback; remove terminal transforms/transitions for reduced motion.
+Use 140–160ms control feedback and approximately 180ms overlays. Reduced motion removes transitions and transforms. No decorative chart sweeps, constant pulses or financial count-up effects.
 
-## Evidence and recovery
+## Evidence
 
-Saved terminal state is server-authoritative. Surface failures must expose the actual response/error and keep the retry path visible; no local success or quote fallback is allowed. Guest history is distinct from signed-in history, so a transition to an account must not imply transfer. This brief records UI scope only; provider configuration, paid entitlements, hardware touch behaviour and brokerage execution require environment-level validation.
+The prior green terminal remains in Git history. Current before/after captures and release checks are recorded in `docs/PRODUCT_REFINEMENT.md`. Provider-dependent states require their real services and are reported separately from locally verified fixture workflows.
