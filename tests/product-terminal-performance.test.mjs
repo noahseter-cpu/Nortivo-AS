@@ -23,6 +23,19 @@ function harness(route) {
   return { context, requests, run: code => vm.runInContext(code, context) };
 }
 
+function bootHarness(route) {
+  const requests = [], app = { classList: { add() {}, remove() {} }, querySelector: () => null };
+  const body = { classList: { add() {} }, append() {} };
+  const document = { querySelector: selector => selector === '#app' ? app : null, createElement: () => ({ className: '', open: false, addEventListener() {}, close() {} }), body, documentElement: {} };
+  const context = vm.createContext({ ...core, esc: core.escapeHtml, MarketChart: class {}, URL, URLSearchParams, Intl, Set, Map, Date, AbortController,
+    location: { origin: 'https://invest.nortivo.no', pathname: '/en/terminal/', search: '', hash: '' },
+    sessionStorage: { getItem: () => null, setItem() {} }, document, console, setTimeout, clearTimeout,
+    fetch: (url, options) => { const request = { url: new URL(url), options }; requests.push(request); return route(request.url, options); },
+  });
+  vm.runInContext(source, context);
+  return { context, requests, run: code => vm.runInContext(code, context) };
+}
+
 test('rapid instrument changes keep only the newest quote and news response', async () => {
   const firstQuote = deferred(), firstNews = deferred(), secondQuote = deferred(), secondNews = deferred();
   const h = harness(url => {
@@ -172,6 +185,26 @@ test('queued background render preserves a newly focused unsent AI field', async
   h.run(`aiField.value='';queueTerminalRender();`);
   await flush();
   assert.equal(h.context.renders, 2);
+});
+
+test('terminal startup renders from the compact product snapshot without loading legacy session or portfolio', async () => {
+  const snapshot = { user: { id: 'owner-boot', kind: 'user', email: 'owner@example.test', emailVerified: true }, csrfToken: 'csrf-boot', entitlements: { tier: 'pro', features: [] }, broker: { connections: [{ id: 'cached-paper' }] }, readiness: {}, billing: { status: 'none' } };
+  const h = bootHarness(url => {
+    const action = url.searchParams.get('action');
+    if (action === 'product') return Promise.resolve(response(snapshot));
+    if (action === 'product-plans') return Promise.resolve(response({ productEnabled: true, ready: false, capabilities: {} }));
+    throw new Error(`unexpected startup GET: ${action}`);
+  });
+  h.run(`globalThis.rendered=0;globalThis.backgroundStarted=0;bindEvents=()=>{};renderWorkspace=()=>{globalThis.rendered++};loadTerminalReport=()=>{};loadTerminalData=()=>{globalThis.backgroundStarted++;return new Promise(()=>{})};`);
+  const pending = h.run('startProduct()');
+  const result = await pending;
+  assert.equal(result, true);
+  assert.deepEqual(h.run('snapshot.user'), snapshot.user);
+  assert.equal(h.run('snapshot.csrfToken'), 'csrf-boot');
+  assert.equal(h.run('brokerStatus.connections[0].id'), 'cached-paper');
+  assert.equal(h.context.rendered, 1);
+  assert.equal(h.context.backgroundStarted, 1);
+  assert.deepEqual(h.requests.map(request => request.url.searchParams.get('action')).sort(), ['product', 'product-plans']);
 });
 
 test('portfolio callers still await optional context loading', async () => {

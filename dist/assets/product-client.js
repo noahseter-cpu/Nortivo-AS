@@ -283,7 +283,9 @@ function accountRiskForm(){const connection=currentConnection();if(!connection)r
 function requestDeletion(){showDialog(L('Request account deletion','Be om kontosletting'),`<p class="p-notice warning">${L('This records a deletion request and stops new risk-increasing access. Billing and broker connections must be resolved before records are deleted. Existing orders and protective stops remain at the broker. Export the records you need first.','Dette registrerer en sletteforespørsel og stanser ny tilgang som øker risiko. Betaling og meglertilkoblinger må håndteres før registreringer slettes. Eksisterende ordrer og beskyttelsesordrer forblir hos megleren. Eksporter registreringene du trenger først.')}</p><form id="deletion-request-form"><label class="p-check"><input type="checkbox" required><span>${L('I want support to resolve my subscription and connections before deleting this account.','Jeg ønsker at kundestøtte håndterer abonnementet og tilkoblingene før kontoen slettes.')}</span></label>${formActions(L('Record deletion request','Registrer sletteforespørselen'))}</form>`);const id=requestId();bindForm('#deletion-request-form',async()=>{await api('product-deletion-request',{method:'POST',body:{requestId:id}});await refreshSnapshot();closeDialog();await accountPage();notify(L('Deletion request recorded. Billing and broker review are required before deletion.','Sletteforespørselen er registrert. Betaling og megler må gjennomgås før sletting.'));},{scope:dialog});}
 export async function startProduct(){
   root=el('#app');if(!root)return false;
-  const sessionRead=api('session').then(data=>({data}),error=>({error}));
+  // Account entry needs identity, entitlements and CSRF, not the full sample replay.
+  // The explicitly selected sample loads its complete session lazily.
+  const accountRead=api('product').then(data=>({data}),error=>({error}));
   let enabled=false;
   try{catalog=await api('product-plans');enabled=catalog.productEnabled===true;}
   catch(error){
@@ -293,8 +295,8 @@ export async function startProduct(){
   }
   if(!enabled&&isTerminal())return false;
   document.body.classList.add('product-app');root.classList.add('product-app');dialog=document.createElement('dialog');dialog.className='p-dialog';document.body.append(dialog);bindEvents();
-  const result=await sessionRead;
-  if(result.data){session=result.data;snapshot=session.product||await api('product');}
+  const result=await accountRead;
+  if(result.data){snapshot=result.data;session={user:snapshot.user,csrfToken:snapshot.csrfToken,product:snapshot};}
   else{if(result.error.status!==401)notify(errorText(result.error));session=null;snapshot=null;}
   const fragment=new URLSearchParams(location.hash.slice(1));
   if(fragment.has('verify')||fragment.has('reset')){const kind=fragment.has('verify')?'verify':'reset';callback={kind,token:fragment.get(kind)};history.replaceState(null,'',location.pathname+location.search);authScreen(kind);return true;}
