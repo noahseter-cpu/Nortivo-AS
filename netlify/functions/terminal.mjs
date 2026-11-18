@@ -4,6 +4,7 @@ import { createSupabaseStore } from '../terminal/store.mjs';
 import { credentials, hashPassword, verifyPassword } from '../terminal/auth.mjs';
 import { createProviderAdapters, integrationStatus, brokerAdapter } from '../terminal/providers.mjs';
 import { TerminalError, fail, header, sessionSecret, token, sha256, csrfToken, equalToken, cookieToken, cookie, requireSameOrigin, parseBody, clientIdentifier, commandDigest, response, isLocalRuntime, COMMAND_QUOTAS, terminalCapabilities, GUEST_TTL, SESSION_TTL, GUEST_SESSION_TTL } from '../terminal/security.mjs';
+import { createProductHandler } from '../product/service.mjs';
 
 const GET_ACTIONS = new Set(['session','integrations','market','news','calendar','export']);
 const POST_ACTIONS = new Set(['guest','signup','login','logout','command','broker']);
@@ -20,10 +21,12 @@ function exportTrades(state) {
   }).join('\r\n') + '\r\n';
 }
 
-export function createTerminalHandler({ store: providedStore, env = process.env, now = () => Date.now(), fetcher = fetch } = {}) {
+export function createTerminalHandler({ store: providedStore, env = process.env, now = () => Date.now(), fetcher = fetch, testEmail, stripe } = {}) {
   let store = providedStore;
   const adapters = createProviderAdapters(env,fetcher);
+  const productHandler=env.PRODUCT_ENABLED==='true'?createProductHandler({store:providedStore,env,now,fetcher,testEmail,stripe,legacyHandler:createTerminalHandler({store:providedStore,env:{...env,PRODUCT_ENABLED:'false'},now,fetcher})}):null;
   return async function terminalHandler(event = {}) {
+    if(productHandler)return productHandler(event);
     try {
       const method = String(event.httpMethod || event.method || 'GET').toUpperCase();
       const action = event.queryStringParameters?.action || new URL(event.rawUrl).searchParams.get('action') || 'session';

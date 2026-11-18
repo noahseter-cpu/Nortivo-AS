@@ -1,4 +1,5 @@
 import { TerminalError } from './security.mjs';
+import { createProductRemoteStore } from '../product/store.mjs';
 
 // Hosted runtime deliberately has no filesystem adapter or automatic sample database fallback.
 export function createSupabaseStore(env = process.env, fetcher = fetch) {
@@ -28,6 +29,12 @@ export function createSupabaseStore(env = process.env, fetcher = fetch) {
   }
   const eq = value => encodeURIComponent(String(value));
   return {
+    product:createProductRemoteStore(request),
+    async productIdentity(input) { return request('rpc/product_identity',{method:'POST',body:{p_input:input}}); },
+    async productCreateSession(session) {return request('rpc/product_create_session',{method:'POST',body:{p_session:session}});},
+    async findUserById(id) {return (await request(`terminal_users?id=eq.${eq(id)}&limit=1`))?.[0]||null;},
+    async listSessions(userId,now) {return request(`terminal_sessions?user_id=eq.${eq(userId)}&expires_at=gt.${now}&select=token_hash,created_at,expires_at&order=created_at.desc&limit=100`);},
+    async revokeSessions(userId,hash=null) {await request(`terminal_sessions?user_id=eq.${eq(userId)}${hash?`&token_hash=eq.${eq(hash)}`:''}`,{method:'DELETE'});},
     kind: 'supabase',
     async createUser(user, state) { await request('rpc/terminal_create_user', { method: 'POST', body: { p_user: user, p_state: state } }); },
     async findUserByEmail(email) { return (await request(`terminal_users?email=eq.${eq(email)}&kind=eq.user&limit=1`))?.[0] || null; },

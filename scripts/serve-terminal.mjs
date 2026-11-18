@@ -5,8 +5,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { previewResponse } from './serve.mjs';
 import { createTerminalHandler } from '../netlify/functions/terminal.mjs';
+import { createStripeWebhookHandler } from '../netlify/functions/stripe-webhook.mjs';
 import { createLocalStore } from '../netlify/terminal/store-local.mjs';
-import { BODY_LIMIT } from '../netlify/terminal/security.mjs';
+import { BODY_LIMIT,isLocalRuntime } from '../netlify/terminal/security.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 export const CSP = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'";
@@ -23,23 +24,26 @@ async function localSecret(filename) {
     catch (writeError) { if (writeError.code === 'EEXIST') return localSecret(filename); throw writeError; }
   }
 }
-export async function createTerminalPreviewServer({ port = 4420, distDir = path.join(root,'dist'), dataDir = path.join(root,'.local','terminal'), store: suppliedStore, secret: suppliedSecret } = {}) {
+export async function createTerminalPreviewServer({ port = 4420, distDir = path.join(root,'dist'), dataDir = path.join(root,'.local','terminal'), store: suppliedStore, secret: suppliedSecret, productEnv = {}, testEmail, stripe } = {}) {
   if (process.env.NETLIFY === 'true' || process.env.CONTEXT === 'production') throw new Error('The local terminal server cannot run in the hosted production runtime.');
   const store = suppliedStore || await createLocalStore(path.join(dataDir,'terminal.sqlite'));
   const secret = suppliedSecret || await localSecret(path.join(dataDir,'session-secret'));
   // Deliberately do not load .env, support credentials, or provider keys in this local preview.
-  const env = {TERMINAL_LOCAL:'true',TERMINAL_SESSION_SECRET:secret,TERMINAL_ORIGIN:`http://127.0.0.1:${port}`};
-  const api = createTerminalHandler({store,env});
+  const env = {...productEnv,TERMINAL_LOCAL:'true',TERMINAL_SESSION_SECRET:secret,TERMINAL_ORIGIN:`http://127.0.0.1:${port}`};
+  const testAdapters=env.PRODUCT_TEST_MODE==='true'&&isLocalRuntime(env)?{testEmail,stripe}:{};
+  const api = createTerminalHandler({store,env,...testAdapters});
+  const webhook=createStripeWebhookHandler({store,env,...(testAdapters.stripe?{stripe:testAdapters.stripe}:{})});
   const server = http.createServer(async (request,res) => {
     const baseHeaders = {'Content-Security-Policy':CSP,'X-Frame-Options':'DENY','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','Permissions-Policy':'camera=(), microphone=(), geolocation=()'};
     try {
       const url = new URL(request.url,env.TERMINAL_ORIGIN);
-      if (url.pathname === '/.netlify/functions/terminal') {
+      if (['/.netlify/functions/terminal','/.netlify/functions/stripe-webhook'].includes(url.pathname)) {
         const chunks = [];
+        const requestLimit=url.pathname.endsWith('stripe-webhook')?1_000_000:BODY_LIMIT;
         let length = 0;
         for await (const chunk of request) {
           length += chunk.length;
-          if (length > BODY_LIMIT) {
+          if (length > requestLimit) {
             res.writeHead(413,{...baseHeaders,'Content-Type':'application/json','Cache-Control':'no-store','Connection':'close'});
             res.end(JSON.stringify({error:{code:'INVALID_BODY',message:'Request body is too large.'}}));
             request.destroy();
@@ -47,7 +51,8 @@ export async function createTerminalPreviewServer({ port = 4420, distDir = path.
           }
           chunks.push(chunk);
         }
-        const result = await api({httpMethod:request.method,rawUrl:url.href,headers:{...request.headers,'x-nf-client-connection-ip':request.socket.remoteAddress || 'local'},queryStringParameters:Object.fromEntries(url.searchParams),body:Buffer.concat(chunks).toString('utf8'),isBase64Encoded:false});
+        const selectedApi=url.pathname.endsWith('stripe-webhook')?webhook:api;
+        const result = await selectedApi({httpMethod:request.method,rawUrl:url.href,headers:{...request.headers,'x-nf-client-connection-ip':request.socket.remoteAddress || 'local'},queryStringParameters:Object.fromEntries(url.searchParams),body:Buffer.concat(chunks).toString('utf8'),isBase64Encoded:false});
         res.writeHead(result.statusCode,{...baseHeaders,...result.headers}); res.end(result.body);
         return;
       }
@@ -65,7 +70,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   const flag = process.argv.indexOf('--port');
   const port = flag === -1 ? 4420 : Number(process.argv[flag+1]);
   if (!Number.isInteger(port) || port<1 || port>65535) throw new Error('Use a valid --port between 1 and 65535.');
-  const server = await createTerminalPreviewServer({port});
+  const server = await createTerminalPreviewServer({port,productEnv:process.argv.includes('--product')?{PRODUCT_ENABLED:'true'}:{}});
   server.on('error',() => { console.error('Local terminal could not start. Check whether its port is already in use.'); process.exitCode=1; });
   server.listen(port,'127.0.0.1',() => console.log(`Nortivo paper terminal: http://127.0.0.1:${port}/en/terminal/ (private local SQLite; support/email and external providers are not connected)`));
 }

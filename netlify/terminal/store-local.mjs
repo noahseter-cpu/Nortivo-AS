@@ -2,6 +2,7 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { TerminalError, COMMAND_QUOTAS } from './security.mjs';
+import { createProductLocalStore } from '../product/store-local.mjs';
 
 export async function createLocalStore(filename) {
   const { DatabaseSync } = await import('node:sqlite');
@@ -36,7 +37,14 @@ export async function createLocalStore(filename) {
     db.prepare('DELETE FROM terminal_users WHERE kind = ? AND expires_at <= ?').run('guest', now);
     db.prepare('DELETE FROM terminal_rate_limits WHERE until <= ?').run(now);
   };
+  const product=createProductLocalStore(db,transaction);
   return {
+    product,
+    async productIdentity(input) { return product.identity(input); },
+    async productCreateSession(session) {return transaction(()=>{db.prepare('DELETE FROM terminal_sessions WHERE user_id=? AND expires_at<=?').run(session.user_id,session.created_at);db.prepare('DELETE FROM terminal_sessions WHERE user_id=? AND token_hash IN (SELECT token_hash FROM terminal_sessions WHERE user_id=? ORDER BY created_at DESC LIMIT -1 OFFSET 49)').run(session.user_id,session.user_id);db.prepare('INSERT INTO terminal_sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(session.token_hash,session.user_id,session.created_at,session.expires_at);});},
+    async findUserById(id) { return db.prepare('SELECT * FROM terminal_users WHERE id=?').get(id)||null; },
+    async listSessions(userId,now) { return db.prepare('SELECT token_hash,created_at,expires_at FROM terminal_sessions WHERE user_id=? AND expires_at>? ORDER BY created_at DESC LIMIT 100').all(userId,now); },
+    async revokeSessions(userId,hash=null) { if(hash) db.prepare('DELETE FROM terminal_sessions WHERE user_id=? AND token_hash=?').run(userId,hash);else db.prepare('DELETE FROM terminal_sessions WHERE user_id=?').run(userId); },
     kind: 'local-sqlite',
     async createUser(user, state) {
       try {

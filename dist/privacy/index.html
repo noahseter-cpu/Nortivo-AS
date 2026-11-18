@@ -34,8 +34,8 @@
   <header class="privacy-banner">
     <div class="wrap">
       <p class="privacy-label" data-i18n="market.privacy">Privacy</p>
-      <h1 data-i18n="privacy.title" >Information in contact, support and the paper workspace.</h1>
-      <p data-i18n="privacy.intro" >A short explanation of what Nortivo stores when you send an enquiry or use the private paper workspace.</p>
+      <h1 data-i18n="privacy.title" >Your information in Nortivo.</h1>
+      <p data-i18n="privacy.intro" >What Nortivo stores for enquiries, accounts, portfolios and subscription services. Each service shows whether it is connected.</p>
     </div>
   </header>
   <div class="wrap privacy-grid">
@@ -54,27 +54,28 @@
       </section>
       <section class="privacy-section" id="privacy-providers" aria-labelledby="privacy-providers-title">
         <h2 id="privacy-providers-title" data-i18n="privacy.providers.title">Services used</h2>
-        <p data-i18n="privacy.providers.text" >Netlify serves the website and server functions. Supabase stores tickets, replies and private paper workspaces in the hosted service. Resend sends contact and support email. This website has no added analytics or marketing tracking.</p>
+        <p data-i18n="privacy.providers.text" >Netlify hosts the website and server functions. Supabase stores private account, portfolio and support records. Resend delivers account and support email when configured. Stripe handles hosted payments and billing when activated; Nortivo does not store card details. Market, news, calendar, broker and AI services remain unavailable until their configuration and permissions are verified. No marketing tracking is added.</p>
       </section>
       <section class="privacy-section" id="privacy-language" aria-labelledby="privacy-language-title">
         <h2 id="privacy-language-title" data-i18n="privacy.language.title">Language and access</h2>
-        <p data-i18n="privacy.language.text" >Your selected language is saved in this browser. On your first visit, Netlify’s approximate country information may select Norwegian in Norway; otherwise English. We do not use GPS. Temporary cookies verify access to a support ticket or the admin area.</p>
+        <p data-i18n="privacy.language.text" >Your selected language is saved in this browser. On your first visit, Netlify’s approximate country information may select Norwegian in Norway; otherwise English. We do not use GPS. Restricted cookies confirm access to support, admin and private workspaces. Starting an approved broker connection uses a separate short-lived security cookie to bind its return to the browser that started it.</p>
       </section>
       <section class="privacy-section" id="privacy-workspace" aria-labelledby="privacy-workspace-title">
-        <h2 id="privacy-workspace-title" data-i18n="privacy.workspace.title">The private paper workspace</h2>
-        <p data-i18n="privacy.workspace.text">A guest receives a separate workspace without an email address. A registered paper account stores an email address, an optional name and a password stored as a secure hash rather than plain text. The workspace also stores watchlists, settings, strategy configuration, alerts, simulated orders, fills, ledger entries and technical events. Records are isolated between users and kept separate from Nortivo’s historical report.</p>
+        <h2 id="privacy-workspace-title" data-i18n="privacy.workspace.title">Accounts and investment workspaces</h2>
+        <p data-i18n="privacy.workspace.text">Registered accounts store an email address, optional name, password hash, email-verification state, session records and security events. Portfolios store manually entered holdings, transactions, corrections, notes and observed valuations. Pro workspaces also store strategies, order intents and relevant broker state when connected. Broker tokens are encrypted on the server; brokerage passwords are never requested. Customer records, sample replay and Nortivo’s company report remain separate.</p>
       </section>
+      <section class="privacy-section" id="privacy-ai"><h2 data-i18n="privacy.ai.title">AI explanations and external data</h2><p data-i18n="privacy.ai.text">When an AI provider is configured and you request an explanation, Nortivo sends the necessary selected portfolio facts and authorized source excerpts to OpenAI. Brokerage credentials, password hashes and payment details are excluded. Responses are not sent to an execution engine. Providers are not declared connected merely because their adapter is installed. Check the workspace’s source and timestamp labels.</p></section><section class="privacy-section" id="privacy-billing"><h2 data-i18n="privacy.billing.title">Subscriptions and account requests</h2><p data-i18n="privacy.billing.text">Billing stores the Stripe customer/subscription identifiers, plan, provider-confirmed dates, invoice references and deduplicated payment events. USD subscription charges are separate from the currency used to display a portfolio. Broker funding and investment custody stay with the broker. Use account billing for supported changes and support for deletion or privacy requests.</p></section>
       <section class="privacy-section" id="privacy-retention" aria-labelledby="privacy-retention-title">
         <h2 id="privacy-retention-title" data-i18n="privacy.retention.title">Sessions and retention</h2>
-        <p data-i18n="privacy.retention.text">A guest session cookie lasts one day. The guest workspace expires after seven days and is removed during later cleanup. A registered account session lasts seven days. The account and its paper history are retained until a separate deletion process is implemented. Email verification and password recovery are not currently connected to paper accounts.</p>
+        <p data-i18n="privacy.retention.text">Registered sessions last seven days unless revoked sooner. Verification and recovery tokens expire and can be used once. Portfolio history, corrections, billing receipts and order audit records are retained for account continuity; stopping a subscription does not erase them. Request deletion through support. Active subscriptions, connected accounts and outstanding orders must be resolved before records are removed. No automatic account-deletion schedule is currently applied.</p>
       </section>
       <section class="privacy-section" id="privacy-local" aria-labelledby="privacy-local-title">
         <h2 id="privacy-local-title" data-i18n="privacy.local.title">Local testing and the hosted service</h2>
-        <p data-i18n="privacy.local.text">The developer’s local test version stores test accounts and paper records in a local SQLite database inside the project’s ignored .local folder. It does not connect to production Supabase, email, market-data or brokerage services. The local database is private but not encrypted. The hosted service uses server storage in Supabase. Passwords are not returned to the browser, and the session token is held in a restricted HttpOnly cookie that page scripts cannot read.</p>
+        <p data-i18n="privacy.local.text">Local development uses an ignored SQLite database and simulated provider fixtures only in tests. External access requires deliberate configuration. The public service uses Supabase server storage. Password hashes and private provider credentials are never returned to the browser. Restricted HttpOnly cookies hold session tokens.</p>
       </section>
-      <p data-i18n="privacy.limit" class="notice">The small trading-rule illustration on the homepage uses fictional prices and neither stores nor sends anything. The full Trading Platform is different: private paper records are stored as described above.</p>
+      <p data-i18n="privacy.limit" class="notice">The homepage illustration and sample replay use fictional market data. Manually entered portfolios, connected services and the historical company report are identified separately.</p>
       <aside class="privacy-help">
-        <p data-i18n="privacy.question" >Have a question about an enquiry, the paper workspace or your information? Create a support ticket.</p>
+        <p data-i18n="privacy.question" >Questions about an account, subscription, portfolio or your information? Contact support.</p>
 <p class="spaced-action">
 <a href="/support/" class="button" >
 <span data-i18n="help.action" >Open support</span>
@@ -90,7 +91,7 @@
 <footer class="site-footer market-footer">
   <div class="footer-shell">
     <div><a class="brand invest-brand" href="/">Nortivo<span aria-hidden="true"></span></a><p data-i18n="market.footer">Investment guides and trading software</p></div>
-    <nav class="footer-links" aria-label="Footer" data-i18n-aria="nav.footer"><a href="/products/" data-i18n="editorialMenu.tools">Trading tools</a>
+    <nav class="footer-links" aria-label="Footer" data-i18n-aria="nav.footer"><a href="/pricing/" data-i18n="product.plans">Plans</a><a href="/products/" data-i18n="editorialMenu.tools">Trading tools</a>
       <a href="/contact/" data-i18n="nav.contact">Get in touch</a>
       <a href="/support/" data-i18n="nav.support">Support</a>
       <a href="/reviews/" data-i18n="market.reviews">Customer reviews</a>
