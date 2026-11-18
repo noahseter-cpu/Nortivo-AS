@@ -63,6 +63,14 @@ test('locale build rewrites only legacy public links and keeps shared assets', (
   for (const preserved of ['href="#local"', 'href="/en/products/"', 'href="https://elsewhere.invalid/products/"', 'src="/assets/image.webp"', 'src="/assets/site.js"', 'href="/assets/site.css"']) assert.ok(rendered.includes(preserved));
 });
 
+test('public product links cut over to the investment host while preserving journey parameters', () => {
+  const links = '<a href="/terminal/?tier=pro&interval=year#research">Terminal</a><a href="/pricing/?ref=home">Pricing</a><a href="/portfolio/">Portfolio</a>';
+  const rendered = renderLocale(fixtureHtml.replace('</body>', links + '</body>'), copy, 'nb', 'home');
+  assert.ok(rendered.includes('href="https://invest.nortivo.no/nb/terminal/?tier=pro&amp;interval=year#research"'));
+  assert.ok(rendered.includes('href="https://invest.nortivo.no/nb/pricing/?ref=home"'));
+  assert.ok(rendered.includes('href="https://invest.nortivo.no/nb/portfolio/"'));
+});
+
 test('report links are localized while preserving query, fragment and standalone report assets', () => {
   const links = `<a href="/report-2026/?source=home&amp;view=equity#report-equity">Report</a><a href="/report-2026/annual-report-2026-ytd.pdf">PDF</a><a href="/report-2026/equity-en.png">Chart</a><a href="/en/report-2026/">Explicit English report</a>`;
   for (const locale of ['nb', 'en']) {

@@ -70,6 +70,7 @@ function localizeHref(href, locale) {
   const pathname = match[1];
   const normalized = pathname === '/' ? '/' : `${pathname.replace(/\/$/, '')}/`;
   if (!['/report-2026/', '/terminal/', '/pricing/', '/portfolio/'].includes(normalized) && !pages.some(page => pagePath(page) === normalized)) return href;
+  if (['/terminal/', '/pricing/', '/portfolio/'].includes(normalized)) return `https://invest.nortivo.no/${locale}${normalized}${match[2] || ''}`;
   return `/${locale}${normalized}${match[2] || ''}`;
 }
 

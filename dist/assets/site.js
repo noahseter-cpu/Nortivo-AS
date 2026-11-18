@@ -9,17 +9,21 @@
   let language = [currentUrl.searchParams.get('lang'), pathLanguage, saved, document.documentElement.dataset.countryLanguage, 'en'].find(x => supported.includes(x));
   const translate = key => dictionaries[language]?.[key] ?? dictionaries.en[key] ?? key;
   const withoutLanguage = pathname => pathname.replace(/^\/(nb|en)(?=\/|$)/, '') || '/';
+  const platformOrigin = 'https://invest.nortivo.no';
+  const platformBases = ['/terminal/', '/pricing/', '/portfolio/'];
   function updateLinks(root = document) {
     root.querySelectorAll('a[href]').forEach(link => {
       const raw = link.getAttribute('href');
       if (!raw || raw.startsWith('#')) return;
       const url = new URL(raw, location.href);
-      if (url.origin !== location.origin || url.pathname.startsWith('/assets/') || url.pathname.startsWith('/.netlify/')) return;
+      const isPlatform = url.origin === platformOrigin;
+      if ((!isPlatform && url.origin !== location.origin) || url.pathname.startsWith('/assets/') || url.pathname.startsWith('/.netlify/')) return;
       const base = withoutLanguage(url.pathname);
-      if (!['/', '/products/', '/support/', '/admin/', '/privacy/', '/about/', '/services/', '/contact/', '/restaurant/', '/studio/', '/arc/', '/studio/services/', '/reviews/', '/report-2026/', '/terminal/', '/pricing/', '/portfolio/'].includes(base)) return;
+      if (isPlatform && !platformBases.includes(base)) return;
+      if (!['/', '/products/', '/support/', '/admin/', '/privacy/', '/about/', '/services/', '/contact/', '/restaurant/', '/studio/', '/arc/', '/studio/services/', '/reviews/', '/report-2026/', ...platformBases].includes(base)) return;
       url.pathname = '/' + language + base;
       url.searchParams.delete('lang');
-      link.setAttribute('href', url.pathname + url.search + url.hash);
+      link.setAttribute('href', (isPlatform ? platformOrigin : '') + url.pathname + url.search + url.hash);
     });
   }
   function applyTranslations(root = document) {

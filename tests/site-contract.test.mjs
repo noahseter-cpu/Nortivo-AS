@@ -319,6 +319,22 @@ test('language changes translate content and attributes, preserve drafts, update
   assert.equal(fixture.site.getLanguage(), 'nb');
 });
 
+test('main-site language switching localizes absolute investment-platform links', () => {
+  const platform = new Element('a', { href: 'https://invest.nortivo.no/en/terminal/?tier=pro#research' });
+  const fixture = loadSite({ url: 'https://nortivo.no/en/', nodes: [platform] });
+  fixture.site.setLanguage('nb');
+  assert.equal(platform.getAttribute('href'), 'https://invest.nortivo.no/nb/terminal/?tier=pro#research');
+  fixture.site.setLanguage('en');
+  assert.equal(platform.getAttribute('href'), 'https://invest.nortivo.no/en/terminal/?tier=pro#research');
+});
+
+test('main-site language switching leaves unrelated investment-host links untouched', () => {
+  const unrelated = new Element('a', { href: 'https://invest.nortivo.no/reports/2026/' });
+  const fixture = loadSite({ url: 'https://nortivo.no/en/', nodes: [unrelated] });
+  fixture.site.setLanguage('nb');
+  assert.equal(unrelated.getAttribute('href'), 'https://invest.nortivo.no/reports/2026/');
+});
+
 test('embedded shared dictionary matches the canonical copy in both languages', () => {
   const { site } = loadSite();
   for (const locale of ['nb', 'en']) {

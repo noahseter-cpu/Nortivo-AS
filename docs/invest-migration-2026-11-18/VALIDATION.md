@@ -2,7 +2,7 @@
 
 ## Automated and source checks
 
-- Full suite: **245 passed, 0 failed** on 18 November 2026.
+- Initial migration suite: **245 passed, 0 failed** on 18 November 2026. Final link-cutover suite is recorded in the publication receipt below.
 - Localized build: 26 pages generated; diff whitespace checks passed.
 - New route tests cover exact production origins, no cross-origin mutations, host-only cookies, language entry, old bookmark/index paths, safe query filtering, account/billing workspace intent, private admin isolation and same-origin callback/data preservation.
 - Commerce regressions cover future recurring prices from validated Stripe prices and reject reusing an open checkout for a different tier or interval. These use test adapters, not real payments.
@@ -38,7 +38,9 @@ All private checks used isolated local fixtures on `127.0.0.1:4422`, without loa
 - Public DNS resolver returned the exact CNAME.
 - Netlify certificate UI confirms `invest.nortivo.no, nortivo.no, www.nortivo.no`, renewed 18 November, expires 16 February 2027.
 - New HTTPS hostname opens without an interstitial. Before the prepared origin change is deployed, the API correctly reports `INVALID_ORIGIN`; this is recorded as pre-deployment evidence, not a passing application check.
-- Old public product links and migration redirect flag remain unchanged until the first investment-host application verification.
+- Stage-one deploy `6afdf10c93e62190914c4496`, commit `81345e7`, published successfully in 17 seconds.
+- On that deployment, investment root with `lang=nb` resolved to `/nb/terminal/`; English switching, six sample KPIs, chart, report data, annual pricing and Pro/year signup intent all worked on the actual HTTPS hostname. No real account was created.
+- Only after those checks, production `TERMINAL_ORIGIN` was changed to `https://invest.nortivo.no` and production-only `PRODUCT_PLATFORM_MIGRATION_READY=true` was saved. Other context values were retained. These non-secret settings use All scopes because this project's UI does not allow narrower scope selection.
 
 ## Verification limits
 

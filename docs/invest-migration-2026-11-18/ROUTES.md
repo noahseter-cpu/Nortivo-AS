@@ -12,6 +12,7 @@ Both hosts use Netlify project `vermillion-mousse-5e3749` (`648e5822-88a6-42a2-8
 | Investment `/{en,nb}/portfolio/` | Portfolio application, authentication, verification, recovery and account management |
 | Investment `/{en,nb}/portfolio/?tab=account` | Existing account controls |
 | Investment `/{en,nb}/portfolio/?tab=billing` | Existing subscription/billing controls |
+| Account/billing `workspace=terminal` or `workspace=portfolio` | Safe originating workspace retained for the Back action; `tab=security` aliases account controls |
 | Old company `/terminal/`, `/pricing/`, `/portfolio/` and localized equivalents | GET/HEAD temporary, uncached redirect to corresponding investment route **after** cutover is enabled |
 | Verification / recovery | Investment localized Portfolio URL with existing `#verify=` / `#reset=` fragment; fragments are not sent to the server or logged |
 | Investment company/support/privacy/report HTML links | Localized absolute company-host destinations |
@@ -41,6 +42,8 @@ Existing apex ALIAS, www CNAME, MX, TXT, nameservers and email records were reta
 4. Switch public product links and enable `PRODUCT_PLATFORM_MIGRATION_READY=true` only after that proof.
 
 The flag defaults off and can be removed/disabled to keep old bookmarks on the company host while investigating a problem. Redirects are deliberately temporary and uncached during transition.
+
+After stage-one application verification, the Production context was configured with `TERMINAL_ORIGIN=https://invest.nortivo.no` and `PRODUCT_PLATFORM_MIGRATION_READY=true`. Other context values were retained; the flag has one Production value. Public links now use absolute localized investment addresses, including the report navigation, and the company language switch retains that host.
 
 Authentication cookies retain their existing host-only scope, Secure/HttpOnly attributes and CSRF protections. A visitor signs in again on the investment host; the same user ID still opens the same stored records. No database migration or shared parent-domain cookie is introduced.
 
