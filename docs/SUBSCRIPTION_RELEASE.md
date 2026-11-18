@@ -32,6 +32,14 @@ Post-review root inspection found that the delegated broker callback needed brow
 
 ## Activation dependencies
 
+### Account entry and private connection preparation
+
+The 18 November follow-up makes Create account and Log in the anonymous terminal entry, with a separate explicit read-only demo and return-to-start action. Existing authenticated users retain the approved operational interface. Local registration feedback, unverified sign-in routing, logout, Escape/focus restoration, sample return and bilingual desktop/mobile checks passed. All224 tests passed; independent source review found no new auth/entitlement blocker. No real vendor account or trading access was created by this UI change.
+
+The owner confirmed both key creation and the private `.env.local` destination. An OpenAI project key was created through encrypted provisioning; authenticated model listing returned200 with the selected `gpt-6-luna`. One small Responses request returned429 `credit_balance_exhausted`. Eligible promotional credit was previewed but no organization link/grant was approved. Separate random MFA and broker encryption keys were generated with their required distinct encodings, then saved with the OpenAI key as production-only Netlify secrets. No key value entered Git or the browser bundle.
+
+Initial deployment `6afd0457f512fa3348c7092f` stopped because the public model-name override was incorrectly marked secret and matched normal source references. Netlify reported only `PRODUCT_OPENAI_MODEL`, with no actual API/encryption-key match. Its override was cleared so the existing identical code default is used. Secret scanning and all real-key protection remain enabled. Final successful publication is recorded after verification.
+
 ### Approved terminal design restored
 
 After the owner reconfirmed `Nortivo_Approved_Trading_Interface.png`, commit `69d89ae41feb621c7e45b7a1c2c43bb2e871b7ae` restored the dense green/charcoal terminal composition while retaining the new product handlers. Netlify production deploy `6afcfdf6439be831ea81b439` was confirmed **Published** from `main` on 18 November 2026 at 02:23 Europe/Oslo. Permalink: `https://6afcfdf6439be831ea81b439--vermillion-mousse-5e3749.netlify.app/`.
