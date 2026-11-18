@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import crypto from 'node:crypto';
 import { fail,commandDigest,sha256 } from '../terminal/security.mjs';
-import { selectedPlan,PRICES,priceId } from './plans.mjs';
+import { selectedPlan,validatedJourney,PRICES,priceId } from './plans.mjs';
 export const STRIPE_API_VERSION='2026-10-28.endive';
 const MODES=['test','live'];
 export function stripeMode(env){return MODES.includes(env.STRIPE_MODE)?env.STRIPE_MODE:'test';}
@@ -38,7 +38,8 @@ async function customerFor(ctx,stripe){
  if(result.status==='conflict'){old=await ctx.store.get('billing_customers',key);if(!old||old.value.customerId!==customer.id)fail('BILLING_CONFLICT','Billing setup is still being confirmed.',409);}return customer.id;
 }
 async function mapping(ctx){const r=await ctx.store.get('billing_customers',`${stripeMode(ctx.env)}:${ctx.user.id}`);if(!r||r.ownerId!==ctx.user.id)fail('NO_SUBSCRIPTION','No subscription is connected to this account.',404);return r.value.customerId;}
-async function verifyPrices(ctx,stripe){for(const tier of Object.keys(PRICES))for(const interval of ['month','year']){const p=await stripe.prices.retrieve(priceId(ctx.env,tier,interval));assertPrice(p,ctx.env,tier,interval,{active:true});}}
+async function verifyPrices(ctx,stripe){const verified=new Map();for(const tier of Object.keys(PRICES))for(const interval of ['month','year']){const p=await stripe.prices.retrieve(priceId(ctx.env,tier,interval));assertPrice(p,ctx.env,tier,interval,{active:true});verified.set(`${tier}:${interval}`,p);}return verified;}
+function checkoutReturn(origin,path,journey,billing){const url=new URL(path,origin);for(const [key,value] of Object.entries({billing,tier:journey.selectedPlan.tier,interval:journey.selectedPlan.interval,locale:journey.locale,returnPath:journey.returnPath}))url.searchParams.set(key,value);return url.href;}
 async function ownedSub(ctx,stripe){const a=await ctx.store.get('accounts',ctx.user.id),customer=await mapping(ctx);const id=a?.value.billing?.subscriptionId;if(!id)fail('NO_SUBSCRIPTION','No active subscription is connected to this account.',404);const s=await stripe.subscriptions.retrieve(id,{expand:['latest_invoice','items.data.price']});if(sid(s.customer)!==customer||s.metadata?.nortivo_user!==ctx.user.id||s.livemode!==(stripeMode(ctx.env)==='live'))fail('BILLING_OWNER','Subscription ownership could not be verified.',403);return s;}
 export async function reconcileSubscription(ctx,stripe,subscription,{eventId=null}={}){
  const customer=sid(subscription.customer),mode=stripeMode(ctx.env),map=await ctx.store.get('billing_customers',`${mode}:customer:${customer}`);
@@ -84,7 +85,7 @@ export async function handleBilling(ctx,action,body={}){
   let replaceCheckout=!record||record.value.expiresAt<=ctx.now;
   if(record?.value.sessionId){
    const previous=await stripe.checkout.sessions.retrieve(record.value.sessionId);
-   if(previous.status==='open'&&previous.expires_at*1000>ctx.now)return {url:previous.url,pending:true};
+   if(previous.status==='open'&&previous.expires_at*1000>ctx.now){if(record.value.plan?.tier!==plan.tier||record.value.plan?.interval!==plan.interval)fail('CHECKOUT_EXISTS','Finish or wait for your existing checkout before choosing another plan.',409);return {url:previous.url,pending:true};}
    if(previous.status==='complete'){
     // A completed historical checkout must not trap a canceled customer. A
     // missing/in-flight subscription still remains pending, never a new charge.
@@ -96,8 +97,8 @@ export async function handleBilling(ctx,action,body={}){
   }
   if(replaceCheckout){const v={idempotencyKey:idem,plan,expiresAt:ctx.now+86400000};const res=await ctx.store.transact([{ns:'billing_checkout',key,ownerId:ctx.user.id,expectedVersion:record?.version??null,value:v}]);if(res.status!=='applied')fail('BILLING_PENDING','Another checkout is being confirmed. Retry shortly.',409);record=await ctx.store.get('billing_checkout',key);}
   if(record.value.plan.tier!==plan.tier||record.value.plan.interval!==plan.interval)fail('CHECKOUT_EXISTS','Finish or wait for your existing checkout before choosing another plan.',409);
-  const locale=ctx.account.locale==='nb'?'nb':'en',returnPath=ctx.account.returnPath||`/${locale}/${plan.tier==='pro'?'terminal':'portfolio'}/`;
-  const checkout=await stripe.checkout.sessions.create({mode:'subscription',customer,line_items:[{price:priceId(ctx.env,plan.tier,plan.interval),quantity:1}],payment_method_types:['card'],client_reference_id:ctx.user.id,metadata:{nortivo_user:ctx.user.id,nortivo_mode:stripeMode(ctx.env)},subscription_data:{metadata:{nortivo_user:ctx.user.id,nortivo_mode:stripeMode(ctx.env)}},allow_promotion_codes:false,locale:locale==='nb'?'nb':'en',success_url:`${ctx.origin}${returnPath}?billing=pending`,cancel_url:`${ctx.origin}/${locale}/pricing/?billing=canceled`,expires_at:Math.floor(record.value.expiresAt/1000)},{idempotencyKey:record.value.idempotencyKey});
+  const journey=validatedJourney({...plan,locale:currentAccount.value.locale,returnPath:currentAccount.value.returnPath}),{locale,returnPath}=journey;
+  const checkout=await stripe.checkout.sessions.create({mode:'subscription',customer,line_items:[{price:priceId(ctx.env,plan.tier,plan.interval),quantity:1}],payment_method_types:['card'],client_reference_id:ctx.user.id,metadata:{nortivo_user:ctx.user.id,nortivo_mode:stripeMode(ctx.env)},subscription_data:{metadata:{nortivo_user:ctx.user.id,nortivo_mode:stripeMode(ctx.env)}},allow_promotion_codes:false,locale:locale==='nb'?'nb':'en',success_url:checkoutReturn(ctx.origin,returnPath,journey,'pending'),cancel_url:checkoutReturn(ctx.origin,`/${locale}/pricing/`,journey,'canceled'),expires_at:Math.floor(record.value.expiresAt/1000)},{idempotencyKey:record.value.idempotencyKey});
   await ctx.store.transact([{ns:'billing_checkout',key,ownerId:ctx.user.id,expectedVersion:record.version,value:{...record.value,sessionId:checkout.id}}]);return {url:checkout.url,pending:true};
  });
  if(action==='product-portal')return operation(ctx,action,body,async idem=>{const customer=await mapping(ctx);const portal=await stripe.billingPortal.sessions.create({customer,configuration:ctx.env.STRIPE_PORTAL_CONFIGURATION,return_url:`${ctx.origin}/${ctx.account.locale==='nb'?'nb':'en'}/portfolio/`},{idempotencyKey:idem});return {url:portal.url};});
@@ -105,11 +106,12 @@ export async function handleBilling(ctx,action,body={}){
   const customer=await mapping(ctx),list=await customerSubscriptions(stripe,customer);const active=list.filter(s=>!['canceled','incomplete_expired'].includes(s.status));if(active.length>1)fail('OVERLAPPING_SUBSCRIPTION','Multiple subscriptions need merchant review. No extra access was granted.',409);const s=active[0]||list[0];if(!s)return {status:'none'};return reconcileSubscription(ctx,stripe,await stripe.subscriptions.retrieve(s.id,{expand:['latest_invoice','items.data.price']}));
  });
  if(action==='product-change-preview'){
-  await verifyPrices(ctx,stripe);
+  const verifiedPrices=await verifyPrices(ctx,stripe);
   const target=selectedPlan(body),s=await ownedSub(ctx,stripe),item=s.items.data[0],old=matchPlan(ctx.env,sid(item.price));if(s.status!=='active')fail('BILLING_PAYMENT_REQUIRED','Resolve the current subscription payment before changing plans.',409);if(s.pending_update||s.schedule)fail('BILLING_CHANGE_PENDING','Resolve the pending subscription change first.',409);
   const immediate=target.tier==='pro'&&old.tier==='portfolio';let invoice=null;const prorationDate=Math.floor(ctx.now/1000);
   if(immediate)invoice=await stripe.invoices.createPreview({customer:sid(s.customer),subscription:s.id,subscription_details:{items:[{id:item.id,price:priceId(ctx.env,target.tier,target.interval)}],proration_behavior:'always_invoice',proration_date:prorationDate}});
-  const id=crypto.randomUUID(),value={subscriptionId:s.id,itemId:item.id,oldPrice:sid(item.price),target,immediate,prorationDate,amountDue:invoice?.amount_due??null,currency:'USD',effectiveAt:immediate?ctx.now:item.current_period_end*1000,expiresAt:ctx.now+600000};await ctx.store.transact([{ns:'billing_previews',key:`${ctx.user.id}:${id}`,ownerId:ctx.user.id,expectedVersion:null,value,expiresAt:value.expiresAt}]);return {previewId:id,...value};
+  const targetPrice=verifiedPrices.get(`${target.tier}:${target.interval}`),futureRecurring={amountMinor:targetPrice.unit_amount,currency:targetPrice.currency.toUpperCase(),interval:targetPrice.recurring.interval,intervalCount:targetPrice.recurring.interval_count};
+  const id=crypto.randomUUID(),value={subscriptionId:s.id,itemId:item.id,oldPrice:sid(item.price),target,immediate,prorationDate,amountDue:invoice?.amount_due??null,currency:'USD',futureRecurring,effectiveAt:immediate?ctx.now:item.current_period_end*1000,expiresAt:ctx.now+600000};await ctx.store.transact([{ns:'billing_previews',key:`${ctx.user.id}:${id}`,ownerId:ctx.user.id,expectedVersion:null,value,expiresAt:value.expiresAt}]);return {previewId:id,...value};
  }
  if(action==='product-change')return operation(ctx,action,body,async (idem,op)=>{
   await verifyPrices(ctx,stripe);

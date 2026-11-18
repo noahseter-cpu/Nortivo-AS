@@ -6,7 +6,7 @@ import { createTerminalHandler } from '../netlify/functions/terminal.mjs';
 import { createInitialState } from '../netlify/terminal/engine.mjs';
 import { sha256,csrfToken } from '../netlify/terminal/security.mjs';
 
-const NOW=Date.parse('2026-11-18T12:00:00Z'),ORIGIN='https://terminal.test',USER='a1111111-1111-4111-8111-111111111111';
+const NOW=Date.parse('2026-11-18T12:00:00Z'),ORIGIN='https://invest.nortivo.no',USER='a1111111-1111-4111-8111-111111111111';
 async function fixture(t,{admin=false,paid=true}={}){
  const store=await createLocalStore(':memory:');t.after(()=>store.close());
  await store.createUser({id:USER,kind:'user',email:'oauth-fixture@example.test',password_hash:'unused-fixture-hash',created_at:NOW,expires_at:null},createInitialState({now:NOW}));

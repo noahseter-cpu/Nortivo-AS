@@ -11,11 +11,11 @@ export async function buildProductLocales(distDir) {
     catch (error) { if (error.code === 'ENOENT') continue; throw error; }
     for (const locale of ['nb', 'en']) {
       const name = page === 'pricing' ? locale === 'nb' ? 'Abonnementer' : 'Plans' : locale === 'nb' ? 'Portefølje' : 'Portfolio';
-      const canonical = `https://nortivo.no/${locale}/${page}/`;
+      const canonical = `https://invest.nortivo.no/${locale}/${page}/`;
       let html = source.replace(/(<html\b[^>]*\blang=")[^"]+/, `$1${locale}`)
         .replace(/<title>[\s\S]*?<\/title>/, `<title>${name} — Nortivo</title>`)
         .replace(/<link\b[^>]*rel="canonical"[^>]*>/g, '')
-        .replace('</head>', `<link rel="canonical" href="${canonical}">\n<link rel="alternate" hreflang="nb" href="https://nortivo.no/nb/${page}/">\n<link rel="alternate" hreflang="en" href="https://nortivo.no/en/${page}/">\n</head>`);
+        .replace('</head>', `<link rel="canonical" href="${canonical}">\n<link rel="alternate" hreflang="nb" href="https://invest.nortivo.no/nb/${page}/">\n<link rel="alternate" hreflang="en" href="https://invest.nortivo.no/en/${page}/">\n</head>`);
       if (locale === 'nb') for (const [english, norwegian] of Object.entries({
         'Skip to workspace': 'Hopp til arbeidsområdet', 'Opening your portfolio…': 'Åpner porteføljen din…',
         'Your private portfolio needs JavaScript. Records remain on the server.': 'Den private porteføljen trenger JavaScript. Opplysningene blir på serveren.',
@@ -24,7 +24,10 @@ export async function buildProductLocales(distDir) {
         'Checking subscription availability…': 'Kontrollerer hvilke abonnementer som er tilgjengelige…',
         'Subscription selection needs JavaScript.': 'Abonnementsvalget trenger JavaScript.', 'Contact support': 'Kontakt support',
       })) html = html.replaceAll(english, norwegian);
-      if (locale === 'nb') html = html.replaceAll('href="/en/"', 'href="/nb/"').replaceAll('href="/en/support/"', 'href="/nb/support/"');
+      html = html.replaceAll('href="/en/"', `href="https://nortivo.no/${locale}/"`)
+        .replaceAll('href="/en/support/"', `href="https://nortivo.no/${locale}/support/"`)
+        .replaceAll('href="/nb/"', `href="https://nortivo.no/${locale}/"`)
+        .replaceAll('href="/nb/support/"', `href="https://nortivo.no/${locale}/support/"`);
       const output = path.join(distDir, locale, page, 'index.html');
       await mkdir(path.dirname(output), { recursive: true });
       await writeFile(output, html);

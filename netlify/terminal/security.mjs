@@ -5,6 +5,7 @@ export const BODY_LIMIT = 24_000;
 export const GUEST_TTL = 7 * 24 * 60 * 60 * 1000;
 export const SESSION_TTL = 7 * 24 * 60 * 60 * 1000;
 export const GUEST_SESSION_TTL = 24 * 60 * 60 * 1000;
+export const PRODUCTION_ORIGINS = Object.freeze(['https://nortivo.no', 'https://www.nortivo.no', 'https://invest.nortivo.no']);
 
 export class TerminalError extends Error {
   constructor(code, message, status = 400) { super(message); this.code = code; this.status = status; }
@@ -37,8 +38,9 @@ export function cookie(rawToken, ttl, local = false) {
 }
 
 export function requestOrigin(event, env) {
-  const configured = [env.TERMINAL_ORIGIN, env.URL, env.DEPLOY_PRIME_URL, env.DEPLOY_URL].filter(Boolean);
-  if (!configured.length) configured.push('https://nortivo.no', 'https://www.nortivo.no');
+  // Both production hosts share the existing backend during the migration.
+  // Browser sessions remain host-only; approving an origin never grants CORS.
+  const configured = [...PRODUCTION_ORIGINS, env.TERMINAL_ORIGIN, env.URL, env.DEPLOY_PRIME_URL, env.DEPLOY_URL].filter(Boolean);
   const allowed = new Set(configured.map(value => {
     try {
       const url = new URL(value);
@@ -47,7 +49,7 @@ export function requestOrigin(event, env) {
     } catch { return ''; }
   }).filter(Boolean));
   let actual;
-  try { actual = new URL(event.rawUrl).origin; } catch { fail('INVALID_ORIGIN', 'Request origin could not be verified.', 403); }
+  try { const url = new URL(event.rawUrl); if (url.username || url.password) throw new Error(); actual = url.origin; } catch { fail('INVALID_ORIGIN', 'Request origin could not be verified.', 403); }
   if (!allowed.has(actual)) fail('INVALID_ORIGIN', 'Request origin is not permitted.', 403);
   return actual;
 }
@@ -56,7 +58,7 @@ export function requireSameOrigin(event, env, required = true) {
   if (header(event, 'sec-fetch-site') === 'cross-site') fail('INVALID_ORIGIN', 'Cross-site requests are not permitted.', 403);
   const source = header(event, 'origin') || header(event, 'referer');
   if (!source && !required) return;
-  try { if (new URL(source).origin === origin) return; } catch { /* reject below */ }
+  try { const url = new URL(source); if (!url.username && !url.password && url.origin === origin) return; } catch { /* reject below */ }
   fail('INVALID_ORIGIN', 'Use this workspace from its own website.', 403);
 }
 export function parseBody(event) {

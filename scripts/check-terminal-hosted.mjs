@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 
 const origin = new URL(process.argv[2] || '').origin;
-assert.match(origin, /^https:\/\/(?:nortivo\.no|[a-z0-9-]+\.netlify\.app)$/);
+assert.match(origin, /^https:\/\/(?:nortivo\.no|invest\.nortivo\.no|[a-z0-9-]+\.netlify\.app)$/);
 const endpoint = `${origin}/.netlify/functions/terminal`;
 const checks = [];
 async function request(client, action, {method='GET', body, csrf=true, expected=200, requestOrigin=origin}={}) {
@@ -25,7 +25,7 @@ async function request(client, action, {method='GET', body, csrf=true, expected=
   assert.equal(response.status, expected, `${action}: HTTP ${response.status}; code ${data?.error?.code || 'none'}`);
   assert.match(response.headers.get('cache-control') || '', /no-store/i);
   if (setCookie && expected === 200) {
-    assert.match(setCookie, /HttpOnly/i);assert.match(setCookie, /Secure/i);assert.match(setCookie, /SameSite=Strict/i);
+    assert.match(setCookie, /HttpOnly/i);assert.match(setCookie, /Secure/i);assert.match(setCookie, /SameSite=Strict/i);assert.doesNotMatch(setCookie, /\bDomain=/i);
     client.cookie=setCookie.split(';')[0];
   }
   if (data.csrfToken) client.csrfToken=data.csrfToken;

@@ -517,7 +517,9 @@
   .pt-terminal-shell .workspace{padding:12px 14px 0}
   .pt-terminal-shell .brand{font-size:25px}
   .pt-terminal-shell .appbar{gap:16px;padding:10px 16px}
-  .pt-terminal-shell .kpis{grid-template-columns:1.5fr repeat(3,minmax(0,1fr))}
+  .pt-terminal-shell .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .pt-terminal-shell .kpis>.kpi{display:block}
+  .pt-terminal-shell .kpis>.kpi-regime{display:flex}
   .pt-terminal-shell .main-grid{grid-template-columns:215px minmax(0,1fr)}
   .pt-terminal-shell .right-column{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-column:1/-1}
   .pt-terminal-shell .bottom-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -710,3 +712,12 @@
 @media(prefers-reduced-motion:reduce){
   .product-app *,.product-app *:before,.product-app *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* Supporting journeys share the approved terminal's type and surfaces; its grid is unchanged. */
+.p-subscription-access{margin-top:12px!important;color:var(--app-text);font-weight:700}
+.p-disabled-help{padding:0 20px 16px;max-width:76ch}
+.p-panel-body .p-disabled-help,.p-auth-tabs .p-disabled-help,.pt-screen-head .p-disabled-help,.pt-entry-main .p-disabled-help{padding:0}
+.p-auth-tabs:has(.p-disabled-help){flex-wrap:wrap}
+.p-auth-tabs .p-disabled-help{flex-basis:100%;margin-top:4px!important}
+.p-auth .p-inline-note,.pt-auth-content>.p-inline-note{margin-bottom:16px}
+.p-intent>span{display:inline-block;margin-bottom:4px}

@@ -35,6 +35,35 @@ The additive migration was applied to the existing project during the authorized
 
 The function fails with `STORAGE_NOT_CONFIGURED` or `STORAGE_UNAVAILABLE` if hosted storage is missing; it never initializes a temporary filesystem account or invents saved success.
 
+## Investment hostname migration
+
+The application host is `https://invest.nortivo.no`; the company website stays on `https://nortivo.no`. Reuse the existing Netlify project, Functions and Supabase project. Add the investment hostname as a domain alias without changing the primary company domain, then add the DNS record shown by Netlify and verify its HTTPS certificate. Adding a hostname alone does not prove that DNS, TLS or provider callbacks are ready.
+
+The edge handler prepares the investment host immediately, but redirects old company-host application links only when `PRODUCT_PLATFORM_MIGRATION_READY` is exactly `true`. Leave it unset or `false` until the new hostname has been checked. Set this variable in Netlify with Functions scope; an edge environment change requires a new build/deploy. A `netlify.toml` build variable alone does not configure edge runtime environment values.
+
+| Request | Destination or behavior |
+| --- | --- |
+| Investment `/`, `/en/`, `/nb/` | Appropriate localized `/en/terminal/` or `/nb/terminal/` entry |
+| Investment `/{locale}/terminal/`, `/{locale}/pricing/`, `/{locale}/portfolio/` | Existing application, prices and account/portfolio/billing workspace |
+| Investment unlocalized or slashless platform entry | Normalized localized application route |
+| Company `/terminal/`, `/pricing/`, `/portfolio/`, and their English/Norwegian variants | Existing behavior until the ready flag; then corresponding investment-host route |
+| Investment company, support, privacy and report HTML entry routes | Corresponding company-host document |
+| Investment private administration UI | Company-host administration; administration function requests on investment host return 404 |
+| Same-origin assets, report JSON and `/.netlify/functions/terminal` | Kept on the requesting host; no cross-host API redirect |
+| `/.netlify/functions/stripe-webhook` and broker callback | Existing server endpoint remains available; not caught by entry redirects |
+
+Only GET/HEAD entry routes redirect between hosts. Language, tier, billing interval, auth mode and validated local return paths are retained, along with allowlisted non-secret campaign values. Token/code/state query parameters are not copied by application entry redirects. Verification/recovery token fragments are preserved by browser redirect behavior, and are never sent to the edge handler.
+
+`requestOrigin()` explicitly approves `https://nortivo.no`, `https://www.nortivo.no` and `https://invest.nortivo.no`; exact configured preview origins are additive. No wildcard, broad CORS or cross-subdomain authentication cookie is added. Keep `TERMINAL_ORIGIN=https://invest.nortivo.no` for the canonical application configuration after preparing the alias. The old production origins remain approved for existing callbacks and the transition. Sessions remain host-only, so users sign in again on the investment hostname. Their durable accounts, subscriptions, portfolios, MFA, broker connections and audit records remain in the same database. Preserve existing session/encryption keys and backend credentials.
+
+Verification and recovery emails use the validated request origin. Stripe Checkout success/cancel returns retain server-validated `tier`, `interval`, `locale` and `returnPath`; a return query never grants paid access. Stripe portal returns use the requesting host. Keep the existing signed webhook delivery URL and secret working; migrating the browser hostname does not require creating a duplicate webhook endpoint or activating purchases.
+
+For Alpaca, register the exact `https://invest.nortivo.no/.netlify/functions/terminal?action=product-broker-callback` address with the existing OAuth app, then set `ALPACA_OAUTH_REDIRECT_URI` to that same value. Keep the old callback endpoint available for in-flight states. OAuth state remains single-use and browser/session bound, with its own host-only Secure/Lax cookie. Changing a callback URL does not establish provider permissions or enable real-money execution.
+
+Before setting the ready flag, verify the investment root and both languages, all relative assets, same-origin API origin/CSRF rejection, signup/login/verification/recovery, preserved monthly/annual selection, billing return destinations, private admin isolation and supported broker callbacks. Do not treat local fixtures as proof of hosted provider or payment readiness. `scripts/check-terminal-hosted.mjs` remains a legacy paper-engine smoke check; it is not a complete product subscription acceptance test.
+
+The subscription change-preview response includes `futureRecurring: { amountMinor, currency, interval, intervalCount }` from the configured Stripe price after server validation. `amountDue` retains the provider's immediate invoice preview amount, and `effectiveAt` retains the actual immediate/renewal change date. The client must display these server values before requesting confirmation.
+
 ## Authentication, limits and retention
 
 Passwords require 12 or more characters and at most 256 UTF-8 bytes. They are stored with a random 16-byte salt and scrypt N=32768, r=8, p=1, 64-byte output. Signup/login is independent of support/admin and does not claim email verification, identity verification, email delivery or password recovery. Account emails are visible only within their authenticated workspace. Hosted signup defaults to disabled; signup conflicts use a generic account-creation error. `capabilities.signupEnabled` exposes the actual server gate in session/integration responses, and `emailVerification:false` makes the missing verification explicit.

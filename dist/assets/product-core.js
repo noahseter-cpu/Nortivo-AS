@@ -7,11 +7,26 @@ export function registrationAvailable(publicCatalog, accountSnapshot) {
 export function internalPath(value, fallback = '/en/portfolio/') {
   return typeof value === 'string' && /^\/(?:en\/|nb\/)?(?:portfolio|terminal|pricing)\/(?:[?#].*)?$/.test(value) && !/[\\\r\n]/.test(value) ? value : fallback;
 }
-export function readIntent(search, locale = 'en') {
+export function readIntent(search, locale = 'en', saved = {}) {
   const query = new URLSearchParams(search);
-  const tier = query.get('tier') === 'pro' ? 'pro' : 'portfolio';
-  const interval = query.get('interval') === 'year' ? 'year' : 'month';
-  return {tier, interval, locale, returnPath:internalPath(query.get('returnPath') || query.get('returnTo'), `/${locale}/${tier === 'pro' ? 'terminal' : 'portfolio'}/`)};
+  const tier = (query.has('tier') ? query.get('tier') : saved?.tier) === 'pro' ? 'pro' : 'portfolio';
+  const interval = (query.has('interval') ? query.get('interval') : saved?.interval) === 'year' ? 'year' : 'month';
+  const fallback = `/${locale}/${tier === 'pro' ? 'terminal' : 'portfolio'}/`;
+  const accountTab = ['account','billing','security'].includes(query.get('tab')) ? query.get('tab') : null;
+  const workspace = ['terminal','portfolio'].includes(query.get('workspace')) ? query.get('workspace') : null;
+  const target = accountTab ? `/${locale}/portfolio/?tab=${accountTab}${workspace ? '&workspace='+workspace : ''}` : internalPath(query.get('returnPath') || query.get('returnTo') || saved?.returnPath, fallback);
+  return {tier, interval, locale, returnPath:target.replace(/^\/(en|nb)\//, `/${locale}/`)};
+}
+export function intentPath(name, chosen, mode) {
+  const locale = chosen?.locale === 'nb' ? 'nb' : 'en';
+  const intent = readIntent(new URLSearchParams(chosen), locale);
+  const route = ['portfolio', 'terminal', 'pricing'].includes(name) ? name : 'portfolio';
+  const query = new URLSearchParams(intent);
+  if (['signup', 'login'].includes(mode)) query.set('auth', mode);
+  return `/${locale}/${route}/?${query}`;
+}
+export function safeAuthDraft(data = {}) {
+  return {email:typeof data.email === 'string' ? data.email.slice(0,160) : '', name:typeof data.name === 'string' ? data.name.slice(0,80) : ''};
 }
 export function safeWebUrl(value) {
   try { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) && !url.username && !url.password ? url.href : null; } catch { return null; }
