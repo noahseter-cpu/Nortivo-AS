@@ -84,4 +84,12 @@ P3 follow-up: at the reference-height viewport the watchlist and news have their
 
 Production confirmation: Netlify published commit `69d89ae41feb621c7e45b7a1c2c43bb2e871b7ae` as deploy `6afcfdf6439be831ea81b439`. The actual Norwegian terminal was opened at `https://nortivo.no/nb/terminal/`, its explicitly selected fixed sample rendered, and no console errors/warnings were captured. Public proof: `.local/qa/published-terminal-restored.jpg`. Paid/live gates remained false. Pricing and subscription functionality remain published separately; external activation dependencies are unchanged.
 
+## Terminal account entry — 18 November 2026
+
+The owner requested an obvious Create account / Log in path before starting the terminal. Anonymous visitors now see a bilingual account entry screen with those primary actions and a secondary explicitly read-only demo. The existing approved operational design remains for signed-in users and for the chosen demo. The demo has a return-to-start action; selecting provider mode while anonymous returns to account entry.
+
+Local browser evidence: `.local/qa/terminal-account-entry.jpg` (desktop) and `.local/qa/terminal-account-entry-mobile.jpg` (380 × 822 content capture, CSS390 × 844). The account action remains visible above the mobile fold; document client/scroll widths both measured380. English/Norwegian language switching, sample entry/return, native login opening/Escape/focus restoration, and logout to entry passed. A disposable local registration displayed verification feedback inside its dialog; sign-in routed that unverified account to Check your email. An existing verified Pro fixture retained the approved terminal. The fixture server did not load the real OpenAI key or send actual email. Final local console reported no warnings/errors.
+
+The full224 automated suite passed on these changes. Independent source review found no auth/entitlement regression. Mechanical detector reported152 advisory token/type findings and zero anti-pattern failures. No backend authorization, paid access, commercial readiness or live-trading checks were relaxed.
+
 final result: passed

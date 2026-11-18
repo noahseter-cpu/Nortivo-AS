@@ -4,7 +4,7 @@
 
 The existing Nortivo project now contains Portfolio and Terminal Pro, with four exact USD prices, bilingual account/workspace/billing interfaces, an independent manual ledger, production provider adapters and a persistent execution worker. Public report/support/company pages and the original account IDs and paper history remain separate.
 
-The reviewed release may expose registration and the new interface. **Purchases and real-money execution remain closed.** Nortivo has no new provider/merchant agreements or API credentials for this scope. An installed adapter, placeholder or passing fixture is not a verified production service.
+The reviewed release exposes registration and the new interface. **Purchases and real-money execution remain closed.** Merchant/data/broker agreements and credentials remain missing. The OpenAI key is now configured privately, but its bounded response test failed because the API account has no credit balance. An installed adapter, saved credential, placeholder or passing fixture is not a verified production service.
 
 ## Verification completed
 
@@ -42,11 +42,11 @@ The restoration passed the full 224-test suite before the final visual/isolation
 
 | Capability | Implemented | Required before enabling paid use |
 | --- | --- | --- |
-| Accounts/email | Existing identity, verification/recovery, session revocation, TOTP and step-up | Existing Resend sender/key reused; verify an actual owner-controlled delivery. Configure the separate encryption key before MFA activation. |
+| Accounts/email | Existing identity, verification/recovery, session revocation, TOTP and step-up | Existing Resend sender/key reused; verify an actual owner-controlled delivery. Separate encryption key saved in production; actual owner MFA enrollment remains required. |
 | Billing | Stripe SDK, exact prices, Checkout/Portal, raw signed webhooks, canonical paid access, pending upgrades/scheduled changes | Merchant account, all four actual recurring price IDs, webhook secret, portal and real sandbox payment/lifecycle validation. No real card charge was made. |
 | Manual portfolio | Decimal ledger, FIFO, native-currency cash, corrections/voids, manual values, FX/partial states, observed snapshots | Already fixture-tested; paid writing still needs a legitimate paid entitlement. Current prices/FX require their commercial feeds. |
 | Market/news/calendar | Twelve Data/Finnhub/Trading Economics server adapters, rights/freshness/caching/metering, in-app reminders | Business contracts and exact display/non-display/storage/AI/exchange permissions, credentials and authenticated probes. US stocks/ETFs first; no universal coverage claim. |
-| AI | OpenAI Responses, grounded evidence, isolated context and atomic monthly quotas | Secure project key setup did not complete because its picker was not visible. Obtain a key through a functioning secure setup, configure budget and verify a real response. Portfolio 30/month; Pro 200/month, with separate token caps. |
+| AI | OpenAI Responses, grounded evidence, isolated context and atomic monthly quotas | Project key created and saved privately/production-only; model access returned200. Bounded Responses returned429 `credit_balance_exhausted`; resolve credit/budget and verify an actual response. Estimated promotional credits remain unclaimed because native organization confirmation was not approved. Portfolio30/month; Pro200/month, with separate token caps. |
 | Broker/automation | Encrypted delegated OAuth, separate paper/live targets, durable intents/reconciliation/fencing, strategy tools, risk controls | Alpaca commercial/live approval and Norwegian/customer-country eligibility, credentials, signed app/account release evidence, MFA/consent, paper sandbox validation, persistent worker hosting and live health evidence. |
 
 Exact provider choices, sources, unpriced commercial gaps, request-volume assumptions and current cost estimates are in `PROVIDER_DECISIONS.md`; secure configuration locations and worker launch controls are in `PROVIDER_SETUP.md`, `IDENTITY_BILLING_SETUP.md` and the placeholder environment examples. The requested USD10/USD30 prices are unchanged. No extra trial, discount or overage charge was invented.
