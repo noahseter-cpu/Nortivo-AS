@@ -17,6 +17,12 @@ Operate — a connected paper-trading workbench for reading disclosed replay dat
 
 ## Development boundaries
 
+### Subscription terminal restoration — 18 November 2026
+
+The owner reconfirmed `Nortivo_Approved_Trading_Interface.png` after the subscription release. The enabled Terminal Pro must retain this same visual contract: a compact application bar and side rail, KPI strip, watchlist/chart/news three-column work area and engine/signal/risk/reported-history lower row. Subscription work extends those controls and their real state; it does not replace the terminal with the Portfolio page composition.
+
+Pricing and manual Portfolio remain separate surfaces. Account, language and plan links remain reachable from the terminal. Production account/market/signal values are shown only when supplied by the relevant current server context. Missing values stay unavailable inside the intended panel. The explicitly selected fixed sample can populate the workbench for inspection, with read-only and fictional-data disclosure. Company history belongs in its own report panel and never initializes a customer balance or signal.
+
 The chart needs its accessible recent-candle table, visible control alternatives and its responsive 34/56/64/78-bar presentation. On mobile, content views replace the compressed desktop canvas and touch controls retain 44px minimum targets. Keep color paired with labels and status text. Use 160ms control feedback and 180ms dialog/toast feedback; remove terminal transforms/transitions for reduced motion.
 
 ## Evidence and recovery

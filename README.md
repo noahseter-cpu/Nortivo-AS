@@ -2,9 +2,9 @@
 
 The public Nortivo website, separate from the Arc application. Static HTML/CSS/JavaScript, Netlify Functions, Supabase storage and Resend email. The additive subscription product uses maintained Stripe and OTPAuth server libraries; run `npm ci` before testing or deployment.
 
-Subscription implementation: two exact USD plans, `/pricing/`, a manual `/portfolio/` workspace, the extended `/terminal/`, additive account/billing persistence and production provider adapters. Read [the complete brief](docs/SUBSCRIPTION_SPEC.md), [the shared contract](docs/SUBSCRIPTION_CONTRACT.md) and [the current implementation plan](docs/SUBSCRIPTION_PLAN.md). `PRODUCT_ENABLED` gates the new product; leaving it off preserves the earlier terminal. Provider adapters and fixture tests do not establish commercial permissions, successful real-provider connections or permission to trade. Checkout stays closed while required readiness evidence is missing.
+Subscription implementation: two exact USD plans, `/pricing/`, a manual `/portfolio/` workspace, the extended `/terminal/`, additive account/billing persistence and production provider adapters. Read [the complete brief](docs/SUBSCRIPTION_SPEC.md), [the shared contract](docs/SUBSCRIPTION_CONTRACT.md) and [the current implementation plan](docs/SUBSCRIPTION_PLAN.md). `PRODUCT_ENABLED` gates the new product and is enabled for the public interface; turning it off restores the earlier terminal. Provider adapters and fixture tests do not establish commercial permissions, successful real-provider connections or permission to trade. Checkout stays closed while required readiness evidence is missing.
 
-Current release: [Nortivo Trading Platform](docs/TRADING_PLATFORM_RELEASE.md), published on 17 November 2026 with a real homepage showcase and a server-backed bilingual paper workspace. The terminal has separate private Supabase storage; external providers and real-money brokerage remain disabled. The release record distinguishes local, hosted preview and production verification.
+Current release: the [subscription extension](docs/SUBSCRIPTION_RELEASE.md), published on 18 November 2026, adds the bilingual registration, pricing, Portfolio and Terminal Pro interfaces while keeping purchases and real-money execution closed. The existing Resend adapter accepted one explicitly labeled owner test message, but inbox receipt and link completion remain unverified. Market data, news, calendar, AI, billing and brokerage still require the documented commercial agreements, credentials and production probes. The earlier [Nortivo Trading Platform](docs/TRADING_PLATFORM_RELEASE.md) release remains the paper-workspace foundation.
 
 ## Local development
 
@@ -34,11 +34,11 @@ For the complete trading platform, use **Node 24 or newer** and run `node script
 
 ## Deployment boundary
 
-The redesign was implemented and tested locally on 2026-09-21. The user explicitly authorized publication to the existing Netlify project and support integration checks on 2026-09-22. Future production changes still require appropriate authorization: a Git push to the linked production branch triggers Netlify automatically.
+The redesign was implemented and tested locally on 2026-09-21. The user explicitly authorized publication to the existing Netlify project and support integration checks on 2026-09-22, and authorized the subscription release published on 2026-11-18. Future production changes still require appropriate authorization: a Git push to the linked production branch triggers Netlify automatically.
 
 `netlify.toml` runs the locale builder and publishes `dist`, with Functions from `netlify/functions` and the language edge function from `netlify/edge-functions`. A manual upload of `dist` alone does not establish the complete backend or edge workflow.
 
-Keep the existing environment values described in `SETUP.md` on Netlify only. Never commit `.env`, API keys, passwords, tokens, or customer records. The access-link implementation uses the existing session secret and requires at least 32 bytes; no database migration is introduced.
+Keep the existing environment values described in `SETUP.md` on Netlify only. Never commit `.env`, API keys, passwords, tokens, or customer records. The access-link implementation uses the existing session secret and requires at least 32 bytes. The additive `supabase/product.sql` schema version 3 was applied for the subscription product; the existing 8 users, 8 states and 12 receipts were retained without account, password or history conversion.
 
 Before production acceptance, test real ticket creation, confirmation delivery, email verification, authenticated lookup, admin login/reply/status/logout, cookies, redirects and response headers in an approved deployment. No real customer ticket was used in local testing. See `docs/SUPPORT_SECURITY.md` for rate-limiter and delivery limitations.
 

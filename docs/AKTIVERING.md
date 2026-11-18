@@ -10,4 +10,6 @@ Nettsiden, begge arbeidsområdene, kontoflyten og koblingskoden er bygget. Datab
 
 En ekte bekreftelsesmelding ble godtatt av eksisterende Resend-oppsett for testaliasen til e-postadressen du tidligere oppga. Mottak i innboksen og bruk av lenken er en egen bekreftelse; testkontoen har ingen betalt tilgang.
 
+Det offentlige grensesnittet ble publisert 18. november 2026, og produksjonssiden `/nb/pricing/` startet som forventet. En kontroll med den samme ubekreftede testkontoen ga godkjent registreringsrespons, HTTP200 ved innlogging og HTTP403 `EMAIL_VERIFICATION_REQUIRED` ved direkte forsøk på å skrive til porteføljen. Registreringen ba ikke om en ny e-post; statusen for e-postleverandøren stammer fra Resend-aksepten i kandidattesten og dokumenterer ikke mottak i innboksen eller bruk av lenken. Betalte planer og live-handel forble stengt. Ingen ekte betaling eller ordre ble forsøkt.
+
 Den presise listen med feltnavn, plasseringer, API-adresser, tester og tilbakeføring ligger i `IDENTITY_BILLING_SETUP.md`, `PROVIDER_SETUP.md` og `SUBSCRIPTION_RELEASE.md`. Eksempelfilene inneholder plassholdere. Eksisterende support, selskapsrapport og tidligere registreringer er beholdt.

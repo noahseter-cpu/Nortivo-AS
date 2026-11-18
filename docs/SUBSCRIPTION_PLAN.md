@@ -11,6 +11,7 @@ Scope: existing product extended in this worktree; stable terminal user UUIDs an
 6. [x] Durable worker, order-intent/reconciliation lifecycle, risk and billing-loss safety controls. Persistent hosting and broker activation remain external dependencies.
 7. [x] Bilingual pricing, onboarding, Portfolio, Pro and billing/account interfaces within existing design.
 8. [x] Automated financial/security/billing/integration tests and actual local desktop/mobile browser QA; independent review. 224 tests passed. Hosted account persistence, unverified-write denial and real Resend acceptance also passed. Market/payment/broker sandbox checks remain blocked by the documented credentials/contracts, not counted as passed.
-9. [ ] Authorized hosted configuration and verified release; exact unresolved external dependencies disclosed.
+9. [x] Authorized public interface release, hosted preview/publication verification and production account/write-denial smoke; exact unresolved external dependencies disclosed.
+10. [ ] Paid checkout and real/live execution activation after every commercial, credential, provider, worker and release gate is independently verified.
 
 The complete user brief is retained in SUBSCRIPTION_SPEC.md. This plan is not a claim that external approvals, billing or live brokerage are already active.
