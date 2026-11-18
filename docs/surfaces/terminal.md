@@ -1,14 +1,13 @@
 # Terminal and Portfolio surface brief
 
-The latest 18 November 2026 correction restores the terminal shown in the user-supplied `trading-platform-1920.jpg`. This supersedes the previous homepage-palette instructions for Terminal Pro. Portfolio and public pages retain their current identity. See `TERMINAL_REFERENCE_RESTORATION.md` for scope and verification.
+The latest owner clarification keeps the approved compact reference layout and changes only its colours to Nortivo's homepage palette. The original screenshot remains geometry and component authority; the homepage remains colour authority.
 
 ## Direction
 
-- Original green-charcoal terminal surfaces, emerald selections, 8–10px panels and compact controls.
-- Existing Nortivo mark, instrument glyphs and actual engine illustration.
-- Compact 160px rail and 66px header; approximately 490px desktop market region so the four lower panels fit the reference viewport.
-- Preserve the improved product switch, complete side navigation and task-specific secondary screens.
-- Keep zero neutral, missing values unavailable, losses red, sample read-only and provider status separate from subscription eligibility.
+- Preserve the existing dense layout, rounded panels, 160px rail, 66px header, 490px desktop market region and four lower panels.
+- Use black/charcoal surfaces, warm ivory actions and neutral selected states. Preserve the existing mark, letter tiles and engine illustration with neutral image treatment.
+- Retain financial green/red and actual operational states; zero stays neutral and unknown values stay unavailable.
+- No changes to typography, spacing, responsive composition, behaviour or data. The earlier all-green and square-panel versions remain historical context only.
 
 ## Behaviour boundaries
 

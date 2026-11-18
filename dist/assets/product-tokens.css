@@ -2,7 +2,7 @@
 @font-face{font-family:Manrope;src:url('/assets/fonts/manrope-bold.ttf') format('truetype');font-weight:600 800;font-display:swap}
 @font-face{font-family:'IBM Plex Mono';src:url('/assets/fonts/ibm-plex-mono-regular.ttf') format('truetype');font-weight:400;font-display:swap}
 
-/* Shared product palette. The trading terminal retains its owner-approved green-charcoal identity below. */
+/* Shared Nortivo brand palette; the terminal preserves its approved compact geometry below. */
 :root{
   color-scheme:dark;
   --app-bg:#08090b;
@@ -59,44 +59,11 @@
   --ease:var(--app-ease);
 }
 
-/* Owner-pinned trading workspace; Portfolio and account pages retain the shared neutral palette. */
+/* The approved trading layout inherits the homepage palette without changing its geometry. */
 .pt-terminal-shell{
-  --app-bg:#080c0e;
-  --app-surface:#101719;
-  --app-raised:#19221f;
-  --app-hover:#22382c;
-  --app-selected:#213e30;
-  --app-border:#34413d;
-  --app-border-strong:#587664;
-  --app-control-border:#5d7469;
-  --app-grid:#1d2a26;
-  --app-text:#f0f4f2;
-  --app-muted:#a7b5b3;
-  --app-subtle:#a0b0a7;
-  --app-positive:#5cf395;
-  --app-negative:#ff9298;
-  --app-warning:#e8c76a;
-  --app-positive-surface:#173323;
-  --app-negative-surface:#301c22;
-  --app-warning-surface:#2b2618;
-  --app-focus:#a2efb6;
-  --chart-ema-fast:#d2e1d7;
-  --chart-ema-slow:#78cba0;
-  --chart-vwap:#8caeb7;
   --app-panel-radius:9px;
   --app-control-radius:5px;
-  --terminal-action-bg:#254f36;
-  --terminal-action-text:#dff9e7;
-  --terminal-action-border:#4d8a63;
-  --bg:var(--app-bg);
-  --panel:var(--app-surface);
-  --raised:var(--app-raised);
-  --line:var(--app-border);
-  --subtle:var(--app-grid);
-  --text:var(--app-text);
-  --muted:var(--app-muted);
-  --green:var(--app-positive);
-  --green-soft:#a2efb6;
-  --red:var(--app-negative);
-  --amber:var(--app-warning);
+  --terminal-action-bg:var(--app-ivory);
+  --terminal-action-text:var(--app-on-ivory);
+  --terminal-action-border:var(--app-ivory);
 }

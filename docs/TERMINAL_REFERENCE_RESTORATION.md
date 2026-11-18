@@ -41,3 +41,13 @@ After the owner resolved the Netlify credit limit and requested continuation, a 
 - Live account entry and the explicitly selected read-only sample opened successfully. The published application displays the restored green panels, mark, instrument tiles, engine layout and three chart indicators.
 - Live browser proof: ignored `.local/qa/terminal-restored-live.jpg`.
 - Existing provider, subscription, authentication and execution controls were preserved. This release did not enable real trading or configure additional external services.
+
+## Brand colour refinement — 18 November 2026
+
+The owner clarified that the restored trading-platform design should stay the same, with colours matching Nortivo. This refines the preceding restoration: keep its exact layout, density, rounded panels, graphics, typography and behaviour; replace green brand surfaces and generic green actions with the homepage's black, charcoal, ivory and silver palette. Financial and actual operational green/red retain their meaning.
+
+The palette pass changes only `product-tokens.css` and `product.css`, plus new real application preview captures. JavaScript, layout, typography, data and backend files remain unchanged. A declaration comparison preserved all 1,620 non-palette declarations, including 9px panel radii and 5px controls.
+
+Rendered 1920×1061 bounds exactly match the restored reference: header 66px, sidebar 160px, KPIs at y112/h102, market region at y226/h490 and lower row at y728/h250. At 1440px and 390px, document content width equals viewport content width. The engine graphic and logo remain the same assets with a CSS grayscale treatment. Financial candle/report colours and the real breadth arc remain semantic.
+
+The locale build and 41 relevant tests passed. The completed-palette detector reported 54 advisories and no warnings. Before/after and geometry evidence are retained in the ignored `.local/qa/terminal-brand-*` files. Publication verification pending.

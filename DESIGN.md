@@ -19,15 +19,15 @@ colors:
   financial-negative: "#dc8c91"
   action-hover: "#c6cad1"
   field-focus: "#c6cad1"
-  terminal-bg: "#080c0e"
-  terminal-panel: "#101719"
-  terminal-raised: "#19221f"
-  terminal-line: "#34413d"
-  terminal-text: "#f0f4f2"
-  terminal-muted: "#a7b5b3"
-  terminal-green: "#5cf395"
-  terminal-green-soft: "#a2efb6"
-  terminal-negative: "#ff9298"
+  terminal-bg: "#08090b"
+  terminal-panel: "#111318"
+  terminal-raised: "#181b21"
+  terminal-line: "#30343c"
+  terminal-text: "#f2f1ed"
+  terminal-muted: "#b5b8c0"
+  terminal-green: "#78b99a"
+  terminal-green-soft: "#78b99a"
+  terminal-negative: "#e59ca2"
   terminal-caution: "#e8c76a"
 typography:
   display:
@@ -110,7 +110,7 @@ rounded:
   field: "3px"
   workspace: "5px"
   terminal-control: "5px"
-  terminal-panel: "10px"
+  terminal-panel: "9px"
   terminal-pill: "20px"
 spacing:
   compact: "12px"
@@ -329,17 +329,17 @@ V2 navigation can use native cross-document view transitions where supported. Th
 
 The private Vibb project remains governed by its authenticated route and separate visual system.
 
-### Product applications — approved terminal reference
+### Product applications — approved layout, Nortivo brand colours
 
-The owner's latest 18 November correction restores the terminal design shown in the supplied `trading-platform-1920.jpg`. It supersedes the black-and-ivory palette and square-panel instructions for Terminal Pro only. The homepage, Portfolio and pricing retain their current identity. Historical briefs remain in the repository as history, not as authority over this newer image.
+The latest owner clarification preserves the compact trading-platform design from `trading-platform-1920.jpg` and changes only its colours to match Nortivo. The earlier all-green terminal and the earlier square, spacious application treatment are historical references, not the current combined direction.
 
-Terminal Pro uses the original green-charcoal surfaces, emerald selections and subtle green panel depth, 8–10px rounded panels, compact controls and the existing slashed Nortivo mark. Keep the reference's workbench proportions: roughly 160px rail, 66px top bar, 100px KPIs, a bounded 490px desktop market region and the four lower panels visible at a 1920×1061 viewport. The watchlist remains compact, the chart dominant and news/calendar subordinate. Restore the actual existing engine illustration and small instrument glyphs.
+Keep the existing 160px rail, 66px header, compact KPI strip, 490px desktop market region, four lower panels, 9px panel radii, 5px controls and all current spacing, typography and responsive rules. Preserve the logo mark, instrument tiles, engine graphic, chart proportions and interaction behaviour. This is a palette refinement, not a new composition.
 
-Shared semantic tokens still define surfaces, text, borders, financial and chart roles, with scoped terminal overrides rather than a replacement Portfolio theme. Zero P&L remains neutral, unknown values remain unavailable and losses stay red. Primary application text remains readable at 13px and metadata at least 12px. Mobile controls retain comfortable 44px targets.
+Use the homepage's near-black #08090b, charcoal #111318/#181b21, warm ivory #f2f1ed, muted #b5b8c0 and neutral #30343c rules. Primary actions use ivory on black; selected navigation, timeframes and instrument tiles use neutral silver/charcoal. Existing images receive a CSS grayscale treatment without changing their assets or geometry. Subtle panel depth remains neutral.
 
-Preserve the usability fixes: product switching and grouped side navigation, task-specific secondary views, Overview-only KPI strip, instrument-only search, chart state restoration, labelled data tables, localized account flows, clear read-only mode and separate provider availability/plan eligibility. The restoration does not activate provider connections or trading. The reference's executable paper controls are not copied into the public read-only sample.
+Green #78b99a and the existing readable red remain for actual gains, losses and operational states. Zero stays neutral and unknown values stay unavailable. The breadth ring represents real advancing share, not a decorative brand accent. Indicator series retain distinct ivory/slate/amber roles. No financial values, labels, periods, currencies or calculations change.
 
-Keep brief 140–160ms control feedback and 180ms overlays, reduced-motion handling and no financial count-up effects. The company NOK report remains separate from customer and sample USD records, with the deployed-capital session definition and real drawdown retained. Full methodology remains reachable from the compact Overview report and the complete Reports workspace.
+Preserve all existing workspaces, product switching, account entry, read-only sample restrictions, provider/plan distinctions, chart viewport and indicators, accessible data tables, keyboard focus and reduced-motion handling. Portfolio and the public website layout remain unchanged. Refresh the homepage's static preview from the completed real application.
 
 ## Do's and Don'ts
 
