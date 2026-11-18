@@ -19,7 +19,7 @@ const ownerProviderBases = new WeakMap();
 export function getProviders(ctx) {
   const base = ownerProviderBases.get(ctx.providers) || ctx.providers || createProductProviders(ctx.env, ctx.fetcher, ctx.store);
   if (!usesOwnerMarket(ctx)) return base;
-  const market = createNortivoDataProviders({ env: ctx.env, fetcher: ctx.fetcher, store: ctx.store, clock: () => ctx.now || Date.now() });
+  const market = createNortivoDataProviders({ env: ctx.env, fetcher: ctx.fetcher, store: ctx.store, clock: typeof ctx.clock === 'function' ? ctx.clock : () => Number.isFinite(ctx.now) ? ctx.now : Date.now() });
   const providers = { ...base, ...market, market: { quote: input => market.quotes({ instrumentId: typeof input === 'string' ? input : input.id }), fx: market.fx }, quote: input => market.quotes({ instrumentId: typeof input === 'string' ? input : input.id }) };
   ownerProviderBases.set(providers, base);
   return providers;
