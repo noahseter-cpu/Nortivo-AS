@@ -27,4 +27,12 @@ Actual browser verification covered 200→205 loaded tickets, email search findi
 
 Read-only review also found and fixed expired-session request ownership: old list/Operations completions cannot replace or release a newer request; old submitted replies cannot clear a new-session draft. Writes are not replayed. Removed project shortcuts and registry bootstrap were checked in the source. Production private support records have not been inspected or changed for this release.
 
-Publication receipt follows after Netlify verification.
+## Publication receipt
+
+- Published production commit `21a46d7` to the existing Netlify project.
+- Netlify deploy `6afdf85e528e59b0c499c000` completed successfully on 18 November 2026 at 20:11 Europe/Oslo in 15 seconds, deploying 13 functions and the existing edge function.
+- Live administration: https://nortivo.no/nb/admin/ and https://nortivo.no/en/admin/ .
+- Seven read-only hosted checks passed: both localized shells, three published assets, ticket/Operations authentication and investment-host admin isolation. See `hosted-checks.json`.
+- Browser verified the published sign-in page in English and Norwegian and its working password-visibility control. The updated login page was left open. Authenticated production tickets were not accessed; authenticated functional checks used the isolated local fixtures described above.
+- Temporary QA tabs were closed, viewport overrides reset, and the local fixture server stopped.
+- `published-signin-nb.jpg` and `netlify-publication.jpg` are production evidence; `fixture` screenshots contain synthetic local tickets only.

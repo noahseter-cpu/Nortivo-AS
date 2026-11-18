@@ -1,0 +1,36 @@
+{
+  "verifiedAt": "2026-11-18T19:14:27.062Z",
+  "productionCommit": "21a46d7",
+  "deployId": "6afdf85e528e59b0c499c000",
+  "checks": [
+    {
+      "name": "en: published admin shell",
+      "result": "pass"
+    },
+    {
+      "name": "published admin.js",
+      "result": "pass"
+    },
+    {
+      "name": "investment host retains admin isolation",
+      "result": "pass"
+    },
+    {
+      "name": "published admin-workspace.css",
+      "result": "pass"
+    },
+    {
+      "name": "published admin-core.js",
+      "result": "pass"
+    },
+    {
+      "name": "nb: published admin shell",
+      "result": "pass"
+    },
+    {
+      "name": "admin ticket and Operations authentication",
+      "result": "pass"
+    }
+  ],
+  "limits": "Public HTTP checks only, no credentials, customer record reads or email sends."
+}
