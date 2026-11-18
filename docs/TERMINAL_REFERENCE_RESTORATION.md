@@ -28,6 +28,16 @@ The homepage uses the full real 1920×1061 application capture so all four lower
 
 GitHub main contains `808d3bd5e15640d2df252cbadee8099272111252`.
 
-Netlify deploy `6afd6de9fa395bb37daf0e12` was skipped with the explicit status “Skipped due to account credit usage exceeded.” The team is on Free (300 monthly credits); the billing UI shows the November 16–December 15 cycle exhausted and only operational credits remaining. Those credits keep the existing site online and cannot fund production deployments. No purchase or plan change was made. Production therefore remains on `515dbba`; the green restoration is implemented, tested and pushed, but is not live.
+The initial Netlify deploy `6afd6de9fa395bb37daf0e12` was skipped because the account credit limit was exhausted. Production remained on `515dbba` during that hold. The corrected source and read-only local preview were retained; no code or secret-configuration issue prevented release.
 
-The isolated local preview on port4421 is retained for review, with its public demo in read-only sample mode. Production deployment can resume after the owner resolves the Netlify plan/credit limit. There is no code or secret-configuration blocker. Local evidence lives in the ignored `.local/qa/terminal-restore-*` files; the user's reference is preserved there as `terminal-liked-reference.jpg`.
+## Publication resumed — 18 November 2026
+
+After the owner resolved the Netlify credit limit and requested continuation, a manual production deployment completed successfully at 18:17 Europe/Oslo.
+
+- Published source: `65e55c92a1664602a5d9ec192b7a05a41e29b92e`.
+- Deploy: `6afddd9eee40dadc7facb734`; Netlify reports Published and an 18-second build/deploy.
+- The `dist` and `netlify` trees are identical to the previously tested restored-design commit `808d3bd5e15640d2df252cbadee8099272111252`. No application changes were made during release.
+- Public HTTPS responses for `product-tokens.css`, `product.css`, `product-client.js`, the complete 1920px preview JPEG and `/en/` all returned 200 and matched the release files. Text comparisons normalize line endings; JPEG comparison uses unchanged bytes.
+- Live account entry and the explicitly selected read-only sample opened successfully. The published application displays the restored green panels, mark, instrument tiles, engine layout and three chart indicators.
+- Live browser proof: ignored `.local/qa/terminal-restored-live.jpg`.
+- Existing provider, subscription, authentication and execution controls were preserved. This release did not enable real trading or configure additional external services.
