@@ -38,7 +38,11 @@ Initial full suite: 229 passed, 0 failed. Five new substantive regressions cover
 
 Local visual evidence (ignored private QA directory): `refinement-before-desktop.jpg`, `refinement-after-desktop.jpg`, `refinement-before-mobile.jpg`, `refinement-after-mobile.jpg`, `refinement-768.jpg`, `refinement-1280.jpg`, `refinement-after-portfolio.jpg`, `refinement-portfolio-mobile.jpg`, `refinement-reports.jpg`.
 
-Production deployment verification pending.
+Production published successfully on Netlify on 18 November 2026 at 09:49 Europe/Oslo (12-second deploy). Published source: `515dbbacc6c347d3123cebcd3e0d95afc1af1bb6`. Deploy ID: `6afd66a42c51f699c1c0e0ba`.
+
+Public HTTPS downloads of `product-tokens.css`, `product-client.js` and the 1920px preview JPEG matched the release files byte-for-byte (text line endings normalized). The live public Terminal opened successfully, entered the read-only sample and navigated News → Overview. Its 1440px and 390px captures replace the after-proof files; both have no document overflow. Phone Connections has its accessible name and Settings remains reachable. No browser errors or warnings were reported. The homepage enlarged preview opened successfully with the actual 1910×1055 image and new read-only caption. Temporary test tabs and the viewport override were cleared; the live Terminal was retained as the deliverable.
+
+Final focused checks after capture metadata changes: 38 passed, 0 failed (site contracts, locale build and substantive display regressions).
 
 ## Limits
 
