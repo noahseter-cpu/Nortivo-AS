@@ -7,12 +7,23 @@ import { getBrokerStatus, connectBroker, brokerControl, syncBroker, brokerConfig
 import { enqueueOrder, cancelOrder, listOrders } from './execution.mjs';
 import { handleStrategy } from './execution-strategy.mjs';
 import { deriveEntitlements } from './entitlements.mjs';
+import { isOwnerContext } from './owner.mjs';
+import { createNortivoDataProviders } from './providers-nortivo.mjs';
 
 export function createProductProviders(env = process.env, fetcher = fetch, store) {
   const data = createDataProviders(env, fetcher, store);
   return { ...data, market: { quote: input => data.quotes({ instrumentId: typeof input === 'string' ? input : input.id }), fx: data.fx }, quote: input => data.quotes({ instrumentId: typeof input === 'string' ? input : input.id }) };
 }
-export function getProviders(ctx) { return ctx.providers || createProductProviders(ctx.env, ctx.fetcher, ctx.store); }
+export function usesOwnerMarket(ctx) { return isOwnerContext(ctx) && ctx.env?.PRODUCT_OWNER_MARKET_PROVIDER === 'nortivo'; }
+const ownerProviderBases = new WeakMap();
+export function getProviders(ctx) {
+  const base = ownerProviderBases.get(ctx.providers) || ctx.providers || createProductProviders(ctx.env, ctx.fetcher, ctx.store);
+  if (!usesOwnerMarket(ctx)) return base;
+  const market = createNortivoDataProviders({ env: ctx.env, fetcher: ctx.fetcher, store: ctx.store, clock: () => ctx.now || Date.now() });
+  const providers = { ...base, ...market, market: { quote: input => market.quotes({ instrumentId: typeof input === 'string' ? input : input.id }), fx: market.fx }, quote: input => market.quotes({ instrumentId: typeof input === 'string' ? input : input.id }) };
+  ownerProviderBases.set(providers, base);
+  return providers;
+}
 async function mutateAccount(ctx, action, body, transform) {
   const id = requestId(body.requestId), key = `integration:${ctx.user.id}:${id}`, digest = commandDigest({ action, ...body });
   for (let attempt = 0; attempt < 12; attempt++) {
@@ -26,18 +37,19 @@ async function mutateAccount(ctx, action, body, transform) {
 }
 export async function getIntegrationReadiness(ctx) {
   const env = ctx.env || {}, store = ctx.store, now = ctx.now || Date.now(), entitlements = ctx.entitlements || deriveEntitlements(ctx.account || {}, now), features = entitlements.features || [];
-  const config = { market: ['twelve', Boolean(env.TWELVE_DATA_API_KEY), 'market.read'], news: ['finnhub', Boolean(env.FINNHUB_API_KEY), 'news.read'], calendar: ['tradingeconomics', Boolean(env.TRADING_ECONOMICS_API_KEY), 'calendar.read'] };
+  const ownerMarket = usesOwnerMarket(ctx), ownerConfigured = Boolean(env.APCA_API_KEY_ID && env.APCA_API_SECRET_KEY);
+  const config = { market: [ownerMarket ? 'alpaca' : 'twelve', ownerMarket ? ownerConfigured : Boolean(env.TWELVE_DATA_API_KEY), 'market.read'], news: ['finnhub', Boolean(env.FINNHUB_API_KEY), 'news.read'], calendar: ['tradingeconomics', Boolean(env.TRADING_ECONOMICS_API_KEY), 'calendar.read'] };
   const result = {};
   for (const [name, [provider, configured, feature]] of Object.entries(config)) {
-    const rights = rightsFor(env, name, provider), state = store ? (await store.get('provider_health', name))?.value : null;
+    const rights = name === 'market' && ownerMarket ? { ready: ownerConfigured, nonDisplay: ownerConfigured, coverage: 'IEX single-venue data; private owner access, not consolidated US prices or public redistribution.' } : rightsFor(env, name, provider), state = store ? (await store.get('provider_health', name === 'market' && ownerMarket ? 'owner_market' : name))?.value : null;
     const lastDataSuccess = name === 'market' ? state?.quoteSuccessAt : state?.lastSuccessAt;
     const currentEvidence = lastDataSuccess && now - lastDataSuccess < (name === 'market' ? 15 * 60000 : 60 * 60000);
     const reachable = configured && rights.ready && state?.provider === provider ? state.reachable ?? null : null;
-    result[name] = { provider: provider === 'twelve' ? 'Twelve Data' : provider === 'finnhub' ? 'Finnhub' : 'Trading Economics', configured, permissionsReady: rights.ready, reachable, freshness: reachable === true ? currentEvidence ? state.freshness || 'current' : 'stale' : 'unavailable', planIncluded: features.includes(feature), connected: reachable === true, authorized: rights.ready, lastSuccessAt: state?.lastSuccessAt || null, reason: !configured ? 'Service setup is pending.' : !rights.ready ? 'Commercial permissions are pending.' : reachable === null ? 'The authenticated provider connection has not been verified.' : reachable === false ? 'The data service is temporarily unavailable.' : !currentEvidence ? 'The last successful provider check is stale.' : 'Authenticated provider data was received.', coverage: rights.coverage, sourceUrl: name === 'market' ? 'https://twelvedata.com' : name === 'news' ? 'https://finnhub.io' : 'https://tradingeconomics.com' };
+    result[name] = { provider: provider === 'alpaca' ? 'Nortivo Data / Alpaca IEX' : provider === 'twelve' ? 'Twelve Data' : provider === 'finnhub' ? 'Finnhub' : 'Trading Economics', configured, permissionsReady: rights.ready, reachable, freshness: reachable === true ? currentEvidence ? state.freshness || 'current' : 'stale' : 'unavailable', planIncluded: features.includes(feature), connected: reachable === true, authorized: rights.ready, lastSuccessAt: state?.lastSuccessAt || null, reason: !configured ? 'Service setup is pending.' : !rights.ready ? 'Commercial permissions are pending.' : reachable === null ? 'The authenticated provider connection has not been verified.' : reachable === false ? 'The data service is temporarily unavailable.' : !currentEvidence ? 'The last successful provider check is stale.' : ownerMarket && name === 'market' ? 'Authenticated private IEX data was received for the owner.' : 'Authenticated provider data was received.', coverage: rights.coverage, sourceUrl: name === 'market' ? ownerMarket ? 'https://alpaca.markets' : 'https://twelvedata.com' : name === 'news' ? 'https://finnhub.io' : 'https://tradingeconomics.com', ...(name === 'market' && ownerMarket ? { privateOwnerUse: true, publicRedistribution: false } : {}) };
   }
   const aiState = store ? (await store.get('provider_health', 'ai'))?.value : null, aiConfigured = Boolean(env.OPENAI_API_KEY && AI_MODELS[env.PRODUCT_OPENAI_MODEL || 'gpt-6-luna']);
-  const researchState = store ? (await store.get('provider_health', 'market'))?.value : null, researchRights = rightsFor(env, 'market', 'twelve'), researchVerified = Boolean(researchState?.historySuccessAt && now - researchState.historySuccessAt < 86400000 && researchState.historyBars >= 52 && researchState.provider === 'twelve');
-  result.strategy = { implemented: true, supported: researchRights.nonDisplay && researchVerified, configured: Boolean(env.TWELVE_DATA_API_KEY), permissionsReady: researchRights.nonDisplay, reachable: researchState?.reachable ?? null, freshness: researchVerified ? 'current' : 'unavailable', planIncluded: features.includes('strategy.write'), definitions: ['daily_sma_crossover', 'next_daily_open_backtest', 'bounded_20_50_sma_scan'], historyBars: researchState?.historyBars || 0, reason: !researchRights.nonDisplay ? 'Licensed non-display history permission is pending.' : !researchVerified ? 'The provider has not supplied sufficient verified daily history.' : 'Supported daily SMA research tools have verified licensed history.' };
+  const researchState = store ? (await store.get('provider_health', ownerMarket ? 'owner_market' : 'market'))?.value : null, researchRights = ownerMarket ? { nonDisplay: ownerConfigured } : rightsFor(env, 'market', 'twelve'), researchVerified = Boolean(researchState?.historySuccessAt && now - researchState.historySuccessAt < 86400000 && researchState.historyBars >= 52 && researchState.provider === (ownerMarket ? 'alpaca' : 'twelve'));
+  result.strategy = { implemented: true, supported: researchRights.nonDisplay && researchVerified, configured: ownerMarket ? ownerConfigured : Boolean(env.TWELVE_DATA_API_KEY), permissionsReady: researchRights.nonDisplay, reachable: researchState?.reachable ?? null, freshness: researchVerified ? 'current' : 'unavailable', planIncluded: features.includes('strategy.write'), definitions: ['daily_sma_crossover', 'next_daily_open_backtest', 'bounded_20_50_sma_scan'], historyBars: researchState?.historyBars || 0, reason: !researchRights.nonDisplay ? 'Licensed non-display history permission is pending.' : !researchVerified ? 'The provider has not supplied sufficient verified daily history.' : ownerMarket ? 'Private IEX daily history is available for owner research; single-venue volume limitations apply.' : 'Supported daily SMA research tools have verified licensed history.' };
   result.ai = { provider: 'OpenAI', model: env.PRODUCT_OPENAI_MODEL || 'gpt-6-luna', configured: aiConfigured, permissionsReady: aiConfigured, reachable: aiConfigured ? aiState?.reachable ?? null : null, freshness: aiState?.reachable && now - aiState.lastSuccessAt < 86400000 ? 'current' : 'unavailable', planIncluded: features.includes('ai.basic'), connected: Boolean(aiState?.reachable), authorized: aiConfigured, reason: !aiConfigured ? 'AI explanations await server configuration.' : !aiState?.reachable ? 'The AI provider has not completed an authenticated explanation.' : 'The provider completed an authenticated explanation.' };
   const connections = ctx.user?.id && store ? await getBrokerStatus(ctx) : { connections: [] }, connected = connections.connections.some(x => x.authorized), configured = brokerConfigured(env), approved = brokerPaperApproved(env);
   const release = store ? await liveRelease(ctx) : { enabled: false }, brokerHealth = store ? (await store.get('provider_health', 'broker'))?.value : null, brokerReachable = brokerHealth?.appClientId === env.ALPACA_OAUTH_CLIENT_ID && brokerHealth?.reachable === true && now - brokerHealth.lastSuccessAt < 86400000;
@@ -95,11 +107,11 @@ export async function handleIntegrations(ctx, action, body = {}, params = {}) {
   if (action === 'product-broker-cancel') return cancelOrder(ctx, body);
   if (['product-strategy', 'product-backtest', 'product-scan'].includes(action)) return handleStrategy(ctx, action, body, params, providers);
   if (action === 'product-health') {
-    if (!(ctx.env.PRODUCT_ADMIN_USER_IDS || '').split(',').map(id=>id.trim()).includes(ctx.user.id)) fail('ADMIN_REQUIRED', 'This operational view is restricted to the owner.', 403);
+    if (!isOwnerContext(ctx) && !(ctx.env.PRODUCT_ADMIN_USER_IDS || '').split(',').map(id=>id.trim()).includes(ctx.user.id)) fail('ADMIN_REQUIRED', 'This operational view is restricted to the owner.', 403);
     return { readiness: await getIntegrationReadiness(ctx), providerAttempts: (await ctx.store.list('provider_meter', { ownerId: SYSTEM_OWNER, limit: 50 })).map(r => ({ key: r.key, ...r.value })), unresolvedOrderScope:'Current owner account only. Other affected accounts are identified by ownerId in private persistent-worker logs.', unresolvedOrders: (await listAllRecords(ctx.store, 'order_intents', { ownerId: ctx.user.id })).filter(r => ['unknown', 'submitting', 'manual_review'].includes(r.value.status)).map(r => ({ intentId: r.value.id, status: r.value.status, since: r.value.createdAt })) };
   }
   if (action === 'product-health-probe') {
-    if (!(ctx.env.PRODUCT_ADMIN_USER_IDS || '').split(',').map(id=>id.trim()).includes(ctx.user.id)) fail('ADMIN_REQUIRED', 'Only the owner can verify configured integrations.', 403);
+    if (!isOwnerContext(ctx) && !(ctx.env.PRODUCT_ADMIN_USER_IDS || '').split(',').map(id=>id.trim()).includes(ctx.user.id)) fail('ADMIN_REQUIRED', 'Only the owner can verify configured integrations.', 403);
     requestId(body.requestId);
     if (!Array.isArray(body.services) || !body.services.length || body.services.length > 8 || body.services.some(x => !['market', 'strategy', 'news', 'calendar', 'ai', 'broker', 'broker_oauth_paper', 'broker_oauth_live'].includes(x)) || new Set(body.services).size !== body.services.length) fail('INVALID_PROBE', 'Choose the supported services to verify.', 400);
     const results = {};
@@ -112,7 +124,7 @@ export async function handleIntegrations(ctx, action, body = {}, params = {}) {
         if (service === 'ai') {
           // Operator checks spend their own bounded Pro-sized quota; no subscription or customer entitlement is granted.
           const result = await explainAi({ ...ctx, entitlements: { tier: 'pro' }, requireFeature: async () => {} }, { requestId: `probe-${body.requestId}`, kind: 'basic', question: 'Briefly explain what portfolio diversification means, without current market data.' }, providers);
-          results.ai = { success: true, model: result.model, usage: result.usage, note: 'One actual request charged against the owner’s monthly 200-request/2.2M-token verification allowance.' };
+          results.ai = { success: true, model: result.model, usage: result.usage, note: isOwnerContext(ctx) ? 'Owner access has no monthly Nortivo AI quota; actual provider charges and technical limits still apply.' : 'One actual request charged against the operator monthly 200-request/2.2M-token verification allowance.' };
         }
         if (service === 'broker') {
           const status = await getBrokerStatus(ctx), selected = status.connections.find(c => c.id === body.connectionId);

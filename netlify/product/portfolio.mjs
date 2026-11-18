@@ -40,7 +40,7 @@ export function normalizeInstrument(input) {
     name: text(input.name, 120, 'instrument name', true), venue: text(input.venue, 24, 'venue', true),
     currency: currency(input.currency), assetType: input.assetType,
   };
-  if (!/^[A-Za-z0-9:._-]+$/.test(instrument.id) || !['stock', 'etf', 'manual'].includes(instrument.assetType))
+  if (!/^[A-Za-z0-9:._-]+$/.test(instrument.id) || !['stock', 'etf', 'stock_or_etf', 'manual'].includes(instrument.assetType))
     fail('INVALID_INSTRUMENT', 'Enter a stable instrument ID and supported asset type.', 400);
   return instrument;
 }

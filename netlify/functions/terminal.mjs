@@ -5,6 +5,7 @@ import { credentials, hashPassword, verifyPassword } from '../terminal/auth.mjs'
 import { createProviderAdapters, integrationStatus, brokerAdapter } from '../terminal/providers.mjs';
 import { TerminalError, fail, header, sessionSecret, token, sha256, csrfToken, equalToken, cookieToken, cookie, requireSameOrigin, parseBody, clientIdentifier, commandDigest, response, isLocalRuntime, COMMAND_QUOTAS, terminalCapabilities, GUEST_TTL, SESSION_TTL, GUEST_SESSION_TTL } from '../terminal/security.mjs';
 import { createProductHandler } from '../product/service.mjs';
+import { loadOwnerMarketEnvironment } from '../product/runtime-owner-market.mjs';
 
 const GET_ACTIONS = new Set(['session','integrations','market','news','calendar','export']);
 const POST_ACTIONS = new Set(['guest','signup','login','logout','command','broker']);
@@ -22,6 +23,7 @@ function exportTrades(state) {
 }
 
 export function createTerminalHandler({ store: providedStore, env = process.env, now = () => Date.now(), fetcher = fetch, testEmail, stripe } = {}) {
+  env = loadOwnerMarketEnvironment(env);
   let store = providedStore;
   const adapters = createProviderAdapters(env,fetcher);
   const productHandler=env.PRODUCT_ENABLED==='true'?createProductHandler({store:providedStore,env,now,fetcher,testEmail,stripe,legacyHandler:createTerminalHandler({store:providedStore,env:{...env,PRODUCT_ENABLED:'false'},now,fetcher})}):null;

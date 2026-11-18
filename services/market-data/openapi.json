@@ -1,0 +1,2008 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Nortivo Data Engine",
+    "version": "0.1.0",
+    "description": "Isolated private local service. Primary routes read the own SQLite warehouse without a provider connection. Optional connectors are clearly separated. No integration with the Nortivo site is enabled."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:4435",
+      "description": "Loopback only"
+    }
+  ],
+  "security": [
+    {
+      "LocalBearer": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Local process health only; no upstream verification",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Service ready"
+          }
+        }
+      }
+    },
+    "/api/v1": {
+      "get": {
+        "summary": "Architecture, coverage and missing prerequisites",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/capabilities": {
+      "get": {
+        "summary": "Honest dataset and provider coverage manifest",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/status": {
+      "get": {
+        "summary": "Private warehouse counts, connector HTTP health and request budgets",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/openapi.json": {
+      "get": {
+        "summary": "This OpenAPI specification",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/sources": {
+      "get": {
+        "summary": "Registered storage sources and operator-declared retention",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      },
+      "post": {
+        "summary": "Register a permitted source",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Source"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created, imported or collected records"
+          },
+          "400": {
+            "description": "Invalid data; atomic ingestion writes nothing"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "503": {
+            "description": "Missing or unavailable optional source"
+          }
+        }
+      }
+    },
+    "/api/v1/instruments": {
+      "get": {
+        "summary": "Own Nortivo instrument directory; no external call",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Search stored metadata",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum records",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      },
+      "post": {
+        "summary": "Register an own stable instrument ID",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Instrument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created, imported or collected records"
+          },
+          "400": {
+            "description": "Invalid data; atomic ingestion writes nothing"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "503": {
+            "description": "Missing or unavailable optional source"
+          }
+        }
+      }
+    },
+    "/api/v1/quotes": {
+      "get": {
+        "summary": "Last stored quote; preserved event timestamp, offline access",
+        "parameters": [
+          {
+            "name": "instrumentId",
+            "in": "query",
+            "required": false,
+            "description": "Stable Nortivo instrument ID; required unless symbol is supplied.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "description": "Exact unambiguous instrument symbol.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceId",
+            "in": "query",
+            "required": false,
+            "description": "Select a particular stored source; one source per price series.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/bars": {
+      "get": {
+        "summary": "Own stored history, one source and adjustment basis",
+        "parameters": [
+          {
+            "name": "instrumentId",
+            "in": "query",
+            "required": false,
+            "description": "Stable Nortivo instrument ID; required unless symbol is supplied.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "description": "Exact unambiguous instrument symbol.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceId",
+            "in": "query",
+            "required": false,
+            "description": "Select a particular stored source; one source per price series.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "description": "Bar interval",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1m",
+                "5m",
+                "15m",
+                "1h",
+                "1d"
+              ],
+              "default": "1d"
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "required": false,
+            "description": "Corporate-action adjustment basis",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "raw",
+                "split",
+                "dividend",
+                "all"
+              ],
+              "default": "raw"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum returned bars",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "ISO date or UTC timestamp",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "ISO date or UTC timestamp",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/indicators": {
+      "get": {
+        "summary": "EMA, RSI, MACD and ATR calculated from complete stored bars",
+        "parameters": [
+          {
+            "name": "instrumentId",
+            "in": "query",
+            "required": false,
+            "description": "Stable Nortivo instrument ID; required unless symbol is supplied.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "description": "Exact unambiguous instrument symbol.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceId",
+            "in": "query",
+            "required": false,
+            "description": "Select a particular stored source; one source per price series.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "description": "Bar interval",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1m",
+                "5m",
+                "15m",
+                "1h",
+                "1d"
+              ],
+              "default": "1d"
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "required": false,
+            "description": "Corporate-action adjustment basis",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "raw",
+                "split",
+                "dividend",
+                "all"
+              ],
+              "default": "raw"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum returned bars",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "ISO date or UTC timestamp",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "ISO date or UTC timestamp",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/ingest": {
+      "post": {
+        "summary": "Atomic ingestion from an own import or incoming feed; no upstream call",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Ingestion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created, imported or collected records"
+          },
+          "400": {
+            "description": "Invalid data; atomic ingestion writes nothing"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "503": {
+            "description": "Missing or unavailable optional source"
+          }
+        }
+      }
+    },
+    "/api/v1/collect": {
+      "post": {
+        "summary": "One explicit collection from an optional source into the warehouse",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Collection"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created, imported or collected records"
+          },
+          "400": {
+            "description": "Invalid data; atomic ingestion writes nothing"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "503": {
+            "description": "Missing or unavailable optional source"
+          }
+        }
+      }
+    },
+    "/api/v1/collectors": {
+      "get": {
+        "summary": "Local collectors and observed state",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      },
+      "post": {
+        "summary": "Start a local quote collector after successful first ingestion",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Collection"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "everySeconds": {
+                        "type": "integer",
+                        "minimum": 10,
+                        "maximum": 3600,
+                        "default": 10
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created, imported or collected records"
+          },
+          "400": {
+            "description": "Invalid data; atomic ingestion writes nothing"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "503": {
+            "description": "Missing or unavailable optional source"
+          }
+        }
+      }
+    },
+    "/api/v1/collectors/{id}": {
+      "delete": {
+        "summary": "Stop a local collector",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stopped"
+          },
+          "404": {
+            "description": "Collector absent"
+          }
+        }
+      }
+    },
+    "/api/v1/stream": {
+      "get": {
+        "summary": "Authenticated SSE of the own stored quote and subsequent ingestions",
+        "description": "Use a bearer-capable streaming client. Sends quote events on ingestion and heartbeat comments every 15 seconds; closes after 10 minutes. No implicit external API polling.",
+        "parameters": [
+          {
+            "name": "instrumentId",
+            "in": "query",
+            "required": false,
+            "description": "Stable Nortivo instrument ID; required unless symbol is supplied.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "description": "Exact unambiguous instrument symbol.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourceId",
+            "in": "query",
+            "required": false,
+            "description": "Select a particular stored source; one source per price series.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE stream",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "404": {
+            "description": "Initial stored quote absent"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/instruments": {
+      "get": {
+        "summary": "Optional source directory preview",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "required": true,
+            "description": "Source directory",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "kraken",
+                "sec"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Search text",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Result limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/quotes": {
+      "get": {
+        "summary": "Optional source quote preview; does not populate own history",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "required": true,
+            "description": "Optional connector, not the primary Nortivo warehouse",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "alpaca",
+                "kraken"
+              ]
+            }
+          },
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Source-supported symbol",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/bars": {
+      "get": {
+        "summary": "Optional source bars; history limits are provider-specific",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "required": true,
+            "description": "Optional connector, not the primary Nortivo warehouse",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "alpaca",
+                "kraken"
+              ]
+            }
+          },
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Source-supported symbol",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "description": "Bar interval",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1m",
+                "5m",
+                "15m",
+                "1h",
+                "1d"
+              ],
+              "default": "1d"
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "required": false,
+            "description": "Corporate-action adjustment basis",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "raw",
+                "split",
+                "dividend",
+                "all"
+              ],
+              "default": "raw"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum returned bars",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "ISO date or UTC timestamp",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "ISO date or UTC timestamp",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "description": "Alpaca continuation token; preserve the same date range",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/indicators": {
+      "get": {
+        "summary": "Indicators on optional source bars",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "required": true,
+            "description": "Optional connector, not the primary Nortivo warehouse",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "alpaca",
+                "kraken"
+              ]
+            }
+          },
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Source-supported symbol",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "description": "Bar interval",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1m",
+                "5m",
+                "15m",
+                "1h",
+                "1d"
+              ],
+              "default": "1d"
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "required": false,
+            "description": "Corporate-action adjustment basis",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "raw",
+                "split",
+                "dividend",
+                "all"
+              ],
+              "default": "raw"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum returned bars",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "ISO date or UTC timestamp",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "ISO date or UTC timestamp",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/insiders": {
+      "get": {
+        "summary": "Explicitly unavailable parsed dataset",
+        "responses": {
+          "501": {
+            "description": "not_supported; see capabilities and the available SEC filing-index endpoint"
+          }
+        }
+      }
+    },
+    "/api/v1/institutional": {
+      "get": {
+        "summary": "Explicitly unavailable parsed dataset",
+        "responses": {
+          "501": {
+            "description": "not_supported; see capabilities and the available SEC filing-index endpoint"
+          }
+        }
+      }
+    },
+    "/api/v1/fund-holdings": {
+      "get": {
+        "summary": "Explicitly unavailable parsed dataset",
+        "responses": {
+          "501": {
+            "description": "not_supported; see capabilities and the available SEC filing-index endpoint"
+          }
+        }
+      }
+    },
+    "/api/v1/corporate-actions": {
+      "get": {
+        "summary": "Explicitly unavailable parsed dataset",
+        "responses": {
+          "501": {
+            "description": "not_supported; see capabilities and the available SEC filing-index endpoint"
+          }
+        }
+      }
+    },
+    "/api/v1/esg": {
+      "get": {
+        "summary": "Explicitly unavailable parsed dataset",
+        "responses": {
+          "501": {
+            "description": "not_supported; see capabilities and the available SEC filing-index endpoint"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/companies": {
+      "get": {
+        "summary": "Optional SEC current filing metadata",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "description": "Exact SEC ticker",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cik",
+            "in": "query",
+            "required": false,
+            "description": "SEC CIK",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/filings": {
+      "get": {
+        "summary": "Optional recent SEC filing index, not parsed holdings or insider trades",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "description": "Exact SEC ticker",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cik",
+            "in": "query",
+            "required": false,
+            "description": "SEC CIK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "form",
+            "in": "query",
+            "required": false,
+            "description": "Exact form, for example 4, 144 or 13F-HR",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asOf",
+            "in": "query",
+            "required": false,
+            "description": "Conservative information cutoff; date-only means start of Eastern date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum entries",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/fundamentals": {
+      "get": {
+        "summary": "Optional selected SEC XBRL facts with periods, units and revisions",
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "description": "Exact SEC ticker",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cik",
+            "in": "query",
+            "required": false,
+            "description": "SEC CIK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asOf",
+            "in": "query",
+            "required": false,
+            "description": "Historical information cutoff",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum facts",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/economic-series": {
+      "get": {
+        "summary": "Optional FRED observations and daily vintages",
+        "parameters": [
+          {
+            "name": "seriesId",
+            "in": "query",
+            "required": true,
+            "description": "FRED series identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Observation start date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Observation end date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asOf",
+            "in": "query",
+            "required": false,
+            "description": "Historical vintage date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum observations",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/fx": {
+      "get": {
+        "summary": "Optional ECB daily reference FX; never labeled live",
+        "parameters": [
+          {
+            "name": "base",
+            "in": "query",
+            "required": false,
+            "description": "Base currency",
+            "schema": {
+              "type": "string",
+              "default": "USD"
+            }
+          },
+          {
+            "name": "quote",
+            "in": "query",
+            "required": false,
+            "description": "Quote currency",
+            "schema": {
+              "type": "string",
+              "default": "NOK"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "description": "Reference date or previous available business day",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/news": {
+      "get": {
+        "summary": "Official Federal Reserve headline feed only",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum headlines",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/events": {
+      "get": {
+        "summary": "Official BLS calendar only",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Start date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "End date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum releases",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sourced data or stored Nortivo records, with timestamps and provenance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Bearer token required"
+          },
+          "404": {
+            "description": "No matching stored/source record"
+          },
+          "429": {
+            "description": "Request budget exhausted; see Retry-After"
+          },
+          "503": {
+            "description": "Missing source configuration or unavailable upstream"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "LocalBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Envelope": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Dataset-specific records; null when unavailable"
+          },
+          "meta": {
+            "type": "object",
+            "description": "Original event/reporting times, provider, venue/feed, receipt time, coverage and freshness where relevant"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "Source": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label",
+          "kind",
+          "canRetain",
+          "retentionUntil"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "user_import",
+              "direct_exchange",
+              "provider"
+            ]
+          },
+          "canRetain": {
+            "type": "boolean",
+            "const": true
+          },
+          "externalDisplay": {
+            "type": "boolean",
+            "default": false
+          },
+          "retentionUntil": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "provenanceUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        }
+      },
+      "Instrument": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "symbol",
+          "name",
+          "assetType",
+          "currency"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "assetType": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "listingVenue": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Quote": {
+        "type": "object",
+        "required": [
+          "asOf",
+          "price"
+        ],
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "price": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "bid": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "ask": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "feed": {
+            "type": "string"
+          },
+          "venue": {
+            "type": "string"
+          },
+          "delaySeconds": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          }
+        }
+      },
+      "Bar": {
+        "type": "object",
+        "required": [
+          "time",
+          "interval",
+          "adjustment",
+          "open",
+          "high",
+          "low",
+          "close",
+          "volume",
+          "complete"
+        ],
+        "properties": {
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "interval": {
+            "type": "string",
+            "enum": [
+              "1m",
+              "5m",
+              "15m",
+              "1h",
+              "1d"
+            ]
+          },
+          "adjustment": {
+            "type": "string",
+            "enum": [
+              "raw",
+              "split",
+              "dividend",
+              "all"
+            ]
+          },
+          "open": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "high": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "low": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "close": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "volume": {
+            "type": "number",
+            "minimum": 0
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Ingestion": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sourceId",
+          "instrumentId"
+        ],
+        "properties": {
+          "sourceId": {
+            "type": "string"
+          },
+          "instrumentId": {
+            "type": "string"
+          },
+          "quotes": {
+            "type": "array",
+            "maxItems": 1000,
+            "items": {
+              "$ref": "#/components/schemas/Quote"
+            }
+          },
+          "bars": {
+            "type": "array",
+            "maxItems": 1000,
+            "items": {
+              "$ref": "#/components/schemas/Bar"
+            }
+          }
+        }
+      },
+      "Collection": {
+        "type": "object",
+        "required": [
+          "provider",
+          "sourceId",
+          "instrumentId",
+          "symbol"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string",
+            "enum": [
+              "kraken",
+              "alpaca"
+            ]
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "Must equal the provider name and refer to a registered provider source with permitted retention."
+          },
+          "instrumentId": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "dataset": {
+            "type": "string",
+            "enum": [
+              "quote",
+              "bars"
+            ],
+            "default": "quote"
+          },
+          "interval": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "adjustment": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

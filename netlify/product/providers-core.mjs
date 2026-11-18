@@ -62,8 +62,9 @@ export function createProviderTransport({ env, fetcher = fetch, store, clock = D
   }
   async function health(capability, value) { return updateRecord(store, 'provider_health', capability, SYSTEM_OWNER, current => ({ ...current, ...value })); }
   return {
-    async request({ provider, capability, url, headers, rights, units = 1, ttl = 0, method = 'GET', body, normalize }) {
+    async request({ provider, capability, url, headers, rights, units = 1, ttl = 0, method = 'GET', body, normalize, maxBytes = 2_000_000 }) {
       const now = clock();
+      if (!Number.isInteger(maxBytes) || maxBytes < 1000 || maxBytes > 16_000_000) fail('INTEGRATION_NOT_CONFIGURED', 'The provider response bound is invalid.', 503);
       if (!rights.ready) fail('COMMERCIAL_PERMISSION_REQUIRED', 'This data service awaits verified commercial permissions.', 503);
       const requestDigest = sha256(`${provider}:${url}`), cacheKey = `slot:${requestDigest.slice(0, 2)}`, cached = ttl && rights.cacheSeconds ? await store.get('provider_cache', cacheKey) : null;
       // A fixed 256-slot collision-safe cache bounds storage over years of searches. Collisions only miss.
@@ -75,7 +76,7 @@ export function createProviderTransport({ env, fetcher = fetch, store, clock = D
       try {
         response = await fetcher(url, { method, headers: { Accept: 'application/json', ...headers }, ...(body ? { body } : {}), signal: AbortSignal.timeout(10000), redirect: 'error' });
         if (!response.ok) fail(response.status === 429 ? 'PROVIDER_RATE_LIMIT' : response.status === 401 || response.status === 403 ? 'PROVIDER_AUTHORIZATION' : 'PROVIDER_UNAVAILABLE', 'The authenticated data request did not succeed.', response.status === 429 ? 429 : 503);
-        payload = await readJsonResponse(response);
+        payload = await readJsonResponse(response, maxBytes);
         if (payload?.status === 'error' || payload?.error) fail('PROVIDER_UNAVAILABLE', 'The provider did not supply usable data.', 503);
         const result = await normalize(payload, now);
         const quoteEvidence = result.quote ? { quoteSuccessAt: now, quoteFreshness: result.quote.freshness } : {};

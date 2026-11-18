@@ -1,0 +1,12 @@
+{
+  "name": "nortivo-data-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env.local server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "smoke": "node --env-file-if-exists=.env.local scripts/smoke.mjs"
+  }
+}

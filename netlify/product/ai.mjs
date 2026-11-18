@@ -1,6 +1,7 @@
 import { fail, commandDigest } from '../terminal/security.mjs';
 import { clean, requestId, change, owned, readJsonResponse, rightsFor, updateRecord, SYSTEM_OWNER } from './providers-core.mjs';
 import { summarizePortfolio, effectiveTransactions } from './portfolio.mjs';
+import { isOwnerContext } from './owner.mjs';
 
 export const AI_MODELS = Object.freeze({ 'gpt-6-luna': { inputPerMillion: 0.10, outputPerMillion: 0.50 }, 'gpt-6.1-terra': { inputPerMillion: 1, outputPerMillion: 5 } });
 export const AI_LIMITS = Object.freeze({ portfolio: { requests: 30, tokens: 150000, output: 800, contextBytes: 10000 }, pro: { requests: 200, tokens: 2200000, output: 1800, contextBytes: 30000 } });
@@ -9,6 +10,7 @@ const reset = now => { const d = new Date(now); return Date.UTC(d.getUTCFullYear
 function limitsFor(tier) { return AI_LIMITS[tier] || { requests: 0, tokens: 0, output: 0, contextBytes: 0 }; }
 export async function getAiUsage(ctx, tier = ctx.entitlements?.tier || ctx.account?.billing?.tier || 'none') {
   const limit = limitsFor(tier), row = await ctx.store.get('ai_usage', `${ctx.user.id}:${month(ctx.now)}`), use = row?.ownerId === ctx.user.id ? row.value : {};
+  if (isOwnerContext(ctx)) return { unlimited: true, remainingRequests: null, requestLimit: null, remainingTokens: null, tokenLimit: null, usedRequests: use.requests || 0, usedTokens: use.tokens || 0, resetAt: reset(ctx.now), period: month(ctx.now) };
   return { remainingRequests: Math.max(0, limit.requests - (use.requests || 0)), requestLimit: limit.requests, remainingTokens: Math.max(0, limit.tokens - (use.tokens || 0)), tokenLimit: limit.tokens, resetAt: reset(ctx.now), period: month(ctx.now) };
 }
 export async function reserveAi(ctx, { requestId: id, digest, inputBound, outputBound, tier }) {
@@ -17,8 +19,8 @@ export async function reserveAi(ctx, { requestId: id, digest, inputBound, output
     const [request, usage] = await Promise.all([ctx.store.get('ai_requests', reqKey), ctx.store.get('ai_usage', key)]);
     if (request) { if (request.ownerId !== ctx.user.id || request.value.digest !== digest) fail('IDEMPOTENCY_CONFLICT', 'That request ID belongs to a different explanation.', 409); return { replay: true, request: request.value }; }
     const current = usage?.value || { requests: 0, tokens: 0 };
-    if (current.requests >= limit.requests || current.tokens + tokens > limit.tokens) fail('AI_QUOTA_EXHAUSTED', 'Your included AI allowance is used. It resets next month.', 429);
-    const value = { digest, state: 'reserved', reservedTokens: tokens, usageKey: key, createdAt: ctx.now, tier, inputBound, outputBound };
+    if (!isOwnerContext(ctx) && (current.requests >= limit.requests || current.tokens + tokens > limit.tokens)) fail('AI_QUOTA_EXHAUSTED', 'Your included AI allowance is used. It resets next month.', 429);
+    const value = { digest, state: 'reserved', reservedTokens: tokens, usageKey: key, createdAt: ctx.now, tier, inputBound, outputBound, ...(isOwnerContext(ctx) ? { quotaExempt: true } : {}) };
     const result = await ctx.store.transact([change('ai_usage', key, ctx.user.id, usage, { requests: current.requests + 1, tokens: current.tokens + tokens }), change('ai_requests', reqKey, ctx.user.id, null, value)]);
     if (result.status === 'applied') return { replay: false, request: value };
   }
