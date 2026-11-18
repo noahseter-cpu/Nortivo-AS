@@ -1,0 +1,24 @@
+services:
+  - type: worker
+    name: nortivo-product-worker
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: node --check scripts/run-product-worker.mjs
+    startCommand: node scripts/run-product-worker.mjs
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: PRODUCT_ENABLED
+        value: "false"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: PRODUCT_BROKER_TOKEN_KEY
+        sync: false
+      - key: TWELVE_DATA_API_KEY
+        sync: false
+      - key: PRODUCT_PROVIDER_RIGHTS_JSON
+        sync: false

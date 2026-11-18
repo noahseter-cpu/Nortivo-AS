@@ -6,6 +6,24 @@
 [functions]
   node_bundler = "esbuild"
 
+[[headers]]
+  for = "/portfolio/*"
+  [headers.values]
+    Cache-Control = "private, no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/nb/portfolio/*"
+  [headers.values]
+    Cache-Control = "private, no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/en/portfolio/*"
+  [headers.values]
+    Cache-Control = "private, no-store"
+    X-Robots-Tag = "noindex, nofollow"
+
 [[redirects]]
   from = "/admin/projects/vibb"
   to = "/.netlify/functions/admin-vibb"

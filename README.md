@@ -1,16 +1,19 @@
 # Nortivo website
 
-The public Nortivo website, separate from the Arc application. Static HTML/CSS/JavaScript, Netlify Functions, Supabase ticket storage and Resend email. No frontend framework or package install is required.
+The public Nortivo website, separate from the Arc application. Static HTML/CSS/JavaScript, Netlify Functions, Supabase storage and Resend email. The additive subscription product uses maintained Stripe and OTPAuth server libraries; run `npm ci` before testing or deployment.
+
+Subscription implementation: two exact USD plans, `/pricing/`, a manual `/portfolio/` workspace, the extended `/terminal/`, additive account/billing persistence and production provider adapters. Read [the complete brief](docs/SUBSCRIPTION_SPEC.md), [the shared contract](docs/SUBSCRIPTION_CONTRACT.md) and [the current implementation plan](docs/SUBSCRIPTION_PLAN.md). `PRODUCT_ENABLED` gates the new product; leaving it off preserves the earlier terminal. Provider adapters and fixture tests do not establish commercial permissions, successful real-provider connections or permission to trade. Checkout stays closed while required readiness evidence is missing.
 
 Current release: [Nortivo Trading Platform](docs/TRADING_PLATFORM_RELEASE.md), published on 17 November 2026 with a real homepage showcase and a server-backed bilingual paper workspace. The terminal has separate private Supabase storage; external providers and real-money brokerage remain disabled. The release record distinguishes local, hosted preview and production verification.
 
 ## Local development
 
-Use Node.js 20 or newer:
+Use Node.js 24 or newer for the complete product:
 
 ```powershell
+npm ci
 node scripts/build-locales.mjs
-node --test tests/*.test.mjs
+npm test
 node scripts/serve.mjs
 ```
 

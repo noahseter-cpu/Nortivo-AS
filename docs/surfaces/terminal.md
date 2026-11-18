@@ -1,6 +1,6 @@
 # Terminal surface brief
 
-Development-only operational surface for `/terminal/`; it does not establish public marketing behaviour or availability claims.
+Operational surface for `/terminal/`; it does not establish public marketing behaviour or availability claims. The original replay implementation below remains the compatibility contract when the subscription product is disabled. The enabled subscription extension is described in `docs/SUBSCRIPTION_UI.md` and governed by `docs/SUBSCRIPTION_SPEC.md`.
 
 ## Mode
 
