@@ -8,7 +8,7 @@ The reviewed release may expose registration and the new interface. **Purchases 
 
 ## Verification completed
 
-- Independent code review: `docs/qa/SUBSCRIPTION_REVIEW.md`; full suite **209 passed, zero failed**. It includes financial, auth, billing, webhook, isolation, quota, order lifecycle, worker recovery and safety-control regressions. Upstream responses are explicitly mocked in those integration tests.
+- Independent code review: `docs/qa/SUBSCRIPTION_REVIEW.md`; final full suite **212 passed, zero failed** (209 at independent review, then three public-registration capability regressions). It includes financial, auth, billing, webhook, isolation, quota, order lifecycle, worker recovery and safety-control regressions. Upstream responses are explicitly mocked in those integration tests.
 - Browser, isolated local server: annual Portfolio selection → free signup → captured local verification link → deliberate confirmation → sign-in → preserved annual choice. No real email was sent by the local fixture.
 - Browser, local paid fixtures: both workspaces, explicit sample/production separation, an undated fractional NOK holding, unavailable prices/FX, immutable void and restored complete USD valuation. The fixture entitlements and holdings exist only in an ignored local SQLite database; they were not copied to Supabase.
 - Responsive browser checks at 390×844: pricing, Portfolio and Pro; no document-wide horizontal overflow. Tables/navigation can scroll within their own containers. English/Norwegian switching and annual totals inspected. Native dialog Tab/Escape returned focus to its trigger. The OS reduced-motion preference was off; the reduced-motion stylesheet was inspected, not claimed as an exercised OS setting.
@@ -21,6 +21,8 @@ The reviewed release may expose registration and the new interface. **Purchases 
 Hosted candidate/production checks and final revision are recorded below when completed.
 
 Candidate PR: `noahseter-cpu/Nortivo-AS#2`, branch `codex/nortivo-subscriptions`. Netlify built the first candidate successfully. Its first application request correctly failed `INVALID_ORIGIN` because the existing Deploy Preview environment still allowed PR1. The context-specific public origin was updated to the exact PR2 hostname; production remains `https://nortivo.no`. A new build is required to receive the changed environment.
+
+The rebuilt candidate then loaded the public catalog with all four exact prices, registration enabled and paid/live gates closed. Real hosted signup accepted an explicitly labeled owner-controlled Gmail test alias through the existing Resend adapter; the provider returned a successful send response and server health became reachable. This proves provider acceptance, **not inbox receipt or completion of email verification**. Hosted login returned the same unverified account, and a direct portfolio write returned HTTP403 `EMAIL_VERIFICATION_REQUIRED`. Checkout readiness stayed false and live transmission stayed false. The new empty test account and chosen plan carry no paid entitlement; its generated password is in an ignored local file and was not displayed or committed.
 
 ## Activation dependencies
 

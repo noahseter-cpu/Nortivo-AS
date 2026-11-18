@@ -1,6 +1,9 @@
 // Display helpers only. Ledger, tax, FX and billing calculations belong to the server.
 export const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function localeFromPath(pathname) { return pathname.startsWith('/nb/') ? 'nb' : 'en'; }
+export function registrationAvailable(publicCatalog, accountSnapshot) {
+  return (publicCatalog?.capabilities ?? accountSnapshot?.capabilities)?.signupEnabled === true;
+}
 export function internalPath(value, fallback = '/en/portfolio/') {
   return typeof value === 'string' && /^\/(?:en\/|nb\/)?(?:portfolio|terminal|pricing)\/(?:[?#].*)?$/.test(value) && !/[\\\r\n]/.test(value) ? value : fallback;
 }
