@@ -20,6 +20,8 @@ The reviewed release may expose registration and the new interface. **Purchases 
 
 Hosted candidate/production checks and final revision are recorded below when completed.
 
+Candidate PR: `noahseter-cpu/Nortivo-AS#2`, branch `codex/nortivo-subscriptions`. Netlify built the first candidate successfully. Its first application request correctly failed `INVALID_ORIGIN` because the existing Deploy Preview environment still allowed PR1. The context-specific public origin was updated to the exact PR2 hostname; production remains `https://nortivo.no`. A new build is required to receive the changed environment.
+
 ## Activation dependencies
 
 | Capability | Implemented | Required before enabling paid use |
