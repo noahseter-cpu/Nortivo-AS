@@ -80,6 +80,15 @@ test('report links are localized while preserving query, fragment and standalone
   }
 });
 
+test('an explicit KORVNT link translation takes precedence over the generic navigation label', () => {
+  const link = '<a href="/security/" data-security-link data-i18n="publicMaster.securityLink">Meet KORVNT</a>';
+  const source = fixtureHtml.replace('</body>', link + '</body>');
+  for (const [locale, label] of [['en', 'Meet KORVNT'], ['nb', 'Bli kjent med KORVNT']]) {
+    const rendered = renderLocale(source, {...copy, 'publicMaster.securityLink': label}, locale, 'home');
+    assert.ok(rendered.includes('data-i18n="publicMaster.securityLink">' + label + '</a>'));
+  }
+});
+
 test('company navigation builds branded destinations in the document language before any client script runs', () => {
   const links = [
     '<a data-security-link href="/security/#controls">KORVNT at Nortivo</a>',

@@ -118,7 +118,7 @@ export function renderLocale(source, dictionary, locale, page, origin = 'https:/
     if (attrs.has('data-language')) replacement = setAttribute(replacement, 'aria-pressed', String(attrs.get('data-language').value === locale));
     const key = attrs.get('data-i18n')?.value;
     const next = tokens[index + 1];
-    if (token.name === 'a' && attrs.has('data-security-link') && next?.closing && next.name === 'a') {
+    if (key === undefined && token.name === 'a' && attrs.has('data-security-link') && next?.closing && next.name === 'a') {
       changes.push({ start: token.end, end: next.start, value: 'KORVNT Security' });
     }
     // Only marked leaf text is replaced; nested markup and form values survive.
