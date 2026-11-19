@@ -90,7 +90,16 @@ export default function languageRedirect(request, context = {}, env = globalThis
   const application=applicationRoute(url,{language,method:request.method,...activation});
   if(application?.kind==='deny')return new Response(null,{status:application.status,headers:{'Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow'}});
   if(application?.kind==='redirect'){const target=new URL(application.location);target.search=safeQueries(target.searchParams).toString();return new Response(null,{status:application.status,headers:{Location:target.href,'Cache-Control':'private, no-store'}});}
-  if(application?.kind==='rewrite'){const target=new URL(application.path,url);target.search='';return target;}
+  if(application?.kind==='rewrite'){
+    if(application.surface==='korvnt'){
+      // Returning an internal file URL would restart this gate on a denied path.
+      // The two host-specific static rewrites serve the approved locale pages downstream.
+      const publicPath='/'+application.locale+'/';
+      if(url.pathname===publicPath)return;
+      return new URL(publicPath,url);
+    }
+    return new URL(application.path,url);
+  }
   if (investment) {
     if (platformPaths.has(url.pathname)) { const page = platformPage(url.pathname),path=`/${language}/${page}/`; if (url.pathname === path) return; url.pathname=path; return redirect(url, explicit); }
     if (companyPaths.has(url.pathname) || adminPath) { const target = new URL(url.pathname, companyOrigin); target.search=url.search; return redirect(target, explicit, {crossHost:true}); }

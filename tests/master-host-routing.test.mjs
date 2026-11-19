@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readdir} from 'node:fs/promises';
+import {readFile,readdir} from 'node:fs/promises';
 import {applicationRoute,applicationHost} from '../netlify/routing/application-routes.mjs';
 import languageRedirect from '../netlify/edge-functions/language.js';
 
@@ -40,6 +40,31 @@ test('standalone KORVNT and optional compatibility names keep their own routes a
  }
  assert.equal(applicationRoute('https://invest.nortivo.no/en/request/').path,'/invest/en/request/index.html');
 });
+test('KORVNT serves each authorized locale through a host-only static rewrite while direct internal paths remain denied',async()=>{
+ const enabled={get:key=>key==='KORVNT_SITE_READY'?'true':undefined};
+ const origin='https://korvnt.no';
+ const config=await readFile(new URL('../netlify.toml',import.meta.url),'utf8');
+ const redirects=config.split(/^\[\[redirects\]\]\s*$/m).slice(1).map(block=>block.split(/^\[/m)[0]);
+ for(const locale of ['en','nb']){
+  const publicUrl=origin+'/'+locale+'/';
+  const file='/korvnt/'+locale+'/index.html';
+  for(const method of ['GET','HEAD']){
+   assert.equal(languageRedirect(new Request(publicUrl,{method}),{},enabled),undefined,'Continue to static routing after authorization.');
+   assert.equal(languageRedirect(new Request(publicUrl,{method}),{},{}).status,503);
+   assert.equal(languageRedirect(new Request(origin+file,{method}),{},enabled).status,404);
+  }
+  const rule=redirects.find(block=>block.includes('from = "'+publicUrl+'"'));
+  assert.ok(rule && rule.includes('to = "'+file+'"') && /status\s*=\s*200\b/.test(rule) && /force\s*=\s*true\b/.test(rule),'The exact canonical host and locale must map to its static document.');
+  const html=await readFile(new URL('../dist'+file,import.meta.url),'utf8');
+  assert.ok(html.includes('data-surface="korvnt"') && html.includes('<html lang="'+locale+'"'));
+  for(const entry of ['/?lang='+locale,'/'+locale+'/index.html','/'+locale+'/security/']){
+   const rewrite=languageRedirect(new Request(origin+entry),{},enabled);
+   assert.equal(rewrite.href,publicUrl);
+   assert.equal(languageRedirect(new Request(rewrite),{},enabled),undefined,'A second edge invocation stops at the public locale.');
+  }
+ }
+});
+
 test('standalone and alias origin boundaries allow public resources and exact service methods; only parent permits its private inbox',()=>{
  const ready={korvntReady:true,korvntAliasReady:true};
  for(const host of ['korvnt.no','www.korvnt.no','security.nortivo.no','korvnt.nortivo.no'])for(const path of ['/en/admin/','/nb/terminal/','/en/portfolio/','/.netlify/functions/terminal','/.netlify/functions/korvnt-inbox','/.netlify/functions/admin-session','/.local/runtime.json','/services/security-core/docs/operations.md','/assets/admin.js','/%61dmin/']){
