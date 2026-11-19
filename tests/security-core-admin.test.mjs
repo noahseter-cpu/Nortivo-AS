@@ -62,6 +62,40 @@ test('named password plus maintained MFA issues only an opaque secure revocable 
   assert.doesNotMatch(f.logs.join('\n'), new RegExp(`${raw}|named-admin@example.test|${PASSWORD}|synthetic-connection`));
 });
 
+test('empty hosted GET and HEAD events reach named session and fresh MFA checks', async t => {
+  const f = await fixture(t);
+  const read = (options, body) => ({ ...f.event('admin-session', options), isBase64Encoded: true, body });
+  for (const body of [undefined, null, '']) {
+    const denied = await f.security.session(read({}, body));
+    assert.equal(denied.statusCode, 401);
+    assert.equal(value(denied).code, 'AUTH_REQUIRED');
+  }
+  const { cookie } = await f.signIn();
+  const authorized = await f.security.session(read({ cookie, headers: { 'content-length': '0' } }, ''));
+  assert.equal(authorized.statusCode, 200);
+  assert.equal((await f.security.requireAdmin(read({ method: 'HEAD', cookie }, null))).id, ID);
+  const cross = await f.security.session(read({ cookie, headers: { origin: 'https://unrelated.test' } }, ''));
+  assert.equal(value(cross).code, 'INVALID_ORIGIN');
+  f.advance(5 * 60000);
+  assert.equal(value(await f.security.session(read({ cookie }, ''))).code, 'MFA_REQUIRED');
+});
+
+test('binary, nonempty read bodies, encoded mutations and oversized bodies are still refused', async t => {
+  const f = await fixture(t);
+  for (const [body, isBase64Encoded, length] of [
+    ['e30=', true], ['{}', false], [Buffer.from('binary'), false], ['', true, '11'],
+  ]) {
+    const rejected = await f.security.session({ ...f.event('admin-session', { headers: length ? { 'content-length': length } : {} }), body, isBase64Encoded });
+    assert.equal(rejected.statusCode, 413);
+    assert.equal(value(rejected).code, 'BODY_TOO_LARGE');
+  }
+  for (const [body, isBase64Encoded] of [['e30=', true], ['', true], ['a'.repeat(24001), false]]) {
+    const rejected = await f.security.login({ ...f.loginEvent(), body, isBase64Encoded });
+    assert.equal(rejected.statusCode, 413);
+    assert.equal(value(rejected).code, 'BODY_TOO_LARGE');
+  }
+});
+
 test('legacy cookies, missing tokens, wrong passwords and spoofed client roles do not grant admin access', async t => {
   const f = await fixture(t);
   for (const cookie of [undefined, 'nortivo_admin=legacy-signed-expiration', `${ADMIN_COOKIE}=invalid`, `${ADMIN_COOKIE}=${'a'.repeat(43)}; ${ADMIN_COOKIE}=${'a'.repeat(43)}`]) {

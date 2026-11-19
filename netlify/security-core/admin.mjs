@@ -45,8 +45,15 @@ function requestFor(event, env, mutation) {
   const origin = header(event, 'origin');
   if ((mutation && origin !== url.origin) || (origin && origin !== url.origin)) throw new SecurityCoreError(403, 'INVALID_ORIGIN');
   const method = event.httpMethod || 'GET';
-  if (event.isBase64Encoded || (event.body && (typeof event.body !== 'string' || Buffer.byteLength(event.body) > 24000))) throw new SecurityCoreError(413, 'BODY_TOO_LARGE');
-  return new Request(url, { method, headers: event.headers, ...(!['GET', 'HEAD'].includes(method) ? { body: event.body || '' } : {}) });
+  const read = method === 'GET' || method === 'HEAD';
+  const body = event.body ?? '';
+  const declaredLength = header(event, 'content-length');
+  // The hosted adapter can mark an empty GET as base64 when it has no content type.
+  if (typeof body !== 'string' || Buffer.byteLength(body) > 24000 ||
+      (read ? body !== '' || (declaredLength && declaredLength !== '0') : event.isBase64Encoded)) {
+    throw new SecurityCoreError(413, 'BODY_TOO_LARGE');
+  }
+  return new Request(url, { method, headers: event.headers, ...(read ? {} : { body }) });
 }
 
 function requireCookieCandidate(request) {
