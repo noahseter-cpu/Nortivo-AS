@@ -28,9 +28,9 @@ delete process.env.ADMIN_NOTIFICATION_EMAIL;
 const identity = { ticketNumber: 'NT-2026-ABC234', email: 'synthetic@example.invalid' };
 const syntheticTicket = { id: 'test-ticket-id', ticket_number: identity.ticketNumber, email: identity.email, name: 'Synthetic user', subject: 'Synthetic subject', message: 'Synthetic private message', status: 'open' };
 let requestCounter = 0;
-const event = (body, overrides = {}) => ({ httpMethod: 'POST', rawUrl: 'https://nortivo.no/.netlify/functions/ticket-access',
+const event = (body, { httpMethod = 'POST', ...overrides } = {}) => ({ httpMethod, rawUrl: 'https://nortivo.no/.netlify/functions/ticket-access',
   headers: { origin: 'https://nortivo.no', 'content-type': 'application/json', 'x-forwarded-proto': 'https', 'x-nf-client-connection-ip': `test-${++requestCounter}` },
-  body: JSON.stringify(body), ...overrides });
+  ...(['GET', 'HEAD'].includes(httpMethod) ? {} : { body: JSON.stringify(body) }), ...overrides });
 const data = response => JSON.parse(response.body);
 const response = value => ({ ok: true, status: 200, text: async () => JSON.stringify(value), json: async () => value });
 const cookieHeader = value => value.split(';')[0];
