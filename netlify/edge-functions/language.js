@@ -2,6 +2,8 @@
 // API: https://docs.netlify.com/build/edge-functions/api/
 // Routing: https://docs.netlify.com/build/edge-functions/declarations/
 import { applicationRoute } from '../routing/application-routes.mjs';
+import { securityPage } from '../../scripts/public-pages/security.mjs';
+import { securityHeaders } from '../../services/security-core/src/headers.mjs';
 const legacyPaths = ['/', '/products/', '/support/', '/admin/', '/privacy/', '/about/', '/services/', '/contact/', '/restaurant/', '/studio/', '/arc/', '/studio/services/', '/reviews/', '/terminal/', '/pricing/', '/portfolio/'];
 const supported = value => value === 'nb' || value === 'en';
 const companyOrigin = 'https://nortivo.no';
@@ -92,11 +94,14 @@ export default function languageRedirect(request, context = {}, env = globalThis
   if(application?.kind==='redirect'){const target=new URL(application.location);target.search=safeQueries(target.searchParams).toString();return new Response(null,{status:application.status,headers:{Location:target.href,'Cache-Control':'private, no-store'}});}
   if(application?.kind==='rewrite'){
     if(application.surface==='korvnt'){
-      // Returning an internal file URL would restart this gate on a denied path.
-      // The two host-specific static rewrites serve the approved locale pages downstream.
-      const publicPath='/'+application.locale+'/';
-      if(url.pathname===publicPath)return;
-      return new URL(publicPath,url);
+      const body=request.method==='HEAD'?null:securityPage(application.locale);
+      return new Response(body,{headers:{
+        ...securityHeaders({api:false,https:true}),
+        'Content-Type':'text/html; charset=utf-8',
+        'Content-Language':application.locale,
+        'CDN-Cache-Control':'no-store',
+        'Netlify-CDN-Cache-Control':'no-store'
+      }});
     }
     return new URL(application.path,url);
   }

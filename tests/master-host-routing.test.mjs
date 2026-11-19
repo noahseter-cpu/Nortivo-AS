@@ -40,28 +40,37 @@ test('standalone KORVNT and optional compatibility names keep their own routes a
  }
  assert.equal(applicationRoute('https://invest.nortivo.no/en/request/').path,'/invest/en/request/index.html');
 });
-test('KORVNT serves each authorized locale through a host-only static rewrite while direct internal paths remain denied',async()=>{
+test('KORVNT returns the exact approved locale document at the edge after host and readiness checks',async()=>{
  const enabled={get:key=>key==='KORVNT_SITE_READY'?'true':undefined};
  const origin='https://korvnt.no';
- const config=await readFile(new URL('../netlify.toml',import.meta.url),'utf8');
- const redirects=config.split(/^\[\[redirects\]\]\s*$/m).slice(1).map(block=>block.split(/^\[/m)[0]);
  for(const locale of ['en','nb']){
   const publicUrl=origin+'/'+locale+'/';
   const file='/korvnt/'+locale+'/index.html';
+  const approved=await readFile(new URL('../dist'+file,import.meta.url));
+  assert.ok(approved.toString().includes('data-surface="korvnt"'));
+  assert.ok(approved.toString().includes('href="'+publicUrl+'"'));
+  for(const path of ['/'+locale+'/','/?lang='+locale,'/'+locale+'/index.html','/'+locale+'/security/']){
+   const response=languageRedirect(new Request(origin+path),{},enabled);
+   assert.ok(response instanceof Response);
+   assert.equal(response.status,200);
+   assert.equal(response.headers.get('content-language'),locale);
+   assert.match(response.headers.get('content-type'),/^text\/html; charset=utf-8$/i);
+   assert.match(response.headers.get('cache-control'),/no-store/);
+   assert.equal(response.headers.get('netlify-cdn-cache-control'),'no-store');
+   assert.equal(response.headers.get('x-content-type-options'),'nosniff');
+   assert.match(response.headers.get('strict-transport-security'),/max-age=[1-9]/);
+   assert.match(response.headers.get('content-security-policy'),/frame-ancestors 'none'/);
+   assert.equal(response.headers.get('set-cookie'),null);
+   assert.deepEqual(Buffer.from(await response.arrayBuffer()),approved);
+  }
+  const head=languageRedirect(new Request(publicUrl,{method:'HEAD'}),{},enabled);
+  assert.equal(head.status,200);assert.equal(head.body,null);
+  assert.equal(head.headers.get('content-language'),locale);
   for(const method of ['GET','HEAD']){
-   assert.equal(languageRedirect(new Request(publicUrl,{method}),{},enabled),undefined,'Continue to static routing after authorization.');
    assert.equal(languageRedirect(new Request(publicUrl,{method}),{},{}).status,503);
    assert.equal(languageRedirect(new Request(origin+file,{method}),{},enabled).status,404);
   }
-  const rule=redirects.find(block=>block.includes('from = "'+publicUrl+'"'));
-  assert.ok(rule && rule.includes('to = "'+file+'"') && /status\s*=\s*200\b/.test(rule) && /force\s*=\s*true\b/.test(rule),'The exact canonical host and locale must map to its static document.');
-  const html=await readFile(new URL('../dist'+file,import.meta.url),'utf8');
-  assert.ok(html.includes('data-surface="korvnt"') && html.includes('<html lang="'+locale+'"'));
-  for(const entry of ['/?lang='+locale,'/'+locale+'/index.html','/'+locale+'/security/']){
-   const rewrite=languageRedirect(new Request(origin+entry),{},enabled);
-   assert.equal(rewrite.href,publicUrl);
-   assert.equal(languageRedirect(new Request(rewrite),{},enabled),undefined,'A second edge invocation stops at the public locale.');
-  }
+  assert.equal(languageRedirect(new Request(publicUrl,{method:'POST'}),{},enabled).status,404);
  }
 });
 

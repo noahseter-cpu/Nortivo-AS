@@ -6,19 +6,6 @@
 [functions]
   node_bundler = "esbuild"
 
-# The edge function checks host, method and readiness before these two static rewrites.
-[[redirects]]
-  from = "https://korvnt.no/en/"
-  to = "/korvnt/en/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "https://korvnt.no/nb/"
-  to = "/korvnt/nb/index.html"
-  status = 200
-  force = true
-
 [[headers]]
   for = "/portfolio/*"
   [headers.values]
