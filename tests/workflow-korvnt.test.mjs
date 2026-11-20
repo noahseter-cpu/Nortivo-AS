@@ -84,6 +84,7 @@ test('cross-host, CSRF, foreign grant, mutation, file and sensitive credential a
     assert.equal((await c.call('korvnt-service','request',b,g,standalone,headers)).status,403);
   for(const extra of [{files:[]},{attachments:['evidence']},{seedPhrase:'synthetic'},{privateKey:'synthetic'},{business:'nortivo'}])
     assert.equal((await c.call('korvnt-service','request',{...b,brief:{...b.brief,...extra}},g)).status,400);
+  assert.equal((await c.call('korvnt-service','request',{...b,linkThreadId:randomUUID()},g)).status,400);
   assert.equal((await c.call('korvnt-service','request',{...b,brief:{...b.brief,summary:'password: synthetic-only'}},g)).status,400);
   assert.equal((await c.call('korvnt-service','request',b,g,standalone,{'content-type':'multipart/form-data'})).status,415);
   assert.equal((await c.call('korvnt-service','request',{...b,brief:{...b.brief,summary:'a'.repeat(25000)}},g)).status,413);
@@ -93,7 +94,9 @@ test('cross-host, CSRF, foreign grant, mutation, file and sensitive credential a
 
 test('KORVNT follow-up, tracking, presence and authorization require the current business and fresh named MFA',async t=>{
   const c=await fixture(t),g=await c.boot('korvnt-service'),second=await c.boot('korvnt-service');
+  const current=await c.call('korvnt-service','chat',send('A short service question'),g);
   const req=(await c.call('korvnt-service','request',submit(),g)).body;
+  assert.equal(req.threadId,current.body.threadId);
   assert.equal((await c.call('korvnt-service','request',{op:'track',ref:req.ref},second)).status,404);
   const follow={op:'followup',ref:req.ref,text:'Synthetic follow-up from KORVNT',state:'needs_information',requestId:randomUUID()};
   assert.equal((await c.call('korvnt-inbox',null,follow,c.admin)).status,200);

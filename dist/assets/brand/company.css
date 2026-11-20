@@ -18,3 +18,7 @@
 .nt-site .company-invest-support h2{margin:0 0 8px;font-size:clamp(1.5rem,2.3vw,2.2rem)}
 @media(min-width:881px) and (max-width:1160px){.nt-site .nt-header .desktop-nav{display:none}.nt-site .nt-header .menu-toggle{display:inline-flex}}
 @media(max-width:700px){.company-symbol{width:32px;height:32px}.nt-site .company-security-intro{grid-template-columns:1fr;gap:14px}.nt-site .footer-bottom:has(.company-devbadge){align-items:flex-start;flex-direction:column;gap:1px}.nt-site .company-devbadge{margin-left:0}.nt-site .nt-header .brand:has(.company-symbol){gap:4px}}
+@media(max-width:700px){
+  .nt-home .v2-hero .nt-actions{grid-template-columns:minmax(0,1fr)}
+  .nt-home .v2-hero .nt-actions :is(.nt-button,.v2-action-label){white-space:normal;overflow-wrap:normal;word-break:normal;hyphens:none}
+}

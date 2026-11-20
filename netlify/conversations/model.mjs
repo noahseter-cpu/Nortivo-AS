@@ -62,6 +62,9 @@ async function current(ctx,id,changes,openRequired=false) {
     const existing=await thread(ctx,owned.data.threads.at(-1));
     if (!openRequired || existing.data.state==='open') return existing;
   }
+  return newThread(ctx,owned,changes);
+}
+function newThread(ctx,owned,changes) {
   if(owned.data.threads.length>=32) fail('THREAD_LIMIT','This workspace has reached its conversation limit.',409);
   const threadId = randomUUID();
   const row = pending(THREAD,'t:'+threadId,ctx.actor,{id:threadId,subject:ctx.actor,createdAt:ctx.time,updatedAt:ctx.time,state:'open',count:0,requests:[]});
@@ -128,7 +131,7 @@ export async function chat(ctx,b) {
     case 'start':
       fields(b,['op','requestId']);
       return once(ctx,'start-conversation',b,async changes=>{
-        const fresh=await current(ctx,null,changes,true);
+        const fresh=ctx.business==='korvnt'?await current(ctx,null,changes,true):newThread(ctx,await index(ctx),changes);
         if(fresh.version===null) changes.push(fresh);
         return {guardThread:fresh.data.id,result:{threadId:fresh.data.id}};
       });
@@ -191,11 +194,19 @@ export async function project(ctx,b) {
     return ownedRequest(ctx,b.ref,b.proof);
   }
   if (b.op!=='submit') invalid();
-  fields(b,['op','requestId','brief','confirmed']);
+  const serviceEnquiry=ctx.business==='korvnt';
+  const allowed=['op','requestId','brief','confirmed'];
+  if(!serviceEnquiry) allowed.push('linkThreadId');
+  fields(b,allowed);
   if (b.confirmed!==true) invalid();
+  if ('linkThreadId' in b) uuid(b.linkThreadId);
   const details=brief(b.brief,ctx);
   return once(ctx,'project-submit',b,async changes=>{
-    const t=await current(ctx,null,changes,true);
+    let t;
+    if(serviceEnquiry) t=await current(ctx,null,changes,true);
+    else if(b.linkThreadId) t=await thread(ctx,b.linkThreadId);
+    else t=newThread(ctx,await index(ctx),changes);
+    if(t.data.state!=='open') fail('THREAD_CLOSED','This conversation is closed.',409);
     if (t.data.requests.length>=20) fail('REQUEST_LIMIT','This conversation has reached its request limit.',409);
     const ref=(ctx.business==='korvnt'?'KR-':'NR-')+randomBytes(8).toString('hex').toUpperCase(), proof=randomBytes(32).toString('base64url');
     const row=pending(REQUEST,ref,ctx.actor,{brief:details,state:'received',createdAt:ctx.time,updatedAt:ctx.time,proofHash:digest(proof),sourceThread:t.data.id,threadId:t.data.id,accountBound:Boolean(ctx.user),followups:[]});

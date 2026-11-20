@@ -24,7 +24,7 @@ const server=http.createServer(async(req,res)=>{
     if(url.origin!==origin||req.headers.host!==new URL(origin).host){res.writeHead(403);res.end();return;}
     if(url.pathname.startsWith('/.netlify/functions/')){
       const chunks=[];for await(const chunk of req)chunks.push(chunk);
-      const evt={httpMethod:req.method,headers:{...req.headers,'x-nf-client-connection-ip':'browser-fixture'},rawUrl:url.href,queryStringParameters:Object.fromEntries(url.searchParams),body:Buffer.concat(chunks).toString()};
+      const evt={httpMethod:req.method,headers:{...req.headers,'x-nf-client-connection-ip':'browser-fixture'},rawUrl:url.href,queryStringParameters:Object.fromEntries(url.searchParams),...(chunks.length?{body:Buffer.concat(chunks).toString()}:{})};
       const name=url.pathname.split('/').at(-1);
       let result;
       if (name==='terminal')result=await terminal(evt);
@@ -39,7 +39,7 @@ const server=http.createServer(async(req,res)=>{
     }
     let name=url.pathname;
     if(name==='/admin/')name='/admin/index.html';
-    else if(name==='/en/'||name==='/nb/'||name.includes('/systems/')||name.includes('/support/'))name='/invest'+name+'index.html';
+    else if(/^\/(en|nb)\/(?:request\/|systems\/(?:bot|engine)\/|support\/)?$/.test(name))name='/invest'+name+'index.html';
     const file=path.resolve(dist,'.'+name);
     if(!file.startsWith(dist)){res.writeHead(404);res.end();return;}
     const asset=await readFile(file);
@@ -58,7 +58,8 @@ try{
   const page=await context.newPage();const issues=[];
   page.on('pageerror',err=>issues.push(err.name));page.setDefaultTimeout(7000);
   await page.goto(origin+'/en/');
-  await page.locator('.nwf-launcher').click();
+  const contact=page.getByRole('link',{name:'Contact support',exact:true});
+  await contact.click();
   const panel=page.locator('.nwf-chat-dialog[open]');
   const bounds=await panel.boundingBox();assert.ok(bounds.width>=400 && bounds.width<=440);assert.ok(bounds.height<=580);
   await panel.getByLabel('Your message').fill('Synthetic browser question');
@@ -67,20 +68,23 @@ try{
   await panel.getByText('Synthetic browser question',{exact:true}).waitFor();
   assert.equal(await panel.locator('.nwf-customer').count(),1);
   await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),0);
-  assert.ok(await page.locator('.nwf-launcher').evaluate(e=>e===document.activeElement));
-  await page.reload();await page.locator('[data-nortivo-chat]').scrollIntoViewIfNeeded();
+  assert.ok(await contact.evaluate(e=>e===document.activeElement));
+  await page.goto(origin+'/en/support/');await page.locator('[data-nortivo-chat]').scrollIntoViewIfNeeded();
   await page.locator('[data-nortivo-chat]').getByText('Synthetic browser question',{exact:true}).waitFor();
-  await page.locator('[data-nortivo-service="bot"]').click();const intake=page.locator('[data-nortivo-intake]');
-  assert.equal(await intake.locator('[name=kind]').inputValue(),'bot');
+  await page.goto(origin+'/en/request/');const intake=page.locator('[data-nortivo-intake]');
+  await intake.locator('[name=kind][value=bot]').check();
   await intake.locator('[name=goal]').fill('A local, synthetic test goal for browser review.');
   await intake.locator('[name=existing]').fill('Undecided');await intake.getByRole('button',{name:'Continue'}).click();
   await intake.locator('[name=market]').fill('Synthetic crypto market');await intake.locator('[name=integration]').fill('Undecided');await intake.locator('[name=safeguards]').fill('Paper mode only');
   await page.reload();await intake.locator('[name=market]').waitFor();assert.equal(await intake.locator('[name=market]').inputValue(),'Synthetic crypto market');
   await intake.locator('[name=execution]').selectOption('paper');await intake.getByRole('button',{name:'Continue'}).click();
   for(const [key,value] of Object.entries({name:'Local fixture',email:'browser@example.invalid',deliverable:'Test scope',budget:'Undecided',timeframe:'Undecided'}))await intake.locator('[name='+key+']').fill(value);
-  await intake.getByRole('button',{name:'Continue'}).click();await intake.getByRole('button',{name:'Edit',exact:true}).first().click();
-  assert.equal(await intake.locator('[name=kind]').inputValue(),'bot');
+  await intake.getByRole('button',{name:'Continue'}).click();await intake.getByRole('button',{name:'Edit goal',exact:true}).click();
+  assert.equal(await intake.locator('[name=kind]:checked').inputValue(),'bot');
   for(let i=0;i<3;i++)await intake.getByRole('button',{name:'Continue'}).click();
+  const link= intake.locator('[name=linkConversation]');
+  assert.equal(await link.isChecked(),false);
+  await link.check();
   await intake.locator('[name=confirm]').check();await intake.getByRole('button',{name:'Submit project request'}).click();
   await intake.getByRole('heading',{name:'Project request received'}).waitFor();const ref=await intake.locator('.nwf-ref').textContent();
   const staff=await browser.newContext();await staff.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
@@ -103,8 +107,8 @@ try{
   await page.keyboard.press('Escape');
   const phone=await browser.newContext({viewport:{width:390,height:844}});await phone.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
   const nb=await phone.newPage();await nb.goto(origin+'/nb/systems/engine/');
-  await nb.locator('[name=goal]').fill('Lokal test av handelsmotor');assert.equal(await nb.locator('[name=kind]').inputValue(),'engine');
-  await nb.locator('[name=existing]').fill('Uavklart');await nb.getByRole('button',{name:'Fortsett'}).click();
+  await nb.locator('[name=goal]').fill('Lokal test av handelsmotor');assert.equal(await nb.locator('[name=kind]:checked').inputValue(),'engine');
+  await nb.locator('[name=existing]').fill('Uavklart');await nb.getByRole('button',{name:/Videre til/}).click();
   await nb.locator('[name=components]').waitFor();assert.equal(await nb.locator('[name=market]').count(),0);
   assert.deepEqual(issues,[]);
   console.log('PASS browser: real guest send/lost acknowledgement/retry/reload, keyboard focus, four-stage bot draft/edit/submit, protected operator reply and follow-up, secure tracking, responsive 1365/768/390/320 and Norwegian engine fields. No external requests allowed.');

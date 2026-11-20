@@ -8,6 +8,8 @@ import {mkdtemp,rm} from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import {createLocalStore} from '../netlify/terminal/store-local.mjs';
+import {project,digest,RECEIPT,THREAD} from '../netlify/conversations/model.mjs';
+import {commandDigest} from '../netlify/terminal/security.mjs';
 
 const origin='https://nortivo.no';
 const uuid=()=>randomUUID();
@@ -103,7 +105,7 @@ test('project submission and retrieval keep the tracking proof private, handle b
 
 test('verified account claim requires browser proof and matching verified project contact, ends guest and bearer access, and does not restore access to revoked accounts/sessions',async t=>{
   const c=await setup(t),guest=await c.boot(),other=await c.boot(),sent=send('Private example');
-  const result=await c.call('chat',sent,guest),req=submit();
+  const result=await c.call('chat',sent,guest),req={...submit(),linkThreadId:result.body.threadId};
   const project=await c.call('request',req,guest),{threadId,proof,ref}=project.body;
   const wrongAccount=await c.account(),wrong=await c.boot(wrongAccount.cookie+'; '+guest.cookie);
   assert.equal((await c.call('chat',{op:'claim',requestId:uuid()},wrong)).status,404);
@@ -122,6 +124,62 @@ test('verified account claim requires browser proof and matching verified projec
   assert.equal((await c.call('chat',{op:'read',id:threadId},verified)).status,403);
   await c.fx.store.deleteSession(right.sessionHash);
   assert.equal((await c.call('chat',{op:'read',id:threadId},verified)).status,401);
+});
+
+test('Invest requests create separate case threads unless an owned open conversation is explicitly selected',async t=>{
+  const c=await setup(t),owner=await c.boot(),stranger=await c.boot();
+  const support=(await c.call('chat',send('A reported support question'),owner)).body.threadId;
+  const foreign=(await c.call('chat',send('Separate customer contact'),stranger)).body.threadId;
+  const separate=submit();
+  const first=await c.call('request',separate,owner);
+  assert.equal(first.status,200);assert.notEqual(first.body.threadId,support);
+  const next=await c.call('request',submit(),owner);
+  assert.equal(next.status,200);assert.notEqual(next.body.threadId,first.body.threadId);
+  assert.deepEqual((await c.call('chat',{op:'read',id:support},owner)).body.thread.requests,[]);
+  assert.deepEqual((await c.call('request',separate,owner)).body,first.body);
+  const linked={...submit(),linkThreadId:support};
+  const [one,two]=await Promise.all([c.call('request',linked,owner),c.call('request',linked,owner)]);
+  assert.equal(one.status,200);assert.equal(one.body.threadId,support);assert.deepEqual(one.body,two.body);
+  assert.deepEqual((await c.call('chat',{op:'read',id:support},owner)).body.thread.requests,[one.body.ref]);
+  assert.equal((await c.call('request',{...linked,linkThreadId:first.body.threadId},owner)).status,409);
+  assert.equal((await c.call('request',{...submit(),linkThreadId:foreign},owner)).status,404);
+  assert.equal((await c.call('request',{...submit(),linkThreadId:null},owner)).status,400);
+  assert.equal((await c.call('request',{op:'track',ref:one.body.ref,proof:one.body.proof},stranger)).body.threadId,null);
+  await c.call('inbox',{op:'state',id:support,state:'closed',requestId:uuid()},c.adminAuth);
+  assert.equal((await c.call('request',{...submit(),linkThreadId:support},owner)).status,409);
+  // The original receipt survives closure. A retry must not consult current link eligibility.
+  assert.deepEqual((await c.call('request',linked,owner)).body,one.body);
+});
+
+test('a pre-link-field receipt still resolves to its original support thread and rechecks ownership',async()=>{
+  const actor=uuid(),id=uuid(),body=submit();
+  const receipt={ref:'NR-1111111111111111',threadId:id,state:'received',proof:raw()};
+  let subject=actor;
+  const db={get:async(ns,key)=>{
+    if(ns===RECEIPT&&key===digest([actor,'project-submit',body.requestId].join(':')))
+      return {data:{checksum:commandDigest(body),guardThread:id,result:receipt}};
+    if(ns===THREAD&&key==='t:'+id)return {data:{id,subject,state:'closed'}};
+    assert.fail('Legacy replay must never create a new case.');
+  }};
+  assert.deepEqual(await project({business:'nortivo',actor,db},body),receipt);
+  subject=uuid();
+  await assert.rejects(project({business:'nortivo',actor,db},body),error=>error.code==='NOT_FOUND');
+});
+
+test('starting from an older closed conversation creates one new thread even when a newer case is open',async t=>{
+  const c=await setup(t),guest=await c.boot();
+  const older=(await c.call('chat',send('Older customer contact'),guest)).body.threadId;
+  const newer=(await c.call('request',submit(),guest)).body.threadId;
+  assert.notEqual(older,newer);
+  await c.call('inbox',{op:'state',id:older,state:'closed',requestId:uuid()},c.adminAuth);
+  assert.equal((await c.call('chat',{op:'read',id:older},guest)).body.thread.state,'closed');
+  const command={op:'start',requestId:uuid()};
+  const [first,retry]=await Promise.all([c.call('chat',command,guest),c.call('chat',command,guest)]);
+  assert.equal(first.status,200);assert.deepEqual(retry.body,first.body);
+  const id=first.body.threadId;
+  assert.notEqual(id,older);assert.notEqual(id,newer);
+  const fresh=(await c.call('chat',{op:'read',id},guest)).body.thread;
+  assert.equal(fresh.state,'open');assert.deepEqual(fresh.requests,[]);assert.deepEqual(fresh.messages,[]);
 });
 
 test('reject foreign origins, malformed or unsupported payloads, missing CSRF, customer impersonation, missing MFA and stale/revoked operator sessions',async t=>{
